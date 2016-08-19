@@ -1,0 +1,32 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1 f14 fd">{$mm_mall_name}</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+	$("a[@rel=menu_head]").click(function(e){
+		e.preventDefault();
+		var o=$(this).parent().siblings("dd");
+		$(this).toggleClass("show").toggleClass("hide");
+		if(o.size()>=1)
+		{
+			if(o.get(0).style.display=="none") o.slideDown(300);
+			else o.slideUp(300);
+		}
+	});
+	
+	var jq_sel=$("a[@rel=page_link][@href*=$action]");
+	if(jq_sel.size()>0)
+	{
+		jq_sel.addClass("hover");
+		jq_sel.parent().slideDown(300);
+	}
+	$("dl[@rel=hnav]:last").css("border","none");
+});
+</script>
+	<h3 class="board_title">$page[title]</h3>
+	<div class="board_content">$page[conter]</div>
+<!--
+EOT;
+?>-->

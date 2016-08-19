@@ -1,0 +1,36 @@
+<!--<?php 
+print <<<EOT
+-->
+<!--form content-->
+		<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="p_url" value="$p_url" />
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" name="uid" value="$uid" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">添加友情链接</th></tr>
+			<tr>
+				<td width="70">网站名称</td>
+				<td><input type="text" name="name" id="name" value="$name" size="40" class="text2" rel="necessary" /><span rel="tip" class="disn"><p class="alert_error"><span class="icon_error"></span>请填写网址名称</p></span></td>
+			</tr>
+			<tr>
+				<td>链接说明</td>
+				<td><input type="text" name="note" id="note" value="$note" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>链接网址</td>
+				<td><input type="text" name="url" id="url" value="$url" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>显示顺序</td>
+				<td><input type="text" name="disp" id="disp" value="$displayorder" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>Logo</td>
+				<td><input type="file" name="logo_file" id="logo_file" size="40" class="border" /></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

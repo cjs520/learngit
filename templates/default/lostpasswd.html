@@ -1,0 +1,77 @@
+<!--<?php
+require_once template('header'); 
+if($action =='lostpasswd'){
+print <<<EOT
+-->	<p class="fl"><img src="images/default/reg.jpg" /></p>
+	<div class="fl logform"><!-- 忘记密码开始 -->
+		<form method="post" action="lostpass.php?action=$action" class="regform">
+		<input type="hidden" value="1" name="step" />
+		<table>
+			<tr>
+				<th></th><td class="f18 fd red">找回ID/密码</td>
+			</tr>
+			<tr>
+				<th>用户名：</th><td><input name="login_id" type="text" class="text2" size="40" /></td>
+			</tr>
+			<tr>
+				<th>E-mail：</th><td><input name="loss_email" type="text" class="text2" size="40" /></td>
+			</tr>
+			<tr>
+				<th></th><td><input type="submit" value="" class="lost_button" /></td>
+			</tr>
+		</table>
+		</form>
+	</div><!-- 忘记密码结束 -->
+<!--
+EOT;
+} else if($action =='changepasswd'){
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("form[@name=cp_form]").submit(function(){
+	    var new_pass=$(this).find("input[@name=new_pass]").val();
+		var confirm_pass=$(this).find("input[@name=confirm_pass]").val();
+		var msg="";
+		if(new_pass=="") msg+="请填写您的新密码\\n";
+		if(new_pass!=confirm_pass) msg+="两次密码填写不一致，请重新检查\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+});
+</script>
+	<p class="fl"><img src="images/default/reg.jpg" /></p>
+	<div class="fl logform"><!-- 忘记密码开始 -->
+		<form name="cp_form" method="post" action="lostpass.php?action=$action" class="regform">
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" value="$login_id" name="login_id" /> 
+		<input type="hidden" value="$str" name="str" />
+		<table>
+			<tr>
+				<th></th><td class="f18 fd red">找回ID/密码</td>
+			</tr>
+			<tr>
+				<th>用户名：</th><td><input name="login_id" value="$login_id" type="text" class="text2" size="40" disabled="disabled" /></td>
+			</tr>
+			<tr>
+				<th>新密码：</th><td><input name="new_pass" type="password" class="text2" size="40" /></td>
+			</tr>
+			<tr>
+				<td>密码确认：</td><td><input name="confirm_pass" type="password" class="text2" size="40" /></td>
+			</tr>
+			<tr>
+				<th></th><td><input type="submit" value="" class="lost_button" /></td>
+			</tr>
+		</table>
+		</form>
+	</div><!-- 忘记密码结束 -->
+<!--
+EOT;
+} print <<<EOT
+--><!--
+EOT;
+?>-->

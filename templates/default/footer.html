@@ -1,0 +1,94 @@
+<!--<?php print <<<EOT
+--></div>
+<div class="clear0"></div>
+<div class="tip_right">
+	<a href="tv_shopping.php" title="TV购" class="tip_tv"></a> 
+    <a href="lucky.php" title="幸运转盘" class="tip_lucky"></a> 
+    <a href="coupon.php" title="优惠券" class="tip_coupon"></a>
+    <a href="#" rel="tip_weixin" title="微信" class="tip_weixin" style="position:relative;"><span><img src="$GLOBALS[mm_wx_logo]" alt="迈维软件"></span></a>
+    <div title="客服" class="tip_service" style="position:relative;">
+        <div>
+        	<h3 class="fct red f16 fd">客服中心</h3>
+        	<h4 class="fct fd red">$GLOBALS[mm_client_phone3]</h4>
+            <p>服务时间：$GLOBALS[mm_client_time]</p>
+            <p>E-mail：$GLOBALS[mm_client_email]</p>
+            <p>传真：$GLOBALS[mm_ceo_fax]</p>
+            <p>电话：$GLOBALS[mm_ceo_phone]</p>
+            <p class="mt4">客服：<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$GLOBALS[mm_client_qq1]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$GLOBALS[mm_client_qq1]:52" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>&nbsp;&nbsp;<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$GLOBALS[mm_client_qq2]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$GLOBALS[mm_client_qq2]:52" alt="点击这里给我发消息" title="点击这里给我发消息"/></a></p>
+        </div>
+    </div>
+    <a href="#top" title="回顶部" class="tip_top"></a> 
+</div>
+<div class="footer_bg"><div id="footer" class="clearfix">
+	<div class="help_faq clearfix"><!-- 帮助链接 开始 -->
+<!--
+EOT;
+$i=0;
+foreach($nav2_help as $val){
+$i++;
+print <<<EOT
+-->		<dl class="span_left">
+			<dt><span class="help_faq{$i}"><a href="$val[link]">$val[title]</a></span></dt>
+			<dd>
+<!--
+EOT;
+foreach($val[child] as $v){
+print <<<EOT
+-->				<a href="$v[link]">$v[title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->			</dd>
+		</dl>
+<!--
+EOT;
+} print <<<EOT
+-->	</div><!-- 帮助链接 结束 -->
+	<ul class="h_oflow site">
+    	<li><span class="site1">实体认证</span></li>
+    	<li><span class="site2">商铺托管</span></li>
+    	<li><span class="site3">全场正品</span></li>
+    	<li><span class="site4">七天退换货</span></li>
+    	<li><span class="site5">积分回馈</span></li>
+    </ul>
+	<div class="footer_nav"><!--
+EOT;
+foreach($nav_foot as $val){
+print <<<EOT
+--><a href="$val[link]" $val[target] title="$val[alt]">$val[title]</a><span rel="footnav">|</span><!--
+EOT;
+} print <<<EOT
+-->	</div>
+	<div class="footer_info">
+		<p class="copy3">Copyright &copy; 2014 <a href="$GLOBALS[mm_mall_url]" title="$mm_mall_address" target="_blank">$mm_mall_address</a> All Rights Reserved &nbsp; ICP证：$mm_company_num</p>
+		<p><a href="http://www.mvmmall.cn/" target="_blank">技术支持:泉州迈商科技有限公司</a></p>
+		<p>$mm_footer_code</p>  
+	</div>
+</div></div>
+<script type="text/javascript">
+$(function(){
+	$("#block").width($("body").width());
+	$("#block").height($("body").height());
+	$("#block").animate({opacity:0.4});
+	//微信弹出框
+	$(".tip_weixin").hover(function()
+	{
+		$(".tip_weixin span").show();
+	},function(){
+		$(".tip_weixin span").hide();
+	});
+	//QQ弹出框
+	$(".tip_service").hover(function()
+	{
+		$(".tip_service div").show();
+	},function(){
+		$(".tip_service div").hide();
+	});
+});
+</script>
+<div id="block"></div>
+</body>
+</html>
+<!--
+EOT;
+?>-->

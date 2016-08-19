@@ -1,0 +1,141 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<!--
+EOT;
+foreach($AD->GetAd('banner',2) as $val){
+print <<<EOT
+-->	<div class="mb10" style="position:relative;">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="coupon" p="banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+--><!--banner-->
+	<div class="h_oflow mb10 hot_group">
+    	<h3 class="titlea"><span>热门品牌团</span><!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="group" p="recommend" op="" t="2" class="fr">我要曝光></a>
+<!--
+EOT;
+} print <<<EOT
+--></h3>
+        <ul>
+<!--
+EOT;
+foreach($AD->GetAd('recommend',2) as $val){
+print <<<EOT
+-->			<li><a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>
+    </div><!-- 热门品牌团 -->
+	
+<script type="text/javascript">
+$(function(){
+    var brand_uid="$brand_uid";
+	var cat_uid="$cat_uid";
+	if(brand_uid!="0")
+	{
+	    $("a[@rel=brand]").removeClass("hover");
+		$("a[@rel=brand][@uid="+brand_uid+"]").addClass("hover");
+	}
+	
+	if(cat_uid!="0")
+	{
+	    $("a[@rel=cat]").removeClass("hover");
+		$("a[@rel=cat][@uid="+cat_uid+"]").addClass("hover");
+	}
+	
+	var od_cls="$ac"=="ASC"?"up1":"down1";
+	$("a[@rel=order][@f=$od]").addClass(od_cls);
+	
+	var status=parseInt("$status");
+	$("a[@rel=status]").eq(status).addClass("now");
+});
+</script>
+
+	<table width="100%" border="0" class="attrs">
+        <tr class="attrs_cate">
+            <th>品牌</th>
+            <td><div class="toggle_div"><a href="" rel="tip_open" class="tip_open"></a>
+                <a class="hover" rel="brand" href="preorder.php?cat_uid=$cat_uid">全部</a>
+<!--
+EOT;
+foreach($arr_brand as $val){
+print <<<EOT
+-->
+                <a rel="brand" uid="$val[brand_uid]" href="preorder.php?cat_uid=$cat_uid&brand_uid=$val[brand_uid]">$val[brand_name]<span>$val[cnt]</span></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </div></td>
+        </tr>
+        <tr class="attrs_cate">
+            <th>分类</th>
+            <td>
+                <a rel="cat" class="hover" href="group.php?action=$action&brand_uid=$brand_uid">全部</a>
+<!--
+EOT;
+foreach($arr_cat as $val){
+print <<<EOT
+-->
+                <a rel="cat" uid="$val[cat_uid]" href="group.php?action=$action&cat_uid=$val[cat_uid]&brand_uid=$brand_uid">$val[cat_name]<span>$val[cnt]</span></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </td>
+        </tr>
+        <tr class="attr_filter">
+            <td colspan="2"><ul>
+                <li class="sort">
+                    <a rel="order" f="start_date" href="group.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&status=$status&od=start_date&ac=$ac&change=change">开始时间</a>
+                    <a rel="order" f="end_date" href="group.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&status=$status&od=end_date&ac=$ac&change=change">结束时间</a> 
+                    <a rel="order" f="goods_sale_price" href="group.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&status=$status&od=goods_sale_price&ac=$ac&change=change">价格</a>
+                    <a rel="order" f="goods_hit" href="group.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&status=$status&od=goods_hit&ac=$ac&change=change">人气</a>
+                </li>
+				<li class="type">
+				    <a rel="status" href="group.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&od=start_date&ac=$ac&status=0" title="进行中">进行中</a>
+                    <a rel="status" href="group.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&od=start_date&ac=$ac&status=1" title="未开始">未开始</a>
+                    <a rel="status" href="group.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&od=start_date&ac=$ac&status=2" title="已结束">已结束</a>
+                </li>
+            </ul></td>
+            </tr>
+    </table><!-- 分类 -->
+	<div class="mt8 box_out"><!-- 团购列表开始 -->
+		<ul class="box_in group_list" >
+<!--
+EOT;
+foreach ($arr_group as $val){
+print <<<EOT
+-->			<li class="border"><div>
+                <a href="$val[url]" title="$val[goods_name]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[goods_file1]" width="276" height="276" /></a>
+                <p class="name">$val[addoption]<a href="$val[url]" title="$val[goods_name]" target="_blank" class="fd f15">$val[goods_name]</a></p>
+                <p class="price red"><span class="fl"><em class="price_em">$mm_price_sign</em><strong>$val[sale_price]</strong></span><a href="$val[url]" target="_blank" class="fr"></a><span class="zhekou">$val[discount]折</span><a href="$val[url]" target="_blank" class="fr goods_but but_see $val[btn_cls]"></a></p>
+                <p><span class="fl gray">市场价 <span class="mline">$val[goods_market_price]</span></span> <span class="fr"><strong class="red">$val[join_num]</strong>人团购 <strong class="red">$val[goods_hit]</strong>人关注</span></p>        
+                <span class="$val[sold_out]"></span>
+            </div></li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>
+    	<div class="page">此类共<span>$total_count</span>个活动 $page_list</div>
+	</div><!-- 团购列表结束 -->
+<!--
+EOT;
+?>-->

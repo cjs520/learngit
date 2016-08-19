@@ -1,0 +1,99 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.map_baiduv2.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("#block1").html("<div class='loading1'><div>地图数据加载中，请稍等……</div></div>");
+	$("#block1").width("1200px");
+	$("#block1").height("600px");
+	$("#block1").animate({opacity:0.6});
+	
+    var oMap=$("#full_map").MapV2($("#block1"));
+	oMap.RefreshMapData("",0);
+	
+	$("input[@rel=search]").click(function(){
+	    var v=$("input[@rel=search_txt]").val();
+	    oMap.RefreshMapData(v,0);
+	});//end click
+	
+	$("a[@rel=cat_filter]").click(function(e){
+	    e.preventDefault();
+	    $("a[@rel=cat_filter]").removeClass("hover");
+		$(this).addClass("hover");
+	    var v=$(this).attr("uid");
+		oMap.RefreshMapData("",v);
+	});//end click
+	
+	$("#one2").mouseover(function(){
+	    oMap.LoadFavorite();
+	});//end mouseover
+});
+
+$(function(){
+	$(".search_a").click(function(){
+		$(this).hide();
+		$(".map_search").hide();
+		$(".search_b").show();	
+	});
+	$(".search_b").click(function(){
+		$(this).hide();
+		$(".map_search").show();
+		$(".search_a").show();	
+	});
+});
+</script>
+    <div class="border map">
+        <ul class="pro_tag">
+            <li><a href="province.php">按地区</a></li>
+            <li class="hover"><a href="map.php">按地图</a></li>
+            <li><a href="sort.php">按分类</a></li>
+        </ul>    
+		<div class="map_cate">
+            <a href="#" uid="0" rel="cat_filter" class="hover">全部分类</a>
+<!--
+EOT;
+foreach($cat_parent as $key=>$val){
+print <<<EOT
+-->
+            <a href="#" uid="$val[uid]" rel="cat_filter">$val[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+      
+<!--
+EOT;
+foreach($sup_cat as $key=>$val){
+print <<<EOT
+--> 	    <a href="#" uid="$key" rel="cat_filter">$val[cat_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->		</div>
+		<div class="map_top_search">
+        	<span class="td1">在这里找到了<span class="fd red" rel="search_num"></span>个商家</span><input rel="search_txt" type="text" class="text" /> <input rel="search" type="button" value="" class="inp2" />
+        </div>
+        <div style="position:relative;">
+            <div id="block1"></div>  
+            <div style="width:1198px;height:520px;" id="full_map"></div>
+            <div class="map_search_div">
+                <div class="search_a"></div>
+                <div class="search_b"></div>
+                <div class="map_search">
+                    <h3>
+                        <a rel="tab_head" n="h1" class="hover">搜索结果</a>
+                        <a rel="tab_head" n="h1" id="one2">我的收藏</a>    
+                    </h3>
+                    <div rel="tab_body" n="h1" class="tab1_content" id="con_one_1">
+                        <h5>共<span class="fd orange" rel="search_num"></span>条结果</h5>
+                    </div>
+                    <div rel="tab_body" n="h1" class="tab1_content" id="con_one_2" style="display:none"></div>
+                </div>
+            </div>
+		</div>
+    </div>
+<!--
+EOT;
+?>-->

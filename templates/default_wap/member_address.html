@@ -1,0 +1,48 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){		
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "account.php?action=$action&act=del&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+	<div class="mem_right"><!-- 会员地址开始 -->
+		<div class="member_title fd red"><a rel="apply_page" apply_url="account.php?action=$action&act=add" class="span_right white mem_add">添加地址</a>我的收货地址</div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<th>我的收货地址</th>
+			</tr>
+<!--
+EOT;
+foreach ($member_address as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td>
+                	收货人：$val[consignee]<br />
+                    联系电话：$val[mobile]<br />
+                    收货地址：$val[province] $val[city] $val[county] $val[address]<br />
+                    操作：<a href="#" rel="apply_page" apply_url="account.php?action=$action&act=edit&uid=$val[uid]" class="tipsy_s modify blue" title="修改">修改</a> <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+	
+		<div class="newopen" p_url="$prev_url" style="width:300px;"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+	</div><!-- 会员地址结束 -->
+<!--
+EOT;
+?>-->

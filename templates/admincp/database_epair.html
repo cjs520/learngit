@@ -1,0 +1,53 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("input[@name=chkall]").click(function(){
+	    $("input[@name='tables[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+});
+</script>
+<div id="right">
+	<form method="post" name="myform" action="admincp.php?module=database&action=$action">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr><th colspan="3">$lang[optimi_repair]</th>
+		</tr>
+	<tr>
+<!--
+EOT;
+if(is_array($tables)){
+foreach($tables as $id => $table){
+$col++;
+print <<<EOT
+-->	
+			<td><input type="checkbox" name="tables[]" value="$table"> $table</td>
+<!--
+EOT;
+if ($col%3==0){
+print <<<EOT
+-->	
+
+		</tr>	
+		<tr>
+
+<!--
+EOT;
+}}} print <<<EOT
+-->			
+		<tr>
+			<td colspan="3" style="text-align:center;">
+			<span style="float:left;"><input type="checkbox" name="chkall" value="$chkall" />$lang[all_anti]</span>
+      		<input type="radio" name="operation" value="repair">$lang[repair_table]&nbsp;&nbsp;
+      		<input type="radio" name="operation" value="optimize" checked>$lang[optimi_table]&nbsp;&nbsp;
+	  		<input type="submit" name="dosubmit" value="确定" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

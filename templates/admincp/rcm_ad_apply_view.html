@@ -1,0 +1,67 @@
+<!--<?php
+print <<< EOT
+<!--右边开始-->
+
+<!--form content-->
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg">
+		<tr><th colspan="4">广告申请查看</th></tr>
+		<tr>
+			<td width="15%">申请人</td>
+			<td width="35%">$member[m_id]</td>
+			<td width="15%">商铺名称</td>
+			<td width="35%">$member[shop_name]</td>
+		</tr>
+		<tr>
+			<td>申请天数</td>
+			<td>$ad_apply[days]</td>
+			<td>申请时间</td>
+			<td>$ad_apply[reg_time]</td>
+		</tr>
+		<tr>
+			<td>当前状态</td>
+			<td colspan="3">$ad_apply[status]</td>
+		</tr>
+		<tr>
+			<td>相关内容</td>
+			<td colspan="3">
+<!--
+EOT;
+if($ad[ad_type]==0){
+print <<<EOT
+-->
+			广告类型：商品广告<br />
+			商品名称：$info[goods_name]<br />
+			商品价格：$info[goods_price] 元<br />
+			商品描述：$info[goods_desc]<br />
+			商品图片：<img src="$info[goods_pic]" align="absmiddle" width="50%" /><br />
+			商铺名称：$info[shop_name]<br />
+			链接地址：<a href="$info[url]" target="$info[url]">$info[url]</a>
+<!--
+EOT;
+}else if($ad[ad_type]==1){
+print <<<EOT
+-->
+			广告类型：商铺广告<br />
+			商铺名称：$info[shop_name]<br />
+			商铺LOGO：<img src="$info[shop_logo]" align="absmiddle" width="50%" /><br />
+			商铺描述：$info[shop_desc]<br />
+			链接地址：<a href="$info[url]" target="$info[url]">$info[url]</a>
+<!--
+EOT;
+}else if($ad[ad_type]==2){
+print <<<EOT
+-->
+			广告类型：其它广告<br />
+			显示标题：[$info[show_cat]]$info[title]<br />
+			链接地址：<a href="$info[url]" target="$info[url]">$info[url]</a><br />
+			相关图片：<img src="$info[pic]" align="absmiddle" width="50%" />
+<!--
+EOT;
+}print <<<EOT
+-->			</td>
+		</tr>
+	</table>
+<!-- end -->
+<!--
+EOT;
+?>-->

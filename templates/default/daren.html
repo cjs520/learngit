@@ -1,0 +1,260 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var jq_list=$("ul[@rel=share_list]");
+	var max_height=0;
+	var jq_loading=$("div[@rel=loading]:first");
+	var jq_no_data=$("div[@rel=no_data]:first");
+	var cur_page=0;
+	var total_page=-1;
+	var max_price=0;
+	var min_price=0;
+	var od="";
+	var cat_uid=0;
+	var req_url="ajax.php?action=share_list"
+	var req_lock=true;
+	var idx=0;
+	
+    $.extend({
+	    Init:function(){
+		    jq_list.empty();
+			jq_loading.show();
+			jq_no_data.hide();
+			cur_page=0;
+			idx=0;
+			
+			$.ajax({
+			    url:$.GetReqUrl("total_page",0),
+				type:"GET",
+				dataType:"json",
+				cache:false,
+				success:function(json){
+				    jq_loading.hide();
+				    total_page=parseInt(json.total_page);
+					if(isNaN(total_page)) total_page=0;
+					req_lock=false;
+					if(total_page<=0)
+					{
+					    jq_no_data.show();
+						return;
+					}
+					cur_page=1;
+					$.GetListData(cur_page);
+				}
+			});//end ajax
+			
+			$.SetEvent();
+		},
+		GetReqUrl:function(cmd,page){
+		    return req_url+"&cmd="+cmd+"&max_price="+max_price+"&min_price="+min_price+"&od="+od+"&cat_uid="+cat_uid+"&page="+page;
+		},
+		GetListData:function(page){
+		    if(page>total_page) return;
+			if(page<1) return;
+			if(req_lock) return;
+			
+			req_lock=true;
+			jq_loading.show();
+			$.ajax({
+			    url:$.GetReqUrl("list",page),
+				type:"GET",
+				dataType:"json",
+				cache:false,
+				success:function(json){
+				    for(var i in json.share)
+					{
+					    idx=idx%4;
+						var html='<li class="border daren_goods" uid="'+json["share"][i]["uid"]+'">';
+						html+='<div>';
+						html+='<p class="goods"><a href="'+json["share"][i]["url"]+'" target="_blank"><img rel="cover" src="'+json["share"][i]["cover"]+'" /></a><span>'+json["share"][i]["buy_price"]+'</span></p>';
+						html+='<ul class="h_oflow">';
+						for(var j in json["share"][i]["pics"])
+						{
+						    var cls=j==0?"hover":"";
+						    html+='<li><a href="#" rel="small_img"><img class="'+cls+'" src="'+json["share"][i]["pics"][j]+'" /></a></li>';
+						}
+						html+='</ul>';
+						html+='<p class="name"><a href="'+json["share"][i]["url"]+'" target="_blank">'+json["share"][i]["goods_name"]+'</a></p>';
+						html+='<p class="attr">属性：'+json["share"][i]["attr"]+'</p>';
+						html+='<p class="love"><span class="fl"><a rel="love" uid="'+json["share"][i]["uid"]+'" time="'+json["share"][i]["love"]+'" href="#">喜欢</a> <b>'+json["share"][i]["love"]+'</b></span><span class="fr"><a href="'+json["share"][i]["url"]+'" target="_blank">去购买</a></span></p>';
+						html+='</div>';
+						
+						html+='<div class="align">';
+						html+='<a><img src="'+json["share"][i]["member_image"]+'" /></a>';
+						html+='<a class="fd">'+json["share"][i]["member_id"]+'</a> '+json["share"][i]["comment"];
+						html+='</div>';
+						html+='</li>';
+						
+						jq_list.eq(idx).append(html);
+						$.SetListEvent(jq_list.eq(idx).children("li:last"));
+						idx++;
+					}
+					
+					max_height=jq_list.eq(0).height();
+					jq_list.each(function(i){
+					    if($(this).height()>max_height) max_height=$(this).height();
+					});//end each
+				},
+				complete:function(){
+				    req_lock=false;
+					jq_loading.hide();
+				}
+			});//end ajax
+		},
+		SetEvent:function(){
+		    $("a[@rel=price]").unbind();
+			$("a[@rel=price]").click(function(e){
+			    e.preventDefault();
+				$(this).siblings("a").removeClass("hover");
+				$(this).addClass("hover");
+				
+				min_price=$(this).attr("min_price");
+				max_price=$(this).attr("max_price");
+				$.Init();
+			});//end click
+			
+			$("a[@rel=od]").unbind();
+			$("a[@rel=od]").click(function(e){
+			    e.preventDefault();
+				$(this).siblings("a").removeClass("hover");
+				$(this).addClass("hover");
+				
+				od=$(this).attr("od");
+				$.Init();
+			});//end click
+			
+			$("a[@rel=cat]").unbind();
+			$("a[@rel=cat]").click(function(e){
+			    e.preventDefault();
+				$("a[@rel=cat]").removeClass("hover");
+				$(this).addClass("hover");
+				
+				cat_uid=$(this).attr("uid");
+				$.Init();
+			});//end click
+			
+			$(window).unbind("scroll");
+			$(window).scroll(function(){
+			    if(req_lock) return;
+				if(max_height<=0) return;
+				if(total_page<=0) return;
+				if(cur_page+1>total_page) return;
+				
+				if($(document).scrollTop()>=217+max_height-150-document.documentElement.clientHeight)
+				{
+				    cur_page++;
+					$.GetListData(cur_page);
+				}
+			});
+		},
+		SetListEvent:function(jq_li){
+		    jq_li.find("a[@rel=love]").click(function(e){
+			    e.preventDefault();
+				var jq_a=$(this);
+				var uid=$(this).attr("uid");
+				var time=parseInt($(this).attr("time"));
+				if(isNaN(time) || time<0) time=0;
+				
+				$.get(
+				    "ajax.php?action=share_list&cmd=love&uid="+uid+"&rnd="+Math.random(),
+					function(){
+					    time++;
+						jq_a.attr("time",time);
+						jq_a.siblings("b").html(time.toString());
+					}
+				);//end get
+			});//end click
+			
+			jq_li.find("a[@rel=small_img]").click(function(e){
+			    e.preventDefault();
+				$(this).parent().siblings("li").find("img").removeClass("hover");
+				var jq_img=$(this).children("img");
+				jq_img.addClass("hover");
+			    jq_li.find("img[@rel=cover]").attr("src",jq_img.attr("src"));
+			});//end hover
+		}
+	});
+	
+	$.Init();
+});
+</script>
+    <dl class="fl daren_order">
+        <dt>价格：</dt>
+        <dd>
+            <a href="#" min_price="0" max_price="0" class="hover" rel="price">全部</a>
+            <a href="#" min_price="0" max_price="100" rel="price">100元以下</a>
+            <a href="#" min_price="101" max_price="300" rel="price">101-300</a>
+            <a href="#" min_price="301" max_price="500" rel="price">301-500</a>
+			<a href="#" min_price="501" max_price="1000" rel="price">501-1000</a>
+            <a href="#" min_price="1000" max_price="0" rel="price">1000元以上</a>    
+        </dd>
+    </dl><!-- 价格 -->
+    <dl class="fr daren_order">
+        <dt>排序：</dt>
+        <dd>
+            <a href="#" class="hover" rel="od" od="new">最新</a>
+            <a href="#" rel="od" od="hot">最热</a>
+        </dd>
+    </dl><!-- 排序 -->
+    <div class="clear"></div>
+	<div class="box_out"><!-- 达人分享开始 -->
+        <ul class="daren_list">
+            <li class="border daren_sort">
+            <dl><dt><a href="daren.php" class="fd" style="color:#333;">所有分类>></a></dt></dl> 
+<!--
+EOT;
+foreach ($order_share_cat as $val){
+print <<<EOT
+-->
+                <dl>
+                    <dt><a href="#" class="fd" rel="cat" uid="$val[cat_uid]">$val[category_name]</a></dt>
+                    <dd>
+<!--
+EOT;
+foreach ($val[children] as $v){
+print <<<EOT
+-->						<a href="#" rel="cat" uid="$v[cat_uid]">$v[category_name]</a><span class="gray">|</span>
+<!--
+EOT;
+} print <<<EOT
+-->					</dd>
+                </dl>	
+<!--
+EOT;
+} print <<<EOT
+-->
+            </li><!--- 分类 --->
+            <li class="border daren_star">
+                <h3>每周达人分享之星</h3>
+<!--
+EOT;
+foreach ($share_star as $key=>$val){
+$pos=$key+1;
+print <<<EOT
+-->
+                <dl>
+                    <dt class="fl"><span>$pos</span></dt>
+                    <dd class="fl"><a href="#" rel="friend" m_uid="$val[uid]"><img src="$val[member_image]" width="64" height="64" /></a></dd>
+                    <dd class="fr"><a href="#" rel="friend" m_uid="$val[uid]" class="fd">$val[member_id]</a><span>$val[share_num]<span class="gray">个分享</span></span><a href="#" rel="friend" m_uid="$val[uid]" class="pink_but">加为好友</a></dd>
+                </dl>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </li><!--- 分享之星 --->
+        </ul>
+        <ul class="daren_list" rel="share_list"></ul>
+        <ul class="daren_list" rel="share_list"></ul>
+        <ul class="daren_list" rel="share_list"></ul>
+        <ul class="daren_list daren_list5" rel="share_list"></ul>
+		<div class="fct" rel="loading" style="display:none; clear:both;"><img src="images/noimages/star_loading.gif" /></div>
+		<div class="data_none fct" rel="no_data" style="display:none;">
+		    <a href="sort.php"><img src="images/default/data_none.jpg" alt="还没有达人分享哦，要不咱先去商城逛逛？" /></a>
+		</div>
+    </div><!-- 达人分享结束 --> 
+<!--
+EOT;
+?>-->	

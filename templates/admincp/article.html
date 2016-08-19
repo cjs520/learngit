@@ -1,0 +1,62 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除资讯？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=article_del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">$board[board_title] 文章管理</td>
+			<td class="tright"><a href="admincp.php?module=$module&action=article_add&ps_name=$board[board_name_code]" class="but1">添加文章</a></td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>文章标题</th>
+			<th>作者</th>
+			<th>点击量</th>
+			<th>发布时间</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_article as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td>$val[board_subject]</td>
+			<td>$val[author]</td>
+			<td>$val[board_hit]</td>
+			<td>$val[register_date]</td>
+			<td>
+			    <a href="admincp.php?module=$module&action=article_edit&uid=$val[uid]" class="tipsy_s modify" title="修改"></a> 
+				<a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+</div>
+<!--
+EOT;
+?>-->

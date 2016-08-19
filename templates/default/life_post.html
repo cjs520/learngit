@@ -1,0 +1,194 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var reply_lock=false;
+    $("form[@name=reply_form]").find("input[@rel=submit]").click(function(){
+	    if(reply_lock) return;
+	    if(!confirm("确认提交您的评论？")) return;
+		
+		var jq_form=$(this).parents("form:first");
+		var msg="";
+		if(jq_form.find("input[@name=title]").val()=="") msg+="请填写回复的标题\\n";
+		if(jq_form.find("textarea[@name=content]").val()=="") msg+="请填写回复的内容\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		reply_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=life_topic_reply&t_uid=$topic[uid]",
+			type:"POST",
+			dataType:"json",
+			data:jq_form.serialize(),
+			cache:false,
+			success:function(json){
+			    jq_form.find("img[@rel=code]").trigger("click");
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				alert(json.info);
+				jq_form.find("input[@type=text],textarea").val("");
+			},
+			complete:function(){
+			    reply_lock=false;
+			}
+		});//end ajax
+	});//end click
+	
+	var page=0;
+	var total_page=-1;
+	var comment_lock=false;
+	$("a[@rel=comment_page]").click(function(e){
+	    e.preventDefault();
+		if($(this).attr("page")=="next") page++;
+		else page--;
+		
+		if(page<=0)
+		{
+		    alert("当前已是第一页");
+			page=1;
+			return;
+		}
+		if(total_page>=0 && page>total_page)
+		{
+		    alert("当前已是最后一页");
+			page=total_page;
+			return;
+		}
+		
+		comment_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=life_comment_list&t_uid=$topic[uid]&page="+page,
+			type:"GET",
+			dataType:"json",
+			cache:false,
+			success:function(json){
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				
+				total_page=json.total_page;
+				var html="";
+				$.each(json.comment_list,function(i){
+				    html+='<dl class="h_oflow post_content">';
+            	    html+='<dt><img src="'+this.member_image+'" width="50" height="50" /></dt>';
+            	    html+='<dd>';
+                	html+='<p class="h_oflow mb8"><span class="fr">'+this.floor+'楼</span><span class="fr gray pad8">'+this.register_date+'</span><span class="fr">会员：'+this.member_id+'</span><span class="fd f13">标题：'+this.title+'</span></p>';
+					
+                    html+='<p></p>';
+					html+='<div>'+this.content+'</div>';
+                    html+='</dd>';
+                    html+='</dl>';
+				});//end each
+				$("div[@rel=comment_list]").empty();
+				if(html!="") $("div[@rel=comment_list]").html(html);
+			},
+			complete:function(){
+			    comment_lock=false;
+			}
+		});
+	});//end click
+	
+	$("a[@rel=comment_page][@page=next]").trigger("click");
+});
+</script>
+
+<div class="left_quan">
+	<div class="h_oflow border">
+    	<div class="location"><span class="loca_icon"></span><a href="./">首页</a> >> <a href="life.php">生活圈</a> >> <a href="life_detail.php?action=$comm[uid]">$comm[c_name]</a> >> $topic[t_name]</div>
+        <div class="posting">
+            <div class="mb10">
+                <span class="gray fr">$topic[hits]浏览/$topic[comment_num]评论</span>
+                <h3 class="f14 fd">$topic[t_name]</h3>
+                <p class="gray mt6">标签：$topic[tags]</p>
+            </div>
+            <dl class="h_oflow post_content">
+            	<dt><img src="$topic_member[member_image]" width="50" height="50" /></dt>
+            	<dd>
+                	<p class="h_oflow mb8"><span class="fr">楼主</span><span class="fr gray pad8">$topic[register_date]</span><a href="" class="blue fd">$topic_member[member_id]</a></p>
+                    <p class="h_oflow gray">圈子($topic_member[community_num])&nbsp;&nbsp;好友($topic_member[friend_num])&nbsp;&nbsp;话题($topic_member[topic_num])&nbsp;&nbsp;评论($topic_member[comment_num])</p>
+                </dd>
+            </dl>
+            <div class="post_content_zhu">$topic[content]</div>
+            <p class="coupon_page">
+                <a class="up" page="next" rel="comment_page" href="#"></a>
+                <a class="next" page="prev" rel="comment_page" href="#"></a>
+            </p>            
+            <div class="clear"></div>
+			
+			<div rel="comment_list"></div>
+        </div>   
+    </div>
+	<div class="mt10 h_oflow border">
+    	<div class="location">发表评论</div>
+		<form name="reply_form">
+        <div class="h_oflow posting">    
+			<input name="title" type="text" class="text2 text_3" value="RE:$topic[t_name]"/>     
+            <div class="clear"></div>
+        	<textarea name="content" class="textarea text_2" style="height:120px"></textarea>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+--> 
+			<div class="clear"></div>
+			验证码：<input name="code" type="text" class="text text_yzm" size="20" maxlength="8" /> 
+			<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:32px" alt="验证码" />
+<!--
+EOT;
+} print <<<EOT
+-->
+            <div class="mt10"><input rel="submit" type="button" class="fl fd f14 green_but mr5" value="发布"/></div>
+        </div>
+		</form>   
+    </div>
+</div>
+<div class="right_quan">
+	<div class="h_oflow quan_zhu">
+    	<dl class="h_oflow">
+    		<dt class="fl"><img src="$man_image" /></dt>
+    		<dd class="fr">
+            	<p>圈主：<span class="fd blue">$comm[m_id]</span></p>
+                <p><span class="fr">好友($man_friend_num)</span>圈子($man_community_num)</p>
+                <p><span class="fr">评论($man_comment_num)</span><a href="life_list.php?m_uid=$comm[m_uid]" class="blue">话题($man_topic_num)</a></p>
+                <p>
+<!--
+EOT;
+if($man_shop_url){
+print <<<EOT
+-->					<a href="$man_shop_url" target="_blank" class="blue">TA的店铺</a>
+<!--
+EOT;
+} print <<<EOT
+-->                
+				</p>
+            </dd>
+    	</dl>  
+        <p class="mt10 mb10"><a rel="friend" m_uid="$comm[m_uid]" href="#" class="f14 fn fr green_but ">加为好友</a></p>
+    </div>
+    <h3 class="mt10 titlec"><span>最新话题</span><a href="life_list.php" target="_blank" class="red">更多>></a></h3>
+    <ul class="quan_news">
+<!--
+EOT;
+foreach (get_new_topic() as $val){
+print <<<EOT
+-->
+    	<li><a href="$val[url]" target="_blank">$val[t_name]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </ul><!-- 热门话题 -->
+</div>
+<!--
+EOT;
+?>-->	

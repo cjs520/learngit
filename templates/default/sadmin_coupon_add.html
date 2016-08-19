@@ -1,0 +1,123 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("#coupon_form").submit(function(){
+	    if(!confirm("优惠券一旦发布则无法修改，确认进行优惠券发布？")) return false;
+		var msg="";
+		if($("input[@name=name]").val()=="") msg+="请填写优惠券名称\\n";
+		if($("input[@name=discount]").val()=="") msg+="请填写优惠券面额\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+});
+</script>
+    <link rel="stylesheet" type="text/css" media="all" href="images/admincp/calendar.css" />
+	<script type="text/javascript" src="include/javascript/calendar.js"></script>
+	<script language="javascript" src="language/cn/admin/lang.js"></script>
+	<script language="javascript" src="include/javascript/date.js"></script>
+	
+	<div class="mem_right">
+		<form name="coupon_form" id="coupon_form" action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+
+        <table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl fd">优惠券添加/修改</th></tr>
+			<tr>
+				<td width="18%">优惠券名称</td>
+				<td>
+				    <input type="text" name="name" value="$coupon[name]" class="text text_5" /> 
+					<input type="checkbox" name="main" value="1" checked="checked" /> 主站发布申请
+				</td>
+			</tr>
+			<tr>
+			    <td>面额</td>
+				<td><input type="text" name="discount" value="$coupon[discount]" class="text text_5" /> 元</td>
+			</tr>
+			<tr>
+			    <td>有效期</td>
+				<td>
+				    起始时间：<input type="text" class="text" name="start_date" id="start_time" value="$coupon[start_date]" onclick="return showCalendar('start_time', 'y-m-d');" /> ~ 
+					终止时间：<input type="text" class="text" name="end_date" id="end_time" value="$coupon[end_date]" onclick="return showCalendar('end_time', 'y-m-d');" />
+				</td>
+			</tr>
+			<tr>
+			    <td>分发方式</td>
+				<td>
+				    <table cellpadding="0" cellspacing="0" width="100%">
+					    <tr><td><input type="radio" name="handout_type" value="0" $handout_type_0_checked /> 免费领取</td></tr>
+						<tr>
+						    <td>
+							    <input type="radio" name="handout_type" value="1" $handout_type_1_checked /> 用积分兑换 
+						        兑换价格：<input type="text" class="text" name="change_point" value="$change_point" /> 积分
+							</td>
+						</tr>
+						<tr>
+						    <td>
+							    <input type="radio" name="handout_type" value="2" $handout_type_2_checked /> 购物返券 
+						        单笔订单满 <input type="text" class="text" name="rtn_price" value="$rtn_price" /> 元时赠送
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+			    <td>使用条件</td>
+				<td>单笔定单消费满 <input type="text" class="text" name="price_lbound" value="$coupon[price_lbound]" /> 元时使用</td>
+			</tr>
+			<tr>
+			    <td>图片上传</td>
+				<td>
+				    当前图片：<img src="$coupon[coupon_img]" /><br />
+				    图片上传：<input type="file" name="coupon_img" /> 
+				</td>
+			</tr>
+			<tr>
+			    <td>排序</td>
+				<td><input type="text" class="text" name="od" value="$coupon[od]" /> （数字越大越靠前，最大为1000）</td>
+			</tr>
+<!--
+EOT;
+if($action=='edit'){
+print <<<EOT
+-->
+			<tr>
+			    <td>当前分发数量</td>
+				<td>$coupon[member_num] 张</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+            <tr>
+			    <td>注意事项</td>
+				<td style="color:red;">优惠券发布之前请认真审核填写的信息，一旦发布，只能删除，无法进行修改。</td>
+			</tr>
+		</table>
+<!--
+EOT;
+if($action=='add'){
+print <<<EOT
+-->
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+		<p class="mem_but fcr">优惠券已发布，无法修改 <input type="button" class="no_button" value="" /></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

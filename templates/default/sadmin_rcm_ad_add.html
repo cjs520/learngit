@@ -1,0 +1,209 @@
+<!--<?php
+print <<<EOT
+-->
+<!--form content-->
+	<script type="text/javascript">
+	$(function(e){
+		$("#btn_goods_search").click(function(e){    //商品搜索
+			var goods_name=$("#search_goods").val();
+			var goods_type=$("input[@name=goods_type][@checked]").val();
+			goods_name=$.trim(goods_name);
+			if(goods_name.length<=0)
+			{
+				alert("请输入商品关键字");
+				return false;
+			}
+			goods_name=encodeURI(goods_name);
+			$.ajax({
+				type:"GET",
+				url:"sadmin.php?module=$module&action=search_goods&goods_name="+goods_name+"&goods_type="+goods_type,
+				cache:false,
+				dataType:"json",
+				success:function(json){
+							if(json)
+							{
+								if(json.error)
+								{
+									alert(json.error);
+									return false;
+								}
+								$("#search_goods_rtl").empty();
+								$("body").data("goods_json",json);
+								$("#search_goods_rtl").append("<option value='0'>----</option>");
+								for(var tmpi in json["goods_info"])
+									$("#search_goods_rtl").append("<option value='"+json["goods_info"][tmpi]["uid"]+"'>"+json["goods_info"][tmpi]["goods_name"]+"</option>");
+							}
+							else alert("查不到任何商品");
+						}
+			});
+		});//end click
+		$("#search_goods_rtl").change(function(e){
+			var json=$("body").data("goods_json");
+			var v=$(this).val();
+			if(v!="0" && json["goods_info"][v])
+			{
+				$("#goods_id").val(json["goods_info"][v]["uid"]);
+				$("#goods_name").val(json["goods_info"][v]["goods_name"]);
+			}
+		});//end change
+		$("#days").change(function(){
+		    var o=$("td[@rel=total_point]");
+			if(o.size()<=0) return;
+			
+			var p=parseInt(o.attr("point"));
+			if(isNaN(p) || p<0) p=0;
+			o.html(($(this).val()*p).toString()+"分");
+		});//end change
+		$("#days").trigger("change");
+		
+		if("$shop_file[sellshow]"=="1")
+		{
+		    $("input[@name=goods_type][@value=8]").attr("disabled",true);
+		    $("input[@name=goods_type][@value=0]").attr("checked",true);
+		}
+		else
+		{
+		    $("input[@name=goods_type]").not("input[@value=8]").attr("disabled",true);
+		    $("input[@name=goods_type][@value=8]").attr("checked",true);
+		}
+	});
+	</script>
+	
+	<form name="ad_form" action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="p_url" value="$p_url" />
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" name="uid" value="$uid" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">广告位置申请</th></tr>
+			<tr>
+				<td width="100">当前总积分</td>
+				<td class="fd f14 red"><a href="account.php?action=point" class="new_button span_right">积分购买</a>$mvm_member[member_point] 分</td>
+			</tr>
+			<tr>
+				<td>广告类型</td>
+				<td>$ad[type]</td>
+			</tr>
+<!--
+EOT;
+if($ad[ad_type]==0){
+print <<<EOT
+-->			<tr>
+				<td>广告内容</td>
+				<td><script type="text/javascript">
+					$(function(){
+						$("input[@rel=ad_submit]").click(function(e){
+							var msg="";
+							var id_pattern=/^\d+$/;
+							if(!id_pattern.test($("#goods_id").val())) msg+="请选择或手动指定一个正确的商品ID\\n";
+							if($("#goods_name").val()=="") msg+="请填写商品名称\\n";
+							if($("#goods_desc").val()=="") msg+="请填写商品描述\\n";
+							if($("#goods_url").val()=="") msg+="请填写商品网址\\n";
+							if(msg!="")
+							{
+								alert(msg);
+								return false;
+							}
+							return true;
+						});
+					});
+				</script>
+				<table cellspacing="0" class="table_list">
+					<tr>
+					    <td width="100">搜索商品：</td>
+						<td>
+						    <input type="radio" name="goods_type" value="0" /> 销售型普通商品 
+							<input type="radio" name="goods_type" value="4" /> 促销商品 
+							<input type="radio" name="goods_type" value="5" /> 团购商品 <br />
+							<input type="radio" name="goods_type" value="6" /> 积分换购商品 
+							<input type="radio" name="goods_type" value="7" /> 拍卖商品 
+							<input type="radio" name="goods_type" value="8" /> 展示型商品 <br />
+					        <input type="text" name="search_goods" id="search_goods" class="text text_3" />
+					        <input type="button" value="搜索" name="btn_goods_search" id="btn_goods_search" /> <br />
+					        <select name="search_goods_rtl" id="search_goods_rtl" style="width:288px;"></select>
+					    </td>
+					</tr>
+					<tr><td>商品ID：</td><td><input type="text" name="goods_id" id="goods_id" class="text text_3" /></td></tr>
+					<tr><td>商品名：</td><td><input type="text" name="goods_name" id="goods_name" class="text text_3" /></td></tr>
+					<tr><td>商品广告图：</td><td><input type="file" name="goods_img" size="36" class="text text_3" /></td></tr>
+					<tr><td>商品描述：</td><td><textarea name="goods_desc" id="goods_desc" class="textarea text_3" rows="2"></textarea></td></tr>
+					<tr><td>商家名称：</td><td><input type="text" name="goods_shop_name" id="goods_shop_name" value="$ad[shop_name]" class="text text_3" readonly /></td></tr>
+					<tr><td>申请积分：</td><td>$ad[price]分/天</td></tr>
+					<tr><td>申请天数：</td><td>$sel_days</td></tr>
+					<tr><td>共需要积分：</td><td rel="total_point" point="$ad[price]">$ad[price]分</td></tr>
+				</table>
+				</td>
+			</tr>
+<!--
+EOT;
+}else if($ad[ad_type]==1){
+print <<<EOT
+-->			<tr>
+				<td>广告内容</td>
+				<td><script type="text/javascript">
+					$(function(){
+						$("input[@rel=ad_submit]").click(function(e){
+							var msg="";
+							if($("#shop_name").val()=="") msg+="请填写商铺名称\\n";
+							if($("#shop_url").val()=="") msg+="请填写商铺网址\\n";
+							if($("#shop_desc").val()=="") msg+="请填写商铺推荐描述\\n";
+							if(msg!="")
+							{
+								alert(msg);
+								return false;
+							}
+							return true;
+						});
+					});
+				</script>
+				<table cellspacing="0" class="table_list">
+					<tr><td width="100">商家ID：</td><td><input type="text" class="text text_3" name="shop_id" id="shop_id" value="$ad[shop_id]" readonly /></td></tr>
+					<tr><td>商家名称：</td><td><input type="text" name="shop_name" id="shop_name" value="$ad[shop_name]" class="text text_3" /></td></tr>
+					<tr><td>推荐描述：</td><td><textarea name="shop_desc" id="shop_desc" class="textarea text_3" rows="2">$ad[shop_desc]</textarea></td></tr>
+					<tr><td>Logo：</td><td><input type="file" name="shop_logo" class="text text_3" /></td></tr>
+					<tr><td>申请积分：</td><td>$ad[price]分/天</td></tr>
+					<tr><td>申请天数：</td><td>$sel_days</td></tr>
+					<tr><td>共需要积分：</td><td rel="total_point" point="$ad[price]">$ad[price]分</td></tr>
+				</table></td>
+			</tr>
+<!--
+EOT;
+}else if($ad[ad_type]==2){
+print <<<EOT
+-->			<tr>
+				<td>广告内容</td>
+				<td><script type="text/javascript">
+					$(function(){
+						$("input[@rel=ad_submit]").click(function(e){
+							var msg="";
+							if($("#ad_title").val()=="") msg+="请填写标题\\n";
+							if($("#ad_url").val()=="") msg+="请填写广告链接\\n";
+							if($("#desc").val()=="") msg+="请填写摘要\\n";
+							if(msg!="")
+							{
+								alert(msg);
+								return false;
+							}
+							return true;
+						});
+					});
+				</script>
+				<table cellspacing="0" class="table_list">
+					<tr><td width="100">显示类别：</td><td><input type="text" name="show_cat" id="show_cat" value="" class="text text_3" /></td></tr>
+					<tr><td>广告标题：</td><td><input type="text" name="ad_title" id="ad_title" value="" class="text text_3" /></td></tr>
+					<tr><td>广告插图：</td><td><input type="file" name="ad_pic" size="36" class="text text_3" /></td></tr>
+					<tr><td>广告链接：</td><td><input type="text" name="ad_url" value="" class="text text_3" /></td></tr>
+					<tr><td>摘要：</td><td><textarea name="desc" id="desc" class="textarea text_3" rows="2"></textarea></td></tr>
+					<tr><td>申请积分：</td><td class="fd red">$ad[price]分/天</td></tr>
+					<tr><td>申请天数：</td><td>$sel_days</td></tr>
+					<tr><td>共需要积分：</td><td class="fd red" rel="total_point" point="$ad[price]">$ad[price]分</td></tr>
+				</table></td>
+			</tr>						
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

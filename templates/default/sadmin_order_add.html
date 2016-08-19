@@ -1,0 +1,136 @@
+<!--<?php
+print <<<EOT
+-->	
+<!--form content-->	
+
+	
+		<div class="member_title fd red" style="margin-bottom:0;">订单修改</div>
+		<div style="width:868px; height:475px; padding:8px 5px; overflow-y:auto; overflow-x:hidden; border:solid 1px #fc9; border-top:none;">
+		<table cellspacing="0" class="table_list fct" rel="table" style="width:850px;">
+			<tr>
+				<th class="fcl" width="30%">商品名称</th>
+				<th width="38%">属性</th>
+				<th>客户单价</th>
+				<th>销售积分</th>
+				<th>余额单价</th>
+				<th>数量</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl">$val[goods_name]</td>
+				<td>$val[goods_attr]</td>
+				<td>$val[buy_price]</td>
+				<td>$val[buy_point]积分</td>
+				<td>$val[rest_price]</td>
+				<td>$val[buy_number]</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->			<tr><td colspan="6">
+                订单总金额：$order_info[goods_amount] + 
+			    运输费：$order_info[sh_price] + 
+			    折扣金额：$order_info[discount] = 
+			    订单总金额：$order_info[order_amount] 
+				<b style="display:none;">(订单余额价格总数为：$order_info[goods_rest_amount])</b>
+			</td></tr>
+			<tr><td colspan="6" class="fcr blue">备注：商品价格中已包含属性加价  商品总数：$total_goods_num</td></tr>
+		</table>
+			
+		<form name="order" action="sadmin.php?module=$module&action=$action" method="post">
+		<input type="hidden" name="p_url" value="$p_url" />
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$order_info[uid]"/>
+		<div class="clear"></div>		
+		<table cellspacing="0" class="table_list" rel="table" style="width:850px;">
+			<tr><th colspan="4" class="fcl red">投递信息</th></tr>
+			<tr>
+				<td width="15%">发货单号</td>
+				<td width="35%">$order_info[delivery_code]</td>
+				<td width="15%">收货人姓名</td>
+				<td width="35%"><input type="text" name="order_row[consignee]" value="$order_info[consignee]" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>手机号码</td>
+				<td><input type="text" name="order_row[mobile]" value="$order_info[mobile]" size="40" class="text" /></td>
+				<td>详细地址</td>
+				<td><input type="text" name="address" id="address" value="$order_info[address]" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>配送方式</td>
+				<td rel="ship">$sel_ship</td>
+				<td>运输费</td>
+				<td><input type="text" name="order_row[sh_price]" value="$sh_price" size="40" class="text" /></td>
+			</tr>
+		</table>
+		
+		<div class="clear"></div>		
+		<table cellspacing="0" class="table_list" rel="table" style="width:850px;">
+			<tr><th colspan="4" class="fcl red">订购者信息</th></tr>
+			<tr>
+				<td width="15%">会员ID</td>
+				<td width="35%">$order_info[username]</td>
+				<td width="15%">发票票头</td>
+				<td width="35%"><input type="text" name="order_row[invoice]" id="order_row[invoice]" value="$order_info[invoice]" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>客户留言</td>
+				<td colspan="3">$order_info[remark]</td>
+			</tr>
+		</table>
+		
+		<script type="text/javascript">
+		$(function(){
+		    $("input[@rel=cal_discount]").click(function(){
+			    var discount=$("input[@rel=discount]").val();
+				var base=$("input[@rel=discount]").attr("base");
+				
+				discount=parseFloat(discount);
+				base=parseFloat(base);
+				if(isNaN(discount) || isNaN(base)) return;
+				discount*=(base/10);
+				$("input[@name='order_row[discount]']").val(discount.toString())
+			});//end click
+		});
+		</script>
+		<div class="clear"></div>		
+		<table cellspacing="0" class="table_list" rel="table" style="width:850px;">
+			<tr><th colspan="4" class="fcl red">结算信息</th></tr>
+			<tr>
+				<td width="15%">订单状态</td>
+				<td width="35%">$sel_status</td>
+				<td width="15%">总结算金额</td>
+				<td width="35%"><span id="order_amount">$order_info[order_amount]</span></td>
+			</tr>
+			<tr>
+			    <td>优惠券使用</td>
+				<td>$order_info[discount_name]</td>
+				<td>折扣金额</td>
+				<td>
+				    <input type="text" name="order_row[discount]" value="$discount" size="10" class="text" /> 
+					折扣：<input type="text" rel="discount" size="10" class="text" base="$goods_amount" /> 折
+					<input type="button" rel="cal_discount" value="计算" />
+				</td>
+			</tr>
+			<tr>
+			    <td>管理员笔记</td>
+				<td colspan="3"><textarea name="order_row[admin_memo]" class="textarea" cols="80" rows="2">$order_info[admin_memo]</textarea></td>
+			</tr>
+		</table>
+<!--
+EOT;
+if($order_info[status]==1){ print <<<EOT
+-->	
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</form>
+		</div>
+<!--
+EOT;
+?>-->

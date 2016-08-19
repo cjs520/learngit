@@ -1,0 +1,175 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">2、填写店主和商铺信息</div>
+<div class="wrapper">
+	<script type="text/javascript">
+	$(function(){
+	    $("form[@rel=shop_apply]").bind("submit",function(e){
+		    var msg="";
+			if($.trim($("#shop_name").val())=="") msg+="名不正则言不顺，给自己的商铺起个响亮的名字吧！\\n";
+			if($("#supplier_cat").val()=="0") msg+="请选择正确的商铺分类，买家可以更快速地找到你！\\n";
+			if($("#province").val()=="0" || $("#city").val()=="0" || $.trim($("#address").val())=="") msg+="请填写完整商铺地址\\n";
+			if($.trim($("#name").val())=="") msg+="请输入您的真实姓名\\n";
+			if($("select[@name='goods_cat[]']").eq(0).val()=="0") msg+="请选择您的商铺分类\\n";
+			if($.trim($("input[@name=tel]").val())=="") msg+="请输入固定电话号码\\n";
+			if(!$("#admit").attr("checked")) msg+="请详细阅读条款，并同意确认\\n";
+			if(!/^[\d\-]{7,}$/.test($("input[@name=tel]").val()))  msg+="请填写正确的联系电话\\n";
+			
+			if($("input[@name=account_type][@checked]").val()=="0")    //支付宝
+			{
+			    if($("input[@name=taobao_account]").val()=="") msg+="请填写您的提现淘宝账号\\n";
+				if($("input[@name=taobao_account]").val()!=$("input[@name=taobao_account_confirm]").val()) msg+="两次填写的淘宝账号不一致，请重新填写\\n";
+			}
+			else if($("input[@name=account_type][@checked]").val()=="1")    //银行卡
+			{
+			    if($("input[@name=bank]").val()=="") msg+="请填写您的开户行\\n";
+				if($("input[@name=bank_name]").val()=="") msg+="请填写您的开户姓名\\n";
+				if($("input[@name=bank_name]").val()!=$("input[@name=name]").val()) msg+="您的开户姓名与店主姓名不一致，请重新填写\\n";
+				if($("input[@name=bank_account]").val()=="") msg+="请填写您的银行账号\\n";
+				if($("input[@name=bank_account]").val()!=$("input[@name=bank_account_confirm]").val()) msg+="两次填写的银行账号不一致，请重新填写\\n";
+			}
+			else msg+="请选择正确的提现方式\\n";
+			
+			if(msg!="")
+			{
+			    alert(msg);
+		        return false;
+			}
+			return true;
+		});//end click
+		
+		$("form[@rel=shop_apply]").find("input[@rel=check],select[@rel=check]").blur(function(){
+		    var name=$(this).attr("name");
+			switch(name)
+			{
+			    case "name":
+				    if($(this).val().length<2) $("span[@rel="+name+"]").html("<p class='alert_error'><span class='icon_error'></span>请填写正确姓名，以便更快速地通过实名认证和商铺审核</p>");
+					else $("span[@rel="+name+"]").html("<p class='alert_success'><span class='icon_success'></span>OK</p>");
+				    break;
+			    case "shop_name":
+				    if($(this).val().length<3) $("span[@rel="+name+"]").html("<p class='alert_error'><span class='icon_error'></span>名不正则言不顺，给自己的商铺起个响亮的名字吧</p>");
+					else $("span[@rel="+name+"]").html("<p class='alert_success'><span class='icon_success'></span>OK</p>");
+				    break;
+			    case "address":
+				    if($(this).val().length<=3) $("span[@rel="+name+"]").html("<p class='alert_error'><span class='icon_error'></span>请填写详细地址</p>");
+					else $("span[@rel="+name+"]").html("<p class='alert_success'><span class='icon_success'></span>OK</p>");
+				    break;
+				case "tel":
+				    if(!/^[\d\-]{7,}$/.test($(this).val())) $("span[@rel="+name+"]").html("<p class='alert_error'><span class='icon_error'></span>请填写固定电话</p>");
+					else $("span[@rel="+name+"]").html("<p class='alert_success'><span class='icon_success'></span>OK</p>");
+				    break;
+			}
+		});//end blur
+		
+		var shop_level="$shop_level";
+		var sellshow="$sellshow";
+		shop_level=parseInt(shop_level);
+		
+		if(isNaN(shop_level) || shop_level<0 || shop_level>5) shop_level=0;
+		$("input[@name=shop_level]").val(shop_level);
+		var arr_shop_level=["普通商铺","扶植商铺","标准商铺","拓展商铺","旗舰商铺"];
+		$("td[@rel=shop_level]").html(arr_shop_level[shop_level]);
+		$("select[@name=sellshow]").val(sellshow);
+	});
+	</script>
+	<script type="text/javascript">
+	$(function(){
+	    $("tr[@rel=bank],tr[@rel=taobao]").hide();
+		if($("input[@name=account_type][@value=0]").attr("checked")) $("tr[@rel=taobao]").show();
+		else if($("input[@name=account_type][@value=1]").attr("checked")) $("tr[@rel=bank]").show();
+		
+		$("input[@name=account_type]").click(function(){
+		    $("tr[@rel=bank],tr[@rel=taobao]").hide();
+		    if($(this).val()=="0") $("tr[@rel=taobao]").show();
+			else if($(this).val()=="1") $("tr[@rel=bank]").show();
+		});//end click
+	});
+	</script>
+	<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+	
+
+
+	<div class="border shopreg h_oflow">
+		<form enctype="multipart/form-data" method="post" action="" rel="shop_apply">
+		<input type="hidden" name="shop_level" value="0" />
+		<input name="step" type="hidden" value="1" />
+        <table>
+			<tr><td class="fcr" width="100">商铺等级：</td><td rel="shop_level">普通商铺</td></tr>
+			<tr><td class="fcr"><span class="red">*</span> 店主姓名：</td><td><input name="name" rel="check" id="name" type="text" class="text" size="35" /><span rel="name"></span></td></tr>
+			<tr><td class="fcr"><span class="red">*</span> 商铺名称：</td><td><input name="shop_name" rel="check" id="shop_name"  maxlength="34" type="text" class="text" size="35"/><span rel="shop_name"></span></td></tr>
+        	<tr>
+			    <td class="fcr"><span class="red">*</span> 所属分类：</td>
+				<td>
+				<span rel="goods_category"></span>
+				<script type="text/javascript">
+				$(function(){
+				    $("span[@rel=goods_category]").GoodsCategory("");
+				});
+				</script>
+				</td>
+			</tr>
+			<tr><td class="fcr">商铺类型：</td><td>
+			    <select name="sellshow" rel="check" class="span_left">
+				    <option value="1">销售型</option>
+					<option value="2">展示型</option>
+				</select>
+				<p class="alert_warning"><span class="icon_waring"></span>请根据商品性质选择正确的类型</p>
+			</td></tr>
+			<tr><td class="fcr"><span class="red">*</span> 所在地区：</td><td><select id="province" name="province"></select>
+			<select id="city" name="city"></select>
+			<select id="county" name="county"></select>
+			<script language="javascript" src="include/javascript/jquery.city.js"></script>
+			<script type="text/javascript">
+			$(function(){
+				$.init_area(new Array("province","city","county"),new Array());
+			});
+			</script></td></tr>
+			<tr><td class="fcr"><span class="red">*</span> 街道地址：</td><td><input type="text" rel="check" name="address" id="address" size="35" class="text" /> <span rel="address"></span></td></tr>
+			<tr><td class="fcr"><span class="red">*</span> 固定电话：</td><td><input name="tel" rel="check"  maxlength="32" type="text" class="text" size="35" /> <span rel="tel"></span></td></tr>
+			<tr><td class="fcr">移动电话：</td><td><input name="tel2" rel="check"  maxlength="32" type="text" class="text" size="35" /></td></tr>
+			<tr><td class="fcr">上传证件：</td><td><input type="file" name="up_id_card" class="text" size="35" /><p class="alert_info"><span class="icon_info"></span>支持jpg/gif/png，请保证图片清晰且不超过400KB</p></td></tr>
+			<tr><td class="fcr">上传执照：</td><td><input type="file" name="up_licence" class="text" size="35" /><p class="alert_info"><span class="icon_info"></span>支持jpg/gif/png，请保证图片清晰且不超过400KB</p></td></tr>
+			<tr><th colspan="2" class="fcl fn" style="padding-top:20px;"><strong class="f14 red span_left">提现账号设置</strong><p class="alert_error"><span class="icon_error"></span>提现是指把您商城账户中的余额提取到您私人的支付宝或银行卡中，请正确设置提现账号，一旦填写，修改需联系管理员</p></th></tr>
+			<tr>
+				<td class="fcr" valign="top">提现方式：</td>
+				<td>
+					<p class="span_left"><input type="radio" name="account_type" value="0" checked /> 支付宝</p> <span class="jian"></span>
+					<p class="alert_info"><span class="icon_info"></span>管理员审核提现申请后，货款将立即分配至您的支付宝账户</p>
+					<div class="clear"></div>
+					<p class="span_left"><input type="radio" name="account_type" value="1" /> 银行卡</p>
+					<p class="alert_info" style="margin-left:26px;"><span class="icon_info"></span>需管理员手动转账，预计1-3工作日到账</p></p>
+				</td>
+			</tr>
+			<tr rel="taobao" style="display:none;">
+				<td class="fcr">支付宝账号：</td>
+				<td><input name="taobao_account" type="text" class="text" size="35" /><p class="alert_warning"><span class="icon_waring"></span>提现账户开户名应与开店人实际姓名保持一致</p></td>
+			</tr>
+			<tr rel="taobao" style="display:none;">
+				<td class="fcr">请再填写一遍：</td>
+				<td><input name="taobao_account_confirm" type="text" class="text" size="35" /></td>
+			</tr>
+			<tr rel="bank" style="display:none;">
+				<td class="fcr">开户行：</td>
+				<td><input name="bank" type="text" class="text" size="35" /><p class="alert_warning"><span class="icon_waring"></span>请填写开户银行支行完整名称</p></td>
+			</tr>
+			<tr rel="bank" style="display:none;">
+				<td class="fcr">开户名：</td>
+				<td><input name="bank_name" type="text" class="text" size="35" /><p class="alert_warning"><span class="icon_waring"></span>请填写开户姓名，并与商铺实名认证身份信息保持一致</p></td>
+			</tr>
+			<tr rel="bank" style="display:none;">
+				<td class="fcr">账号：</td>
+				<td><input name="bank_account" type="text" class="text" size="35" /></td>
+			</tr>
+			<tr rel="bank" style="display:none;">
+				<td class="fcr">请再填写一遍：</td>
+				<td><input name="bank_account_confirm" type="text" class="text" size="35" /></td>
+			</tr>
+			<tr><td></td><td><input name="admit" id="admit" checked="checked" value="1" type="checkbox" /> 我已认真阅读并完全同意<a href="$mm_url[seller_agreement]" target="_blank" class="red">商城入驻协议</a>中的所有条款</td></tr>
+			<tr><td></td><td><input type="submit" value="" class="ljkd" /></td></tr>
+		</table>
+   		</form><!-- 会员注册资料结束 -->
+	</div>
+<!--
+EOT;
+?>-->

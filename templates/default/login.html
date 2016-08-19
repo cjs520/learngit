@@ -1,0 +1,83 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+--><!-- 会员登录开始 --><!--
+EOT;
+if($mm_close==0){
+print <<<EOT
+--> <div class="login_none"><p><span>商城正在维护，请稍后再访问！</span></p></div>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if(!$m_check_id){
+print <<<EOT
+-->	<p class="fl"><img src="images/default/login.jpg" /></p>
+	<div class="fl logform">
+		<form method="post" action="logging.php?action=$action" name="mvmmall_main_login">
+        <input type="hidden" name="referer" value="$referer" />
+        <input type="hidden" name="setp" value="1" />
+        <input type="hidden" name="subrel" value="$subrel" />
+        <input type="hidden" name="login" value="login" />
+		<table>
+            <tr><th>&nbsp;</th><td><span class="fl fd f16">商城用户登陆</span><span class="fr">还不是商城用户？<a href="$mm_url[user_reg]" class="blue">免费注册</a></span></td></tr>
+			<tr><th>用户名：</th><td><input name="login_id" type="text" maxlength="30" class="text2" size="40" /></td></tr>
+			<tr><th>密　码：</th><td><input name="login_pass" type="password" maxlength="40" class="text2" size="40" /></td></tr>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+-->        	<tr>
+                <th>验证码：</th>
+				<td>
+				    <input name="code" type="text" class="text2 text_yzm" size="20" maxlength="8" /> 
+					<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:32px" alt="验证码" />
+					<span rel="code" style="display:none;">请输入验证码</span>
+				</td>
+			</tr> 
+<!--
+EOT;
+} print <<<EOT
+-->         <tr><th>&nbsp;</th><td><input type="submit" class="fl log_button" value="" /> <a href="lostpass.php?action=lostpasswd" class="blue vmid">找回ID/密码</a></td></tr>
+			<tr>
+            	<th></th>
+                <td>
+                <div class="log_other">
+                    <h3>使用合作者账号登录{$mm_mall_title}</h3>
+                    <p class="mt10 gray">
+<!--
+EOT;
+if($qq_login_url){
+print <<<EOT
+--> 
+                		<a href="$qq_login_url"><img src="images/default/qq.png" class="vmid" /> QQ登陆</a> | 
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($sina_login_url){
+print <<<EOT
+-->
+                		<a href="$sina_login_url"><img src="images/default/xl.png" class="vmid" /> 新浪</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+                    </p>
+                </div>
+                </td>
+            </tr>
+		</table>
+		</form>	
+	</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+?>-->

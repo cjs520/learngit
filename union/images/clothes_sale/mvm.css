@@ -1,0 +1,29 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+.title1 { background:url(title_bg.jpg) right; }
+.title2 { padding:4px 8px; background:url(title_bg.jpg) repeat-y; line-height:34px; }
+.title2 span { padding:0 8px; color:#fff; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; color:#fff; }
+.zn_search { padding:7px 0; color:#c7c7c7; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:0 auto; }
+.top3_bg { background:#191919; }
+.top3 { height:34px; }
+.top3 ul { float:left; width:725px; }
+.top3 li .navtab { float:left; line-height:34px; height:34px; overflow:hidden; color:#fff; margin:0 16px; }
+.top3 li .self { float:left;  background:url(nav_bg.jpg) right; padding-right:16px; font-weight:bold; }
+.top3 li .self span { display:block; background:url(nav_bg.jpg) left; line-height:34px; padding-left:16px; color:#000;  }
+.top3 li a:hover { color:#c00; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:34px; line-height:32px; padding:0 0 0 10px; background:#3d3d3d; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:7px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:0; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#cecece;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#000; }
+.top_cate dt.self { background:#e6e6e6; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#e6e6e6; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#000; }
+.sub_category a:hover { background:#cecece; color:#000; }

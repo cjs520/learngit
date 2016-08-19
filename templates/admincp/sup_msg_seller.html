@@ -1,0 +1,75 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(e){
+    $("#chkall").click(function(e){
+	    var b=$(this).attr("checked");
+		$("input[@rel=del_chk]").attr("checked",b);
+	});//end click
+	
+	$("#delall").click(function(e){
+	    return confirm("确认全部删除？");
+	});//end click
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&act=$action&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+<form action="admincp.php?module=$module" method="post">
+    <input type="hidden" name="step" value="1" />
+	<input type="hidden" name="action" value="all_delete" />
+	<input type="hidden" name="act" value="$action" />
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">商家评价</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="5%"><label for="chkall"><input type="checkbox" id="chkall" /></label></th>
+			<th>评价</th>
+			<th width="10%" >评价等级</th>
+			<th width="15%">评价人</th>
+			<th width="15%">被评价人</th>
+			<th width="10%">操作</th>
+		</tr>
+
+<!--
+EOT;
+foreach ($msg_list as $val){
+print <<<EOT
+-->
+		<tr uid="$val[uid]">
+			<td><input type="checkbox" value="$val[uid]" name="uid_check[]" rel="del_chk" /></td>
+			<td class="td1">$val[comment]</td>
+			<td>$val[level]</td>
+			<td>$val[from_id]</td>
+			<td>$val[to_id]</td>
+			<td><a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="page"><b style="float:left;"><input type="submit" id="delall" value="删除所选" class="button1" /></b><span>$page_list</span></div>
+</form>	
+	
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

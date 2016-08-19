@@ -1,0 +1,114 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除？")) return false;
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=del&uid="+uid+"&ajax=ajax&rnd="+Math.random(),
+				function(msg){
+					$("tr[@uid="+uid+"]").remove();
+					alert("删除成功");
+				}
+			);//end get
+		});//end click
+		
+		$("input[@rel=chkall]").click(function(){
+			$("input[@rel=subchk]").attr("checked",$(this).attr("checked"));
+		});//end click
+		
+		$("form[@name=link_form]").submit(function(){
+			if(!confirm("确认批量删除？")) return false;
+			return true;
+		});//end submit
+		
+		$("img[@rel=minus_plus]").click(function(){
+			var img=$(this).attr("src");
+			var jq_tr=$(this).parents("tr:first");
+			var arr_uid=[jq_tr.attr("uid")];
+			var jq_rtl=null;
+			if(img.indexOf("minus")!=-1)
+			{
+				var new_img="./images/admincp/plus.gif";
+				$(this).attr("src",new_img);
+				for(jq_rtl=jq_tr.next("tr");jq_rtl.size()>0;jq_rtl=jq_rtl.next())
+				{
+					if($.inArray(jq_rtl.attr("pid"),arr_uid)==-1) continue;
+					arr_uid[arr_uid.length]=jq_rtl.attr("uid");
+					jq_rtl.find("img[@rel=minus_plus]").attr("src",new_img);
+					jq_rtl.hide();
+				}
+			}
+			else
+			{
+				var new_img="./images/admincp/minus.gif";
+				$(this).attr("src",new_img);
+				$("tr[@pid="+arr_uid[0]+"]").show();
+			}
+		});//end click
+		
+		$("a[@rel=copy]").click(function(e){
+		    e.preventDefault();
+			var uid=$(this).attr("uid");
+			$.get(
+			    "sadmin.php?module=$module&action=copy&uid="+uid+"&rnd="+Math.random(),
+				function(msg){
+				    var msg_flag=msg.substr(0,2);
+					alert(msg)
+					if(msg_flag.toLowerCase()=="ok") window.location.reload();
+				}
+			);//end get
+		});//end click
+	});
+	</script>
+	
+	<div class="mem_right">
+		<div class="member_title fd red"><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=add" class="span_right white mem_add">添加分类</a>商品分类</div>	
+		<div class="newopen" style="width:800px;" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<form name="link_form" action="sadmin.php?module=$module" method="post">
+		<input type="hidden" name="action" value="all_delete" />	
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="8%" class="fcl gray"><input type="checkbox" rel="chkall" />&nbsp;<input type="submit" class="delete" value="" title="全部删除" /></th>
+				<th width="50%" class="fcl">分类名称</th>
+				<th>顺序</th>
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_tree as $key=>$val){
+$goods_mod=$shop_file['sellshow']==1?'goods':'showgd';
+print <<<EOT
+-->			<tr uid="$key" pid="$val[1]">
+				<td class="fcl"><input type="checkbox" name="uid_check[]" rel="subchk" value="$key" align="absmiddle" /></td>
+				<td class="fcl">
+				    <img rel="minus_plus" src="images/admincp/minus.gif" style="margin-left:$val[2]em;cursor:pointer;" /> 
+					<a href="sadmin.php?module=$goods_mod&action=list&cat_menu=$key">$val[0]</a>
+				</td>
+				<td>$val[4]</td>
+				<td><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&uid=$key" title="编辑" class="tipsy_s modify"></a>&nbsp;
+				<a href="#" rel="copy" uid="$key" title="复制" class="tipsy_s copy"></a>&nbsp;
+				<a href="#" rel="del" uid="$key" title="删除" class="tipsy_s delete"></a></td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

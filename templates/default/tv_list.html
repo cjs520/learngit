@@ -1,0 +1,66 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=cat][@cat_uid=$cat_uid]").addClass("hover");
+	$("a[@rel=time_area][@time_area=$time_area]").addClass("hover");
+});
+</script>
+	<h3 class="titleb alltv_title"><span>全部TV购</span></h3>
+	<table width="100%" border="0" class="attrs"> 
+        <tr class="attrs_cate">
+            <th>分类</th>
+            <td>
+                <a rel="cat" cat_uid="0" href="tv_list.php?time_area=$time_area">全部</a>
+<!--
+EOT;
+foreach($cat_parent as $key=>$val){
+print <<<EOT
+-->
+                <a rel="cat" cat_uid="$val[uid]" href="tv_list.php?time_area=$time_area&cat_uid=$val[uid]">$val[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </td>
+        </tr>
+        <tr class="attrs_cate">
+            <th>播放时段</th>
+            <td>
+<!--
+EOT;
+foreach($arr_video_time as $key=>$val){
+print <<<EOT
+-->
+                <a href="tv_list.php?time_area=$key&cat_uid=$cat_uid" rel="time_area" time_area="$key">$val[0]：$val[1]-$val[2]：$val[3]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </td>
+        </tr> 
+    </table><!-- 分类 -->
+	<div class="mt8 box_out"><!-- 团购列表开始 -->
+		<ul class="box_in group_list">    
+<!--
+EOT;
+foreach($arr_video as $key=>$val){
+print <<<EOT
+-->
+			<li class="border"><div>
+                <a href="$val[url]" title="$val[title]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[pic]" style="width:276px;height:207px;"/></a>
+                <p class="name mb6"><a href="$val[url]" title="$val[title]" target="_blank" class="fd f15">$val[title]</a></p>
+                <p class="fl gray">简介：$val[description]</p><a href="$val[url]" target="_blank" class="fr goods_but but_see mt2"></a></p> 
+            </div></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>
+	</div><!-- 全部TV购 -->
+	<div class="page">$page_list</div>
+<!--
+EOT;
+?>-->

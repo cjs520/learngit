@@ -1,0 +1,63 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<!--
+EOT;
+foreach ($my_comm as $val){
+print <<<EOT
+-->
+<div class="mb10 bg_gray h_oflow recom_quan1">
+    <dl>
+    	<dt><a href="$val[detail_url]" target="_blank"><img src="$val[c_logo]" class="border"/></a></dt>
+        <dd>
+        	<h4 class="h_oflow"><a href="$val[detail_url]" target="_blank" class="f14 fl">$val[c_name]</a><a href="$val[detail_url]" class="f14 fn fr green_but">进去逛逛</a></h4>
+            <p>$val[c_intro]</p>
+            <table width="100%" cellspacing="0" cellpadding="0" class="gray">
+              <tr>
+                <td>成员($val[member_num])</td>
+                <td>话题($val[topic_num])</td>
+                <td>圈主：$shop_file[m_id]</td>
+                <td class="fcr">建立时间：$val[register_date]</td>
+              </tr>
+            </table>
+<!--
+EOT;
+if($val[topic]){
+print <<<EOT
+-->
+            <p class="h_oflow"><a href="{$val[topic][topic_url]}" target="_blank" class="fl fd">{$val[topic][t_name]}</a><span class="fr gray">发布时间：{$val[topic][register_date]}</span></p>
+            <p class="align">{$val[topic][content]} ... <a href="{$val[topic][topic_url]}" target="_blank" class="blue">[全文]</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</dd>
+    </dl>
+</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+<h3 class="mt10 titlec titlec_quan"><span>热门圈子</span><a class="red p6" target="_blank" href="$main_settings[mm_mall_url]/life_all.php">更多>></a></h3>
+<div class="all_quan">
+	<ul>
+<!--
+EOT;
+foreach ($hot_community as $val){
+print <<<EOT
+-->
+		<li class="border">
+            <a href="$val[detail_url]" target="_blank"><img src="$val[c_logo]" /></a>
+            <a href="$val[detail_url]" class="f14 name">$val[c_name]</a>
+            <p><span class="fl gray">成员($val[member_num]) 话题($val[topic_num])</span><a href="$val[join_url]" target="_blank" class="fr green">申请加入</a></p>
+        </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</ul>
+</div><!-- 热门圈子 -->
+<!--
+EOT;
+?>-->	

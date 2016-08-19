@@ -1,0 +1,66 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">求购信息</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=cat][@uid=$cat_uid]").addClass("hover");
+});
+</script>
+    <div class="member_title fd red">
+        <form action="infor_buy_more.php" method="post">
+            快速查找：
+            <input type="text" name="search_txt" class="text" size="18" />
+            <input type="submit" class="sea_button" value="确定" />
+        </form>
+    </div>
+    <table width="100%" border="0" class="attrs">
+        <tr class="attr_filter">
+            <td colspan="2">
+            <ul>
+            	<li class="tag"><a href="infor_supply.php">供应信息</a><a class="f14 fd red" href="infor_buy.php">求购信息</a></li>
+            </ul></td>
+        </tr>
+        <tr class="attrs_cate">
+		    <th>行业分类</th>
+			<td><div class="toggle_div"><a href="" rel="tip_open" class="tip_open"></a>
+<!--
+EOT;
+foreach ($cat_parent as $cat_val){
+print <<<EOT
+-->				<a rel="cat" uid="$cat_val[uid]" href="infor_buy_more.php?cat_uid=$cat_val[uid]">$cat_val[category_name]</a>       
+<!--
+EOT;
+} print <<<EOT
+-->
+			</div></td>
+		</tr>
+    </table>      
+	<div class="bus_div">
+        <h3 class="titlec"><span>$title</span></h3>
+<!--
+EOT;
+foreach ($arr_info as $val){
+print <<<EOT
+-->
+        <table class="infor_list">
+          <tr>
+            <td><span class="red">[求购]</span> <a href="$val[url]">$val[goods_name]</a></td>
+          </tr>
+          <tr>
+            <td class="gray">$val[province] $val[city] $val[county] $val[register_date]</td>
+          </tr>
+          <tr>
+            <td class="col2 align">$val[intro]</td>
+          </tr>
+        </table>
+<!--
+EOT;
+} print <<<EOT
+-->
+        <div class="page">$page_list</div>
+    </div>
+<!--
+EOT;
+?>-->	

@@ -1,0 +1,54 @@
+<!--<?php
+require_once template('header');
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+	    if(!confirm("确认删除分享内容？")) return;
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "member.php?action=$action&cmd=del&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right">
+    	<div class="member_title fd red">我的分享</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th colspan="2">分享详情</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_order_share as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td class="fcl" width="80">
+				    <a href="$val[url]" target="_blank"><img src="$val[goods_file1]" width="80" height="80" class="border"/></a><br />
+                    喜欢：$val[love]
+				</td>
+				<td class="fcl">
+                	<span class="sptm"><a href="$val[url]" target="_blank">$val[goods_name]</a></span><br />
+                	价格：<span class="red">$val[buy_price]</span><br />
+                    分享内容：<span class="gray">$val[comment]</span><br />
+					<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

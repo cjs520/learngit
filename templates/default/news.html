@@ -1,0 +1,89 @@
+<!--<?php
+require_once template('header'); 
+require_once template('board_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("dl[@rel=news_block]").each(function(){
+	    var jq_a=$(this).children("dd").children("a");
+		if(jq_a.size()<=0)
+		{
+		    $(this).children("dt").remove();
+			return;
+		}
+		$(this).children("dt:first").find("a").attr("href",jq_a.eq(0).attr("href"));
+		$(this).children("dt:first").find("img").attr("src",jq_a.eq(0).attr("cover"));
+	});//end each
+});
+</script>
+	<div class="board_right">
+		<div class="h_oflow border newtop_list">
+        	<div class="fl">       
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="news" p="banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->					
+<!--
+EOT;
+foreach($AD->GetAd('banner',2) as $val){
+print <<<EOT
+-->				<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]" width="310" height="210"/></a>
+<!--
+EOT;
+} print <<<EOT
+-->			</div>
+            <div class="fr">
+				<h3>最新资讯</h3>
+				<ul>
+<!--
+EOT;
+foreach (GetBoard('',0,14,'20') as $val){
+print <<<EOT
+-->
+                    <li><span class="fr gray f11">$val[register_date]</span><a href="$val[url]" title="$val[board_subject]" target="_blank">$val[board_subject]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</ul>
+			</div>
+		</div>
+		<div class="clear"></div>
+        <div class="h_oflow border newsdown_list">
+<!--
+EOT;
+foreach ($b_cat as $key=>$val){
+print <<<EOT
+-->
+        	<div class="fl">
+                <h3><a href="$val[url]" class="fr fn gray">更多&gt;</a><a href="$val[url]" class="fl">$val[board_title]</a></h3>
+				<dl class="h_oflow" rel="news_block">
+                    <dt><a href="" target="_blank"><img src="images/noimages/loading.gif" width="100" height="130" class="border" /></a></dt>
+                    <dd>
+<!--
+EOT;
+foreach (GetBoard($key,0,6) as $k=>$v){
+print <<<EOT
+-->
+                        <a href="$v[url]" title="$v[board_subject]" cover="$v[cover]" target="_blank">$v[board_subject]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</dl>
+            </div>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</div>
+	</div><!-- 右边结束 -->
+<!--
+EOT;
+?>-->

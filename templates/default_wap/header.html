@@ -1,0 +1,52 @@
+<!--<?php print<<<EOT
+--><!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+<title>$mm_mall_title,$mm_mall_name-$mm_seotitle</title>
+<link rel="stylesheet" type="text/css" href="images/default_wap/public.css?v=$MVMMALL_WAPVERSION" />
+<link rel="stylesheet" type="text/css" href="$imgpath/mvm.css?v=$MVMMALL_WAPVERSION" />
+<script type="text/javascript" src="include/javascript/jquery.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.lazyload.js"></script>
+<script type="text/javascript" src="include/javascript/mvm.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("img[@rel=lazy]").lazyload();
+    $("html").css("fontSize",(document.documentElement.clientWidth*0.15625)+"px");
+	$(window).resize(function(){
+	     $("html").css("fontSize",(document.documentElement.clientWidth*0.15625)+"px");
+	});
+});
+</script>
+<script type="text/javascript">
+$(function(){
+	//属性的伸缩
+	$("a[@rel=tip_open]").toggle(
+		function(){//点击第一次
+			$(this).parent().css("height","auto");
+			$(this).addClass("tip_close");
+		},
+		function (){//点击第二次
+			$(this).parent().css("height","31px");
+			$(this).removeClass("tip_close");
+			$(this).addClass("tip_open");
+	    }
+	);
+});
+</script>
+
+</head>
+<body><a name="top"></a>
+	<div class="footer1">
+    	<ul class="h_oflow">
+        	<li class="fl"><a href="$mm_url[index]"><span class="home"></span>首页</a></li>
+        	<li class="fl"><a href="goodcat.php"><span class="cate" ></span>分类</a></li>
+            <li class="fl li3"><a href="$mm_url[cart]" class="cart"><span></span>购物车</a></li>
+            <li class="fr"><a href="$mm_url[my_account]"><span class="my_acc"></span>我的</a></li>
+        	<li class="fr"><a href="wap_search.php"><span class="search"></span>搜索</a></li>
+        </ul>   
+	</div><!-- 底部悬浮 -->
+<!--
+EOT;
+?>-->

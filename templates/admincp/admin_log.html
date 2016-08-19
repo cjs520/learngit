@@ -1,0 +1,54 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">后台管理日志</td>
+			<td class="tright"><strong>注：只保留一周的日志记录</strong></td>
+		</tr>
+	</table>
+	<form name="search_form" action="admincp.php?module=$module&action=$action" method="POST">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th>会员搜索</th>
+		</tr>
+		<tr>
+			<td>
+			    会员ID <input type="text" name="m_id" value="$m_id" size="20" class="text" /> 
+				<input name="member" type="submit" value="确 定" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>ID</th>
+			<th>会员ID</th>
+			<th>动作</th>
+			<th>时间</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_log as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td>$val[uid]</td>
+			<td>$val[m_id]</td>
+			<td>$val[cnt]</td>
+			<td>$val[register_date]</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+
+</div>
+<!--
+EOT;
+?>-->

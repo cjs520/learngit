@@ -1,0 +1,81 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=check]").one("click",function(e){
+	    e.preventDefault();
+		if(!confirm("确认对申请纪录进行手工审核？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=check&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">网店升级申请</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>申请会员ID</th>
+			<th>商铺</th>
+			<th>申请号</th>
+			<th>申请等级</th>
+			<th>金额</th>
+			<th>申请时间</th>
+			<th>状态</th>
+		</tr>
+
+<!--
+EOT;
+foreach ($apply_list as $val){
+print <<<EOT
+-->
+		<tr uid="$val[uid]">
+			<td>$val[member_id]</td>
+			<td><a href="$val[shop_url]" target="_blank">$val[shop_name]</a></td>
+			<td>$val[ordersn]</td>
+			<td>$val[shop_level]</td>
+			<td>$val[amount]</td>
+			<td>$val[reg_date]</td>
+			<td rel="$val[uid]">
+<!--
+EOT;
+if($val[approval_date]>20){
+print <<<EOT
+-->
+			    已审核
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+				未审核 <a href="#" rel="check" uid="$val[uid]" style="color:#f00;">（手动审核）</a>
+<!--
+EOT;
+}print <<<EOT
+-->
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

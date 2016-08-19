@@ -1,0 +1,93 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div id="right">
+	<form name="mvmmall" action="" method="post">
+	<input type="hidden" name="step" value="1"/>
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="10%">说明</th>
+<!--
+EOT;
+foreach ($main_lang[shop_level] as $key=>$val){
+print <<<EOT
+-->			<th>$val</th>
+
+<!--
+EOT;
+} print <<<EOT
+-->		</tr>
+		<tr>	
+			<td>升级费用<span class="cpsm">(元)</span></td>
+<!--
+EOT;
+foreach ($main_lang[shop_level] as $key=>$val){
+print <<<EOT
+-->
+			<td><input type="text" name="update_money[$key]"  value="{$update_money[$key]}" class="text text_6" /></td>
+<!--
+EOT;
+} print <<<EOT
+-->	
+		</tr>
+		<tr>	
+			<td>商品数量<span class="cpsm">(个)</span></td>
+<!--
+EOT;
+foreach ($main_lang[shop_level] as $key=>$val){
+print <<<EOT
+-->			<td><input type="text" name="allow_goods_items[$key]"  value="{$allow_goods_items[$key]}" class="text text_6" /></td>
+<!--
+EOT;
+} print <<<EOT
+-->		</tr>	
+		<tr>	
+			<td>商品空间<span class="cpsm">(MB)</span></td>
+<!--
+EOT;
+foreach ($main_lang[shop_level] as $key=>$val){
+$allow_upload_size[$key]=$allow_upload_size[$key]/1024/1024;
+print <<<EOT
+-->			<td><input type="text" name="allow_upload_size[$key]"  value="{$allow_upload_size[$key]}" class="text text_6" /></td>
+<!--
+EOT;
+} print <<<EOT
+-->	
+		</tr>
+		<tr>	
+			<td>页面数量<span class="cpsm">(页)</span><p class="cpsm">(各等级商铺使用page页面的数量)</p></td>
+<!--
+EOT;
+foreach ($main_lang[shop_level] as $key=>$val){
+print <<<EOT
+-->			<td><input type="text" name="allow_page_items[$key]"  value="{$allow_page_items[$key]}" class="text text_6" /></td>
+<!--
+EOT;
+} print <<<EOT
+-->	
+		</tr>
+		<tr style="display:none;">	
+			<td>使用模板<span class="cpsm">(套)</span><p class="cpsm">(正确填写模板英文名称供各等级商铺选择使用，多套模板用半角英文逗号“,”隔开)</p></td>
+<!--
+EOT;
+foreach ($main_lang[shop_level] as $key=>$val){
+$tpl_data[$key]=implode(',',$tpl_data[$key]);
+print <<<EOT
+-->			<td><textarea name="tpl_data[$key]" rows="5" class="text text_6">{$tpl_data[$key]}</textarea></td>
+<!--
+EOT;
+} print <<<EOT
+-->	
+		</tr>
+	</table>
+	
+	<div id="tfoot">
+	    <input type="submit" name="Submit" value="确 定" class="button" /> 
+		<input type="reset" name="reset" value="重 置" class="button" /> 
+	</div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

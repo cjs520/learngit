@@ -1,0 +1,176 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){    //联动部分
+    var json_data='($json_data)';
+	var json;
+	if(json_data.length>0) json=eval(json_data);
+	if(json)
+	{
+	    var tmpi;
+		$("#module").append("<option value='0'>全部</option>");
+	    for(tmpi in json)
+		{
+		    $("#module").append("<option value='"+tmpi+"'>"+tmpi+"</option>");
+		}
+	}
+	
+	$("#module").change(function(e){
+	    e.preventDefault();
+		var selv=$(this).val();
+		$("#other_param").empty();
+		$("#pos").empty();
+		if(selv=="0") return false;
+		
+		if(json[selv]['other_param'])
+		{
+		    for(var tmpi2 in json[selv]['other_param']) 
+				$("#other_param").append("<option value='"+json[selv]['other_param'][tmpi2]+"'>"+json[selv]['other_param'][tmpi2]+"</option>");
+		}
+		else $("#other_param").append("<option value='0'>无</option>");
+				
+		if(json[selv]['pos'])
+		{
+			for(var tmpi3 in json[selv]['pos']) 
+				$("#pos").append("<option value='"+json[selv]['pos'][tmpi3]+"'>"+json[selv]['pos'][tmpi3]+"</option>");
+		}
+		else $("#pos").append("<option value='0'>无</option>");
+	});
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("#chkall").click(function(){
+	    $("input[@rel=del_chk]").attr("checked",$(this).attr("checked"))
+	});
+	$("#delall").click(function(){
+	    if($("input[@rel=del_chk][@checked]").size()<=0)
+		{
+		    alert("请选择要删除的广告记录");
+			return false;
+		}
+		return true;
+	});
+});
+</script>
+<script type="text/javascript">
+//搜索记忆功能
+$(function(){
+    $("input[@name=adtype][@value=$adtype]").attr("checked",true);
+	$("input[@name=ad_option][@value=$ad_option]").attr("checked",true);
+	var ad_module="$post_module";
+	var ad_other_param="$other_param";
+	var ad_pos="$pos";
+	if(ad_module!="")
+	{
+	    $("select[@name=module]").val(ad_module);
+		$("select[@name=module]").trigger("change");
+		$("select[@name=other_param]").val(ad_other_param);
+		$("select[@name=pos]").val(ad_pos);
+	}
+});
+</script>
+<div id="right">
+	<!-- 订单详细搜索 -->		
+	<form name="search_form" action="admincp.php?module=$module&action=$action" method="post">
+	<input type="hidden" name="search" value="1"/>
+	<table class="clst" align="center" cellpadding="0" cellspacing="1" style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">广告推荐</td>
+			<td class="tright"><a href="admincp.php?module=rcm_ad&action=add" class="but1">添加推荐</a></td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list1" style="border-top:none;">
+		<tr>
+			<td width="15%">按类型</td>
+			<td width="30%">
+				<input type="radio" name="adtype" value="-1" checked />全部 
+				<input type="radio" name="adtype" value="0" />{$ad_config[ad_type][0]} 
+				<input type="radio" name="adtype" value="1" />{$ad_config[ad_type][1]} 
+				<input type="radio" name="adtype" value="2" />{$ad_config[ad_type][2]} 
+			</td>
+			<td width="15%">按位置</td>
+			<td width="30%">
+				<select name="module" id="module" style="width:100px;"></select> 
+				<select name="other_param" id="other_param" style="width:100px;"></select> 
+				<select name="pos" id="pos" style="width:100px;"></select>
+			</td>
+			<td width="10%"><input name="member" type="submit" value="搜 索" class="button" /></td>
+		</tr>
+	</table>
+	</form>
+	<form action="admincp.php?module=$module" method="post">
+    <input type="hidden" name="action" value="del" /> 
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="5%"><label for="chkall"><input type="checkbox" id="chkall" /></label></th>
+			<th width="25%">标题</th>
+			<th width="24%">广告信息</th>
+			<th>相关图片</th>
+			<th>所需积分</th>
+			<th>申请人/过期时间</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($ad_list as $val){
+print <<<EOT
+-->		
+		<tr id="r$val[uid]" uid="$val[uid]">
+			<td><input type="checkbox" value="$val[uid]" name="uid[]" rel="del_chk" /></td>
+			<td class="td1">
+			    $val[title]<br />
+<!--
+EOT;
+if($val[reg_time]!='可申请'){
+print <<<EOT
+-->
+				$val[supplier_reg_id]
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		    <td class="td1">
+			    前台显示：$val[tip]<br />
+				位置：$val[module] -> $val[other_param] -> $val[pos]<br />
+<!--
+EOT;
+if($val[wh]){
+print <<<EOT
+-->				长宽：$val[wh]
+<!--
+EOT;
+} print <<<EOT
+-->			</td>
+			<td>$val[pic]</td>
+			<td><span class="orange">$val[price] 积分/天</span></td>
+			<td>
+<!--
+EOT;
+if($val[m_id]){
+print <<<EOT
+-->				$val[m_id]<br />
+<!--
+EOT;
+} print <<<EOT
+-->	
+				$val[expire]
+			</td>
+			<td>
+			    <a href="admincp.php?module=rcm_ad&action=edit&uid=$val[uid]&page=$page&page_info=$str_info" class="tipsy_s modify" title="修改"></a> 
+				<a href="admincp.php?module=rcm_ad&action=del&uid=$val[uid]&page=$page" class="tipsy_s delete" title="删除"></a> 
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	</table>
+	<div id="page"><b style="float:left;"><input type="submit" id="delall" value="删除所选" class="button1" /></b><span>$page_list</span></div>
+	</form>	
+</div>
+<!--
+EOT;
+?>-->

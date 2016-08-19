@@ -1,0 +1,84 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" media="all" href="images/admincp/calendar.css" />
+<script type="text/javascript" src="include/javascript/calendar.js"></script>
+<script language="javascript" src="language/cn/admin/lang.js"></script>
+<script language="javascript" src="include/javascript/date.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("form[@rel=ad_form]").submit(function(){
+	     return confirm("请仔细检索所填资料，推送成功后无法修改");
+	});//end submit
+});
+</script>
+    <div class="mem_right">
+		<form rel="ad_form" action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" name="uid" value="$uid" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">添加推送视频</th></tr>
+			<tr>
+				<td width="70">视频名称</td>
+				<td><input type="text" name="title" value="$video_ad[title]" size="40" class="text2" /></td>
+			</tr>
+			<tr>
+				<td>视频封面</td>
+				<td><img src="$video_ad[pic]" /></td>
+			</tr>
+			<tr>
+				<td>视频原地址</td>
+				<td><a href="$video_ad[youku_link]" target="_blank">$video_ad[youku_link]</a></td>
+			</tr>
+			<tr>
+				<td>简要说明</td>
+				<td><textarea name="description" class="text" style="width:250px;height:60px;">$video_ad[description]</textarea></td>
+			</tr>
+			<tr>
+				<td>广告链接</td>
+				<td><input type="text" class="text" name="url" style="width:250px;" value="$video_ad[url]" /></td>
+			</tr>
+			<tr>
+			    <td>商城分类</td>
+				<td>$sel_cat</td>
+			</tr>
+			<tr>
+				<td>申请日期</td>
+				<td>
+				    起始日期：<input type="text" name="start_date" value="$video_ad[start_date]" id="start_date" class="text" onclick="return showCalendar('start_date', 'y-m-d');" /> 
+					终止日期：<input type="text" name="end_date" value="$video_ad[end_date]" id="end_date" class="text" onclick="return showCalendar('end_date', 'y-m-d');" />
+				</td>
+			</tr>
+			<tr>
+			    <td>申请时段</td>
+				<td>
+<!--
+EOT;
+foreach($arr_video_time as $key=>$val){
+$checked=$key<=0?'checked':'';
+print <<<EOT
+-->
+				<input type="radio" name="time_area" value="$key" $checked /> 时段 $val[0]:$val[1]~$val[2]:$val[3] 需要积分：<b>$val[6]</b>积分/天<br />
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+			<tr>
+				<td>封面修改</td>
+				<td><input type="file" name="pic" size="40" class="border" /></td>
+			</tr>
+			<tr>
+			    <td>注意</td>
+				<td><b class="red">您当前积分余额为$mvm_member[member_point]积分</b></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

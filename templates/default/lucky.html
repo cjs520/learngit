@@ -1,0 +1,255 @@
+<!--<?php
+require_once template('header_index'); 
+print <<<EOT
+-->	
+<style type="text/css">
+.wrapper_div { width:100%; padding-bottom:20px; background:#a51908; }
+#footer { margin-top:0; }
+</style>
+
+<script type="text/javascript">
+$(function(){	
+	$("a[@rel=close1]").click(function(e){ 
+	    e.preventDefault();
+	    var win_tip = $("div.lucky_tip");
+		$("#block").css("display","none");
+		win_tip.fadeOut(500);
+	});//end click
+});
+
+function show_lucky_result(g_uid,g_img,g_name,lucky_name,g_url,rec_uid)
+{
+    var win_tip = $("div.lucky_tip");
+	g_uid=parseInt(g_uid);
+	if(isNaN(g_uid) || g_uid<=0)
+	{    
+	    win_tip.find("img[@rel=goods_img]").attr("src","images/default/cry.jpg");
+		win_tip.find("span[@rel=goods_name]").html("很遗憾，您没有中奖");
+		win_tip.find("a[@rel=goods_url]").hide();
+		win_tip.find("table[@rel=form]").hide();
+		win_tip.find("input[@rel=lucky_submit]").unbind();
+	}
+	else
+	{
+	    win_tip.find("img[@rel=goods_img]").attr("src",g_img);
+		win_tip.find("span[@rel=goods_name]").html("恭喜，您获得"+g_name);
+		win_tip.find("a[@rel=goods_url]").show();
+		win_tip.find("a[@rel=goods_url]").attr("href",g_url);
+		win_tip.find("input[@rel=rec_uid]").val(rec_uid);
+		win_tip.find("input[@rel=lucky_submit]").click(function(){
+		    var rec_uid=win_tip.find("input[@rel=rec_uid]").val();
+			var name=win_tip.find("input[@rel=name]").val();
+			var address=win_tip.find("input[@rel=address]").val();
+			var tel=win_tip.find("input[@rel=tel]").val();
+			var memo=win_tip.find("textarea[@rel=memo]").val();
+			
+			$.post(
+			    "lucky.php?step=1&rnd="+Math.random(),
+				"rec_uid="+rec_uid+"&name="+name+"&address="+address+"&tel="+tel+"&memo="+memo,
+				function(msg){
+				    win_tip.find("input[@rel=lucky_submit]").unbind();
+				    alert(msg);
+					if(msg.indexOf("ERR")==-1) $("a[@rel=close1]").trigger("click");
+				}
+			);//end post
+		});//end click
+		win_tip.find("table[@rel=form]").show();
+		
+	}
+	
+    var itop=(document.documentElement.clientHeight-win_tip.height())/2+$(window).scrollTop();
+	var ileft=(document.documentElement.clientWidth-win_tip.width())/2+$(window).scrollLeft();
+	win_tip.css({"left":ileft+"px","top":itop+"px"});
+	$("#block").css("display","block");
+	win_tip.fadeIn(1000);
+}//end function show_lucky_result
+</script>
+
+<div class="wrapper_div">
+	<div style="position:relative;">
+<!--
+EOT;
+foreach($AD->GetAd('banner',2) as $val){
+print <<<EOT
+-->
+		<script type="text/javascript">
+            function getHeight(pic) {//宽屏图片
+                var img=new Image();
+                img.src=pic.src;
+                var Height_img=img.height;
+                document.getElementById("banner").innerHTML ="<p style=\"background:url($val[pic]) no-repeat center;\"><a href=$val[url] target=_blank style=\"height:"+Height_img+"px\"></a></p>"; 
+            }
+        </script>
+		<div id="banner" class="top1_ad"><img src="$val[pic]" onLoad="getHeight(this)" style="display:none;"/></div>      
+<!--
+EOT;
+} print <<<EOT
+--> </div><!--- 头部广告 --->
+    <div class="wrapper">
+	<div class="h_oflow lucky_draw">
+    	<div class="span_left">
+		  <object id="lucky_turnable" name="lucky_turnable" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="530" height="530">
+            <param name="movie" value="flash/turntable.swf">
+            <param name="quality" value="high">
+			<param name="wmode" value="transparent">
+			<param name="FlashVars" value="sid=$sessionID&mm_mall_url={$mm_mall_url}/">
+            <embed src="flash/turntable.swf" name="lucky_turnable" FlashVars="sid=$sessionID&mm_mall_url={$mm_mall_url}/" quality="high" wmode="transparent" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="530" height="530"></embed>
+          </object>
+		</div>
+        <div class="span_right">
+        	<div class="lucky_bg"></div>
+        	<div class="white fd lucky_time">
+                开始时间：$lucky[start_time]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                截止时间：$lucky[end_time]
+            </div>
+			<div class="lucky_list">
+			    <img src="images/default/lucky4.jpg" alt="最新中奖名单">
+				<div id="marquee6">
+					<ul>
+<!--
+EOT;
+foreach($arr_cur_rec as $val){
+print <<<EOT
+-->
+						<li>$val[m_id] 抽中 $val[goods_name]</li>
+<!--
+EOT;
+} print <<<EOT
+--> 
+					</ul>
+				</div>	
+			</div>   
+        </div>
+    </div>
+    <h3 class="lucky_title"><img src="images/default/lucky6.jpg" alt="本期奖品介绍"></h3>
+    <div class="h_oflow lucky_goods_intro">
+		<ul>
+<!--
+EOT;
+foreach($arr_rewards as $val){
+print <<<EOT
+-->     	<li>
+                <p class="goodimg"> <a rel="banner" href="$val[url]" title="$val[goods_name]" target="_blank"><img src="$val[goods_img]" alt="$ad_val[goods_name]" /></a></p>
+                <p class="name"><a href="$val[url]" title="$val[goods_name]" target="_blank" class="white">$val[goods_name]</a></p>
+                <p class="mt10 yellow fct fd f18">$val[lucky_name]</p>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->	
+		</ul>
+    </div>
+    <h3 class="lucky_title"><img src="images/default/lucky5.jpg" alt="幸运大转盘抽奖规则"></h3>
+    <div class="h_oflow lucky_rule">
+        <ul class="before_win">
+<!--
+EOT;
+foreach($arr_old_rec as $val){
+print <<<EOT
+-->
+            <li>$val[m_id] 抽中 $val[goods_name]</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>	
+    </div>
+    <h3 class="lucky_title"><img src="images/default/lucky1.jpg" alt="幸运大转盘抽奖规则"></h3>
+    <div class="lucky_rule">$lottery_rule</div>
+    
+    <div class="h_oflow topic">
+        <h3 class="fct"><img src="images/default/lucky2.jpg" alt="精选推荐"></h3>
+        <div>
+            <ul>
+<!--
+EOT;
+foreach($AD->GetAd("recom_goods",0) as $val){
+print <<<EOT
+-->     		<li>
+                	<p class="goodimg"><!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+--><a href="#" rel="ad_apply" m="lucky" p="recom_goods" op="" t="0" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+--> <a rel="banner" href="$val[goods_link]" title="$val[goods_name]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[goods_pic]" alt="$ad_val[goods_name]" style="width:207px; height:207px" /></a></p>
+                    <p class="name"><a href="$val[goods_link]" title="$val[goods_name]" target="_blank">$val[goods_name]</a></p>
+                    <p class="price"><strong class="fr f18 red">$val[goods_price]</strong></p>
+                    <p class="buy"><a href="$val[goods_link]" target="_blank" class="white">立即购买</a></p>
+				</li>
+<!--
+EOT;
+} print <<<EOT
+-->	
+            </ul>
+        </div>
+    </div>
+    <h3 class="fct mt10"><img src="images/default/lucky3.jpg" alt="品牌热卖"></h3>
+    <div class="hot_brand">
+        <ul>
+<!--
+EOT;
+foreach($AD->GetAd('hot_brand',2) as $val){
+print <<<EOT
+-->			<li>
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+--><a href="#" rel="ad_apply" m="lucky" p="hot_brand" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+--><a href="$val[url]" target="_blank" rel="banner" title="$val[title]"><img src="$val[pic]" alt="$val[title]"/></a>
+			</li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>
+    </div>
+</div>
+
+    <div class="lucky_tip">
+        <h3><span>抽奖提示</span><a href="#" rel="close1" class="close1"></a></h3>
+        <dl class="h_oflow">
+            <dt class="span_left"><img rel="goods_img" src="images/default/cry.jpg" alt=""></dt>
+            <dd class="span_right fd"> <span rel="goods_name"></span> <br><a rel="goods_url" href="#" target="_new" class="span_right blue">去看看>></a></dd>
+        </dl>
+        <div class="win_info">
+		    <input type="hidden" rel="rec_uid" value="" />
+            <table width="100%" cellpadding="5" rel="form" style="display:none;">
+              <tr>
+                <td colspan="2"><h4 class="f14">请填写下列信息，管理员将和您联系</h4></td> 
+              </tr>
+              <tr>
+                <td class="fcr" width="90">收货人姓名：</td>
+                <td><input rel="name" type="text" class="text2" /></td>
+              </tr>
+              <tr>
+                <td class="fcr">收货地址：</td>
+                <td><input rel="address" type="text" class="text2" /></td>
+              </tr>
+              <tr>
+                <td class="fcr">联系电话：</td>
+                <td><input rel="tel" type="text" class="text2" /></td>
+              </tr>
+              <tr>
+                <td class="fcr">其它备注：</td>
+                <td><textarea rel="memo" cols="" rows="" class="textarea"></textarea></td>
+              </tr>
+              <tr>
+                <td colspan="2" class="fct red">提示：请认真填写资料，提交后不可更改</td>
+              </tr>
+              <tr>
+                <td class="fcr"></td>
+                <td><input rel="lucky_submit" type="button" value="确定" /></td>
+              </tr>
+            </table>
+        </div>
+    </div><!--抽奖提示-->
+
+<!--
+EOT;
+?>-->	

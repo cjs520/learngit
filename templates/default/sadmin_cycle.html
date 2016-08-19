@@ -1,0 +1,73 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("div[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+
+	<div class="newopen" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+	<div class="mem_right">
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">Flash 轮转广告</th></tr>
+			<tr>
+				<td width="10%">编辑</td>
+				<td>
+<!--
+EOT;
+foreach ($photo as $val){
+print <<<EOT
+-->				<div uid="$val[uid]" class="fl cycle_list">
+					<p class="mb6"><a href="$val[img]" target="_blank"><img src="$val[img]" width="146" height="70" /></a></p>
+					<p>标题：<input type="text" value="$val[title]" size="15" class="text" /></p>
+					<p>链接：<input type="text" value="$val[link]" size="15" class="text" /></p>
+					<p>排序：<input type="text" value="$val[cat_tag]" size="15" class="text" /></p>
+                    <p><a href="#" rel="del" uid="$val[uid]">[删除]</a>&nbsp;&nbsp;<a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&uid=$val[uid]">[编辑]</a></p>
+				</div>
+<!--
+EOT;
+} print <<<EOT
+-->				</td>
+			</tr>
+		</table>
+		<form action="sadmin.php?module=$module&action=add" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<td width="10%">上传轮转广告</td>
+				<td>
+				    标题：<input type="text" name="title" size="15" class="text"> 
+				    链接：<input type="text" name="link" size="15" class="text"> 
+				    图片：<input type="file" name="gallery" size="15" class="text">
+					排序：<input type="text" name="cat_tag" size="15" class="text">
+				</td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form> 
+	</div>	
+<!--
+EOT;
+?>-->

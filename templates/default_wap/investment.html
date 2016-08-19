@@ -1,0 +1,175 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">1、选择商铺类型</div>
+<div class="wrapper">
+    <div class="inv_spxz">
+		<script type="text/javascript">
+		$(function(){ 
+			$("a[@rel=shop_show],p[@rel=tolink]").hover(
+				function(){
+					var shoupp = $("div[@rel=shoupp]").position();
+					var top = shoupp.top+19+"px";
+					var left = shoupp.left+110+"px";
+					$("p[@rel=tolink]").css({"left":left,"top":top});
+					$("p[@rel=tolink]").show();
+				},
+				function(){
+					$("p[@rel=tolink]").hide();
+				}
+			);
+			$("a[@rel=shop_sale],p[@rel=tolink1]").hover(
+				function(){
+					var shoupp = $("div[@rel=shoupp]").position();
+					var top = shoupp.top+19+"px";
+					var left = shoupp.left+176+"px";
+					$("p[@rel=tolink1]").css({"left":left,"top":top});
+					$("p[@rel=tolink1]").show();
+				},
+				function(){
+					$("p[@rel=tolink1]").hide();
+				}
+			);
+	
+		    $("a[@rel=apply_shop2]").click(function(e){
+		        e.preventDefault();
+				if("$m_check_id"=="")
+				{
+					window.location="logging.php?action=login";
+					return false;
+				}
+				if(parseInt("$mvm_member[isSupplier]")>=1)
+				{
+				    alert("您已经申请过商铺，无需重复申请");
+					return false;
+				}
+				if($("input[@rel=sellshow][@checked]").size()<=0)
+				{
+				    alert("请选择展示型或销售型");
+					return false;
+				}
+				
+				var n=$(this).attr("n");
+				var money=$(this).attr("money");
+				var l=$(this).attr("l");
+				
+				if(parseFloat("$mvm_member[member_money]")>=money)
+				{
+				    var sellshow=$("input[@rel=sellshow][@value=1]").attr("checked")?1:2;
+				    window.location="member.php?action=shop_apply&sellshow="+sellshow+"&shop_level="+l;
+				    return false;
+				}
+				
+				var invshop = $("div[@rel=invshop]");
+				invshop.find("span[@n=n]").html(n);
+				invshop.find("span[@money=money]").html(money);
+				invshop.find("input[@rel=pay_shop]").attr("l",l);
+				var itop=(document.documentElement.clientHeight-invshop.height())/2+$(window).scrollTop();
+				var ileft=(document.documentElement.clientWidth-invshop.width())/2+$(window).scrollLeft()-20;
+				invshop.css({"left":ileft+"px","top":itop+"px"});
+				invshop.fadeIn(1000);
+				$("#block").css("display","block");
+			});//end click
+			
+			$("span[@rel=close]").click(function(){ 
+				$("div[@rel=invshop]").fadeOut(500);
+				$("#block").css("display","none");
+			});	//end click
+		})
+		</script>
+		<script type="text/javascript">
+		$(function(){
+		    $("a[@rel=pay]").click(function(){
+			    $("input[@rel=pay_shop]").parents("p").show();
+			});//end click
+		
+		    $("input[@rel=pay_shop]").click(function(){
+				var l=$(this).attr("l");
+				var sellshow=$("input[@rel=sellshow][@value=1]").attr("checked")?1:2;
+			    window.location="member.php?action=shop_apply&sellshow="+sellshow+"&shop_level="+l;
+			});//end click
+			
+			$("input[@rel=sellshow]").click(function(){
+			    if($(this).attr("checked")) $("input[@rel=sellshow]").not(this).attr("checked",false);
+			});//end click
+		});
+		</script>
+        <div class="titleb" rel="shoupp">
+            <div class="fl"><input type="checkbox" rel="sellshow" value="2"/><a rel="shop_show" class="f13 red">展示型</a></div>
+            <div class="fl"> <input type="checkbox" rel="sellshow" value="1"/><a rel="shop_sale" class="f13 red">销售型</a></div>   
+        </div>
+        <div class="clear0"></div>
+        <ul>
+            <li>
+                <h3 class="shop_1"><span>普通商铺</span></h3>
+                <p>允许上传商品数：<span class="red">$allow_goods_items[0]</span></p>
+                <p>上传商品空间：<span class="red">$allow_upload_size[0]</span></p>
+                <p>允许页面数量：<span class="red">$allow_page_items[0]</span></p>
+                <p>升级费用：<span class="red">$update_money[0] 元</span></p>
+                <p><a href="#" rel="apply_shop2" money="$update_money[0]" n="普通商铺" l="0" class="ljkd" title="立即开店"></a></p>
+            </li>
+            <li>
+                <h3 class="shop_2"><span>扶植商铺</span></h3>
+                <p>允许上传商品数：<span class="red">$allow_goods_items[1]</span></p>
+                <p>上传商品空间：<span class="red">$allow_upload_size[1]</span></p>
+                <p>允许页面数量：<span class="red">$allow_page_items[1]</span></p>
+                <p>升级费用：<span class="red">$update_money[1] 元</span></p>
+                <p><a href="#" rel="apply_shop2" money="$update_money[1]" n="扶植商铺" l="1" class="ljkd" title="立即开店"></a></p>
+            </li>
+            <li>
+                <h3 class="shop_3"><span>标准商铺</span></h3>
+                <p>允许上传商品数：<span class="red">$allow_goods_items[2]</span></p>
+                <p>上传商品空间：<span class="red">$allow_upload_size[2]</span></p>
+                <p>允许页面数量：<span class="red">$allow_page_items[2]</span></p>
+                <p>升级费用：<span class="red">$update_money[2] 元</span></p>
+                <p><a href="#" rel="apply_shop2" money="$update_money[2]" n="标准商铺" l="2" class="ljkd" title="立即开店"></a></p>
+            </li>
+            <li>
+                <h3 class="shop_4"><span>拓展商铺</span></h3>
+                <p>允许上传商品数：<span class="red">$allow_goods_items[3]</span></p>
+                <p>上传商品空间：<span class="red">$allow_upload_size[3]</span></p>
+                <p>允许页面数量：<span class="red">$allow_page_items[3]</span></p>
+                <p>升级费用：<span class="red">$update_money[3] 元</span></p>
+                <p><a href="#" rel="apply_shop2" money="$update_money[3]" n="拓展商铺" l="3" class="ljkd" title="立即开店"></a></p>
+            </li>
+            <li>
+                <h3 class="shop_5"><span>旗舰商铺</span></h3>
+                <p>允许上传商品数：<span class="red">$allow_goods_items[4]</span></p>
+                <p>上传商品空间：<span class="red">$allow_upload_size[4]</span></p>
+                <p>允许页面数量：<span class="red">$allow_page_items[4]</span></p>
+                <p>升级费用：<span class="red">$update_money[4] 元</span></p>
+                <p><a href="#" rel="apply_shop2" money="$update_money[4]" n="旗舰商铺" l="4" class="ljkd" title="立即开店"></a></p>
+            </li> 
+        </ul>          
+    </div><!-- 商铺选择 -->  
+
+    <div class="inv_left">
+    	<div class="inv_rztj h_oflow">
+        	<h3 class="titlec"><span>入驻条件</span></h3>
+            <div>
+                <p>原则上，有良好的合作意愿，能提供优质的商品，保证合作的顺利进行（如商品变动、商品上下架、更新等能及时通知）并保证售后服务的商家都是可以入驻商铺商城的。</p>
+                <h4 class="fd f12">具备以下条作件</h4>
+                <p>① 所有商品价格均不得高于实体商铺交易价</p>
+                <p>② 保证原厂正品、合法经营</p> 
+                <p>③ 提供购买者与实体店购买同样的售后服务</p> 
+                <p>④ 配合商铺网进行促销活动，活动期内提供特价促销商品</p> 
+                <p>⑤ 可一件代发货，具有固定的物流通道</p> 
+                <p>⑥ 遵守七天无条件退换货服务</p>
+                <h4 class="fd f12">商户类型</h4>
+                <p class="mt8">展示型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销售型</p>
+                <p class="red fd">入驻热线：<span class="f14">$mm_ceo_phone $mm_client_phone3</span> <br />
+开店咨询QQ：<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$GLOBALS[mm_client_qq1]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$GLOBALS[mm_client_qq1]:52" alt="点击这里给我发消息" title="点击这里给我发消息" class="vmid"/></a>&nbsp;&nbsp;<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$GLOBALS[mm_client_qq2]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$GLOBALS[mm_client_qq2]:52" alt="点击这里给我发消息" title="点击这里给我发消息"/ class="vmid"></a></p>
+            </div>
+		</div>
+    </div><!-- 入驻条件 -->
+ 
+    <div class="invshop" rel="invshop" style="width:280px;"><span class="close" rel="close"></span>
+        <h3 class="f14">您选择的<span class="orange" n="n"></span>，需要支付<strong class="f14 orange"><span money="money"></span>元/年</strong></h3>
+        <p>您当前预付款余额：<strong class="f14 orange">$mvm_member[member_money]</strong> 元</p>
+		<p>您的预付款账户余额不足，<a href="account.php?action=money" rel="pay" class="red" target="_blank">点击此处进行充值</a></p>
+        <p class="pay_suess"><span class="red pad8"> 如果您已经充值成功，请点击</span><input type="button" rel="pay_shop" l="" value="" class="submit"/></p>
+        <p><strong class="red">友情提醒：</strong>商铺到期不续费，将自动降级至免费商铺</p>
+    </div>
+<!--
+EOT;
+?>-->

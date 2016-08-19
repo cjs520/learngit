@@ -1,0 +1,70 @@
+<!--<?php print <<<EOT
+-->
+	<script type="text/javascript">
+    $(function(){
+		//菜单权重
+		var idx=0;
+		if("$script"=="member") idx=0;
+		else if("$script"=="account") idx=2;
+		$("table[@rel=member_tab] td:eq("+idx+")").addClass("table_list_nav_hover"); 		
+		//弹出框
+        $("a[@rel=top_info_a]").click(
+            function(){
+                $("div[@rel=top_sj]").toggle();
+            }
+        );
+    });
+    </script>
+<!--
+EOT;
+if(in_array($script,array('account'))){
+print <<<EOT
+-->	<div class="top1"><a href="#" rel="top_info_a" class="fr top_cate_a">账号管理</a><a class="fl" href="$mm_url[logout]">[退出]</a></div>
+    <div rel="top_sj" class="top1_toggle">
+		<dl>
+			<dt>我的账户</dt>
+			<dd><a href="account.php?action=index">帐户概览</a></dd>
+			<dd><a href="account.php?action=address">收货地址</a></dd>
+			<dd><a href="account.php?action=point">积分明细</a></dd>
+			<dd><a href="account.php?action=money">资金明细</a></dd>
+			<dd><a href="account.php?action=profile">修改资料</a></dd>
+			<dd><a href="account.php?action=mysms">短消息</a></dd>
+		</dl>
+    </div>
+<!--
+EOT;
+}else{
+print <<<EOT
+-->	<div class="top1"><a href="#" rel="top_info_a" class="fr top_cate_a">我是买家</a><a class="fl" href="$mm_url[logout]">[退出]</a></div>
+    <div rel="top_sj" class="top1_toggle">
+		<dl>
+			<dt>我是买家</dt>
+			<dd><a href="$mm_url[cart]" target="_blank">购物车</a></dd>
+			<dd><a href="member.php?action=myfav">我的收藏</a></dd>
+			<dd><a href="member.php?action=order">我的订单</a></dd>
+			<dd><a href="member.php?action=my_back_order">退货通道</a></dd>
+			<dd><a href="member.php?action=pai">我的竞拍</a></dd>
+			<dd><a href="member.php?action=my_lucky">我的幸运抽奖</a></dd>
+			<dd><a href="member.php?action=mycoupon">我的优惠券</a></dd>
+			<dd><a href="member.php?action=scomment">评价商家</a></dd>
+            <dd><a href="member.php?action=order_share">我的分享</a></dd>
+			<dd><a href="member.php?action=user_rate&roll=1">信用管理</a></dd>
+		</dl>
+    </div>
+<!--
+EOT;
+} print <<<EOT
+-->
+<div class="wrapper">
+    <table cellspacing="0" class="table_list fct table_list_nav" rel="member_tab">
+        <tr>
+        	<td><a href="member.php?action=index">我是买家</a></td>
+            <td><a href="sadmin.php?module=index">我是商家</a></td>
+            <td><a href="account.php?action=index">账号管理</a></td>
+            <td><a href="member.php?action=want_supply">我的社交</a></td> 
+        </tr>
+    </table>
+    <div class="clear"></div>
+<!--
+EOT;
+?>-->

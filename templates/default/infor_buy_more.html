@@ -1,0 +1,161 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=cat][@uid=$cat_uid]").addClass("hover");
+});
+</script>
+
+	<div class="fl bus_tleft">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="infor_buy" p="banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->	    
+<!--
+EOT;
+foreach($AD->GetAd('banner',2,'','infor_buy') as $val){
+print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+<!--
+EOT;
+} print <<<EOT
+-->	</div><!--banner-->
+    <div class="fr bus_tright">
+    	<p><a href="member.php?action=want_supply&cmd=add" class="fl">我要供应</a><a href="member.php?action=want_buy&cmd=add" class="fr">我要求购</a></h2></p>
+        <ul>
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->			<a href="#" rel="ad_apply" m="infor_buy" p="recommend" op="" t="2" class="pu"></a>
+<!--
+EOT;
+} print <<<EOT
+--> 
+<!--
+EOT;
+foreach($AD->GetAd('recommend',2,'','infor_buy') as $val){
+print <<<EOT
+-->			<li><a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>  
+    </div><!-- 供应 求购 -->
+    <div class="clear"></div>  
+    <table width="100%" border="0" class="attrs">
+        <tr class="attr_filter">
+            <td colspan="2">
+            <ul>
+            	<li class="tag"><a href="infor_supply.php">供应信息</a><a class="f14 fd red" href="infor_buy.php">求购信息</a></li>
+                <li>
+                <form action="infor_buy_more.php" method="post">
+                    快速查找：
+                    <input type="text" name="search_txt" class="text" size="18" />
+                    <input type="submit" class="sea_button" value="确定" />
+                </form>
+                </li>
+            </ul></td>
+        </tr>
+        <tr class="attrs_cate">
+		    <th>行业分类</th>
+			<td>
+<!--
+EOT;
+foreach ($cat_parent as $cat_val){
+print <<<EOT
+-->				<a rel="cat" uid="$cat_val[uid]" href="infor_buy_more.php?cat_uid=$cat_val[uid]">$cat_val[category_name]</a>       
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+    </table>        
+    <div class="clear"></div>        
+	<div class="h_oflow border bus_div">
+        <h3 class="titlec">
+		    <span>$title</span>
+			<p>
+<!--
+EOT;
+foreach ($arr_sub_cat as $v){
+print <<<EOT
+-->
+			    <a href="infor_buy_more.php?cat_uid=$v[uid]">$v[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</p>
+		</h3>
+        <div class="fr bus_left">
+<!--
+EOT;
+foreach ($arr_info as $val){
+print <<<EOT
+-->
+            <table class="infor_list">
+              <tr>
+                <td><span class="red">[求购]</span> <a href="$val[url]" target="_blank">$val[goods_name]</a></td>
+                <td class="gray fcr"><span class="pad8">$val[province] $val[city] $val[county]</span> $val[register_date]</td>
+              </tr>
+              <tr>
+                <td class="col2" colspan="2">$val[intro]</td>
+              </tr>
+            </table>
+<!--
+EOT;
+} print <<<EOT
+-->
+            <div class="page">$page_list</div>
+		</div>
+        <div class="h_oflow fl bus_right">
+        	<ul class="bus_ad3">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="infor_buy" p="cat_ad" op="$root_parent" t="2" class="pu"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+$i=0;
+foreach($AD->GetAd('cat_ad',2,$root_parent,'infor_buy') as $val){
+if($i++>=16) break;
+print <<<EOT
+-->				<li><a href="$val[url]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[pic]" alt="$val[title]" style="height:250px;"/></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>
+            <div class="clear"></div>
+        	<ul class="infor_text">
+<!--
+EOT;
+foreach (get_infor_list($cat_uid,1,10) as $val){
+print <<<EOT
+-->
+            	<li><a href="$val[url]" title="$v[goods_name]" target="_blank">$val[goods_name]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+<!--
+EOT;
+?>-->	

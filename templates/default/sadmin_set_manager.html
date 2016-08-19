@@ -1,0 +1,93 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除指定管理员？")) return false;
+			var uid=$(this).attr("uid");
+			if(uid<=0)
+			{
+			    alert("指定管理员未设置，无法删除");
+				return;
+			}
+			$.get(
+				"sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+				function(msg){
+					alert(msg);
+					if(msg.indexOf("OK")!=-1) window.location.reload();
+				}
+			);//end get
+		});//end click
+	});
+	</script>
+	
+	<div class="newopen" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+ 
+	<div class="mem_right">
+		<div class="member_title fd red">管理授权</div>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="10%">身份</th>
+				<th width="15%">会员ID</th>
+				<th>授权</th>
+				<th width="10%">操作</th>
+			</tr>
+		    <tr>
+			    <td>大当家</td>
+				<td>$shop_file[m_id]</td>
+				<td>无限制</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+			    <td>二当家</td>
+				<td>{$arr_manager[1][m_id]}</td>
+				<td>{$arr_manager[1][rank_list]}</td>
+				<td>
+				    <a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&level=1" class="tipsy_s modify" title="编辑"></a>&nbsp;
+					<a href="#" rel="del" uid="{$arr_manager[1][uid]}" class="tipsy_s delete" title="删除"></a>
+				</td>
+			</tr>
+			<tr>
+			    <td>三当家</td>
+				<td>{$arr_manager[2][m_id]}</td>
+				<td>{$arr_manager[2][rank_list]}</td>
+				<td>
+				    <a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&level=2" class="tipsy_s modify" title="编辑"></a>&nbsp;
+					<a href="#" rel="del" uid="{$arr_manager[2][uid]}" class="tipsy_s delete" title="删除"></a>
+				</td>
+			</tr>
+			<tr>
+			    <td>四当家</td>
+				<td>{$arr_manager[3][m_id]}</td>
+				<td>{$arr_manager[3][rank_list]}</td>
+				<td>
+				    <a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&level=3" class="tipsy_s modify" title="编辑"></a>&nbsp;
+					<a href="#" rel="del" uid="{$arr_manager[3][uid]}" class="tipsy_s delete" title="删除"></a>
+				</td>
+			</tr>
+			<tr>
+			    <td>五当家</td>
+				<td>{$arr_manager[4][m_id]}</td>
+				<td>{$arr_manager[4][rank_list]}</td>
+				<td>
+				    <a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&level=4" class="tipsy_s modify" title="编辑"></a>&nbsp;
+					<a href="#" rel="del" uid="{$arr_manager[4][uid]}" class="tipsy_s delete" title="删除"></a>
+				</td>
+			</tr>
+		</table>
+	</div>	
+<!--
+EOT;
+?>-->

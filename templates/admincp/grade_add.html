@@ -1,0 +1,91 @@
+<!--<?php
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("#chkall").click(function(){
+	    $("input[@name='rank[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+	
+	$("form[@name=grade_form]").submit(function(){
+	    var msg="";
+		if($("input[@name=group_name]").val()=="") msg+="请填写等级名称\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		
+		return true;
+	});//end submit
+});
+</script>
+<!--form content-->
+	<form name="grade_form" action="admincp.php?module=$module&action=$action" method="post">
+	<input type="hidden" name="p_url" value="$p_url" />
+	<input type="hidden" name="uid" value="$group_id"/>
+	<input type="hidden" name="step" value="1"/>
+	<table cellpadding="0" cellspacing="1" class="list1" style="margin-bottom:0px; border-bottom:0px;">
+		<tr><th>添加或修改等级</th></tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg">
+		<tr>
+			<td width="17%">$lang[group_name]</td>
+			<td width="33%"><input type="text" name="group_name" value="$group_name" size="23" maxlength="20" class="text" /></td>
+			<td width="17%">$lang[degree]</td>
+			<td width="33%"><input type="text" name="degree" value="$degree" size="23" maxlength="5" class="text" /></td>
+		</tr>
+		<tr rel="grade_point">
+			<td>$lang[max_points]</td>
+			<td><input type="text" name="max_points" value="$max_points" size="23" maxlength="20" class="text" /></td>
+			<td>$lang[min_points]</td>
+			<td><input type="text" name="min_points" value="$min_points" size="23" maxlength="20" class="text" /></td>
+		</tr>	
+		<tr>
+		    <td>等级类型</td>
+		    <td>
+			    <input type="radio" name="is_admin" value="0" $is_admin_n /> 会员等级
+			    <input type="radio" name="is_admin" value="1" $is_admin_y /> 管理员等级
+			</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td valign="top">$lang[rating_list]
+			    <input type="checkbox" name="chkall" id="chkall" value="check"> $lang[selectall]
+			</td>
+			<td colspan="3">
+<!--
+EOT;
+foreach ($rank_list as $key=>$val){
+print <<<EOT
+-->
+                <dl style="clear:both; padding:5px 0; border-bottom:solid 1px #fff; height:100%; overflow:hidden;">
+				<dt style="float:left; width:80px; font-weight:bold;">$key</dt>
+				<dd style="float:right; width:560px;">
+<!--
+EOT;
+foreach ($val as $k=>$v){
+$checked=in_array($k,$rank)?'checked':'';
+print <<<EOT
+-->
+				<span style="float:left; width:110px; "><input type="checkbox" name="rank[]" value="$k" $checked /> $v</span>
+<!--
+EOT;
+} print <<<EOT
+-->
+                </dd>
+				</dl>
+<!--
+EOT;
+} print <<<EOT
+-->	
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" onclick="" /> <input type="reset" name="reset" value="重置" class="button" /></div>
+	</form>
+<!-- end -->
+<!--
+EOT;
+?>-->

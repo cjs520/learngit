@@ -1,0 +1,49 @@
+<!--<?php
+print <<< EOT
+-->
+<!--form content-->
+<form name="mvmmall" action="admincp.php?module=$module&action=$action" method="post">
+<input type="hidden" name="p_url" value="$p_url" />
+<input type="hidden" name="step" value="1" />
+<input type="hidden" name="uid" value="$uid" />
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg mb0">
+		<tr>
+			<th colspan="2">添加或修改菜单</th>
+		</tr>
+		<tr>
+			<td width="20%">上级菜单</td>
+			<td>$admin_menu</td>
+		</tr>
+		<tr>
+			<td>菜单名称</td>
+			<td><input type="text" name="menu_name" id="menu_name" value="$menu_name" size="35" maxLength="90" class="text2" rel="necessary" /><span rel="tip" style="display:none;"><p class="alert_error"><span class="icon_error"></span>请填写网址名称</p></span></td>
+		</tr>
+		<tr>
+			<td>输出顺序</td>
+			<td><input type="text" name="menu_order" id="menu_order" value="$menu_order" size="35" maxLength="10" class="text" /></td>
+		</tr>
+		<tr>
+			<td>菜单链接</td>
+			<td><input type="text" name="menu_url" id="menu_url" value="$menu_url" size="35" maxLength="255" class="text" /></td>
+		</tr>
+		<tr>
+			<td>参数module</td>
+			<td><input type="text" name="m_module" value="$m_module" size="35" class="text" /></td>
+		</tr>
+		<tr>
+			<td>参数action</td>
+			<td><input type="text" name="m_action" value="$m_action" size="35" class="text" /></td>
+		</tr>
+		<tr>
+			<td>参数type</td>
+			<td><input type="text" name="m_type" value="$m_type" size="35" class="text" /></td>
+		</tr>
+	</table>
+	<div id="tfoot">
+	  	<input type="submit" name="Submit" value="确定" class="button" onclick="" />
+	  	<input type="reset" name="reset" value="重置" class="button" />
+	</div>
+</form>
+<!--
+EOT;
+?>-->

@@ -1,0 +1,137 @@
+<!--<?php
+require_once template('header');
+require_once template('left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("li[@rel=g_grid]").hover(
+	    function(){
+		    if($(this).data("load")==1) return;
+			$(this).data("load",1);
+			var jq_this=$(this);
+			var uid=$(this).attr("uid");
+			var sellshow="$shop_file[sellshow]";
+			$.ajax({
+			    url:"ajax.php?action=get_goods_attr&sellshow="+sellshow+"&uid="+uid,
+				type:"GET",
+				dataType:"json",
+				cache:true,
+				success:function(json){
+				    if(json.err!="") return;
+					var stock=jq_this.attr("stock");
+					var html='<dl class="h_oflow">';
+					
+					for(var attr_name in json["attr_val"])
+					{
+					    html+='<dd rel="attr"><span class="fl">'+attr_name+'：</span>';
+						html+='<p>';
+					    for(var i in json["attr_val"][attr_name])
+						{
+						    var kv=attr_name+":"+json["attr_val"][attr_name][i][0];
+						    if(json["attr_val"][attr_name][i][1]!="") html+='<a href="#" kv="'+kv+'"><img src="$main_settings[mm_mall_url]/'+json["attr_val"][attr_name][i][1]+'" /></a>';
+						    else html+='<a href="#" kv="'+kv+'"><strong>'+json["attr_val"][attr_name][i][0]+'</strong></a>';
+						}
+						html+='</p>';
+						html+='</dd>';
+					}
+					
+					html+='<dd><span class="fl">库存：</span><b rel="stock">'+stock+'</b>件</dd>'
+					html+='</dl>';
+					jq_this.find("dl[@rel=loading]").replaceWith(html);
+					jq_this.data("attr_store",json["attr_store"]);
+					$.SetAttrEvent(jq_this);
+				},
+				complete:function(){
+				    var jq_loading=jq_this.find("dl[@rel=loading]");
+					if(jq_loading.size()<=0) return;
+					var stock=jq_this.attr("stock");
+					var html='<dl class="h_oflow">';
+					html+='<dd><span class="fl">库存：</span><b rel="stock">'+stock+'</b>件</dd>'
+                    html+='</dl>';
+					jq_loading.replaceWith(html)
+				}
+			});//end ajax
+		},
+		function(){}
+	);//end hover
+	
+	$.extend({
+	    SetAttrEvent:function(jq_grid){
+		   var attr_row=jq_grid.find("dd[@rel=attr]");
+		   attr_row.find("a").removeClass("hover");
+		   attr_row.find("a").attr("selected","");
+		   attr_row.find("a").unbind("click");
+		   attr_row.find("a").click(function(e){
+		       e.preventDefault();
+			   $(this).parents("dd[@rel=attr]:first").find("a").removeClass("hover");
+			   $(this).parents("dd[@rel=attr]:first").find("a").attr("selected","");
+			   
+			   $(this).addClass("hover");
+			   $(this).attr("selected","selected");
+			   
+			   var is_full=true;
+			   var arr_sel_attr=[];
+			   attr_row.each(function(i){
+			       var jq_a_sel=$(this).find("a[@selected=selected]:first");
+				   if(jq_a_sel.size()<=0)
+				   {
+				       is_full=false;
+					   return false;
+				   }
+				   arr_sel_attr.push(jq_a_sel.attr("kv"));
+			   });//end each
+			   if(!is_full) return;
+			   var arr_store=jq_grid.data("attr_store");
+			   var idx=-1;
+			   for(var i in arr_store)
+			   {
+			       var b_find=true;
+			       for(var j in arr_sel_attr)
+				   {
+				       if($.inArray(arr_sel_attr[j],arr_store[i])==-1)
+					   {
+					       b_find=false;
+						   break;
+					   }
+				   }
+				   if(b_find)
+				   {
+				       idx=i;
+					   break;
+				   }
+			   }
+			   if(idx==-1) return;
+			   var stock=arr_store[idx][arr_store[idx].length-1];
+			   jq_grid.find("b[@rel=stock]:first").html(stock);
+		   });//end click
+		}
+	});//end extend
+});
+</script>
+	<div class="right">
+		<div class="location"><p><span class="loca_icon"></span><strong>$page_title</strong>(共有 <span class="red fd">$total_count</span> 个商品)</p></div>
+		<div class="pro_list">
+			<ul>
+<!--
+EOT;
+foreach($arr_goods as $val){
+print <<<EOT
+-->
+				<li rel="g_grid" stock="$val[goods_stock]" uid="$val[uid]"><div class="border">
+                	<a href="$val[url]" target="_blank"><img src="$val[goods_file1]" /></a>
+                    <p class="name">$val[addoption]<a href="$val[url]" target="_blank">$val[goods_name]</a></p>
+                    <p><span class="span_right gray">({$val[goods_hit]}人关注)</span><span class="red">$val[goods_sale_price]</span></p>
+                    <dl rel="loading" class="h_oflow"><dt><img src="images/noimages/star_loading.gif" /></dt></dl>
+                </div></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</ul>
+			<div class="page">$lang[genus_total]<span>$total_count</span>$lang[entries]$lang[note] | $page_list</div>
+		</div>
+	</div><!-- 新品抢先结束 -->
+<!--
+EOT;
+?>-->

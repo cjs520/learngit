@@ -1,0 +1,18 @@
+<?php
+$banner_config=array(
+    'list_ggz1'=>array('desc'=>'左侧预留广告1','w'=>230,'h'=>200),
+    'list_ggz2'=>array('desc'=>'左侧预留广告2','w'=>230,'h'=>200),
+    'list_ggz3'=>array('desc'=>'左侧预留广告3','w'=>230,'h'=>200),
+    'list_ggz4'=>array('desc'=>'左侧预留广告4','w'=>230,'h'=>200),
+    'shop_banner'=>array('desc'=>'banner','w'=>1200,'h'=>160),
+	'wap_banner'=>array('desc'=>'手机轮转广告','w'=>300,'h'=>115),
+	'wap_coupon'=>array('desc'=>'手机优惠券','w'=>100,'h'=>100),
+	'wap_cate'=>array('desc'=>'手机分类图标','w'=>75,'h'=>75),
+	'wap_recom'=>array('desc'=>'手机推荐广告','w'=>150,'h'=>150),
+	'wap_floor1'=>array('desc'=>'手机楼层1广告','w'=>320,'h'=>180),
+	'wap_floor2'=>array('desc'=>'手机楼层2广告','w'=>320,'h'=>180),
+	'wap_floor3'=>array('desc'=>'手机楼层3广告','w'=>320,'h'=>180),
+	'wap_floor4'=>array('desc'=>'手机楼层4广告','w'=>320,'h'=>180),
+	'wap_floor5'=>array('desc'=>'手机楼层5广告','w'=>320,'h'=>180),
+);
+?>

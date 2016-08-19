@@ -1,0 +1,134 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+var pattern=/^\d+$/;
+$(function(){
+    $(".bd").click(function(e){    //品牌名称单元格点击的时候
+	    var jqThis=$(this);
+		if(jqThis.children("input").size()<=0)
+		{
+		    var oldv=jqThis.text();
+		    jqThis.empty();
+		    jqThis.append("<input type=\"text\" class='text' style=\"width:150px;\" value=\""+oldv+"\">");
+			jqThis.cInput=jqThis.children("input");
+			jqThis.cInput.get(0).focus();
+			jqThis.cInput.get(0).select();
+			//为这个input绑定事件
+			jqThis.cInput.one("blur",function(){
+			    var v=jqThis.cInput.val();
+				jqThis.empty();
+				jqThis.append(document.createTextNode(v));
+				if(v==oldv) return;    //前后的值相同就不会回传了
+				var id=jqThis.parent().attr("uid");
+				
+				//发送到服务器去
+				$.get("admincp.php?module=brand&action=ajax&id="+id+"&field=brandname&v="+encodeURI(v));
+			});
+		}
+	});//end bd click
+	
+	$(".od").click(function(e){    //输出顺序单元格点击的时候
+	    var jqThis=$(this);
+		if(jqThis.children("input").size()<=0)
+		{
+		    var oldv=jqThis.text();
+		    jqThis.empty();
+		    jqThis.append("<input type=\"text\" class='text' style=\"width:30px;\" value=\""+oldv+"\">");
+			jqThis.cInput=jqThis.children("input");
+			jqThis.cInput.get(0).focus();
+			jqThis.cInput.get(0).select();
+			//为这个input绑定事件
+			jqThis.cInput.one("blur",function(){
+			    var v=jqThis.cInput.val();
+				if(!pattern.test(v)) v=oldv
+				jqThis.empty();
+				jqThis.append(document.createTextNode(v));
+				if(v==oldv) return;    //前后的值相同就不会回传了
+				var id=jqThis.parent().attr("uid");
+				//发送到服务器去
+				$.get("admincp.php?module=brand&action=ajax&id="+id+"&field=train&v="+v);
+			});
+		}
+	});//end od click
+	
+	$("a[@rel=change_brand_check]").click(function(e){
+	    e.preventDefault();
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=change_brand_check&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("a[@rel=change_brand_check][@uid="+uid+"]").html(msg);
+			}
+		);
+	});//end click
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定删除指定品牌？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+});
+</script>
+
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">品牌管理</td>
+			<td class="tright"><a href="admincp.php?module=$module&action=add" class="but1">添加品牌</a></td>
+		</tr>
+	</table>
+	<form action="admincp.php?module=$module&action=$action" method="post">
+    <table width="100%">
+		<tr>
+			<td>
+                <a class="but1" href="admincp.php?module=brand&action=list">全部</a>
+                <a class="but1" href="admincp.php?module=brand&action=list&isCheck=-1">未审核品牌</a>
+                <a class="but1" href="admincp.php?module=brand&action=list&isCheck=1">已审核品牌</a>
+            </td>
+			<td class="fcr"><input type="text" name="brandname" size="20" class="text gray" value="请输入品牌名称" onfocus="if(this.value=='请输入品牌名称'){this.value=''};this.style.cssText='color:#000'" /> <input type="submit" value="搜索" class="button" /> </td>
+		</tr>
+	</table>
+	</form>
+	<table cellpadding="0" cellspacing="1" class="list mt6">
+		<tr>
+		    <th>LOGO</th>
+			<th width="14%">品牌名称</th>
+			<th width="18%">网址</th>
+			<th width="20%">品牌描述</th>
+			<th width="8%">显示顺序</th>
+			<th width="8%">验证</th>
+			<th width="8%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($brand_rt as $val){
+print <<<EOT
+-->
+		<tr uid="$val[id]">
+		    <td><img src="$val[logo]" /></td>
+			<td class="bd" style="cursor:pointer;">$val[brandname]</td>
+			<td><a href="$val[weburl]" target="_blank">$val[weburl]</a></td>
+			<td style="float:left;padding-left:5px;">$val[brief]</td>
+			<td class="od" style="cursor:pointer;">$val[train]</td>
+			<td><a rel="change_brand_check" uid="$val[id]" href="#">$val[isCheck]</a></td>
+			<td><a href="admincp.php?module=$module&action=edit&uid=$val[id]" class="tipsy_s modify" title="修改"></a> <a href="#" rel="del" uid="$val[id]" class="tipsy_s delete" title="删除"></a></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	</table>
+	<div id="page"><span>$page_list</span></div>
+
+</div>
+<!--
+EOT;
+?>-->

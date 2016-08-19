@@ -1,0 +1,60 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return false;
+		var path=$(this).attr("path");
+		var jq_a=$(this);
+		$.post(
+		    "sadmin.php?module=$module&action=del&rnd="+Math.random(),
+			"path="+path,
+			function(msg){
+			    alert("删除成功");
+				jq_a.parents("tr").remove();
+			}
+		);//end post
+	});//end click
+	
+	$("input[@rel=chk_all]").click(function(e){
+	    $("input[@type=checkbox][@name='path[]']").attr("checked",this.checked);
+	});//end click
+	
+	$("form[@name=img_form]").submit(function(){
+	    return confirm("确认删除？");
+	});//end click
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red">图片管理</div>
+		<form action="sadmin.php?module=$module&action=bat_del" method="post" name="img_form">
+		<input type="hidden" name="step" value="1" />
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+			<th width="8%" class="fcl"><input rel="chk_all" type="checkbox" />&nbsp;<input type="submit" class="delete" value="" title="全部删除" /></th>
+			<th>图片</th>
+			<th width="20%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach($imgs as $key=>$val){
+print <<<EOT
+-->			<tr>
+			    <td><input type="checkbox" name="path[]" value="$val" /></td>
+				<td><a href="$val" target="_blank"><img src="$val" width="150" /></a></td>
+			    <td><a href="#" rel="del" path="$val" class="tipsy_s delete" title="删除"></a></td>
+			</tr>				
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+        </form>
+		<div class="page">$page_list</div>
+	</div>	
+<!--
+EOT;
+?>-->

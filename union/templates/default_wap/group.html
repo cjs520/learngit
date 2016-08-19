@@ -1,0 +1,31 @@
+<!--<?php 
+require_once template('header');
+print <<<EOT
+-->
+	<div class="location"><p><span class="loca_icon"></span><strong>团购</strong>(共有 <span class="red fd">$total_count</span> 个商品)</p></div>
+    <div class="pro_list">
+        <ul>
+<!--
+EOT;
+$k=0;
+foreach($arr_group as $val){
+$class=$k++%2==0?'span_left':'span_right';
+print <<<EOT
+-->
+            <li class="$class">
+                <a href="$val[url]" target="_blank" class="goods_img"><img src="$val[goods_file1]" /></a>
+                <p class="name">$val[addoption]<a href="$val[url]" target="_blank">$val[goods_name]</a></p>
+                <p>市场价：$val[goods_market_price]</p>
+                <p>折后价：<span class="red">$val[goods_sale_price]</span></p>
+                <p><span class="red">$val[discount]</span> 折<span class="span_right gray">({$val[join_num]}人参与)</span></p>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>	
+    </div><!-- 团购商品结束 -->
+    <div class="page">$page_list</div>
+<!--
+EOT;
+?>-->

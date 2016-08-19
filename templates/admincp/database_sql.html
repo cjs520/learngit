@@ -1,0 +1,29 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">$lang[implement_sql]</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+	<form name="myform" method="post" action="?module=database&action=query&operation=sql">
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>$lang[into_sqltext]</th>
+		</tr>
+		<tr>
+			<td><textarea name="sql" id="sql" style="width:96%;" rows="16">$sql</textarea></td>
+		</tr>
+		<tr>
+			<td><input type="submit" name="dosubmit" value="$lang[perform_sql]" class="button1"></td>
+		</tr>
+	</table>	
+	</form>
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

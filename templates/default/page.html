@@ -1,0 +1,62 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=menu_head]").click(function(e){
+	        e.preventDefault();
+		    var o=$(this).parent().siblings("dd");
+		    $(this).toggleClass("show").toggleClass("hide");
+		    if(o.size()>=1)
+		    {
+		        if(o.get(0).style.display=="none") o.slideDown(300);
+			    else o.slideUp(300);
+		    }
+		});
+		
+		var jq_sel=$("a[@rel=page_link][@href*=$action]");
+		if(jq_sel.size()>0)
+		{
+		    jq_sel.addClass("hover");
+			jq_sel.parent().slideDown(300);
+		}
+		$("dl[@rel=hnav]:last").css("border","none");
+	});
+	</script>
+	<div class="board_left"><!-- 帮助中心开始 -->
+		<div class="border h_nav h_oflow">
+			<h3 class="titlea bzzx"><span>帮助中心</span></h3>
+<!--
+EOT;
+$i=1;
+foreach($nav2_help as $val){
+$style=$i++==1?'':'style="display:none;"';
+print <<<EOT
+-->			<dl rel="hnav">
+				<dt><a rel="menu_head" href="#">$val[title]</a></dt>
+            	<dd $style><!--
+EOT;
+foreach($val[child] as $child){
+print <<<EOT
+--><a href="$child[link]" rel="page_link" title="$child[alt]">$child[title]</a><!--
+EOT;
+} print <<<EOT
+--></dd>
+			</dl>
+<!--
+EOT;
+} print <<<EOT
+-->		</div>
+	</div><!-- 左边结束 -->
+	
+	<div class="span_right border board_right" style="overflow:hidden;"><!-- 页面调用开始 -->
+		<div class="location"><span class="loca_icon"></span> $navigation</div>
+		<div class="board">
+			<h3 class="board_title">$page[title]</h3>
+			<div class="board_content">$page[conter]</div>
+		</div>
+		<div class="title_b"><p></p></div>
+	</div><!-- 页面调用结束 -->
+<!--
+EOT;
+?>-->

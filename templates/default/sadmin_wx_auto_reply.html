@@ -1,0 +1,78 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定删除指定记录？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    if(msg.indexOf("OK")!=-1)
+				{
+				    $("tr[@uid="+uid+"]").find("input,textarea").val("");
+					$("tr[@uid="+uid+"]").find("img").attr("src","images/noimages/noproduct.jpg");
+				}
+				alert(msg);
+			}
+		);
+	});//end click
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red">资讯自动应答</div>
+		<form action="sadmin.php?module=$module&action=add" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="step" value="1" />
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="5%">编号</th>
+			    <th>标题</th>
+			    <th>简介</th>
+			    <th>封面</th>
+			    <th>网址</th>
+			    <th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_reply_news as $key=>$val){
+$pos=$key+1;
+print <<<EOT
+-->
+		    <tr uid="$val[uid]">
+		        <td>$pos</td>
+			    <td>
+			        <input type="hidden" name="uid[$key]" value="$val[uid]" />
+				    <input type="hidden" name="od[$key]" value="$pos" />
+				    <input type="text" class="text" name="title[$key]" value="$val[title]" />
+			    </td>
+			    <td><textarea class="text" style="width:150px;height:50px;" name="description[$key]">$val[description]</textarea></td>
+			    <td>
+			        <img src="$val[pic]" height="50" /><br />
+				    <input type="file" class="text" name="pic[$key]" width="10" />
+			    </td>
+			    <td><input type="text" class="text" name="url[$key]" value="$val[url]" size="30" /></td>
+			    <td><a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a></td>
+		    </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+            <tr>
+		        <td colspan="6" class="fcl">
+			        注意：<br />
+				    1、编号为1的资讯封面图，推荐大小360*200，其余为200*200<br />
+				    2、使用自动应答功能之前，请确认您的商铺已正确整合微信公众号<br />
+				    3、资讯网址需要填写绝对路径
+			    </td>
+		    </tr>
+		</table>
+        <p class="mem_but fcr"><input class="mem_button" type="submit" value=""></p>
+		</form>
+	</div>	
+<!--
+EOT;
+?>-->

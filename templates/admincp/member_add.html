@@ -1,0 +1,118 @@
+<!--<?php
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("form[@rel=mvm_member]").submit(function(){
+	    var msg="";
+		if($("input[@name=login_id]").val()=="") msg+="请填写用户ID\\n";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+});
+</script>
+<!--form content-->
+	<form rel="mvm_member" action="admincp.php?module=$module&action=$action" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="action" value="$action" id="action"/>
+	<input type="hidden" name="uid" value="$uid"/>
+	<input type="hidden" name="p_url" value="$p_url" />
+	<input type="hidden" name="step" value="1"/>
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg mb0">
+		<tr><th colspan="4">$lang[add_member]</th></tr>
+		<tr>
+			<td width="15%">会员ID</td>
+			<td width="35%">$member_id</td>
+			<td width="15%">会员姓名</td>
+			<td width="35%"><input type="text" name="name" id="name" maxlength="20" class="text text_3" value="$member_name" /></td>
+		</tr>
+		
+		<tr>
+			<td>登录密码</td>
+			<td>
+				<input type="text" name="pass" maxlength="20" class="text text_3" />
+				<p class="alert_warning2 text_33"><span class="icon_waring"></span>不填写则原密码保留</p>
+
+			</td>
+			<td>支付密码</td>
+			<td>
+			    <input type="password" name="pay_pass" maxlength="20" class="text text_3" />
+				<p class="alert_warning2 text_33"><span class="icon_waring"></span>不填写则原密码保留</p>
+			</td>
+		</tr>
+		<tr>
+			<td>生日</td>
+			<td>
+			    <input type="text" name="birth_yy" style="width:64px;" maxlength="4" class="text" value="$birth_yy" /> 年
+			    <input type="text" name="birth_mm" style="width:44px;" maxlength="2" class="text" value="$birth_mm" /> 月 
+				<input type="text" name="birth_dd" style="width:44px;" maxlength="2" class="text" value="$birth_dd" /> 日
+			</td>
+			<td>性别</td>
+			<td><input type="radio" name="sex" value="1" $member_sex_y /> 先生 <input type="radio" name="sex" value="0" $member_sex_n/> 女士</td>
+		</tr>
+		<tr>
+			<td>固话</td>
+			<td><input type="text" name="tel1" maxlength="20" class="text text_3" value="$member_tel1" /></td>
+			<td>手机</td>
+			<td><input type="text" name="tel2" maxlength="20" class="text text_3"  value="$member_tel2" /></td>
+		</tr>
+		<tr>
+			<td>所在区域</td>
+			<td>
+			<select id="province" name="province"></select>
+			<select id="city" name="city"></select>
+			<select id="county" name="county"></select>
+			<script type="text/javascript">
+			$(function(){
+			    $.init_area(new Array("province","city","county"),new Array("$province","$city","$county"));
+			});
+			</script></td>
+			<td>街道地址</td>
+			<td><input type="text" name="address1" class="text text_3" value="$member_address" /></td>
+		</tr>
+		<tr>
+			<td>邮编</td>
+			<td><input type="text" name="zip1" class="text text_3" value="$member_zip" /></td>
+		    <td>淘宝旺旺</td>
+			<td><input type="text" name="taobao" class="text text_3" value="$taobao" /></td>
+		</tr>
+		<tr>
+			<td>qq</td>
+			<td><input type="text" name="qq" id="qq" maxlength="12" class="text text_3" value="$qq" /></td>
+			<td>会员等级</td>
+			<td>$grade_select</td>
+		</tr>	
+		<tr>
+			<td>积分</td>
+			<td>
+			当前积分: <span style="color:#f00;">$member_point</span><br />
+			+/- 积分: <input type="text" name="new_point" class="text" style="width:143px;" />
+			<p class="alert_info2 text_33"><span class="icon_info"></span>填负数可扣除会员积分</p>
+			</td>
+			<td>预付款</td>
+			<td>
+			当前预付款: <span style="color:#f00;">$member_money</span><br />
+			+/- 预付款: <input type="text" name="new_money" class="text" style="width:131px;" />
+			<p class="alert_info2 text_33"><span class="icon_info"></span>填负数可扣除会员预付款</p>
+			<p>冻结金额：$member_money_freeze 元</p>
+			</td>
+		</tr>
+		<tr>
+			<td>会员头像</td>
+			<td>
+			    当前头像：<img src="$member_image" width="79" /><br />
+			    <input type="file" name="member_file" class="text text_3" value="$member_file" />
+			</td>
+			<td>EMAIL</td>
+		    <td><input type="text" name="email" class="text text_3" value="$member_email" /></td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="资料提交" class="button" /> <input type="reset" name="reset" value="重 置" class="button" /></div>
+	</form>
+<!--
+EOT;
+?>-->

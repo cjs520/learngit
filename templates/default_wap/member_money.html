@@ -1,0 +1,105 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+	    $("input[@rel=money_submit]").click(function(e){
+		    var msg="";
+			if($("input[@name=pay_id][@checked]").size()<=0) msg+="请选择付款方式\\n";
+			var money=parseFloat($("#pay_money").val());
+			if(isNaN(money)) msg+="请填写正确的金额\\n";
+			if(!isNaN(money) && money<=0) msg+="填写的金额要大于0\\n";
+			if(msg!="")
+			{
+			    alert(msg);
+				return false;
+			}
+			return true;
+		});//end click
+		
+		$("a[@rel=money_cz]").click(function(e){
+			e.preventDefault();
+			var o = $("div[@rel=money_cz]");
+			var itop=(document.documentElement.clientHeight-o.height())/2+$(document).scrollTop();
+			var ileft=(document.documentElement.clientWidth-o.width())/2+$(document).scrollLeft()-20;
+			o.css({"position":"absolute","left":ileft+"px","top":itop+"px"});
+			$("#block").css("display","block");
+			o.fadeIn(1000);
+		});//end click
+		
+		$("span[@rel=close]").click(function(){ 
+			$("#block").css("display","none");
+			$("div[@rel=money_cz]").fadeOut(500);
+		});//end click
+		
+		$("input[@name=pay_id]:first").attr("checked",true);
+	});
+	</script>
+	<div class="mem_right"><!-- 会员支付款开始 -->
+		<div class="member_title fd red">资金明细 <span class="fn gray">MY MONEY</span></div>
+		<p class="f14">
+		    账户余额：<span class="fd f16 orange">$money_left_total</span> &nbsp; 
+			可用余额：<span class="fd f16 orange">$money_left</span> 
+            <a href="#" class="new_button blue f14 fd" rel="money_cz">充值</a>
+		</p>
+        <div class="newopen" style="width:250px;" rel="money_cz">
+		    <span class="close" rel="close"></span>
+            <form action="account.php?action=pay" method="post" name="pay_money">
+            <input name="step" type="hidden" value="1" />
+            <table cellspacing="0" class="table_list">
+                <tr>
+                    <th class="fcl red" colspan="2">预存款充值</th>
+                </tr>
+                <tr>
+                    <td width="70">充值方式</td>
+                    <td>
+<!--
+EOT;
+foreach ($payment as $val){
+print <<<EOT
+-->					<input type="radio" name="pay_id" value="$val[id]"> $val[name] &nbsp;
+<!--
+EOT;
+} print <<<EOT
+-->					</td>
+                </tr>
+                <tr>
+                    <td>充值金额</td>
+                    <td><input name="pay_money" type="text" id="pay_money" size="30" class="text" maxlength="15" /></td>
+                </tr>
+            </table>
+            <p class="mem_but fcr"><input type="submit" name="Submit" rel="money_submit" value="" class="mem_button" /></p>
+            </form>           
+        </div><!-- 支付结束 -->
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list " rel="table">
+			<tr>
+				<th colspan="2">资金明细</th>
+			</tr>
+<!--
+EOT;
+foreach ($money_log as $val){
+print <<<EOT
+-->			<tr $val[css]>
+				<td>
+                	类型：$val[type]<br />
+                    时间：$val[reg_time]<br />
+                    状态：$val[status]<br />
+                    可用余额：$val[money_left]
+                </td>
+				<td>
+                	类别：<a href="#" class="tipsy_w" title="$val[other_info]">$val[money_reason]</a><br />
+                    单号：$val[money_sess]<br />
+                    收支：$val[add] <span class="orange">$val[minus]</span>
+                </td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员预付款结束 -->
+<!--
+EOT;
+?>-->

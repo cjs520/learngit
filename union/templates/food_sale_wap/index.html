@@ -1,0 +1,161 @@
+<!--<?php
+require_once template('header');
+print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.flashv3.js"></script>
+<script language="javascript">
+$(function(){
+	var length=$("div[@rel=frame] p a").length;
+	if(length==0){
+		$(".tel_flash_div").addClass("tel_flash_div_no"); 
+	};
+	$("div[@rel=frame]").flashv3("$pics","$urls","$titles",735,"3.833rem",30,2);//手机轮转 
+});
+</script>
+	<div class="tel_flash_div">
+		<a rel="banner"><div class="tel_flash" rel="frame"></div></a>
+	</div><!-- 手机轮转 -->
+    <div class="h_oflow nav_index">
+        <ul>
+            <li class="li1"><a href="#down"><span></span>本店搜</a></li>
+            <li class="li2"><a href="goods.php?action=new"><span></span>新品</a></li>
+            <li class="li3"><a href="group.php?action=list"><span></span>团购</a></li>
+            <li class="li4"><a href="wap_info.php"><span></span>店铺信息</a></li>
+        </ul>
+    </div><!-- 首页导航 -->
+    <ul class="recom_ad"> 
+<!--
+EOT;
+for($j=1;$j<=2;$j++){
+$banner=banner("wap_recom",$j,-1,-1);
+print <<<EOT
+-->		<li class="fr">$banner</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </ul>
+    <div class="recom_ad"> 
+<!--
+EOT;
+$banner=banner("wap_recom",3,-1,-1);
+print <<<EOT
+-->		<p class="mb6">$banner</p>
+<!--
+EOT;
+print <<<EOT
+-->
+    </div>
+    <ul class="h_oflow recom_ad3">
+<!--
+EOT;
+$banner=banner("wap_recom",4,-1,-1);
+print <<<EOT
+-->		<li class="fr">$banner</li> 
+<!--
+EOT;
+print <<<EOT
+-->      
+<!--
+EOT;
+for($j=5;$j<=6;$j++){
+$banner=banner("wap_recom",$j,-1,-1);
+print <<<EOT
+-->		<li class="fl">$banner</li> 
+<!--
+EOT;
+} print <<<EOT
+-->  
+ 
+ 
+	</ul>
+    <ul class="h_oflow recom_ad2">    
+<!--
+EOT;
+$k=0;
+for($j=7;$j<=9;$j++){
+$banner=banner("wap_recom",$j,-1,-1);
+print <<<EOT
+-->		<li class="fl">$banner</li> 
+<!--
+EOT;
+} print <<<EOT
+-->
+	</ul><!-- 手机推荐广告 -->
+<!--
+EOT;
+$i=0;
+foreach ($cat_parent as $val){
+if($i++>5) break;
+print <<<EOT
+-->
+<div class="mt6 bg_white">
+    <ul class="h_oflow ad_list">
+<!--
+EOT;
+for($j=1;$j<=4;$j++){
+$banner=banner("wap_floor$i",$j,-1,-1);
+print <<<EOT
+-->		<li>$banner</li> 
+<!--
+EOT;
+} print <<<EOT
+-->     
+    </ul><!-- 楼层广告 -->
+	<div class="h_oflow pro_list1"><!-- 商品列表开始 -->
+		<ul>
+<!--
+EOT;
+$k=0;
+foreach (GetGoodsByCat($val[uid]) as $v){
+$class=$k++%2==0?'span_left':'span_right';
+print <<<EOT
+-->
+            <li class="$class">
+				<a href="$v[url]" class="goods_img"><img src="$v[goods_file1]" alt="$v[goods_name]" /></a>
+                <p class="name">$v[addoption]<a href="$v[url]" title="$v[goods_name]">$v[goods_name]</a></p>
+                <p><span class="span_right gray">($v[goods_hit]人关注)</span><span class="red">$v[goods_sale_price]</span></p> 
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>
+	</div><!-- 商品列表结束 -->
+</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+    <div class="mt10 recom_ad"> 
+<!--
+EOT;
+for($j=1;$j<=6;$j++){
+$banner=banner("wap_recom2",$j,-1,-1);
+print <<<EOT
+-->		<p class="mb6">$banner</p>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </div><!-- 手机推荐广告2 -->
+    <div class="clear6"></div>
+    <div class="zn_search">
+        <form method="post" action="search.php?supid=$page_member_id" name="search" class="border">
+            <input type="text" name="ps_search" class="s_inp" style="color:#000;" value="$ps_search" /> 
+            <input type="submit" value="" class="s_but" /> 
+        </form> 
+    </div><!-- 搜索框 -->
+<!--
+EOT;
+if($mm_wx_res_img && file_exists($mm_wx_res_img) && $is_wx){
+print <<<EOT
+-->
+    <img style="width:100%" src="$mm_wx_res_img" alt="关注我">
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+?>-->	

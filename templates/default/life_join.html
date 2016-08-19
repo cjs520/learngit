@@ -1,0 +1,138 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var join_lock=false;
+    $("input[@rel=join_submit]").click(function(){
+	    if(join_lock) return;
+	    var jq_form=$(this).parents("form:first");
+		var msg="";
+		if(!jq_form.find("input[@name=agree]").attr("checked")) msg+="请认真阅读并同意《圈子指导原则》\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		join_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=join_community&uid=$comm[uid]",
+			type:"POST",
+			dataType:"json",
+			data:jq_form.serialize(),
+			cache:false,
+			success:function(json){
+			    $("img[@rel=code]").trigger("click");
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				alert(json.info);
+				jq_form.find("input[@type=text],textarea").val("");
+				window.location="life_detail.php?action=$comm[uid]";
+			},
+			complete:function(){
+			    join_lock=false;
+			}
+		});
+	});//end click
+});
+</script>
+<div class="left_quan">
+	<div class="h_oflow border">
+    	<div class="lifexx_left fl">
+			<img src="$comm[c_logo]" class="fl" width="350" height="250" /> 
+		</div>
+        <div class="lifexx_right fr">
+			<h4 class="h_oflow"><a href="life_detail.php?action=$comm[uid]" class="f14 fl lifexx_title">$comm[c_name]</a></h4> 
+            <p class="mt10 gray"><span class="fr">建立日期：$comm[register_date]</span>成员：{$member_num}&nbsp;&nbsp;&nbsp;&nbsp;话题：{$topic_num}&nbsp;&nbsp;&nbsp;&nbsp;评论：{$comment_num}</p>
+			<div class="clear6"></div>
+            <p class="mb6"><strong>圈子分类：</strong>$comm[c_cat]</p>
+            <p class="mb6"><strong>圈子标签：</strong>$comm[c_tag]</p>
+            <p class="mb6"><strong>共同爱好：</strong>$comm[c_hobby]</p>
+            <p class="mb6"><strong>圈子宣言：</strong>$comm[c_proclaim]</p>
+            <div class="lifexx_jx"><strong>圈子简介：</strong>$comm[c_intro]</div>  
+        </div>
+    </div>
+    <div class="clear"></div>  
+	<form name="join_form">
+    <table cellspacing="0" class="table_list">
+        <tr>
+            <th class="fcl red" colspan="2"><span class="fd">申请加入 <span class="f14 blue">$comm[c_name]</span> 圈子</span> <span class="gray">（填写越完整越容易通过圈主审核哦！）</span></th>
+        </tr>
+        <tr>
+            <td>加入理由</td>
+            <td><textarea name="join_reason" cols="" rows="5" class="textarea"></textarea></td>
+        </tr>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+-->   
+					<tr>
+					    <td>验证码</td>
+						<td>
+						    <input name="code" type="text" class="text2 text_yzm" size="20" maxlength="8" /> 
+							<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:24px; margin-left:8px;" alt="验证码" />
+						</td>
+					</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+        <tr>
+            <td></td>
+            <td>
+                <input name="agree" type="checkbox" value="1" class="vmid" /> 我已认真阅读并同意<a href="page.php?action=quanzi" target="_blank" class="blue">《圈子指导原则》</a>
+            </td>
+        </tr>
+         <tr>
+            <td></td>
+            <td><input class="button3" type="button" rel="join_submit" value=""></td>
+        </tr>
+    </table>
+	</form>
+</div>
+<div class="right_quan">
+	<div class="h_oflow quan_zhu">
+    	<dl class="h_oflow">
+    		<dt class="fl"><img src="$man_image" /></dt>
+    		<dd class="fr">
+            	<p>圈主：<span class="fd blue">$comm[m_id]</span></p>
+                <p><span class="fr">好友($man_friend_num)</span>圈子($man_community_num)</p>
+                <p><span class="fr">评论($man_comment_num)</span><a href="life_list.php?m_uid=$comm[m_uid]" class="blue">话题($man_topic_num)</a></p>
+                <p>
+<!--
+EOT;
+if($man_shop_url){
+print <<<EOT
+-->					<a href="$man_shop_url" target="_blank" class="blue">TA的店铺</a>
+<!--
+EOT;
+} print <<<EOT
+-->                
+				</p>
+            </dd>
+    	</dl>  
+        <p class="mt10 mb10"><a rel="friend" m_uid="$comm[m_uid]" href="#" class="f14 fn fr green_but ">加为好友</a></p>
+    </div>
+	<h3 class="mt10 titlec"><span>最新加入</span></h3>
+    <ul class="quan_act1">
+<!--
+EOT;
+foreach ($new_join as $val){
+print <<<EOT
+-->
+    	<li><a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加为好友"><img src="$val[member_image]" /></a><a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加为好友" class="fct">$val[member_id]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </ul><!-- 最新加入 -->
+</div>
+<!--
+EOT;
+?>-->	

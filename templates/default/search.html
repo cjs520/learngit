@@ -1,0 +1,92 @@
+<!--<?php 
+require_once template('header');
+print <<<EOT
+--> <script type="text/javascript">
+	$(function(){
+	    var ps_ac="$ps_ac";
+		var order="$order";	
+		if("$order"=="price")
+		{	
+			var cls=ps_ac=="ASC"?"up1":"down1";
+		    $("a[@rel=order][@field=price]").addClass(cls);
+		}
+		if("$order"=="stock")
+		{
+			var cls=ps_ac=="ASC"?"up1":"down1";
+		    $("a[@rel=order][@field=stock]").addClass(cls);
+		}
+		if("$order"=="date")
+		{
+			var cls=ps_ac=="ASC"?"up1":"down1";
+		    $("a[@rel=order][@field=date]").addClass(cls);
+		}
+		if("$order"=="shoplevel")
+		{
+			var cls=ps_ac=="ASC"?"up1":"down1";
+		    $("a[@rel=order][@field=shoplevel]").addClass(cls);
+		}
+	});
+	</script>
+	<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+    <table width="100%" border="0" class="attrs">
+        <tr class="attr_filter">
+            <td colspan="2"><ul>
+				<li>
+                <form method="post" action="search.php">
+                    <input type="hidden" name="action" value="$action" />
+                    关键字：<input type="text" name="ps_search" value="$ps_search_txt" class="text" size="20" />
+                    按价格：<input type="text" name="min_money" class="text" value="$min_money" size="4" /> - <input type="text" name="max_money" value="$max_money" class="text" size="4" />
+                    按品牌：$sel_brand
+                    商品类型：<input type="radio" name="sellshow" value="1" $sellshow_1_checked /> 销售型 <input type="radio" name="sellshow" value="2" $sellshow_2_checked /> 展示型
+                    按分类：<i rel="goods_category"></i>
+                    <script type="text/javascript">
+                    $(function(){
+                        $("i[@rel=goods_category]").GoodsCategory("$category_id");
+                    });
+                    </script>
+                    <input type="submit" class="sea_button" value="确定" />
+            	</form>
+				</li>
+            </ul></td>
+        </tr>
+        <tr class="attr_filter">
+            <td colspan="2"><ul>
+                <li class="sort">
+                    <a href="#" class="moren">默认排序</a>
+                    <a href="$price_url" rel="order" field="price">价格</a>
+                    <a href="$stock_url" rel="order" field="stock">库存</a>
+                    <a href="$date_url" rel="order" field="date">日期</a>
+                    <a href="$shoplevel_url" rel="order" field="shoplevel">人气</a>
+                </li> 
+                <li class="type">
+                    <a href="search.php?action=$action&category_id=$category_id&ps_search=$ps_search&ps_brand=$ps_brand&min_money=$min_money&max_money=$max_money&sellshow=1" title="销售型商品" $class_sell>销售型</a>
+                    <a href="search.php?action=$action&category_id=$category_id&ps_search=$ps_search&ps_brand=$ps_brand&min_money=$min_money&max_money=$max_money&sellshow=2" title="展示型商品" $class_show>展示型</a>
+                </li>  
+            </ul></td>
+        </tr>
+    </table>   
+    <div class="pro_list"><!-- 商品列表开始 -->
+        <div class="box_in"><ul>  
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->			<li style="height:350px;"><div class="border">
+                <a href="$val[url]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[goods_file1]" height="210" alt="$val[title]"/></a>
+                <p class="name">$val[addoption]<a href="$val[url]" target="_blank">$val[goods_name]</a></p>  
+                <p><a href="$val[shop_url]" target="_blank" class="fr gray">($val[shop_name])</a><span class="red">$val[goods_sale_price]</span></p>
+                <p><span class="fr">分类：<a href="$val[cat_url]" target="_blank" class="gray">$val[goods_category]</a></span>查看次数：$val[goods_hit]</p>
+                <p>商品类型：$val[t]</p>	
+                <p>品牌：$val[goods_brand]</p>                			
+            </div></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul></div>
+    </div><!-- 商品列表结束 -->
+    <div class="clear"></div>
+	<div class="page page1">$page_list</div>
+<!--
+EOT;
+?>-->

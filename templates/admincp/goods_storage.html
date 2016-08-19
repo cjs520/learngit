@@ -1,0 +1,122 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认审核商品进入商品库？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=edit&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+				alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定商品？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+				alert(msg);
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("input[@rel=chk_all]").click(function(){
+	    $("input[@name='uids[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+	
+	$("form[@name=storage_form]").submit(function(){
+	    if(!confirm("确认进行审核？")) return false;
+		if($("input[@name='uids[]'][@checked]").size()<=0)
+		{
+		    alert("请选择需要审核的商品库商品");
+			return false;
+		}
+		return true;
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">商品库列表</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<form name="search_form" action="admincp.php?module=$module&action=list" method="post">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th>商品搜索</th>
+		</tr>
+		<tr>
+			<td>
+			    商品名称 <input type="text" name="ps_subject" value="$ps_subject_txt" size="20" class="text" /> &nbsp;&nbsp;&nbsp;&nbsp; 
+				状态 $sel_status
+				<input name="member" type="submit" value="确 定" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+
+    <form name="storage_form" action="admincp.php?module=$module&action=bat_edit" method="post">
+	<input type="hidden" name="step" value="1" />
+	<input type="hidden" name="p_url" value="$prev_url" />
+	<table cellpadding="0" cellspacing="1" class="list" style="margin-top:2px;">
+		<tr>
+		    <th width="5%"><input type="checkbox" rel="chk_all" /></th>
+			<th>商品名称</th>
+            <th width="15%">商品编码</th>
+			<th width="10%">所属分类</th>
+            <th width="10%">所属商铺</th>
+			<th width="10%">商城价格</th>
+			<th width="10%">状态</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->	
+		<tr uid="$val[uid]">
+		    <td><input type="checkbox" name="uids[]" value="$val[uid]" /></td>
+			<td class="td1"><a href="$val[goods_url]" target="_blank">$val[goods_name]</a></td>
+			<td>$val[goods_code]</td>
+			<td>$val[goods_category]</td>
+            <td><a href="$val[shop_url]" target="_blank">$val[shop_name]</a></td>
+			<td>$val[goods_sale_price] 元</td>
+			<td>$val[status]</td>
+			<td>
+			    <a href="$val[goods_url]" target="_blank" class="tipsy_s view" title="查看"></a>
+<!--
+EOT;
+if($val[approval_date]==0){
+print <<<EOT
+-->
+				<a href="#" uid="$val[uid]" rel="check" class="tipsy_s check" title="审核"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="page"><b style="float:left;"><input type="submit" value="点击审核" /></b><span>$page_list</span></div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

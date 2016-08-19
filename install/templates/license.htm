@@ -1,0 +1,40 @@
+<?php require_once('./templates/header.htm');?>
+<div class="box">
+  	<h3>:: MvMmall多用户商城系统 - 软件许可确认</h3>
+  	<div class="lic_content">
+		<p>欢迎使用MvMmall多用户商城系统。请确认您接受软件许可的条款。</p>
+		<p>MvMmall多用户商城系统,<span class="red">软件着作权登记号：2011SR020550</span>，(<a href="http://www.mvmmall.cn/certi/mvmmall_multi_big.jpg" target="_blank"><span class="red">查看登记证书</span></a>)<br />
+		版权所有 (c)2003-2018，MvMmall.com 保留所有权利。<br />
+		MvMmall多用户商城系统是国内最好的多用户商城解决方案的行业标准，是广大社区运营商、门户网站运营商、校园创业团队、行业协会、百货商城、超市、购物中心等建立网上商城的首选系统。<br />
+		MvMmall 的官方网址： <a href="http://www.mvmmall.cn" target="_blank">www.mvmmall.cn</a>  交流论坛： <a href="http://bbs.mvmmall.cn" target="_blank">bbs.mvmmall.cn</a><br />
+		为了正确并合法的使用本软件,请你在使用前务必阅读清楚下面的协议条款：<br />
+		一、本协议适用适用于MvMmall旗下所有网上商城系统版本<br />
+		MvMmall官方拥有对本协议的最终解释权。<br />
+		二、协议许可的权利<br />
+		1、您可以在完全遵守本许可协议的基础上，将本软件应用于非商业用途，而不必支付软件版权授权费用。 <br />
+		2、您可以在协议规定的约束和限制范围内修改MvMmall源代码或界面风格以适应您的网站要求。<br />
+		3、您拥有使用本软件构建的网站全部内容所有权，并独立承担与这些内容的相关法律义务。<br />
+4、如向官方或者官方指定认证销售商获得商业授权之后，您可以将本软件应用于商业用途，同时依据所购买的授权类型中确定的技术支持内容，自购买时刻起，在技术支持期限内拥有通过指定的方式获得指定范围内的技术支持服务。商业授权用户享有反映和提出意见的权力，相关意见将被作为首要考虑，但不一定被采纳的承诺或保证。<br />
+二、协议规定的约束和限制 <br />
+1、未获商业授权之前，不得将上述任一款MvMmall软件用于商业用途（包括但不限于企业网站、经营性网站、以营利为目的或实现盈利的网站）。购买商业授权请登陆MVMMALL.COM了解最新说明。<br />
+2、未经官方许可，不得对Mvmmall软件或与之关联的商业授权进行出租、出售、抵押或发放子许可证。<br />
+3、不管你的网站是否整体使用MvMmall ，还是部份栏目使用MvMmall，在你使用了MvMmall 程序的网站主页上必须加上MvMmall官方网址(WWW.MVMMALL.COM)的链接。<br />
+4、未经官方许可，禁止在MvMmall旗下任一版本整体或部分基础上以发展任何派生版本、修改版本或第三方版本用于重新分发。<br />
+5、如果您未能遵守本协议的条款，您的授权将被终止，所被许可的权利将被收回，并承担相应法律责任。<br />
+6、为了统计更准确的用户数量，向您提供更优质的服务，您在安装本商城的同时，迈维软件将收集您的安装时间、管理员邮箱等资料。迈维承诺，此类资料绝密，不会外泄！<br />
+三、有限担保和免责声明 <br />
+1、MvMmall任一款软件及所附带的文件不作为任何明确或隐含的赔偿、担保等形式提供的。<br />
+2、用户出于自愿而使用MvMmall软件，您必须了解使用软件的风险，在尚未购买产品技术服务之前，我们不承诺对免费用户提供任何形式的技术支持、使用担保，也不承担任何因使用本软件而产生问题的相关责任。<br />
+3、电子文本形式的授权协议如同双方书面签署的协议，具有完全的和等同的法律效力。您一旦开始确认本协议并安装 MvMmall，即被视为完全理解并接受本协议的各项条款，在享有上述条款授予的权力的同时，受到相关的约束和限制。协议许可范围以外的行为，将直接违反本授权协议并构成侵权，我们有权随时终止授权，责令停止损害，并保留追究相关责任的权力。<br />
+4、如果MvMmall软件带有其它软件的整合API示范例子包，该文件版权不属于MvMmall官方，并且该文件是没经过授权发布的，请参考相关软件的使用许可合法的使用。<br />
+		</p>
+	</div>
+	<form method="post" action="index.php?action=inspect">
+  	<div class="content">
+  		<input type="radio" name="license_consent" id="agree" value="agree" /> 我已阅读并同意遵守上面列出的条款<br />
+  		<input type="radio" name="license_consent" id="disagree" checked="checked" value="disagree" /> 我已阅读但不同意遵守上面列出的条款
+	</div>
+  	<div class="continue"><input type="submit" name="submit" class="f_right button" value="继续" /></div>
+	</form>
+</div>
+<?php require_once('./templates/footer.htm');?>

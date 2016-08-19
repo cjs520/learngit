@@ -1,0 +1,39 @@
+.top1 { background:#c50304; }
+/*-- 底部悬浮 --*/
+.footer1 { z-index:999; position:fixed; bottom:0; left:0; width:100%; height:62px; overflow:visible; background:url(bg.jpg) repeat-x 0 14px;    }
+.footer1 li { width:18%; margin-top:16px; text-align:center; }
+.footer1 li.li3 { width:28%; margin:0; }
+.footer1 li a { color:#f1c7c8; }
+.home,.cate,.search,.my_acc { display:block; width:25px; height:23px; margin:0 auto; background:url(../default_wap/icon.png) 0 -30px; }
+.cate { background-position:0 -60px; }
+.search { background-position:0 -90px; }
+.my_acc { background-position:0 -120px; }
+.cart { display:block; width:64px; height:62px; margin:0 auto; background:url(../default_wap/gouwuc.png) 0 0; text-indent:-1000em; }
+/*---------------------- 首页 ----------------------*/
+/*-- 快捷图标 --*/
+.tip { height:6.5rem; overflow:hidden; }
+.tip li { float:left; margin:0.2rem 0 0 0.32rem; text-align:center; }
+.tip li span { display:block; height:0.6rem; line-height:0.6rem; margin-top:0.166rem; }
+.tip li a { display:block; width:1.2rem; height:1.2rem; text-indent:-1000em; }
+.tip .li1 a { background:url(tip_01.png); background-size:cover; }/*生活圈*/
+.tip .li2 a { background:url(tip_02.png); background-size:cover; }/*秒杀*/
+.tip .li3 a { background:url(tip_03.png); background-size:cover; }/*团购*/
+.tip .li4 a { background:url(tip_04.png); background-size:cover; }/*拍卖*/
+.tip .li5 a { background:url(tip_05.png); background-size:cover; }/*资讯*/
+.tip .li6 a { background:url(tip_06.png); background-size:cover; }/*找商铺*/
+.tip .li7 a { background:url(tip_07.png); background-size:cover; }/*品牌*/
+.tip .li8 a { background:url(tip_08.png); background-size:cover; }/*预定*/
+.tip .li9 a { background:url(tip_09.png); background-size:cover; }/*积分汇*/
+.tip .li10 a { background:url(tip_10.png); background-size:cover; }/*专题*/
+.tip .li11 a { background:url(tip_11.png); background-size:cover; }/*我的订单*/
+.tip .li12 a { background:url(tip_12.png); background-size:cover; }/*分享*/
+.tip .li13 a { background:url(tip_13.png); background-size:cover; }/*优惠券*/
+.tip .li14 a { background:url(tip_14.png); background-size:cover; }/*找商机*/
+.tip .li15 a { background:url(tip_15.png); background-size:cover; }/*更多*/
+/*-- 楼层样式 --*/
+.floor_title { height:25px; margin:7px 0 5px; border-bottom:1px solid #d9d9d9; font-weight:normal; text-align:center; }
+.floor_title a { background:#fff; color:#999; font-size:14px; font-weight:bold; }
+.floor_banner li { float:left; margin:0 0 0 0.1rem; }
+.floor_banner li img { width:2rem; height:3rem; }
+.floor_brand li { float:left; margin:0 0 0 0.1rem; }
+.floor_brand li img { width:2rem; height:0.92rem; box-sizing:border-box; }

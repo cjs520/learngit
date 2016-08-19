@@ -1,0 +1,64 @@
+<!--<?php 
+require_once template('header');
+require_once template('left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+	$(".pro_list_bat li div").hover(
+	function(){
+		$(this).addClass("hover");},
+	function(){
+		$(this).removeClass("hover");
+	});
+})
+</script>
+	<div class="right">
+		<div class="location"><p><span class="loca_icon"></span><strong>$page_title</strong>(共有 <span class="red fd">$total_count</span> 个商品)</p></div>
+		<div class="pro_list_bat">
+			<ul>
+<!--
+EOT;
+foreach($arr_goods as $val){
+print <<<EOT
+-->
+            	<li><div class="border">
+                	<p class="goodimg"><a href="$val[url]" target="_blank"><img src="$val[goods_file1]" /></a></p>
+                    <p class="name">$val[addoption]<a href="$val[url]" target="_blank">$val[goods_name]</a></p>
+                    <p><span class="fr gray">({$val[goods_hit]}人关注)</span><span class="red">$val[goods_sale_price]</span></p>
+                    <dl>
+                    	<dt class="fd"><span class="fl">批发数量</span><span class="fr">批发价格</span></dt>
+<!--
+EOT;
+foreach($val[wholesale_price] as $v){
+print <<<EOT
+-->
+<!--
+EOT;
+if($v[1]>0){
+print <<<EOT
+-->						<dd><span class="fl">$v[0] - $v[1]件</span><span class="fr red">$main_settings[mm_price_sign]$v[2]</span></dd>
+<!--
+EOT;
+}else{ print <<<EOT
+-->						<dd><span class="fl">$v[0]件以上</span><span class="fr red">$main_settings[mm_price_sign]$v[2]</span></dd>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+} print <<<EOT
+-->					</dl>
+                </div></li>
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>
+		</div>
+        <div class="clear"></div>
+        <div class="page">$lang[genus_total]<span>$total_count</span>$lang[entries]$lang[note] | $page_list</div>
+	</div><!-- 批发商品结束 -->
+<!--
+EOT;
+?>-->

@@ -1,0 +1,114 @@
+<!--<?php 
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+<script type="text/javascript">
+KindEditor.ready(function(K) {
+	var editor1 = K.create('textarea[name="detail"]', {
+		uploadJson : 'member.php?action=editor&cmd=upload',
+		fileManagerJson : 'member.php?action=editor&cmd=list_files',
+		allowFileManager : true,
+		items:kindecitor_items
+	});	
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("form[@name=supply_form]").submit(function(){
+	    var msg="";
+		if($(this).find("input[@name=goods_name]").val()=="") msg+="请填写商品名称\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+});
+</script>
+
+<div class="mem_right">
+<form name="supply_form" action="member.php?action=$action&cmd=$cmd" enctype="multipart/form-data" method="post">
+<input type="hidden" name="p_url" value="$p_url" />
+<input type="hidden" name="step" value="1" />
+<input type="hidden" name="uid" value="$supply[uid]" />
+<table cellspacing="0" class="table_list" rel="table">
+	<tr><th colspan="2" class="red fcl fd">添加/修改供应信息</th></tr>
+	<tr>
+		<td width="80">商品名称</td>
+		<td><input type="text" name="goods_name" value="$supply[goods_name]" size="40" class="text2" /></td>
+	</tr>
+	<tr>
+		<td>商品分类</td>
+		<td>
+		    <script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+			<span rel="goods_category"></span>
+			<script type="text/javascript">
+		    $(function(){
+				$("span[@rel=goods_category]").GoodsCategory("$supply[goods_category]");
+		    });
+			</script>
+		</td>
+	</tr>
+	<tr>
+		<td>商品数量</td>
+		<td><input type="text" name="num" value="$supply[num]" size="40" class="text" /></td>
+	</tr>
+	<tr>
+		<td>商品单价</td>
+		<td>
+		    <input type="text" name="price" value="$supply[price]" size="20" class="text" /> 元 
+			（注：填0或不填表示价格面议）
+		</td>
+	</tr>
+	<tr>
+	    <td>商品简介</td>
+		<td><textarea name="intro" class="text" style="width:500px;height:50px;">$supply[intro]</textarea></td>
+	</tr>
+	<tr>
+		<td>所在地区</td>
+		<td>
+		    <script language="javascript" src="include/javascript/jquery.city.js"></script>
+			<select id="province" name="province"></select>
+			<select id="city" name="city"></select>
+			<select id="county" name="county"></select>
+			<script type="text/javascript">
+			$(function(){
+				$.init_area(new Array("province","city","county"),new Array("$supply[province]","$supply[city]","$supply[county]"));
+			});
+			</script>
+		</td>
+	</tr>
+	<tr>
+	    <td>手机</td>
+		<td><input type="text" name="tel" value="$supply[tel]" size="40" class="text" /></td>
+	</tr>
+	<tr>
+	    <td>QQ</td>
+		<td><input type="text" name="qq" value="$supply[qq]" size="40" class="text" /></td>
+	</tr>
+	<tr>
+	    <td>旺旺</td>
+		<td><input type="text" name="ww" value="$supply[ww]" size="40" class="text" /></td>
+	</tr>
+	<tr>
+	    <td>当前展示图片</td>
+		<td><img src="$pic" width="200" height="200" border="0" /></td>
+	</tr>
+	<tr>
+		<td>展示图片</td>
+		<td><input type="file" name="pic" size="40" class="border" /></td>
+	</tr>
+	<tr>
+	    <td>详细说明</td>
+		<td><textarea name="detail" style="width:755px;height:400px;visibility:hidden;">$supply[detail]</textarea></td>
+	</tr>
+</table>
+<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+</form>
+</div>
+<!--
+EOT;
+?>-->

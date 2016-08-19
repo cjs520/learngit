@@ -1,0 +1,240 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(e){
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		uid=$(this).attr("userid");
+		
+	    if(!confirm("确认通过审核？"))
+		{
+		    $("#deny_certify").hide();
+		    var o=$("#deny_check");
+			o.find("textarea").val("");
+			o.find("input[@name=uid]").val(uid);
+		    var itop=(document.documentElement.clientHeight-o.height())/2+$(document).scrollTop();
+		    var ileft=(document.documentElement.clientWidth-o.width())/2+$(document).scrollLeft();
+		    o.css({
+		        position:"absolute",
+			    top:itop+"px",
+			    left:ileft+"px"
+		    }).fadeIn(500);
+			$("#block").css("display","block");
+		    return false;
+		}
+	    $.get(
+		    "admincp.php?module=$module&action=pass_supplier&uid="+uid+"&rnd="+Math.random(),
+			function(msg)
+			{
+			    if(msg=="通过验证")
+				    $("a[@rel=check][@userid="+uid+"]").empty();
+				alert(msg);
+				window.location.reload();
+			}
+		);
+	});
+	$("a[@rel=close_deny_check]").click(function(e){
+	    e.preventDefault();
+		$("#deny_check").fadeOut(500);
+		$("#block").css("display","none");
+	});
+	$("input[@rel=deny_check_submit]").click(function(e){
+	    var data=$("#deny_check").find("form").serialize();
+		$.ajax({
+		    "type":"POST",
+		    "url":"admincp.php?module=$module&action=deny_check",
+			"data":data,
+			"cache":false,
+			"success":function(msg){
+			              alert(msg);
+						  if(msg=="邮件发送成功") $("#deny_check").fadeOut(500);
+						  $("#block").css("display","none");
+					  }
+		});
+	});
+	/////////////////////////////
+	$("a[@rel=certify]").click(function(e){
+	    e.preventDefault();
+		var uid=$(this).attr("userid");
+		var type=$(this).attr("type");
+		if(!confirm("确认通过认证？"))
+		{
+		    $("#deny_check").hide();
+		    var o=$("#deny_certify");
+			o.find("textarea").val("");
+			o.find("input[@name=uid]").val(uid);
+		    var itop=(document.documentElement.clientHeight-o.height())/2+$(document).scrollTop();
+		    var ileft=(document.documentElement.clientWidth-o.width())/2+$(document).scrollLeft();
+		    o.css({
+		        position:"absolute",
+			    top:itop+"px",
+			    left:ileft+"px"
+		    }).fadeIn(500);
+			$("#block").css("display","block");
+		    return false;
+		}
+	    
+	    $.get(
+		    "admincp.php?module=$module&action=certify_supplier&uid="+uid+"&type="+type+"&rnd="+Math.random(),
+			function(msg)
+			{
+			    if(msg=="通过认证")
+				    $("a[@rel=certify][@userid="+uid+"][@type="+type+"]").empty();
+				alert(msg);
+				window.location.reload();
+			}
+		);
+	});
+	$("a[@rel=close_deny_certify]").click(function(e){
+	    e.preventDefault();
+		$("#deny_certify").fadeOut(500);
+		$("#block").css("display","none");
+	});
+	$("input[@rel=deny_certify_submit]").click(function(e){
+	    var data=$("#deny_certify").find("form").serialize();
+		$.ajax({
+		    "type":"POST",
+		    "url":"admincp.php?module=$module&action=deny_certify",
+			"data":data,
+			"cache":false,
+			"success":function(msg){
+			              alert(msg);
+						  if(msg=="邮件发送成功") $("#deny_certify").fadeOut(500);
+						  $("#block").css("display","none");
+					  }
+		});
+	});
+});
+</script>
+<div class="newopen" style="display:none; width:750px;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+
+<div id="deny_certify" class="renzheng"><a rel="close_deny_certify" href="#" class="close"></a>
+    <h3>拒绝认证理由：</h3>
+    <form>
+	   <input type="hidden" name="uid" />
+	    <p><input type="radio" name="deny_reason" value="您的商品品牌设置不符合规范" checked /> 您的商品品牌设置不符合规范</p>
+		<p><input type="radio" name="deny_reason" value="您还没上传五件商品" /> 您还没上传五件商品</p>
+		<p><input type="radio" name="deny_reason" value="您的商品在国家禁止电子商务销售范围之内" /> 您的商品在国家禁止电子商务销售范围之内</p>
+		<p><input type="radio" name="deny_reason" value="您没有上传有效证件" /> 您没有上传有效证件</p>
+		<p><input type="radio" name="deny_reason" value="您上传的证件与您的注册资料不一致" /> 您上传的证件与您的注册资料不一致</p>
+		<p><input type="radio" name="deny_reason" value="0" /> 其它拒绝理由</p>
+		<p><textarea name="reason" class="textarea" rows="3"></textarea></p>
+		<p align="center"><input type="button" rel="deny_certify_submit" value="发送邮件" class="button1" /></p>
+	</form>
+</div>
+
+
+<div id="deny_check" class="renzheng"><a rel="close_deny_check" href="#" class="close"></a>
+   <h3>拒绝审核理由：</h3>
+    <form>
+	    <input type="hidden" name="uid" />
+	    <p><input type="radio" name="deny_reason" value="您的商品品牌设置不符合规范" checked /> 您的商品品牌设置不符合规范</p>
+		<p><input type="radio" name="deny_reason" value="您还没上传五件商品" /> 您还没上传五件商品</p>
+		<p><input type="radio" name="deny_reason" value="您的商品在国家禁止电子商务销售范围之内" /> 您的商品在国家禁止电子商务销售范围之内</p>
+		<p><input type="radio" name="deny_reason" value="您没有上传有效证件" /> 您没有上传有效证件</p>
+		<p><input type="radio" name="deny_reason" value="您上传的证件与您的注册资料不一致" /> 您上传的证件与您的注册资料不一致</p>
+		<p><input type="radio" name="deny_reason" value="0" /> 其它拒绝理由</p>
+		<p><textarea name="reason" class="textarea" rows="3"></textarea></p>
+		<p align="center"><input type="button" rel="deny_check_submit" value="发送邮件" class="button1" /></p>
+	</form>
+</div>
+
+<div id="right">
+	<form action="admincp.php?module=$module" method="post" name="search_form">
+	<input type="hidden" name="action" value="list"/>
+	<input type="hidden" name="amode" value="detail_search"/>
+	<table class="list1" cellpadding="0" cellspacing="1">
+		<tr>
+			<th colspan="5">商铺认证</th>
+		</tr>
+		<tr>
+			<td width="13%">会员ID</td>
+			<td><input type="text" name="ps_member" value="$ps_member" class="text" size="30" /></td>
+			<td width="13%">是否认证商铺</td>
+			<td>
+			    <input type="radio" name="isSupplier" value="0" $isSupplier_0_checked />全部
+			    <input type="radio" name="isSupplier" value="1" $isSupplier_1_checked />未通过认证的商铺 
+				<input type="radio" name="isSupplier" value="2" $isSupplier_2_checked />已通过认证的商铺
+			</td>
+			<td width="20%"><input name="member" type="submit" value="查询商铺" class="button1" /></td>
+		</tr>
+	</table>
+	</form>
+
+	<form action="admincp.php?module=$module" method="post">
+    <input type="hidden" name="step" value="1" />
+	<input type="hidden" name="action" value="all_delete" />
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="25%">会员ID</th>
+			<th width="25%">商铺名称</th>
+			<th width="20%">身份证</th>
+			<th width="20%">营业执照</th>
+			<th width="10%">审核</th>
+		</tr>
+
+<!--
+EOT;
+foreach ($arr_shop as $val){
+print <<<EOT
+-->
+		<tr id="r$val[uid]">
+			<td class="td1">$val[m_id] $val[tag]</td>
+			<td class="td1"><a href="$val[shop_url]" target="_blank">$val[shop_name]</a></td>
+			<td class="td1">
+			    $val[id_card] 
+<!--
+EOT;
+if(!($val['certified_type'] & 1)){
+print <<<EOT
+-->
+			    <a href="#" rel="certify" userid="$val[m_uid]" type="1" style="color:red;">人个认证</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+			<td class="td1">
+			    $val[licence]
+<!--
+EOT;
+if(!($val['certified_type'] & 2)){
+print <<<EOT
+-->
+				<a href="#" rel="certify" userid="$val[m_uid]" type="2" style="color:red;">实体认证</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+			<td>
+<!--
+EOT;
+if($val['isSupplier']<>3){
+print <<<EOT
+-->				<a href="#" rel="check" userid="$val[m_uid]" class="tipsy_s check" title="点击审核"></a>
+<!--
+EOT;
+}else{
+print <<<EOT
+-->				通过审核 
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="page"><span>$page_list</span></div>
+</form>	
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

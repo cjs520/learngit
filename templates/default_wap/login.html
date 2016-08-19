@@ -1,0 +1,157 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top_wap">登陆</div>
+<div class="wrapper_nopad">
+<!--
+EOT;
+if($mm_close==0){
+print <<<EOT
+--> <div class="login_none"><p><span>商城正在维护，请稍后再访问！</span></p></div>
+<!--
+EOT;
+} print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var login_id="";
+	var login_pass="";
+	var login_lock=false;
+	var jq_login_form=$("form[@name=login_form]:first");
+	var jq_countdown=jq_login_form.find("a[@rel=countdown]:first");
+	var lost_validate_code="$lost_validate_code";
+	var h_countdown=0;
+	var t_countdown=0;
+	
+	$("ul.log_list").children("li").click(function(){
+	    $(this).children("input:first").trigger("focus");
+	});//end click
+	
+	$("input[@rel=btn_next]").click(function(){
+	    if(login_lock) return;
+	    login_id=jq_login_form.find("input[@name=login_id]:first").val();
+		if(login_id=="")
+		{
+		    alert("请输入登录账号");
+			return;
+		}
+		$("div[@rel=login_first]:first").hide();
+		$("div[@rel=login_second]:first").show();
+	});//end click
+	
+	$("input[@rel=login_submit]").click(function(){
+	    if(login_lock) return;
+		login_pass=jq_login_form.find("input[@name=login_pass]:first").val();
+		if(login_pass=="")
+		{
+		    alert("请输入登录密码");
+			return;
+		}
+		login_lock=true;
+		$("#block").show();
+		$.ajax({
+		    url:"logging.php?action=ajax_login&ajax=ajax&ismobile=ismobile",
+			type:"POST",
+			data:{
+			    login_id:login_id,
+				login_pass:login_pass
+			},
+			cache:false,
+			success:function(msg){
+			    var arr_msg=msg.split("||");
+				if(arr_msg[0].indexOf("OK")===0) window.location=arr_msg[1];
+				else
+				{
+				    alert(arr_msg[0]);
+				    $("div[@rel=login_first]:first").show();
+		            $("div[@rel=login_second]:first").hide();
+					jq_login_form.find("input[@name=login_id]:first").val("");
+					jq_login_form.find("input[@name=login_pass]:first").val("");
+				}
+			},
+			complete:function(){
+			    login_lock=false;
+				$("#block").hide();
+			}
+		});
+	});//end click
+	
+	$("a[@rel=lost_pass]").click(function(e){
+	    e.preventDefault();
+		if(login_lock) return;
+		if(!confirm("忘记密码需要通过手机找回密码，确认给你发送找回密码的验证短信吗？")) return;
+		var jq_a=$(this);
+		login_id=jq_login_form.find("input[@name=login_id]:first").val();
+		if(login_id=="")
+		{
+		    alert("请输入登录账号");
+			return;
+		}
+		
+		login_lock=true;
+		jq_a.hide();
+		$.ajax({
+		    url:"ajax.php?action=wap_sendcode&cmd=lost_code",
+			type:"POST",
+			data:{
+			    login_id:login_id,
+				lost_validate_code:lost_validate_code
+			},
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) $.StartCountDown();
+				else jq_a.show();
+			},
+			complete:function(){
+			    login_lock=false;
+			}
+		});//end ajax
+	});//end click
+	
+	$.extend({
+	    StartCountDown:function(){
+		    t_countdown=60;
+			jq_countdown.show();
+			
+			h_countdown=setInterval(function(){
+			    t_countdown--;
+				if(t_countdown<=0)
+				{
+				    clearInterval(h_countdown);
+					h_countdown=0;
+					jq_countdown.hide();
+					jq_reg_form.find("a[@rel=lost_pass]:first").show();
+				}
+			    jq_countdown.html(t_countdown.toString()+"S后重新发送");
+			},1000);
+		}
+	});
+});
+</script>
+	<div class="logform">
+		<form name="login_form">
+		<div rel="login_first">
+        <ul class="mt10 log_list">
+        	<li>帐号 <input name="login_id" type="text" maxlength="20" class="text" size="20" /></li>
+        </ul>
+        <p><input type="button" value="下一步" class="but_blue" rel="btn_next" /></p>
+		</div>
+		
+	    <div rel="login_second" style="display:none;">
+        <ul class="mt10 log_list">
+            <li>密码 <input name="login_pass" type="password" maxlength="20" class="text" size="20" /></li>
+        </ul>
+        <p><input type="button" rel="login_submit" value="登陆" class="but_blue" /></p>  
+		</div>
+        <p class="log_a">
+		    <a href="register.php" class="blue fr">注册</a>
+		    <a href="#" rel="lost_pass" class="blue">忘记密码？</a>
+			<a href="#" rel="countdown" class="gray" style="display:none;"></a>
+		</p> 
+
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

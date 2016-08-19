@@ -1,0 +1,25 @@
+<?php
+/**
+ * MVM_MALL 网上商店系统  会员中心
+ * ============================================================================
+ * 版权所有 (C) 2007-2018 www.mvmmall.cn，并保留所有权利。
+ * 网站地址: http://www.mvmmall.cn
+ * ----------------------------------------------------------------------------
+ * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
+ * 使用；不允许对程序代码以任何形式任何目的的再发布。
+ * ============================================================================
+ * $Author:  www.mvmmall.cn  $
+ * $Date: 2008-06-12 $
+ * $Id: account.php  www.mvmmall.cn$
+ * ---------------------------------------------
+*/
+
+require_once 'include/common.inc.php';
+if(!$m_check_id) move_page('logging.php?action=login');
+$myshop_url = GetBaseUrl('index','','',$m_check_uid);
+$myshop_base_url=preg_replace('/index.*|\?.*/','',$myshop_url);
+$mclass[$action]='class="ahover"';
+
+include "account/$action.php";
+footer();
+?>

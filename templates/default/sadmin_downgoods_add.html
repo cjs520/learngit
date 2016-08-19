@@ -1,0 +1,795 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+	<script type="text/javascript">
+	$(function(){
+	    var arr_brand=[];
+		$("#goods_brand").children("option").each(function(i){
+		    if(i==0) return true;
+			arr_brand.push([$(this).attr("value"),$(this).html()]);
+		});//end each
+		
+		$("input[@rel=search_brand]").click(function(e){
+			var brand_name=$("input[@name=search_brand]").val();
+			$("#goods_brand").empty();
+			$("#goods_brand").append("<option value='0'>--</option>");
+			for(var i in arr_brand)
+			{
+			    if(arr_brand[i][1].indexOf(brand_name)<0) continue;
+				$("#goods_brand").append("<option value='"+arr_brand[i][0]+"'>"+arr_brand[i][1]+"</option>");
+			}
+			if($("#goods_brand").children().size()>1) $("#goods_brand").children().eq(1).attr("selected",true);
+		});//end click
+	});
+	</script>
+	
+	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del_gallery]").click(function(e){
+			e.preventDefault();
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=delimg&uid="+uid+"&rnd="+Math.random(),
+				function(){
+					$("dl[@uid="+uid+"]").remove();
+				}
+			);//end get
+		});//end click
+		
+		$("a[@rel=add_gallery]").click(function(e){
+			e.preventDefault();
+			if($("dl[@rel=gallery],div[@rel=gallery]").size()>=5) return;
+			$("div[@rel=gallery]:last").after($("div[@rel=gallery]:last").clone())
+		});//end click
+		
+		$("a[@rel=minus_gallery]").click(function(e){
+			e.preventDefault();
+			if($("div[@rel=gallery]").size()<=1) return;
+			$("div[@rel=gallery]:last").remove();
+		});//end click
+	});
+	</script>
+
+	<script type="text/javascript">
+	$(function(){
+	   $("form[@name=goods_form]").submit(function(){
+		   var msg="";
+		   if($("form[@name=goods_form]").data("edit_attr")==1) msg+="属性库存未更新\\n";
+		   if($('#goods_name').val() == '') msg += "请填写商品名称\\n";
+		   if($("select[@name='goods_cat[]']:first").val()=="0")    msg+="请填写主站分类\\n";
+		   if($("select[@name=supplier_cat]").val()=="0") msg+="请填写商铺分类\\n";
+		   if(msg!="")
+		   {
+			   alert(msg);
+			   return false;
+		   }
+		   $.ClearEmptyAttrInput();
+		   
+		   //serialize attr_val
+		   var attr_val="";
+		   $("input[@rel=sale_attr_title]").each(function(i){
+		       attr_val+=$(this).val()+"|";
+			   $(this).parent().siblings("td").find("input[@rel=sale_attr_value]").each(function(i){
+			       var img=$(this).siblings("a[@rel=sale_attr_pic]").attr("bk");
+				   if(typeof(img)=="undefined") img="";
+				   var v=$(this).val().replace(/\(|\)|\||"|'|:/g,"")+"("+img+")";
+				   attr_val+=v+"|";
+			   });//end click
+			   attr_val+="|";
+		   });//end each
+		   attr_val=attr_val.substr(0,attr_val.lastIndexOf("||"));
+		   $("form[@name=goods_form]").children("input[@name=attr_val]").remove();
+		   $("form[@name=goods_form]").append("<input type='hidden' name='attr_val' value='"+attr_val+"' />");
+		   
+		   //serialize attr_stock
+		   var attr_store="";
+		   $("table[@rel=attr_stock]").find("tr").each(function(i){
+		       $(this).children("td").each(function(j){
+			       if($(this).children("input").size()>0)
+				   {
+				       var num=parseInt($(this).children("input").val());
+					   if(isNaN(num)) num=0;
+				       attr_store+=num+"|";
+				   }
+				   else attr_store+=$(this).html()+"|";
+			   });//end each
+			   attr_store+="|"
+		   });//end each
+		   attr_store=attr_store.substr(0,attr_store.lastIndexOf("||"));
+		   $("form[@name=goods_form]").children("input[@name=attr_store]").remove();
+		   $("form[@name=goods_form]").append("<input type='hidden' name='attr_store' value='"+attr_store+"' />");
+		   
+		   return true;
+	   });//end submit
+	});
+	</script>
+	
+	<script type="text/javascript">
+	$(function(){
+	    $("a[@rel=add_wholesale]").click(function(e){
+		    e.preventDefault();
+			var jq_tr=$("tr[@rel=wholesale]:last").clone();
+			jq_tr.find("input").val("");
+			$("tr[@rel=wholesale]:last").after(jq_tr);
+		});//end click
+		
+		$("a[@rel=minus_wholesale]").click(function(e){
+		    e.preventDefault();
+			if($("tr[@rel=wholesale]").size()<=1) return;
+			$("tr[@rel=wholesale]:last").remove();
+		});//end click
+		
+		$("input[@name=type]").click(function(){
+		    $("input[@name=type]").not(this).attr("checked",false);
+		});//end click
+	});
+	</script>
+	
+	<script type="text/javascript">
+	$(function(){
+	    $.extend({
+		    SetCombineEvent:function(){
+			    $("a[@rel=combine_goods]").click(function(e){
+				    e.preventDefault();
+					if($("a[@rel=combine][@selected=selected]").size()<=0)
+					{
+					    alert("请选择设置的组合商品");
+						return;
+					}
+					var uid=$(this).attr("uid");
+					var img_src=$(this).children("img").attr("src");
+					var title=$(this).attr("title");
+					var price=$(this).attr("price");
+					$("a[@rel=combine][@selected=selected]").siblings("input[@name='combine_uid[]']").val(uid);
+					$("a[@rel=combine][@selected=selected]").siblings("input[@name='combine_price[]']").val(price);
+					$("a[@rel=combine][@selected=selected]").children().attr("src",img_src);
+					$("a[@rel=combine][@selected=selected]").attr("title",title);
+				});//end click
+			}
+		});
+	    var combine_num=$("dl[@rel=combine]").children("dd[@rel=combine]").size();
+		for(var i=0;i<4-combine_num;i++)
+		{
+		    var html='<dd rel="combine">';
+			html+='<a href="#" rel="combine"><img src="images/noimages/mark.jpg" class="border"/></a>';
+			html+='<a class="delete" rel="del_combine"  href="#"></a>';
+			html+='<input name="combine_price[]" type="text" class="text" size="8" />';
+			html+='<input type="hidden" name="combine_uid[]" value="0" />';
+			html+='</dd>';
+		    $("dl[@rel=combine]").append(html);
+		}
+		$("a[@rel=combine]").click(function(e){
+		    e.preventDefault();
+			$("a[@rel=combine]").removeClass("hover").attr("selected","");
+			$(this).addClass("hover").attr("selected","selected");
+		});//end click
+		$("a[@rel=del_combine]").click(function(e){
+		    e.preventDefault();
+			$(this).siblings("input[@name='combine_uid[]']").val("0");
+			$(this).siblings("a[@rel=combine]").children().attr("src","images/noimages/mark.jpg");
+		});//end click
+		$("input[@rel=search_combine]").click(function(){
+		    var key=$("input[@name=search_combine]").val();
+			$.ajax({
+			    url:"sadmin.php?module=$module&action=search_combine",
+				type:"POST",
+				data:"key="+key+"&uid=$product[uid]",
+				dataType:"json",
+				cache:false,
+				success:function(json){
+				    if(json.length<=0)
+					{
+					    alert("检索不到商品，请修改关键字再进行搜索");
+						return;
+					}
+					$("td[@rel=combine_list]").empty();
+					var html='<p class="combine_goods">';
+					for(var i in json)
+					{
+						html+='<a href="#" rel="combine_goods" title="'+json[i]["goods_name"]+'" uid="'+json[i]["uid"]+'" price="'+json[i]["goods_sale_price"]+'">';
+						html+='<img src="'+json[i]["goods_file1"]+'" class="border" />';
+						html+='</a>';
+					}
+					html+="</p>";
+					$("td[@rel=combine_list]").append(html);
+					
+					$.SetCombineEvent();
+				}
+			});
+		});//end click
+	});
+	</script>
+	
+	<script type="text/javascript">
+	function filter_att_callback(cat_id)
+	{
+	    if(cat_id<=0) return;
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=get_att_list&cid="+cat_id,
+			type:"GET",
+			cache:true,
+			dataType:"json",
+			success:function(json){
+			   var html="";
+			   $("td[@rel=att_list]").empty();
+			   for(var key in json["attr"])
+			   {
+			       html="";
+			       html+='<div class="attr_goods">';
+				   html+='<span>'+key+'</span>';
+				   html+='<select name="filter_attr['+key+']">';
+				   for(var i in json["attr"][key])
+				   {
+				       html+='<option value="'+json["attr"][key][i]+'">'+json["attr"][key][i]+'</option>';
+				   }
+				   html+='</select>';
+				   html+='</div>';
+				   $("td[@rel=att_list]").append(html);
+			   }
+			   $("span[@rel=commision]").children("b").html(json["rate"].toString());
+			}
+		});//end ajax
+	}//end function
+	</script>
+	
+	<script type="text/javascript">
+	$(function(){
+	    $.extend({
+		    SaleAttrValueAddEvent:function(){
+			    $("a[@rel=sale_attr_value_add]").unbind("click");
+				$("a[@rel=sale_attr_value_add]").click(function(e){
+				    e.preventDefault();
+					$(this).before('<p><input type="text" rel="sale_attr_value" class="text" size="8" /><a href="#" class="up" rel="sale_attr_pic"></a></p>');
+					$("form[@name=goods_form]").data("edit_attr",1);
+					$.PicPanelEvent();
+				});//end click
+				
+				$("input[@rel=sale_attr_value],input[@rel=sale_attr_title]").unbind("keydown");
+				$("input[@rel=sale_attr_value],input[@rel=sale_attr_title]").keydown(function(e){
+				    $("form[@name=goods_form]").data("edit_attr",1);
+				});//end keydown
+			},//end SaleAttrValueAddEvents
+			PicPanelEvent:function(){
+			    $("a[@rel=sale_attr_pic]").unbind("click");
+				$("a[@rel=sale_attr_pic]").click(function(e){
+				    e.preventDefault();
+					$("a[@rel=sale_attr_pic]").attr("selected","");
+					$(this).attr("selected","selected");
+					var offset=$(this).offset();
+					$("div[@rel=attr_pic_panel]").css("left",(offset.left-312)+"px");
+					$("div[@rel=attr_pic_panel]").css("top",(offset.top+24)+"px");
+					$("div[@rel=attr_pic_panel]").show();
+				});//end click
+			},//end PicPanelEvent
+			InitPanel:function(){
+			    $("div[@rel=attr_pic_panel]").find("a[@rel=attr_pic_tab]").click(function(e){
+				    e.preventDefault();
+					var jq_this=$(this);
+				    $(this).siblings("a").attr("selected","").removeClass("hover");
+					$(this).attr("selected","seleted").addClass("hover");
+					switch($(this).data("loading"))
+					{
+					    case "loading":
+						    $("div[@rel=attr_pic_panel]").children("p").html("<span>图片加载中，请稍等...</span>");
+						    break;
+						case "loaded":
+						    var json=$(this).data("data");
+							$("div[@rel=attr_pic_panel]").children("p").empty();
+							for(var i in json)
+							{
+								$("div[@rel=attr_pic_panel]").children("p").append("<a><img src='"+json[i]+"' /></a>");
+							}
+							$.PanelPicEvent();
+						    break;
+						default:
+						    $("div[@rel=attr_pic_panel]").children("p").html("<span>图片加载中，请稍等...</span>");
+							$(this).data("loading","loading");
+							$.ajax({
+							    url:"sadmin.php?module=$module&action=get_att_pic",
+								type:"POST",
+								dataType:"json",
+								cache:true,
+								data:"att_cat="+$(this).html(),
+								success:function(json){
+								    jq_this.data("data",json);
+									$("div[@rel=attr_pic_panel]").children("p").empty();
+									for(var i in json)
+									{
+									    $("div[@rel=attr_pic_panel]").children("p").append("<a><img src='"+json[i]+"' /></a>");
+									}
+									$.PanelPicEvent();
+								},
+								complete:function(){
+								    jq_this.data("loading","loaded");
+								}
+							});
+						    break;
+					}
+					
+				});//end click
+				
+				$("div[@rel=attr_pic_panel]").find("a[@rel=clear_attr_pic]").click(function(e){
+				    e.preventDefault();
+					$("a[@rel=sale_attr_pic][@selected=selected]").css({
+					    backgroundPosition:"-180px 0",
+						backgroundImage:"url(images/default/icon.gif)"
+					});
+					$("a[@rel=sale_attr_pic][@selected=selected]").attr("bk","");
+				});//end click
+				
+				
+		        $("div[@rel=attr_pic_panel]").find("a[@rel=attr_pic_tab]").eq(0).trigger("click");
+			},//end InitPanel
+			PanelPicEvent:function(){
+			    $("div[@rel=attr_pic_panel]").children("p").children("a").unbind("click");
+				$("div[@rel=attr_pic_panel]").children("p").children("a").click(function(e){
+				    e.preventDefault();
+					var img_path=$(this).children("img").attr("src");
+					$("a[@rel=sale_attr_pic][@selected=selected]").css({
+					    backgroundImage:"url("+img_path+")",
+						backgroundPosition:"0 0"
+					});
+					$("a[@rel=sale_attr_pic][@selected=selected]").attr("bk",img_path);
+				});//end click
+			},//end PanelPicEvent
+			ClearEmptyAttrInput:function(){
+				$("input[@rel=sale_attr_value]").each(function(i){
+				    if($.trim($(this).val())=="") $(this).parent().remove();
+					else $(this).val($(this).val().replace(/\(|\)|\||"|'|:/g,""));
+				});//end each
+				$("input[@rel=sale_attr_title]").each(function(i){
+				    if($.trim($(this).val())=="") $(this).parent().parent().remove();
+					if($(this).parent().siblings("td").find("input[@rel=sale_attr_value]").size()<=0) $(this).parent().parent().remove();
+				});//end each
+			},//end ClearEmptyAttrInput
+			Rearray:function(arr_src,arr_dst){
+			    if(arr_src.length<=0) return arr_dst;
+				if(arr_dst<=0)
+				{
+				    var arr_tmp=arr_src.shift();
+					for(var i in arr_tmp) arr_dst.push([arr_tmp[i]]);
+				}
+				else
+				{
+				    var arr_tmp=arr_src.shift();
+					var arr_rtl=[];
+					while(arr_dst.length>0)
+					{
+					    var arr_tmp2=arr_dst.shift();
+						for(var j in arr_tmp)
+						{
+						    arr_rtl.push(arr_tmp2.concat(arr_tmp[j]))
+						}
+					}
+					arr_dst=arr_rtl;
+				}
+				return $.Rearray(arr_src,arr_dst);
+			},//end Rearray
+			BuildAttrStock:function(){
+			    var arr_rtl=[];
+				$("input[@rel=sale_attr_title]").each(function(i){
+				    var arr_tmp=[];
+					var key=$(this).val();
+					$(this).parent().siblings("td").find("input[@rel=sale_attr_value]").each(function(i){
+					    var v=key+":"+$(this).val();
+						arr_tmp.push(v);
+					});//end each
+					arr_rtl.push(arr_tmp);
+				});//end each
+				
+				var arr_rearray=$.Rearray(arr_rtl,[]);
+				var html="";
+				$("table[@rel=attr_stock]").empty();
+				for(var i in arr_rearray)
+				{
+				    html+="<tr>";
+					for(var j in arr_rearray[i])
+					{
+					    html+="<td>"+arr_rearray[i][j]+"</td>";
+					}
+					html+='<td>加价：<input type="text" class="text" size="8"/></td>';
+					html+='<td>库存：<input type="text" class="text" size="8"/></td>';
+					html+="</tr>";
+				}
+				if(html=="") return;
+				$("table[@rel=attr_stock]").append(html);
+			}//end BuildAttrStock
+		});//end extend
+		
+	    $("a[@rel=sale_attr_add]").click(function(e){
+		    e.preventDefault();
+			var html="<tr>";
+			html+='<td width="18%" class="vtop">属性类型 <input type="text" class="text" rel="sale_attr_title" size="13"/></td>';
+			html+='<td><dl class="attr_add"><dt>属性值</dt><dd>';
+			html+='<p><input type="text" class="text" rel="sale_attr_value" size="8" /><a href="#" class="up" rel="sale_attr_pic"></a></p><a class="red fl" rel="sale_attr_value_add">[添加]</a></dd>';
+			html+='</dl></td>';
+			html+="</tr>";
+			$("tr[@rel=sale_attr_confirm]").before(html);
+			$("form[@name=goods_form]").data("edit_attr",1);
+			
+			$.SaleAttrValueAddEvent();
+			$.PicPanelEvent();
+		});//end click
+		
+		$("a[@rel=close_attr_panel]").click(function(e){
+		    e.preventDefault();
+			$("div[@rel=attr_pic_panel]").hide();
+		});//end click
+		
+		$("input[@rel=confirm_attr]").click(function(){
+		    $.ClearEmptyAttrInput();
+			$.BuildAttrStock();
+			$("form[@name=goods_form]").data("edit_attr",0);
+		});//end click
+		
+		$.SaleAttrValueAddEvent();
+		$.PicPanelEvent();
+		$.InitPanel();
+	});
+	</script>
+	
+	<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+	<div class="mem_right">
+		<div class="member_title fd red">
+			商品发布
+		</div>			
+		<form name="goods_form" action="sadmin.php?module=$module&action=$_GET[action]" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="step" id="step" value="1"/>
+		<input type="hidden" name="uid" id="uid" value="$uid"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="fcl">商品分类</th></tr>						
+			<tr>
+				<td width="17%">主站分类</td>
+				<td>
+				    <span rel="goods_category"></span>
+					<script type="text/javascript">
+				    $(function(){
+				        $("span[@rel=goods_category]").GoodsCategory("$product[goods_category]",filter_att_callback);
+				    });
+				    </script>
+					<span rel="commision">温馨提示：该类商品交易达成后，主站将提取<b>$category[rate]</b>%佣金</span>
+				</td>
+			</tr>
+			<tr>
+				<td>分类选择</td>
+				<td>$cat_menu 多重分类：$cat_menu2 多重分类：$cat_menu3</td>
+			</tr>
+            <tr>
+				<td>筛选属性</td>
+				<td rel="att_list" style="padding:0;">$filter_html</td>
+			</tr>	
+		</table>
+		
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="5" class="fcl">基本信息</th></tr>	
+			<tr>
+				<td width="24%" rowspan="9" class="spdu"><img src="$goods_file1" width="220" height="220" /></td>
+			</tr>	
+            <tr>
+				<td width="15%">商品名称</td>
+				<td colspan="3"><input type="text" name="goods_name" id="goods_name" value="$goods_name" size="60" class="text" /></td>
+			</tr>
+			<tr>
+				<td width="15%">进货价</td>
+				<td><input type="text" name="goods_cost" value="$goods_cost" size="15" class="text" /> 元</td>
+				<td width="15%">市场价</td>
+				<td><input type="text" name="goods_market_price" value="$goods_market_price" size="15" class="text" /> 元</td>
+			</tr>
+			<tr>
+				<td>商城价</td>
+				<td>
+				    <input type="text" name="goods_sale_price" value="$goods_sale_price" size="15" class="text" /> 元 
+					<input type="checkbox" name="type" value="3" $type_3_checked /> 会员折扣
+				</td>
+				<td>商品重量</td>
+				<td><input type="text" name="goods_kg" value="$goods_kg" size="15" class="text" /> 克</td>
+			</tr>
+			<tr>
+				<td>商品显示</td>
+				<td>
+				    <input type="checkbox" name="goods_status[]" value="1" $hot_checked /> 热门 
+					<input type="checkbox" name="goods_status[]" value="2" $best_checked /> 推荐 
+					<input type="checkbox" name="goods_status[]" value="4" $free_delivery_checked /> 免邮
+				</td>
+				<td>商品编码</td>
+				<td><input type="text" name="goods_code" value="$goods_code" size="15" class="text" /></td>
+			</tr>
+			<tr>
+				<td>商品品牌</td>
+				<td colspan="3" class="addpp">{$brand_menu} <input type="text" name="search_brand" size="28" class="text"/> <input type="button" class="sea_button" rel="search_brand" value="搜索" /></td>
+			</tr>
+			<tr>
+				<td>商品详细大图</td>
+				<td colspan="3">
+				    <input type="file" name="goods_file2" size="45" class="text text_3" />
+				</td>
+			</tr>
+			<tr>
+				<td>商品缩略图</td>
+				<td colspan="3"><input type="file" name="goods_file1" size="45" class="text text_3" /><p class="alert_info2 text_32"><span class="icon_info"></span>不上传，系统自动用商品详细图等比例压缩</p></td>
+			</tr>
+			<tr>
+				<td>总库存</td>
+				<td colspan="3">
+				    <input type="text" name="goods_stock" value="$goods_stock" size="15" class="text" /> 件
+				</td>
+			</tr>
+		</table>
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+			    <th colspan="2" class="fcl">
+				    销售属性  <a href="#" class="red" rel="sale_attr_add">[添加]</a> 
+					<font color="blue">（注意：属性值选完图片后，文字也必须填写。空白属性将被视为放弃。）</font>
+				</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_attr_val as $key=>$val){
+print <<<EOT
+-->
+			<tr>
+			    <td width="18%" class="vtop">属性类型 <input type="text" class="text" rel="sale_attr_title" value="$key" size="13"/></td>
+				<td>
+				    <dl class="attr_add">
+					    <dt>属性值</dt>
+						<dd>
+<!--
+EOT;
+foreach($val as $v){
+$css_bk=$v[1]?"style='background-image:url($v[1]);background-position:0 0;'":'';
+print <<<EOT
+-->
+						    <p><input type="text" class="text" rel="sale_attr_value" value="$v[0]" size="8" /><a href="#" class="up" $css_bk bk="$v[1]" rel="sale_attr_pic"></a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+							<a class="red fl" rel="sale_attr_value_add">[添加]</a>
+						</dd>
+					</dl>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+			<tr rel="sale_attr_confirm">
+			    <td colspan="2">
+				    <input type="button" rel="confirm_attr" value=" ↓ 变更属性库存设置 ↓ " /> 
+					<font color="red">（属性修改后点击此按钮，重新设置对应的库存）</font>
+                    <div class="attr_add_pic" rel="attr_pic_panel">
+	                    <h4>
+<!--
+EOT;
+foreach($attr_category as $val){
+print <<<EOT
+-->
+						    <a href="#" rel="attr_pic_tab">$val</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+							<a class="delete" rel="close_attr_panel"></a><a class="fn" rel="clear_attr_pic">清除</a>
+						</h4>
+                        <p></p>
+                    </div>
+				</td>
+			</tr>
+			<tr>
+			    <td>库存设置</td>
+				<td>
+                    <table cellspacing="0" class="stock" rel="attr_stock">
+<!--
+EOT;
+foreach($arr_attr_store as $val){
+$size=sizeof($val);
+print <<<EOT
+-->
+					<tr>
+<!--
+EOT;
+foreach($val as $k=>$v){
+print <<<EOT
+-->
+<!--
+EOT;
+if($k==$size-1){
+print <<<EOT
+-->
+					    <td>库存：<input type="text" class="text" size="8" value="$v" /></td>
+<!--
+EOT;
+}else if($k==$size-2){
+print <<<EOT
+-->
+					    <td>加价：<input type="text" class="text" size="8" value="$v" /></td>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+						<td>$v</td>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+} print <<<EOT
+-->
+					</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+					</table>
+                </td>
+			</tr>
+		</table>
+
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th class="fcl">批发设置 <input type="checkbox" name="type" value="2" $type_2_checked /> <a href="#" rel="add_wholesale">添加</a> <a href="#" rel="minus_wholesale">删除</a> </th></tr>
+<!--
+EOT;
+if(sizeof($arr_wholesale)<2){
+print <<<EOT
+-->
+			<tr rel="wholesale">
+			    <td>
+				    批发数量 <input type="text" class="text" name="wholesale[]" value="" /> — <input type="text" class="text" name="wholesale[]" value="" />
+					批发价格 <input type="text" class="text" name="wholesale_price[]" value="" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+				    批发数量 大于 <input type="text" class="text" name="wholesale[]" value="" /> 
+					批发价格 <input type="text" class="text" name="wholesale_price[]" value="" />
+				</td>
+			</tr>
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+<!--
+EOT;
+foreach($arr_wholesale as $val){
+print <<<EOT
+-->
+<!--
+EOT;
+if($val[1]>=0){
+print <<<EOT
+-->
+			<tr rel="wholesale">
+			    <td>
+				    批发数量 <input type="text" class="text" name="wholesale[]" value="$val[0]" /> — <input type="text" class="text" name="wholesale[]" value="$val[1]" />
+					批发价格 <input type="text" class="text" name="wholesale_price[]" value="$val[2]" />
+				</td>
+			</tr>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+			<tr>
+				<td>
+				    批发数量 大于 <input type="text" class="text" name="wholesale[]" value="$val[0]" /> 
+					批发价格 <input type="text" class="text" name="wholesale_price[]" value="$val[2]" />
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+} print <<<EOT
+-->	
+		</table>
+		
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th class="fcl">组合购买 <input type="checkbox" name="type" value="1" $type_1_checked /></th></tr>
+            <tr><td>
+            <dl class="combin" rel="combine">
+            	<dt><span class="goods">组合商品</span><span class="price">组合价格</span></dt>
+                <dd><img src="$combine_img" class="border"/> <input name="combine_price1" type="text" class="text" size="8" value="$combine_price1" /></dd>
+                <dt><span class="plus"></span></dt>
+<!--
+EOT;
+foreach($arr_combine as $val){
+print <<<EOT
+-->
+				<dd rel="combine">
+				    <a href="#" rel="combine" title="$val[goods_name]"><img src="$val[goods_file1]" class="border"/></a>
+					<a class="delete" rel="del_combine"  href="#"></a>
+					<input name="combine_price[]" type="text" class="text" size="8" value="$val[price]" />
+					<input type="hidden" name="combine_uid[]" value="$val[com_uid]" />
+				</dd>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </dl>
+            </td></tr>
+			<tr><td>
+            组合商品搜索：
+            <input class="text" type="text" size="28" name="search_combine" value="">
+            <input class="sea_button" type="button" value="搜索" rel="search_combine"> <font color="red">（接索不到？请完善您的关键字）</font>
+            </td></tr>
+            <tr><td rel="combine_list"></td></tr>
+		</table>
+        
+		<div class="clear"></div>
+	    <script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+	    <script type="text/javascript">
+		KindEditor.ready(function(K) {
+			var editor1 = K.create('textarea[name="goods_main"]', {
+				uploadJson : 'sadmin.php?module=editor&action=upload',
+				fileManagerJson : 'sadmin.php?module=editor&action=list_files',
+				allowFileManager : true,
+				items:kindecitor_items
+			});
+			
+		});
+	    </script>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="fcl">详细信息</th></tr>
+			<tr>
+				<td width="18%">商品说明</td>
+				<td><textarea name="goods_main" style="width:755px;height:400px;visibility:hidden;">$goods_main</textarea></td>
+			</tr>
+		</table>
+				
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="fcl">商品相册</th></tr>
+			<tr>
+				<td width="18%">相册图片</td>
+				<td>
+<!--
+EOT;
+foreach ($photo as $val){
+print <<<EOT
+-->				<dl uid="$val[imgid]" class="span_left good_imgdesc" rel="gallery">
+					<dd><a href="#" rel="del_gallery" uid="$val[imgid]">[-]</a></dd>
+					<dd><img src="$val[thumb]" class="border" width="100" height="100" /></dd>
+				</dl>
+<!--
+EOT;
+} print <<<EOT
+-->				</td>
+			</tr>
+			<tr>
+				<td>相册图片 <a rel="add_gallery">[+]</a>  <a rel="minus_gallery">[-]</a></td>
+				<td>
+				    <div rel="gallery">相册图片 <input type="file" style="width:190px;" name="gallery[]" class="text" /></div>
+				</td>
+			</tr>
+		</table>
+		
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="fcl">商品SEO</th></tr>
+			<tr>
+				<td>商品关键字</td>
+				<td><textarea name="goods_key" class="textarea text_2">$goods_key</textarea></td>
+				<td>商品描述</td>
+				<td><textarea name="goods_advance" class="textarea text_2">$goods_advance</textarea></td>
+			</tr>
+		</table>
+		
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>	
+<!--
+EOT;
+?>-->

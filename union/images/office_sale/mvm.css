@@ -1,0 +1,32 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+body { background:url(bg_main.gif) repeat-y center; }
+.border { background:#fff; }
+.footer_bg { background:#fff; }
+.title1 { background:#008ecd; }
+.title2 { height:34px; padding:16px 50px 10px; background:url(title_bg.gif); line-height:34px; }
+.title2 span { padding:0 8px; color:#0293d2; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; }
+.zn_search { color:#0293d2; }
+.top2_bg { background:#fff; border-bottom:1px solid #f1f1f1; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:10px auto 0; }
+.top3 { height:34px; padding:23px 0; background:url(bg_new.jpg) repeat-x; }
+.top3 ul { float:left; width:705px; }
+.top3 li .navtab { float:left; height:34px; padding:0 14px; overflow:hidden; line-height:34px; font-size:14px; color:#0293d2; }
+.top3 li .self { float:left; font-weight:bold; color:#ee151b; }
+.top3 li a:hover { color:#ee151b; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:34px; line-height:32px; padding:0 0 0 10px; background:#c1ecfd url(cate_bg.png) no-repeat 0 -60px; }
+.top3 .allcat span { display:block; position:absolute; left:48px; top:7px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:0; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#9cdffc;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#0081ba; }
+.top_cate dt.self { background:#86d2f2; }
+.top_cate dt.self a { color:#fff; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#86d2f2; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#fff; }
+.sub_category a:hover { background:#9cdffc; color:#0081ba; }

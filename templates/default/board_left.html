@@ -1,0 +1,45 @@
+<!--<?php print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var code="$action";
+	$("div.board_left").find("a[@code="+code+"]").addClass("hover");
+	$(".news_nav li:last").css("background","none");
+});
+</script>
+	<div class="board_left"><!-- 左边开始 -->
+		<ul class="border h_oflow news_nav">
+<!--
+EOT;
+foreach ($b_cat as $key=>$val){
+print <<<EOT
+-->
+        	<li><a href="board.php?action=$key" code="$key" class="f14">$val[board_title]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>   
+<!--
+EOT;
+foreach($AD->GetAd('left_ad',2,'','news') as $val){
+print <<<EOT
+-->		<div class="mt10" style="position:relative;">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->			<a href="#" rel="ad_apply" m="news" p="left_ad" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->			<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]" width="174"/></a>
+		</div>
+<!--
+EOT;
+} print <<<EOT
+-->   
+	</div><!-- 左边结束 -->
+<!--
+EOT;
+?>-->

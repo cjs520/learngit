@@ -1,0 +1,146 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.flashv3.js"></script>
+<script language="javascript" src="include/javascript/jquery.hscroll.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.cookie.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("#close_popup").click(function(){
+	    $("#popup_ad").fadeOut(400);
+	});//end click
+	
+	$("input[@name=ad_check]").click(function(){
+	    $.cookie("mm_popup",$(this).attr("checked")?1:0);
+	});//end click
+});
+</script>
+<script language="javascript">
+$(function(){
+	$("div[@rel=img_frame]").flashv3("$pics","$links","$title",710,320,30,false);
+	$.h_scroll("sub_frame1","lsubbutton1","rsubbutton1",1,4,219);
+});
+</script>
+<!--
+EOT;
+if($popup && $_COOKIE[mm_popup]!=1){
+print <<<EOT
+-->
+	<div class="popup_ad" id="popup_ad" style="width:$popup[width]px;height:$popup[height]px;left:$popup[left]px;top:$popup[top]px;">
+		<h3><span id="ad_title">$popup[subject]</span></h3>
+		<div id="ad_content">$popup[body]</div>
+		<div id="ad_24hour">
+		    <input type="button" id="close_popup" value="关闭" class="button1 span_right" />
+			<input type="checkbox" name="ad_check" class="vmid" /> 24小时内不再打开
+		</div>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+    <div class="box_out custom_area"><!--自定义区域开始-->
+        $def_mod[content]
+    </div><!-- 自定义区域结束 -->
+    <div class="box_out"><!-- 自定义商品开始 --> 
+		<ul class="sypro_list sypro_list_b">
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->
+			<li><p class="goodimg"><a href="$val[url]"><img src="$val[goods_file1]" class="border_img" alt="$val[goods_name]" /></a></p>
+				<p class="name">$val[addoption]<a href="$val[url]" title="$val[goods_name]">$val[goods_name]</a></p>
+				<p><span class="span_right gray">($val[goods_hit]人关注)</span></p>		
+			</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>
+    </div><!-- 自定义商品结束 -->
+    <div class="clear"></div>
+<!--
+EOT;
+require_once template('left'); 
+print <<<EOT
+-->	
+	<div class="right">
+        <div class="flash_div"><div class="flash" rel="img_frame"></div></div><!-- flash 开始 注: HTML结构不得更改！ -->
+			<div class="fr artile_list">
+                <h3 class="title1"><span>商城公告</span></h3>
+				<ul class="border">
+<!--
+EOT;
+foreach (GetBoard('news',0,11) as $val){
+print <<<EOT
+-->
+ 					<li><a href="$val[url]" target="_blank" title="$val[board_subject]">$val[board_subject]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</ul>	
+			</div>
+		<div class="clear"></div>
+<!--
+EOT;
+$i=0;
+foreach ($cat_parent as $val){
+if($i++>5) break;
+print <<<EOT
+-->
+        <h3 class="title2"><a href="category.php?action=$val[uid]&supid=$page_member_id" class="fn f12 gray">更多></a>$val[title]</h3>
+		<ul class="box_r sypro_list">
+<!--
+EOT;
+foreach (GetGoodsByCat($val[uid]) as $v){
+print <<<EOT
+-->
+			<li><p class="goodimg"><a href="$v[url]" target="_blank"><img src="$v[goods_file1]" class="border_img" alt="$v[goods_name]" /></a></p>
+				<p class="name">$v[addoption]<a href="$v[url]" title="$v[goods_name]" target="_blank">$v[goods_name]</a></p>
+				<p><span class="span_right gray">($v[goods_hit]人关注)</span></p>
+			</li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul><!-- 最新商品 -->
+		<div class="clear"></div>
+<!--
+EOT;
+} print <<<EOT
+-->
+        <h3 class="title2"><a href="$detail_url" class="fn f12 white">详细介绍></a><img src="$imgpath/t2.jpg" /></h3>
+        <div class="h_oflow shop_info">
+        	<div class="fl shop_detail">$detail</div>
+			<div class="fr" rel="video">$shop_file[video_code]</div><!-- 商家视频 -->
+			<script type="text/javascript">
+			$("div[@rel=video]").children().css({
+			    "width":"325px",
+				"height":"235px"
+			});
+			</script>
+        </div><!-- 商家简介 -->
+		<h3 class="title2 mt10"><img src="$imgpath/t1.jpg" /></h3>
+        <div class="sub_frame_div"><span class="sub_bright" id="rsubbutton1"></span><span class="sub_bleft" id="lsubbutton1"></span>
+            <div id="sub_frame1" class="sub_frame">
+			<table cellspacing="0">
+			<tr>
+<!--
+EOT;
+foreach ($arr_certi as $val){
+print <<<EOT
+-->
+            	<td><a href="$val[b_img]" target="_blank"><img src="$val[s_img]"></a></td>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</tr>
+			</table>
+			</div>
+        </div><!-- 资质证书 -->
+	</div>
+<!--
+EOT;
+?>-->	

@@ -1,0 +1,56 @@
+<!--<?php
+require_once template('header'); 
+if($action =='lostpasswd'){
+print <<<EOT
+-->	<div class="top1">找回ID/密码</div>
+<div class="wrapper">
+	<div class="logform"><!-- 忘记密码开始 -->
+		<form method="post" action="" name="mvmmall_loss" class="regform">
+		<input type=hidden value="1" name="setp" />
+		<table>
+			<tr>
+				<th>用户名：</th><td><input name="login_id" type="text" class="text" size="40" /></td>
+			</tr>
+			<tr>
+				<th>E-mail：</th><td><input name="loss_email" type="text" class="text" size="40" /></td>
+			</tr>
+			<tr>
+				<th></th><td><input name="" type="submit" value="" class="lost_button" /></td>
+			</tr>
+		</table>
+		</form>
+	</div><!-- 忘记密码结束 -->
+<!--
+EOT;
+} else if($action =='changpasswd'){
+print <<<EOT
+-->
+    <div class="top1">找回ID/密码</div>
+<div class="wrapper">
+	<div class="logform"><!-- 忘记密码开始 -->
+		<form method="post" action="" name="mvmmall_loss" onsubmit="javascript：return changpasswd()" class="regform">
+		<input type=hidden value="1" name="setp" />
+		<input type=hidden value="$login_id" name="login_id" /> 
+		<input type=hidden value="$str" name="str" />
+		<table>
+			<tr>
+				<th>用户名：</th><td><input name="login_id" value="$login_id" type="text" class="text" size="40" disabled="disabled" /></td>
+			</tr>
+			<tr>
+				<th>新密码：</th><td><input name="new_pass" type="password" class="text" size="40" /></td>
+			</tr>
+			<tr>
+				<td>密码确认：</td><td><input name="agin_pass" type="password" class="text" size="40" /></td>
+			</tr>
+			<tr>
+				<th></th><td><input name="" type="submit" value="" class="lost_button" /></td>
+			</tr>
+		</table>
+		</form>
+	</div><!-- 忘记密码结束 -->
+<!--
+EOT;
+} print <<<EOT
+--><!--
+EOT;
+?>-->

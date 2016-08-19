@@ -1,0 +1,204 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    if("$od"=="price") $("a[@rel=od]:eq(0)").addClass("curtab");
+	else if("$od"=="time") $("a[@rel=od]:eq(1)").addClass("curtab");
+	else if("$od"=="stock") $("a[@rel=od]:eq(2)").addClass("curtab");
+	
+	$("input[@rel=goods_name],input[@rel=goods_sale_price]").blur(function(){
+	    var v=$(this).val();
+		var field=$(this).attr("rel");
+		var uid=$(this).attr("uid");
+		
+		$.post(
+		    "admincp.php?module=$module&action=ajax_edit&uid="+uid+"&rnd="+Math.random(),
+			"v="+v+"&field="+field,
+			function(){}
+		);//end post
+	});//end blur
+	
+	$("input[@name=chkall]").click(function(){
+	    $("input[@name='uid_check[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+	
+	$("input[@rel=bat_del]").click(function(){
+	if(!confirm("确认删除选择的商品？")) return;
+	    if($("input[@name='uid_check[]'][@checked]").size()<=0)
+		{
+		    alert("请选择需要删除的商品");
+			return;
+		}
+		$.post(
+		    "admincp.php?module=$module&action=del&rnd="+Math.random(),
+			$("input[@name='uid_check[]'][@checked]").serialize(),
+			function(msg){
+			    alert(msg);
+				window.location.reload();
+			}
+		);
+	});//end click
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				$("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=approval]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行审核？")) return;
+		var uid=$(this).attr("uid");
+		$.post(
+		    "admincp.php?module=$module&action=approval&rnd="+Math.random(),
+			"uid="+uid+"&v=1",
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end post
+	});//end click
+	
+	$("a[@rel=reject]").click(function(e){
+	    e.preventDefault();
+		var t=$(this).attr("t");
+		if(!confirm("确认进行拒绝："+t+"？")) return;
+		var uid=$(this).attr("uid");
+		var reason=$(this).siblings("input[@rel=reject]").val();
+		if(reason=="")
+		{
+		    alert("请输入拒绝理由");
+			return;
+		}
+		$.post(
+		    "admincp.php?module=$module&action=approval&rnd="+Math.random(),
+			"uid="+uid+"&v=-1&reject="+reason,
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end post
+	});//end click
+});
+</script>
+
+<div class="newopen" style="display:none; height:520px;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">拍卖商品列表</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<form name="search_form" action="admincp.php?module=$module&action=list" method="POST">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th>商品搜索</th>
+		</tr>
+		<tr>
+			<td>
+			    商品名称 <input type="text" name="ps_subject" value="$ps_subject_txt" size="20" class="text" /> &nbsp;
+				商品编码 <input type="text" name="ps_code" value="$ps_code_txt"  size="20" class="text" /> 
+				商品状态 $sel_approval 
+				<input name="member" type="submit" value="确 定" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+	
+	<table cellpadding="0" cellspacing="1" class="list" style="margin-top:6px;">
+		<tr>
+			<th width="4%"><input type="checkbox" name="chkall" value="1" /></th>
+			<th>商品信息</th>
+			<th>起拍价</th>
+			<th>终止价</th>
+			<th>开始时间</th>
+			<th>结束时间</th>
+			<th>参与人次</th>
+			<th>状态</th>
+			<th>操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($goods_rt as $val){
+print <<<EOT
+-->	
+		<tr uid="$val[uid]">
+			<td><input type="checkbox" name="uid_check[]" value="$val[uid]" /></td>
+			<td>
+			    <input type="text" class="text" rel="goods_name" uid="$val[uid]" value="$val[goods_name]" style="width:250px;" />
+				<span class="td1">
+				    <a href="$val[goods_url]" target="_new">
+					    <img src="images/admincp/zoom.gif" align="absmiddle" />
+					    <span style="width:auto;"><img src="$val[goods_file1]" /></span>
+					</a>
+				</span>
+			</td>
+			<td>$val[start_price]</td>
+			<td>$val[end_price]</td>
+			<td>$val[start_date]</td>
+			<td>$val[end_date]</td>
+			<td>
+			    $val[join_times]
+				<a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=join_list&uid=$val[uid]">(详情)</a>
+			</td>
+			<td style="padding:0 8px">
+			    $val[status]
+			</td>
+			<td>
+			    <a href="$val[edit]" class="tipsy_s modify" title="修改"></a>
+				<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+<!--
+EOT;
+if($val[approval]==0){
+print <<<EOT
+-->
+				<a href="#" rel="approval" uid="$val[uid]" class="tipsy_s check" title="审核"></a> 
+				<a href="#" rel="reject" uid="$val[uid]" t="$val[goods_name]" class="tipsy_s che" title="拒绝"></a>
+                拒绝理由：<input rel="reject" type="text" class="text" value="" style="width:100px" />
+<!--
+EOT;
+}else if($val[approval]<0){ print <<<EOT
+-->
+				拒绝理由：$val[reject]
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="page">
+	    <span style="float:left;">
+		    <input type="button" value="删除选定" rel="bat_del" class="button1" /> 
+		</span>
+		<span>$page_list</span>
+	</div>
+<!--
+EOT;
+?>-->

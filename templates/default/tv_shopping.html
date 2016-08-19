@@ -1,0 +1,214 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("li[@rel=rcm_tv]").hover(
+	    function(e){
+		    $("li[@rel=rcm_tv]").find("a.img").hide();
+			$("li[@rel=rcm_tv]").find("p").removeClass("FB_hover");
+			
+			$(this).find("a.img").show();
+			$(this).find("p").addClass("FB_hover");
+		},
+		function(e){}
+	);//end hover
+	$("li[@rel=rcm_tv]:first").trigger("mouseenter");
+	
+	$("li[@rel=rcm_tv]").find("a").click(function(e){
+	    e.preventDefault();
+		var youku_id=$(this).parents("li[@rel=rcm_tv]:first").attr("youku_id");
+		var html='<embed src="http://static.youku.com/v/swf/qplayer.swf?VideoIDS='+youku_id+'&isAutoPlay=true&isShowRelatedVideo=false&embedid=-&showAd=0" quality="high" width="569" height="427" align="middle" allowScriptAccess="always" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>';
+	    $("div[@rel=tv_show]").html(html);
+	});//end click
+	
+	$("li[@rel=rcm_tv]").find("a:first").trigger("click");
+	
+	$("a[@rel=more_rcm]").click(function(e){
+	    e.preventDefault();
+		if($("li[@rel=rcm_tv]").size()<=4)
+		{
+		    alert("没有更多视频了:(");
+			return;
+		}
+		if($(this).html().indexOf("↓")!=-1)
+		{
+		    $(this).html("查看更多↑");
+			$("li[@rel=rcm_tv]:gt(3)").show();
+			$("li[@rel=rcm_tv]:lt(4)").hide();
+		}
+		else
+		{
+		    $(this).html("查看更多↓");
+			$("li[@rel=rcm_tv]:gt(3)").hide();
+			$("li[@rel=rcm_tv]:lt(4)").show();
+		}
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    var cat_uid=0;
+	var time_area=parseInt("$time_area");
+	var load_lock=false;
+	
+	$("a[@rel=cat]:first").addClass("hover");
+	$("a[@rel=time_area]").eq(time_area).addClass("hover");
+	
+	$.extend({
+	    LoadVideo:function(){
+		    if(load_lock) return;
+			
+			$("ul[@rel=tv_list]").empty();
+			$.ajax({
+			    url:"ajax.php?action=load_video&cat_uid="+cat_uid+"&time_area="+time_area,
+				type:"GET",
+				dataType:"json",
+				cache:true,
+				success:function(json){
+				    var html="";
+					$.each(json,function(i){
+					    html+='<li class="border"><div>';
+						html+='<a href="'+this.url+'" title="'+this.title+'" target="_blank"><img src="'+this.pic+'" style="width:276px;height:207px;" /></a>';
+						html+='<p class="name"><a href="'+this.url+'" title="'+this.title+'" target="_blank" class="fd f15">'+this.title+'</a></p>';
+						html+='<p class="price orange"><span class="fl f14  mt6">直播时间：'+$("a[@rel=time_area]").eq(time_area).html()+' </span><a href="'+this.url+'" target="_blank" class="fr goods_but but_see"></a></p>';
+						html+='</div></li>';
+					});//end each
+					$("ul[@rel=tv_list]").html(html);
+				},
+				complete:function(){
+				    load_lock=false;
+				}
+			});//end ajax
+		}//end LoadVideo
+	});
+	
+	$("a[@rel=cat]").click(function(e){
+	    e.preventDefault();
+		if(load_lock) return;
+		
+		cat_uid=$(this).attr("cat_uid");
+		$("a[@rel=cat]").removeClass("hover");
+		$(this).addClass("hover");
+		$.LoadVideo();
+	});//end click
+	
+	$("a[@rel=time_area]").click(function(e){
+	    e.preventDefault();
+		if(load_lock) return;
+		
+		time_area=$(this).attr("time_area");
+		$("a[@rel=time_area]").removeClass("hover");
+		$(this).addClass("hover");
+		$.LoadVideo();
+	});//end click
+	
+	$.LoadVideo();
+});
+</script>
+	<div class="border fl tv_show">
+    	<div class="recom_tv">
+        	<h3>推荐购</h3>
+            <ul class="four_box"><!-- 五箱 开始 -->     
+<!--
+EOT;
+foreach($rcm_tv as $val){
+print <<<EOT
+-->	
+                <li rel="rcm_tv" youku_id="$val[youku_id]">
+                    <p>
+                        <a href="#" class="name fd f14">$val[title]</a>
+                        <span class="gray">简介：$val[description]……</span>
+                    </p>
+                    <a href="#" class="img"><img src="$val[pic]" /></a>
+                </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </ul>
+            <p class="more"><span class="fl"></span><a href="#" rel="more_rcm" class="f14 red">查看更多↓</a></p>
+        </div>
+        <div class="recom_tv_live" rel="tv_show"></div>
+    </div>
+    <div class="tv_ad" style="position:relative;">
+<!--
+EOT;
+foreach($AD->GetAd('recommend',2) as $val){
+print <<<EOT
+-->	 
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="tv_shopping" p="recommend" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+<!--
+EOT;
+} print <<<EOT
+--><!--recommend-->
+    </div>
+    <div class="clear"></div>
+	<h3 class="titleb hottv_title"><span>热销产品</span><a href="tv_list.php">更多>></a></h3>
+	<div class="mt8 box_out">
+		<ul class="box_in tv_hot">
+<!--
+EOT;
+foreach($hot_tv as $val){
+print <<<EOT
+-->	
+        	<li>
+            	<a href="$val[url]" target="_blank"><img src="$val[pic]" alt=""></a>
+                <p class="name"><a href="$val[url]" target="_blank" class="f14 fd">$val[title]</a></p>
+                <p class="gray">$val[description]……</p>
+            </li> 
+<!--
+EOT;
+} print <<<EOT
+-->
+ 		</ul>
+	</div><!-- 热销产品 -->
+	<h3 class="titleb alltv_title"><span>全部TV购</span><a href="tv_list.php">更多>></a></h3>
+	<table width="100%" border="0" class="attrs"> 
+        <tr class="attrs_cate">
+            <th>分类</th>
+            <td>
+                <a rel="cat" cat_uid="0" href="#">全部</a>
+<!--
+EOT;
+foreach($cat_parent as $key=>$val){
+print <<<EOT
+-->
+                <a rel="cat" cat_uid="$val[uid]" href="#">$val[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </td>
+        </tr>
+        <tr class="attrs_cate">
+            <th>时段</th>
+            <td>
+<!--
+EOT;
+foreach($arr_video_time as $key=>$val){
+print <<<EOT
+-->
+                <a href="#" rel="time_area" time_area="$key">$val[0]：$val[1]-$val[2]：$val[3]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </td>
+        </tr> 
+    </table><!-- 分类 -->
+	<div class="mt8 box_out"><!-- 团购列表开始 -->
+		<ul class="box_in group_list" rel="tv_list"></ul>
+	</div><!-- 全部TV购 -->
+<!--
+EOT;
+?>-->

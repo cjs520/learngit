@@ -1,0 +1,60 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定日志？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">定期任务日志管理</td>
+			<td class="tright"><strong>注：只保留一周的日志记录</strong></td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>ID</th>
+			<th>模块</th>
+			<th>动作</th>
+			<th>时间</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_log as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td>$val[uid]</td>
+			<td>$val[module]</td>
+			<td>$val[action]</td>
+			<td>$val[register_date]</td>
+			<td><a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+
+</div>
+<!--
+EOT;
+?>-->

@@ -1,0 +1,49 @@
+<!--<?php
+print <<<EOT
+-->	
+<!--form content-->
+	<script type="text/javascript">
+	$(function(){
+		$("img[@rel=del_img]").click(function(){
+			var jq_this=$(this);
+			$.get(
+				"sadmin.php?module=$module&action=del&type=delimg&uid=$uid&rnd="+Math.random(),
+				function(){
+					alert("移除成功");
+					jq_this.replaceWith("暂无图片");
+				}
+			);//end get
+		});//end click
+	});
+	</script>
+		<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<input type="hidden" name="p_url" value="$p_url" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl fd">分类添加</th>
+			<tr>
+				<td width="70">上级分类</td>
+				<td>$cat_menu <p class="alert_info2 text_33"><span class="icon_info"></span>如该分类是顶级分类，此处留空</p></td>
+				<td width="70">分类名称</td>
+				<td><input type="text" name="category_name" id="category_name" value="$category_name" class="text text_3" /></td>
+			</tr>
+			<tr>
+			    <td>分类图标</td>
+				<td><input type="file" name="category_file1" id="category_file1" size="36" class="text text_3" /><p class="alert_info2 text_33"><span class="icon_info"></span>与商铺分类界面匹配的图片尺寸</p>$category_file</td>
+				<td>输出顺序</td>
+				<td><input type="text" name="category_rank" id="category_rank" value="$category_rank" class="text text_3" /><p class="alert_info2 text_33"><span class="icon_info"></span>请直接输入数字，数值越小，显示越靠前</p></td>
+			</tr>
+
+			<tr>
+				<td>分类关键字</td>
+				<td><textarea name="category_key" id="category_key" class="textarea text_3" rows="2">$category_key</textarea></td>
+				<td>分类描述</td>
+				<td><textarea name="category_desc" id="category_desc" class="textarea text_3" rows="2">$category_desc</textarea></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

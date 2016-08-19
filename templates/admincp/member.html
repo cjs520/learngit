@@ -1,0 +1,107 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(e){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div class="newopen" style="display:none; width:880px;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<!-- 会员搜索 -->		
+	<form action="admincp.php?module=$module" method="post" name="search_form">
+	<input type="hidden" name="action" value="list"/>
+	<table class="clst" align="center" cellpadding="0" cellspacing="1" style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">会员资料搜索</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list1" style="border-top:none;">
+		<tr>
+			<td>
+            	注册时间
+				<input type="text" name="start_time" size="8" value="$start_time" id="start_time" class="text" onclick="return showCalendar('start_time', 'y-m-d');" /> ~
+				<input type="text" name="end_time" size="8" value="$end_time" id="end_time" class="text" onclick="return showCalendar('end_time', 'y-m-d');" /> &nbsp;
+				会员ID <input type="text" name="ps_member" size="30" value="$ps_member" class="text" /> &nbsp;
+				会员等级 $grade_sel
+				<input name="member" type="submit" value="会员搜索" class="button1" />
+            </td>
+		</tr>
+	</table>
+	</form>
+	
+	<form action="admincp.php?module=$module" method="post">
+    <input type="hidden" name="step" value="1" />
+	<input type="hidden" name="action" value="all_delete" />
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>会员ID</th>
+			<th>姓名</th>
+			<th width="10%">等级</th>
+			<th width="8%" >积分</th>
+			<th width="8%">预付款</th>
+			<th>最后登录时间</th>
+			<th width="10%">$lang[operation]</th>
+		</tr>
+
+<!--
+EOT;
+foreach ($member_rt as $val){
+print <<<EOT
+-->
+		<tr uid="$val[uid]">
+			<td class="td1">$val[member_id] $val[tag]</td>
+			<td class="td1">
+			<a href="#">$val[member_name]
+			<span style="cursor:pointer;">
+			性别: $val[member_sex]<br/>
+			注册时间: $val[register_date]<br/>
+			固话号码: $val[member_tel1]<br/>
+			手机号码: $val[member_tel2]<br/>
+			联系地址:$val[province] $val[city] $val[county] $val[member_address]<br/>
+			</span>
+			</a>
+			</td>
+			<td>$val[member_class]</td>
+			<td>$val[member_point]</td>
+			<td>$val[member_money]</td>
+			<td>$val[last_login]</td>
+			<td>
+			    <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="修改"></a>
+				<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="page"><span>$page_list</span></div>
+	</form>	
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

@@ -1,0 +1,96 @@
+<!--<?php print<<<EOT
+--><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta name="Copyright" content="www.mvmmall.cn" />
+<meta name="keywords" content="$mm_keywords" />
+<meta name="description" content="$mm_description" />
+<title>$mm_mall_title,$mm_mall_name-$mm_seotitle</title>
+</head>
+<body>
+<link rel="stylesheet" type="text/css" media="all" href="images/default/public.css" />
+<link rel="stylesheet" type="text/css" media="all" href="images/default/member.css" />
+	<div style="margin:20px;">
+		<div class="member_title printst" style="padding:0 15px;"><span class="fl fd red">订单详情&nbsp;</span><a href="#" onclick="if(confirm('确认打印？')) window.print();return false;" class="mt6 sprint" title="打印"></a>  <span class="fr">订单号码：$order_info[ordersn]</span></div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th class="fcl">商品</th>
+				<th>属性</th>
+				<th>客户单价</th>
+				<th>销售积分</th>
+				<th>数量</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->			<tr>
+				<td class="fcl" width="25%">$val[goods_name]</td>
+				<td>$val[goods_attr]</td>
+				<td>$val[buy_price]</td>
+				<td>$val[buy_point]积分</td>
+				<td>$val[buy_number]</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->			<tr><td colspan="5" class="blue">订单总金额：$order_info[goods_amount] + 运输费：$order_info[sh_price] + 折扣金额：$order_info[discount] = 订单总金额：$order_info[order_amount]</td></tr>
+			<tr><td class="fcr" colspan="5">商品总数：<strong class="red">$total_goods_num</strong></td></tr>
+		</table>	
+		<div class="clear"></div>		
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<th colspan="2" class="fcl fd red">收货人信息</th>
+				<th colspan="2" class="fcl fd red">结算信息</th>
+			</tr>
+			<tr>
+				<td>发货单号</td>
+				<td>$order_info[delivery_code]</td>
+				<td>支付方式</td>
+				<td>$order_info[pay_name]</td>
+			</tr>
+			<tr>
+				<td width="15%">姓名</td>
+				<td width="35%">$order_info[consignee]</td>
+				<td width="15%">总结算金额</td>
+				<td width="35%">$order_info[order_amount]</td>
+			</tr>
+			<tr>
+				<td>手机</td>
+				<td>$order_info[mobile]</td>
+				<td>订购者</td>
+				<td>$order_info[username]</td>
+			</tr>
+			<tr>
+				<td>邮政编码</td>
+				<td>$order_info[zipcode]</td>
+				<td>配送方式</td>
+				<td>$order_info[sh_name]</td>
+			</tr>
+			<tr>
+				<td>收货地址</td>
+				<td>$order_info[address]</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>发票票头</td>
+				<td>$order_info[invoice]</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>客户留言</td>
+				<td>$order_info[remark]</td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
+<!--
+EOT;
+?>-->

@@ -1,0 +1,305 @@
+<!--<?php print<<<EOT
+--><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta name="Copyright" content="www.mvmmall.cn" />
+<meta name="keywords" content="$mm_keywords" />
+<meta name="description" content="$mm_description" />
+<title>{$mm_mall_title} - $shop_file[shop_name]</title>
+<link rel="stylesheet" type="text/css" href="images/default/public.css?v=$MVMMALL_WAPVERSION" />
+<link rel="stylesheet" href="$imgpath/mvm.css?v=$MVMMALL_WAPVERSION" type="text/css" />
+<script type="text/javascript" src="include/javascript/jquery.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.searchhint.js"></script>
+<script type="text/javascript" src="include/javascript/mvm.js"></script>
+<script type="text/javascript">
+$(function(){
+    $.fn.extend({
+        DropDownMenu:function(show_hover,right_px,callback){
+			$(this).hover(
+			    function()
+			    {
+				    var shoupp = $(this).children("p").position();
+				    var top = shoupp.top+29+"px";
+				    var left = shoupp.left+right_px+"px";
+				    $(this).children("div").css({"left":left,"top":top});
+				    $(this).children("p").addClass(show_hover);
+				    $(this).children("div").show();
+					
+					if(typeof callback=="function") callback(this);
+			    },
+				function(){
+				    $(this).children("p").removeClass(show_hover);
+				    $(this).children("div").hide();
+			    }
+			);//end hover
+        }	 
+    });//end extend
+	
+	$("#search_gn").Hint($("#goods_search_span"));
+	$("#search_article").Hint($("#article_search_span"));
+	$("#search_shop").Hint($("#shop_search_span"));
+	
+	$("form[@name=search_goods]").find("input[@name=sellshow]").click(function(){
+	    var v=$(this).val();
+		$("#goods_search_span").attr("url","ajax.php?action=search_hint&ctrl=g&sellshow="+v);
+	});//end click
+	
+	$("div.top_tel").DropDownMenu("totel_show",-45);
+	$("div.top_list").DropDownMenu("tolist_show",0);
+	$("div.top_cart").DropDownMenu("tocart_show",0,function(obj){
+	    if($(obj).attr("load")=="load") return;
+		$(obj).attr("load","load");
+		
+		$.ajax({
+		    url:"ajax.php?action=cart_simple_list",
+			type:"GET",
+			dataType:"json",
+			cache:false,
+			success:function(json){
+			    var jq_list=$("div[@rel=cart_list]:first");
+				jq_list.empty();
+				if(json.length<=0)
+				{
+				    jq_list.html('<p><span class="span_left red">您购物车里还没有任何商品。</span><a href="$mm_url[cart]" class="check_cart">查看我的购物车</a></p>');
+				    return;
+				}
+				
+				var price=$("strong[@rel=cart_num]").attr("price");
+				var html="";
+				html+='<div class="cart_mid h_oflow">';
+				$.each(json,function(i){
+				    html+='<dl rel="cart_list">';
+					html+='<dt><img src="'+this.goods_file1+'" width="40" height="40" /></dt>';
+					html+='<dd><p>'+this.goods_name+'</p><p class="red">'+this.cart_price+' <span class="gray">'+this.attr+'</span><span class="fr gray">'+this.cart_num+'件</span></p></dd>';
+					html+='<dd><a rel="del_cart" href="'+this.url+'" target="_new">查看</a></dd>';
+					html+='</dl>';
+				});//end each
+				html+='<div class="clear"></div>';
+                html+='<p><span class="span_left">总计：<span class="red f14" rel="cart_price">'+price+'</span></span><a href="$mm_url[cart]" class="check_cart">查看我的购物车</a></p>';
+			    html+='</div>';
+				jq_list.html(html);
+			}
+		});//end ajax
+	});
+});
+</script>
+</head>
+<body>
+<div id="header">
+	<div class="top1_bg"><div class="top1"><!--- 头部第一块开始 --->
+		<div class="span_right">
+        	<div class="top_tel">
+                <p class="totel"><i></i>手机版</p>
+                <div class="totel_child"><img src="$_URL[0]/images/noimages/wap_code.png" /></div>
+            </div><!-- 手机版 -->
+            <div class="top_list">
+				<p class="tolist">特色服务<span></span></p>
+            	<div class="tolist_child tolist_child2">
+                    <dl>
+                		<dt>商家</dt>
+                		<dd><a href="$_URL[0]/sadmin.php?module=sup_apply&action=list">托管服务</a></dd>
+                	</dl>
+                    <dl>
+                		<dt>买家</dt>
+                		<dd><a href="$_URL[0]/help.php">帮助中心</a></dd>
+                	</dl>
+                    <dl>
+                		<dt>招商</dt>
+                		<dd><a href="$_URL[0]/join.php">招商加盟</a></dd>
+                		
+                	</dl>
+            	</div>               
+            </div><!-- 特色服务 -->
+            <div class="top_list">            
+				<p class="tolist"><a href="$_URL[0]/sadmin.php?module=index">我的帐户</a><span></span></p>
+                <div class="tolist_child">
+                    <a href="$_URL[0]/member.php?action=order">我的订单</a>
+                    <a href="$_URL[0]/account.php?action=point">我的积分</a>
+                    <a href="$_URL[0]/member.php?action=mycoupon">我的优惠券</a>
+                    <a href="$_URL[0]/member.php?action=pai">我的竞拍</a>
+                    <a href="$_URL[0]/member.php?action=myfav">我的收藏</a>
+                    <a href="$_URL[0]/member.php?action=my_lucky">幸运抽奖</a>         
+                </div>
+            </div><!-- 我的帐户 -->
+			<p class="tnav"><!--
+EOT;
+if($mvm_member[isSupplier]>=1){
+print <<<EOT
+--><a href="$my_shop_url" class="red">我的商铺</a>|<!--
+EOT;
+}else{
+print <<<EOT
+--><a href="$mm_url[investment]" class="red">我要开店</a>|<!--
+EOT;
+} print <<<EOT
+-->			</p>
+            <div class="top_cart">    
+            	<p class="tocart"><i></i><a href="$mm_url[cart]">购物车</a> <strong class="orange" rel="cart_num" price="$cart_info[total_price_txt]">$cart_info[total_num]</strong> 件</p>
+				<div class="tocart_child" rel="cart_list"><p>购物车加载中...</p></div>
+            </div><!-- 购物车 -->
+            <a href="{$_URL[0]}" class="fr red" target="_blank">商城首页</a>
+		</div>
+		<div class="top_login">
+<!--
+EOT;
+if($m_check_id){
+print <<<EOT
+-->		欢迎您,$m_check_id&nbsp;&nbsp;<span class="red">[$member_level]</span> 
+<!--
+EOT;
+if($m_un_activate==1){
+print <<<EOT
+-->
+		<a href="activate.php" style="font-weight:bold;">[点击这里激活]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+  <a href="$mm_url[logout]">[退出]</a>
+<!--
+EOT;
+} else { 
+print <<<EOT
+-->		您好，欢迎您！<a href="$mm_url[login]" class="orange">请登录</a>
+		<a href="$mm_url[user_reg]" class="orange">免费注册</a>
+<!--
+EOT;
+} print <<<EOT
+-->		</div>
+	</div></div><!-- 头部第一块 -->
+
+	<div class="top2_bg"><div class="top2"><!--- 头部第二块结束 --->
+		<div class="topsearch">
+			<h3 class="span_left">
+				<a rel="tab_head" n="h2" class="hover">商品</a>
+				<a rel="tab_head" n="h2">商铺</a>
+				<a rel="tab_head" n="h2">资讯</a>
+			</h3>		
+			<div class="topsearth_tab topsearth_tab1" rel="tab_body" n="h2"><span class="topsearth_tabr fr"></span><span class="topsearth_tabl topsearth_tabl2 fl"></span>
+				<form method="post" name="search_goods" action="$main_settings[mm_mall_url]/search.php">
+					<input type="submit" class="searchtop_button" value="" />
+					<input type="text" class="searchtop_input" name="ps_search" id="search_gn" value="请输入商品名称" onfocus="if(this.value=='请输入商品名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+                    <p class="searchtop_radio"><input type="radio" name="sellshow" value="1" checked />销售型 <input type="radio" name="sellshow" value="2" />展示型</p> 
+				</form>
+                <div class="search_jg" rel="search_span" style="display:none;" id="goods_search_span" url="ajax.php?action=search_hint&ctrl=g&sellshow=1"></div>
+			</div>		
+			<div class="topsearth_tab" rel="tab_body" n="h2" style="display:none;"><span class="topsearth_tabr fr"></span><span class="topsearth_tabl fl"></span>
+				<form method="post" action="$main_settings[mm_mall_url]/shop.php">
+					<input type="submit" class="searchtop_button" value="" />
+					<input type="text" class="searchtop_input" name="shop_name" id="search_shop" value="请输入商铺名称" onfocus="if(this.value=='请输入商铺名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+				    <div class="search_jg" rel="search_span" style="display:none;" id="shop_search_span" url="ajax.php?action=search_hint&ctrl=shop"></div>
+				</form>
+			</div>		
+			<div class="topsearth_tab" rel="tab_body" n="h2" style="display:none;"><span class="topsearth_tabr fr"></span><span class="topsearth_tabl fl"></span>
+				<form method="post" action="$main_settings[mm_mall_url]/board.php">
+					<input type="submit" class="searchtop_button" value="" />
+					<input type="text" class="searchtop_input" name="ps_search" id="search_article" value="请输入资讯名称" onfocus="if(this.value=='请输入资讯名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+				</form>
+				<div class="search_jg" rel="search_span" style="display:none;" id="article_search_span" url="ajax.php?action=search_hint&ctrl=article"></div>
+			</div>
+		</div>
+		<h1><a href="$main_settings[mm_mall_url]"><img src="$main_settings[mm_mall_url]/$main_settings[mm_logo]" /></a></h1>	
+	</div></div><!-- 头部第二块 -->
+    
+    <div class="new_header">
+        <p><img src="$shop_banner[banner_file1]" width="1200" /></p>
+    </div><!-- 头部banner -->
+    
+    <div class="top3_bg"><div class="top3">
+        <div class="h_oflow"><span class="tr"></span><span class="tl"></span>
+            <a title="所有分类" class="allcat" rel="allcatnew"><span>所有商品分类</span><i></i></a>
+            <ul>
+<!--
+EOT;
+$i=0;
+foreach($nav_head as $val){
+$i++;
+print <<<EOT
+-->				<li class="span_left nav$i"><a href="$val[link]" class="navtab" $val[target] title="$val[alt]" rel="nav_head"><span>$val[title]</span></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>
+			<form method="post" action="search.php?supid=$page_member_id" name="search" class="zn_search"  >
+				站内搜索：<input type="text" name="ps_search" class="s_inp" style="color:#000;" value="$ps_search" /> 
+				<input type="submit" value="" class="s_but" /> 
+			</form> 
+        </div>
+        <script language="javascript" src="include/javascript/jquery.submenu.js"></script>
+        <script type="text/javascript">
+        $(function(){
+            $("dl[@rel=category]").DXDSubMenu();
+            $("a[@rel=allcatnew],div[@rel=tcategory]").hover(
+                function(){
+                    $("div[@rel=tcategory]").show();
+					$("div[@rel=tcategory]").css("top","43px")
+                    $("a[@rel=allcatnew]>i").addClass("on");
+                },
+                function(){
+                    $("div[@rel=tcategory]").hide();
+                    $("a[@rel=allcatnew]>i").removeClass("on");
+                }
+            );
+        });
+        </script>
+        <div class="top_cate" rel="tcategory">
+            <dl rel="category">
+			    <dt uid="1" class="fd" style="height:1px;"></dt>
+<!--
+EOT;
+foreach($cat_parent as $val){
+print <<<EOT
+-->
+                <dt uid="$val[uid]" class="fd"><a href="$val[url]" class="gray">$val[category_name]</a></dt>
+                <dd uid="$val[uid]">
+<!--
+EOT;
+foreach($val[children] as $child){
+print <<<EOT
+-->
+                    <a href="$child[url]">$child[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+                </dd>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </dl>
+            <div class="sub_category"></div>	
+        </div><!-- 头部分类 -->    
+    </div></div><!-- 头部第三块 -->
+</div>
+<div class="clear"></div>
+<script type="text/javascript">
+$(function(){
+	//微信弹出框
+	$(".tip_weixin").hover(function()
+	{
+		$(".tip_weixin span").show();
+	},function(){
+		$(".tip_weixin span").hide();
+	});
+	//QQ弹出框
+	$(".tip_service").hover(function()
+	{
+		$(".tip_service div").show();
+	},function(){
+		$(".tip_service div").hide();
+	});
+});
+</script>
+<div class="tip_right">
+    <a href="$mm_url[changegd]" title="积分换购" class="tip_changegd"></a> 
+    <a href="$mm_url[coupon]" title="优惠券" class="tip_coupon"></a>
+    <a href="#" rel="tip_weixin" title="微信" class="tip_weixin" style="position:relative;"><span><img src="$mm_wx_logo"></span></a>
+    <a href="#top" title="回顶部" class="tip_top"></a> 
+</div><!-- 右侧浮动 -->
+<div class="wrapper">
+<!--
+EOT;
+?>-->

@@ -1,0 +1,144 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定视频？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=approval]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行审核？")) return;
+		var uid=$(this).attr("uid");
+		$.post(
+		    "admincp.php?module=$module&action=approval&rnd="+Math.random(),
+			"uid="+uid+"&v=1",
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end post
+	});//end click
+	
+	$("a[@rel=reject]").click(function(e){
+	    e.preventDefault();
+		var t=$(this).attr("t");
+		if(!confirm("确认进行拒绝："+t+"？")) return;
+		var uid=$(this).attr("uid");
+		var reason=$(this).siblings("input[@rel=reject]").val();
+		if(reason=="")
+		{
+		    alert("请输入拒绝理由");
+			return;
+		}
+		$.post(
+		    "admincp.php?module=$module&action=approval&rnd="+Math.random(),
+			"uid="+uid+"&v=-1&reject="+reason,
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end post
+	});//end click
+});
+</script>
+<div id="right">
+    <form name="search_form" action="admincp.php?module=$module&action=$action" method="post">
+	<input type="hidden" name="search" value="1"/>
+	<table class="clst" align="center" cellpadding="0" cellspacing="1"  style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">商城视频管理</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list1" style="border-top:none;">
+		<tr>
+			<td>申请会员</td>
+			<td><input type="text" name="m_id" value="$m_id" class="text" /></td>
+			<td>按分类</td>
+			<td>$sel_cat</td>
+			<td>按状态</td>
+			<td>$sel_status</td>
+			<td width="10%"><input name="member" type="submit" value="搜 索" class="button" /></td>
+		</tr>
+	</table>
+	</form>
+	
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="15%">视频名称</th>
+			<th>视频截图</th>
+			<th>分类</th>
+			<th>积分</th>
+			<th>排名评分</th>
+			<th width="17%">简介</th>
+			<th>申请时段</th>
+			<th>状态</th>
+			<th>操 作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_video as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td class="td1">
+			    <a href="$val[youku_link]" target="_blank">$val[title]</a><br />
+				推广：<br />
+				<a href="$val[url]" target="_blank">$val[url]</a>
+			</td>
+			<td class="td1"><img src="$val[pic]" width="160" /></td>
+			<td>$val[cat_name]</td>
+			<td>$val[total_point]</td>
+			<td>$val[rate]</td>
+			<td class="td1">$val[description]</td>
+			<td>$val[start_date]~$val[end_date]<br />$val[time_area]</td>
+			<td>$val[status]</td>
+			<td>
+			    <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=view&uid=$val[uid]" class="tipsy_s view" title="预览"></a> 
+				<a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+<!--
+EOT;
+if($val[approval]==0){
+print <<<EOT
+-->
+				<a href="#" rel="approval" uid="$val[uid]" class="tipsy_s check" title="审核"></a> 
+				<a href="#" rel="reject" uid="$val[uid]" t="$val[title]" class="tipsy_s che" title="拒绝"></a>
+                拒绝理由：<input rel="reject" type="text" class="text" value="" style="width:100px;"/>
+<!--
+EOT;
+}else if($val[approval_date]<0){ print <<<EOT
+-->
+				拒绝理由：$val[reject]
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+
+</div>
+<!--
+EOT;
+?>-->

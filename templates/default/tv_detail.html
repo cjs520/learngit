@@ -1,0 +1,222 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<style>
+.rate_good,.rate_bad { float:left; margin:7px 6px 0; }
+</style>
+<script type="text/javascript">
+$(function(){
+    var comment_lock=false;
+    $("a[@rel=good_video],a[@rel=bad_video]").click(function(e){
+	    e.preventDefault();
+		if("$m_check_id"=="")
+		{
+		    alert("您还未登录，请先登录");
+			return;
+		}
+		if(comment_lock) return;
+		var uid=$(this).attr("uid");
+		var rel=$(this).attr("rel");
+		var num=parseInt($(this).attr("num"));
+		var jq_this=$(this);
+		if(isNaN(num)) num=0;
+		
+		comment_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=load_video&cmd=write_comment&uid="+uid+"&rel="+rel,
+			type:"GET",
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    num++;
+					jq_this.next("span").html("("+num+")");
+				}
+			},
+			complete:function(){
+			    comment_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+
+	<div class="shopshow_r" style="padding-bottom:0;">
+		<div class="pro_rinfo">
+			<p>商铺名称：<strong><a href="$shop_url" target="_blank">$shop[shop_name]</a></strong></p>
+			<p>所在地区：$shop[province] $shop[city] $shop[county]</p>
+			<p>
+			    客服人员：
+<!--
+EOT;
+foreach($arr_qq as $val){
+print <<<EOT
+-->
+				<a target='_blank' href='http://wpa.qq.com/msgrd?v=3&uin=$val&site=qq&menu=yes'><img src='http://wpa.qq.com/pa?p=2:$val:52' align='absmiddle' alt='' title=''></a> &nbsp; 
+<!--
+EOT;
+} print <<<EOT
+-->
+			</p>
+		</div>
+        <h4 class="title_line"><span>分享给朋友</span></h4>
+        <p class="fct"><img src="$qrcode_img" alt="$shop[shop_name]" width="210"></p>
+        <div class="clear"></div>
+        <h4 class="title_line"><span>您可能喜欢</span></h4>
+        <ul class="tv_hot tv_love">
+<!--
+EOT;
+foreach($arr_may_fav as $val){
+print <<<EOT
+-->
+            <li>
+            	<a href="$val[url]"><img src="$val[pic]" alt=""></a>
+                <p class="name"><a href="$val[url]" class="f14 fd">$val[title]</a></p>
+                <p class="gray">$val[description]……</p>
+            </li>  
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>
+        <div class="h_oflow" style="background:#fff;">
+<!--
+EOT;
+foreach($AD->GetAd('recommend',2) as $val){
+print <<<EOT
+-->		<div class="mt10" style="position:relative;">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->			<a href="#" rel="ad_apply" m="tv_detail" p="recommend" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->			<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]" width="230"/></a>
+		</div>
+<!--
+EOT;
+} print <<<EOT
+-->		</div>
+	</div>
+	<div class="shopshow_l">
+    	<div>
+<!--
+EOT;
+if($time_area!=$video[time_area]){
+print <<<EOT
+-->
+		    <span class="tv_none"></span>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+		    <embed src="http://static.youku.com/v/swf/qplayer.swf?VideoIDS=$video[youku_id]&isAutoPlay=true&isShowRelatedVideo=false&embedid=-&showAd=0" quality="high" width="960" height="500" align="middle" allowScriptAccess="always" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</div>
+    	
+        <div class="h_oflow border tv_title">
+        	<p class="fl name">
+                <a href="" class="fd f16">$video[title]</a>
+                <span class="fl gray">$video[description]</span>
+            </p>
+            <a href="$video[url]" target="_blank" class="fr buy_now">立即去购买</a>
+        </div>
+        <div class="mt10 share_bar"> 
+            <div class="fl bshare-custom icon-medium"><a title="分享到QQ空间" class="bshare-qzone"></a><a title="分享到新浪微博" class="bshare-sinaminiblog"></a><a title="分享到人人网" class="bshare-renren"></a><a title="分享到腾讯微博" class="bshare-qqmb"></a><a title="分享到网易微博" class="bshare-neteasemb"></a><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a><span class="BSHARE_COUNT bshare-share-count">0</span></div><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script><script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+            <p class="fr">
+                <a href="#" rel="good_video" num="$video[good]" uid="$video[uid]" class="fl feel_good"></a> <span class="fl gray">($video[good])</span>
+                <a href="#" rel="bad_video" num="$video[bad]" uid="$video[uid]" class="fl feel_bad"></a> <span class="fl gray">($video[bad])</span>
+			</p>    
+        </div>
+        <h3 class="shop_title f14 mt10">商品评论</h3>
+        <div class="h_oflow border product_con">
+			<div class="pro_satisfaction">
+				<p><strong class="fl">商品满意度 &nbsp;</strong> <span class="gray fl">(有{$total_comment}人评论)</span><span class="rate_good" title="好评"></span><span class="orange f13"><span class="fl">$video[good] &nbsp;</span> <span class="rate_bad" title="差评"></span> <span class="fl">$video[bad]</span> </span></p>
+			</div>
+			<div class="clear"></div>
+            <table class="pro_comment" cellspacing="0">
+<!--
+EOT;
+foreach($arr_comment as $val){
+print <<<EOT
+-->
+                <tr>
+                    <td class="fct">
+                        <a><img src="{$val[me][member_image]}" alt=""></a>
+                        <a>{$val[me][member_id]}</a>
+                    </td>
+                    <td>
+                        <p>$val[comment]</p>
+                        <div class="red">
+                            <span class="fr gray">($val[register_date])</span>
+                            <span class="fl">
+<!--
+EOT;
+if($val[good_bad]==1){
+print <<<EOT
+-->
+                                <span class="rate_good"></span>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+								<span class="rate_bad"></span>
+<!--
+EOT;
+} print <<<EOT
+-->
+                                <a href="{$val[my_fav][url]}"> 我推荐我喜欢: <b>{$val[my_fav][title]}</b></a>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </table>
+        </div><!-- 商品评论 -->
+        <h3 class="mt10 titlec"><span>大家都在看</span></h3>
+        <ul class="h_oflow bg_gray buy_other">
+<!--
+EOT;
+foreach($arr_all_view as $val){
+print <<<EOT
+-->
+            <li><a href="$val[url]"><img src="$val[pic]" class="border" /></a>
+                <p class="name"><a href="$val[url]" title="$val[title]">$val[title]</a></p>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul><!-- 看过该视频的人还看了 -->
+<!--
+EOT;
+foreach($AD->GetAd('banner',2) as $val){
+print <<<EOT
+-->	<div class="mt10" style="position:relative;">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="tv_detail" p="banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]" width="960"/></a>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+--><!--banner-->     
+    </div>
+<!--
+EOT;
+?>-->

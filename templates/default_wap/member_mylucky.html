@@ -1,0 +1,86 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("span[@rel=close_info]").click(function(e){
+		e.preventDefault();
+		$("div[@rel=info]").fadeOut(1000);
+		$("#block").css("display","none");
+	});//end click
+	
+	$("a[@rel=edit]").click(function(e){
+	    e.preventDefault();
+		var o=$("div[@rel=info]");
+		var itop=(document.documentElement.clientHeight-o.height())/2+$(document).scrollTop();
+		var ileft=(document.documentElement.clientWidth-o.width())/2+$(document).scrollLeft()-20;
+		o.css({
+			width:500+"px",
+			position:"absolute",
+			top:itop+"px",
+			left:ileft+"px"
+		}).fadeIn(1000);
+		
+		var uid=$(this).attr("uid");
+		var name=$("span[@rel=name][@uid="+uid+"]").html();
+		var tel=$("span[@rel=tel][@uid="+uid+"]").html();
+		var address=$("span[@rel=address][@uid="+uid+"]").html();
+		var memo=$("span[@rel=memo][@uid="+uid+"]").html();
+		o.find("input[@rel=uid]").val(uid);
+		o.find("input[@rel=name]").val(name);
+		o.find("input[@rel=tel]").val(tel);
+		o.find("input[@rel=address]").val(address);
+		o.find("textarea[@rel=memo]").val(memo);
+		
+		$("#block").css("display","block");
+		$("div[@rel=info]").find("div[@rel=info_content]").html(msg);
+	});//end click
+	
+	$("input[@rel=info_submit]").click(function(){
+	    $.post(
+		    "member.php?action=$action&rnd="+Math.random(),
+			$("form[@rel=info_form]").serialize(),
+			function(msg){
+			    alert(msg);
+			    if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end post
+	});//end click
+});
+</script>
+    <div class="mem_right">
+        <div class="member_title fd red">我的幸运抽奖</div>      
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th>活动详情</th>
+				<th>收货信息</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_lucky_rec as $val){
+print <<<EOT
+-->			<tr>
+				<td class="fcl">
+                	活动名称：$val[lucky_name]<br />
+                    流水号：$val[ordersn]<br />
+                    奖品：<a href="$val[goods_url]" $val[target]>$val[goods_name]</a><br />
+                    状态：$val[status]
+                </td>
+				<td class="fcl">
+				    收货人：<span rel="name" uid="$val[uid]">$val[name]</span><br />
+					联系方式：<span rel="tel" uid="$val[uid]">$val[tel]</span><br />
+					收货地址：<span rel="address" uid="$val[uid]">$val[address]</span><br />
+					备注：<span rel="memo" uid="$val[uid]">$val[memo]</span>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div>
+<!--
+EOT;
+?>-->

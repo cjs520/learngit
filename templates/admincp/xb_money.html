@@ -1,0 +1,71 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return false;
+		var uid=$(this).attr("uid");
+		console.log("admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random());
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1" style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">消保明细</td>
+			<td class="tright red"></td>
+		</tr>
+	</table>
+	<form action="" method="post" style="border:solid 1px #888; border-top:none; padding:3px 10px;">
+		会员：<input type="text" class="text" name="ps_member" size="12" value="$ps_member" />  
+		时间：<input type="text" class="text" size="7" name="b_time" id="b_time" value="$b_time" onclick="return showCalendar('b_time', 'y-m-d');" /> ~ <input type="text" class="text" name="e_time" size="7" id="e_time" value="$e_time" onclick="return showCalendar('e_time', 'y-m-d');" />  
+		<input type="submit" value="搜索" class="button4" />
+	</form>
+	<div style="clear:both; height:5px; overflow:hidden;"></div>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+        	<th width="10%">会员</th>
+		    <th>交易类型</th>
+			<th width="12%">支付类别</th>
+			<th width="10%">交易单号</th>
+			<th width="10%">收支</th>
+			<th width="10%">消保余额</th>
+			<th width="12%">创建时间</th>
+			<th width="8%" style="display:none;">操作</th>
+		</tr>
+
+<!--
+EOT;
+foreach ($member_xb as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+		    <td><a href="admincp.php?module=xb_money&action=list&ps_member=$val[money_id]">$val[money_id]</a></td>
+            <td class="td1">$val[money_reason]</td>
+			<td>$val[type]</td>
+			<td>$val[money_sess]</td>
+		    
+			<td>$val[add] <span class="orange">$val[minus]</span></td>
+			<td>$val[money_left]</td>
+			<td>$val[register_date]</td>
+			<td style="display:none;"><a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		
+	</table>	
+	<div id="page"><span>$page_list</span></div>	
+</div>
+<!--
+EOT;
+?>-->

@@ -1,0 +1,111 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=ch_title]").click(function(e){
+	    e.preventDefault();
+		$("a[@rel=ch_title]").removeClass("hover");
+		$(this).addClass("hover");
+		
+		var v=$(this).attr("v");
+		if(v=="all")
+		{
+		    $("dl[@rel=ch_row]").show();
+			return;
+		}
+		$("dl[@rel=ch_row]").hide();
+		$("dl[@rel=ch_row][@v="+v+"]").show();
+	});//end click
+});
+</script>
+	<div class="border province">
+        <ul class="pro_tag">
+            <li class="hover"><a href="province.php">按地区</a></li>
+            <li><a href="map.php">按地图</a></li>
+            <li><a href="sort.php">按分类</a></li>
+        </ul>    
+        <table width="100%" border="0" class="pro_table">
+          <tr>
+            <th scope="row">请&nbsp;&nbsp;选&nbsp;&nbsp;择：</th>
+            <td>
+                <form action="shop.php" method="post" class="fl" target="_blank">
+                <script language="javascript" src="include/javascript/jquery.city.js"></script>
+                <select id="province_s" name="province_s"></select>
+                <select id="city_s" name="city_s"></select>
+                <select id="county_s" name="county_s"></select>
+                <script type="text/javascript">
+                $(function(){
+                    $.init_area(new Array("province_s","city_s","county_s"),new Array("$province_s","$city_s","$county_s"));
+                });
+                </script>
+                <input type="submit" class="sea_button" value="确定" />
+				</form>
+				<form action="shop.php" method="post" class="fl" style="margin-left:10px;" target="_blank">
+                <strong class="f14">直接搜索：</strong>
+                <input type="text" class="text" name="shop_name" size="20" value="$shop_name" />
+                <input type="submit" class="sea_button" value="确定" />
+                </form>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">热门城市：</th>
+            <td>
+<!--
+EOT;
+foreach($arr_hot_area as $key=>$val){
+print <<<EOT
+-->
+                <a href="$val[1]" target="_new">$val[0]</a> 
+<!--
+EOT;
+} print <<<EOT
+-->
+            </td>
+          </tr>
+        </table><!-- 搜索 -->
+    	<div class="pro_letter">
+        	<span></span>
+            按拼音首字母选择：
+            <a href="#" class="hover" rel="ch_title" v="all">全部</a>
+<!--
+EOT;
+for($c=ord('A');$c<=ord('Z');$c++){
+$ch=chr($c);
+print <<<EOT
+-->
+            <a href="#" rel="ch_title" v="$ch">$ch</a> 
+<!--
+EOT;
+} print <<<EOT
+-->
+        </div><!-- 按拼音首字母选择 -->
+<!--
+EOT;
+foreach($arr_rtl as $key=>$val){
+print <<<EOT
+-->
+    	<dl class="pro_area" rel="ch_row" v="$key">
+        	<dt><strong>$key</strong></dt>
+            <dd>
+<!--
+EOT;
+foreach($val as $v){
+print <<<EOT
+-->
+                <a href="$v[url]" target="_new">$v[area]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </dd>
+        </dl>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </div>
+<!--
+EOT;
+?>-->	

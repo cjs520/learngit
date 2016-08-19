@@ -1,0 +1,71 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("form[@name=page_form]").submit(function(){
+	    var msg="";
+		if($("input[@name=page_name]").val()=="") msg+="请输入英文名称\\n";
+		if($("input[@name=page_subject]").val()=="") msg+="请输入中文名称\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+});
+</script>
+<div id="right">
+	<form name="page_form" action="admincp.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="step" value="1"/>
+	<input type="hidden" name="uid" value="$uid"/>
+	<input type="hidden" name="page" value="$page" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr><th colspan="4">添加或修改页面</th></tr>
+		<tr>
+			<td width="18%">英文名称</td>
+			<td>
+			    <input type="text" onkeyup="value=value.replace(/[\W]/g,'') " name="page_name" value="$page_name" maxlength="20" class="text2 text_4" />
+				<p class="alert_warning"><span class="icon_waring"></span>请填写页面的英文名称</p>
+			</td>
+		</tr>
+		<tr>
+			<td>中文名称</td>
+			<td>
+			    <input type="text" name="page_subject" value="$page_subject"  maxlength="70" class="text text_4" /></td>
+			</td>
+		</tr>
+		<tr>
+			<td>关键字</td>
+			<td><textarea name="page_key" rows="2" class="text text_4">$page_key</textarea></td>
+		</tr>
+		<tr>
+			<td>页面描述</td>
+			<td><textarea name="page_desc" rows="2" class="text text_4">$page_desc</textarea></td>
+		</tr>
+		<tr>
+			<td>页面内容</td>
+			<td>
+			    <script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+	            <script type="text/javascript">
+	            KindEditor.ready(function(K) {
+		            var editor1 = K.create('textarea[name="page_body"]', {
+			            uploadJson : 'admincp.php?module=editor&action=upload',
+			            fileManagerJson : 'admincp.php?module=editor&action=list_files',
+			            allowFileManager : true,
+			            items:kindecitor_items
+		            });
+	            });
+	            </script>
+			    <textarea name="page_body" style="width:100%;height:400px;visibility:hidden;">$page_body</textarea>
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" onclick="" /> <input type="reset" name="reset" value="重置" class="button" /></div>
+	</form>	
+</div>
+<!--
+EOT;
+?>-->

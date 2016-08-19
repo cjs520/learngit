@@ -1,0 +1,36 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">商城资讯</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+    var code="$action";
+	$("div.news_nav").find("a[@code="+code+"]").addClass("hover");
+});
+</script>
+	<div class="border h_oflow news_nav">
+<!--
+EOT;
+foreach ($b_cat as $key=>$val){
+print <<<EOT
+-->		<a href="board.php?action=$key" code="$key">$val[board_title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->	</div>
+    <ul class="search_news">
+<!--
+EOT;
+foreach ($arr_board as $key=>$val){
+print <<<EOT
+-->		<li><a href="$val[url]" class="blue">$val[board_subject]</a></li>    
+<!--
+EOT;
+} print <<<EOT
+-->
+    </ul> 
+	<div class="page">$page_list</div>
+<!--
+EOT;
+?>-->

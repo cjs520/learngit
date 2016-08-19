@@ -1,0 +1,272 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1 f14 fd">{$mm_mall_name}</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+     var brand_uid="$brand_uid";
+	 if(brand_uid!="0")
+	 {
+	     $("a[@rel=brand]").removeClass("hover");
+		 $("a[@rel=brand][@uid="+brand_uid+"]").addClass("hover");
+	 }
+	 
+	 $("a[@rel=sellshow]").eq(parseInt("$sellshow")-1).addClass("now");
+	 
+	 var od="$od";
+	 var cls="$ac"=="DESC"?"down1":"up1";
+	 $("a[@rel=od][@f="+od+"]").addClass(cls);
+	 
+	 var attr_url="category.php?action=$action&sellshow=$sellshow&od=$od&ac=$ac&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&brand_uid=$val[id]";
+	 var arr_attr="$attr"==""?[]:MVMUrl.decode("$attr").split("|");
+	 $("a[@rel=attr]").click(function(e){
+	     e.preventDefault();
+		 var n=$(this).attr("n");
+		 var v=$(this).attr("v");
+		 var str_attr="";
+		 for(var k in arr_attr)
+		 {
+		     if(arr_attr[k].indexOf(n)!=-1) continue;
+			 if(arr_attr[k]=="") continue;
+			 str_attr+=arr_attr[k]+"|";
+		 }
+		 
+		 n=MVMUrl.encode(n);
+		 v=MVMUrl.encode(v);
+		 if(v!="") str_attr+=n+":"+v;
+		 attr_url+="&attr="+MVMUrl.encode(str_attr);
+		 window.location=attr_url;
+	 });//end click
+	 
+	 $.each(arr_attr,function(i){
+	     var arr_tmp=this.split(":");
+		 if(arr_tmp.length<2) return true;
+		 $("a[@rel=attr][@n="+arr_tmp[0]+"]").removeClass("hover").filter("[@v="+arr_tmp[1]+"]").addClass("hover").unbind("click");
+	 });//end each
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("li[@rel=g_grid]").hover(
+	    function(){
+		    if($(this).data("load")==1) return;
+			$(this).data("load",1);
+			var jq_this=$(this);
+			var uid=$(this).attr("uid");
+			var sellshow="$sellshow";
+			$.ajax({
+			    url:"ajax.php?action=get_goods_attr&sellshow="+sellshow+"&uid="+uid,
+				type:"GET",
+				dataType:"json",
+				cache:true,
+				success:function(json){
+				    if(json.err!="") return;
+					var stock=jq_this.attr("stock");
+					var html='<dl class="h_oflow">';
+					
+					for(var attr_name in json["attr_val"])
+					{
+					    html+='<dd rel="attr"><span class="fl">'+attr_name+'：</span>';
+						html+='<p>';
+					    for(var i in json["attr_val"][attr_name])
+						{
+						    var kv=attr_name+":"+json["attr_val"][attr_name][i][0];
+						    if(json["attr_val"][attr_name][i][1]!="") html+='<a href="#" kv="'+kv+'"><img src="'+json["attr_val"][attr_name][i][1]+'" /></a>';
+						    else html+='<a href="#" kv="'+kv+'"><strong>'+json["attr_val"][attr_name][i][0]+'</strong></a>';
+						}
+						html+='</p>';
+						html+='</dd>';
+					}
+					
+					html+='<dd><span class="fl">库存：</span><b rel="stock">'+stock+'</b>件</dd>'
+					html+='</dl>';
+					jq_this.find("dl[@rel=loading]").replaceWith(html);
+					jq_this.data("attr_store",json["attr_store"]);
+					$.SetAttrEvent(jq_this);
+				},
+				complete:function(){
+				    var jq_loading=jq_this.find("dl[@rel=loading]");
+					if(jq_loading.size()<=0) return;
+					var stock=jq_this.attr("stock");
+					var html='<dl class="h_oflow">';
+					html+='<dd><span class="fl">库存：</span><b rel="stock">'+stock+'</b>件</dd>'
+                    html+='</dl>';
+					jq_loading.replaceWith(html)
+				}
+			});//end ajax
+		},
+		function(){}
+	);//end hover
+	
+	$.extend({
+	    SetAttrEvent:function(jq_grid){
+		   var attr_row=jq_grid.find("dd[@rel=attr]");
+		   attr_row.find("a").removeClass("hover");
+		   attr_row.find("a").attr("selected","");
+		   attr_row.find("a").unbind("click");
+		   attr_row.find("a").click(function(e){
+		       e.preventDefault();
+			   $(this).parents("dd[@rel=attr]:first").find("a").removeClass("hover");
+			   $(this).parents("dd[@rel=attr]:first").find("a").attr("selected","");
+			   
+			   $(this).addClass("hover");
+			   $(this).attr("selected","selected");
+			   
+			   var is_full=true;
+			   var arr_sel_attr=[];
+			   attr_row.each(function(i){
+			       var jq_a_sel=$(this).find("a[@selected=selected]:first");
+				   if(jq_a_sel.size()<=0)
+				   {
+				       is_full=false;
+					   return false;
+				   }
+				   arr_sel_attr.push(jq_a_sel.attr("kv"));
+			   });//end each
+			   if(!is_full) return;
+			   var arr_store=jq_grid.data("attr_store");
+			   var idx=-1;
+			   for(var i in arr_store)
+			   {
+			       var b_find=true;
+			       for(var j in arr_sel_attr)
+				   {
+				       if($.inArray(arr_sel_attr[j],arr_store[i])==-1)
+					   {
+					       b_find=false;
+						   break;
+					   }
+				   }
+				   if(b_find)
+				   {
+				       idx=i;
+					   break;
+				   }
+			   }
+			   if(idx==-1) return;
+			   var stock=arr_store[idx][arr_store[idx].length-1];
+			   jq_grid.find("b[@rel=stock]:first").html(stock);
+		   });//end click
+		}
+	});//end extend
+});
+</script>
+    <div class="border border_bn h_oflow">
+     	<p class="location"><span class="loca_icon"></span>$navigation</p>
+	</div>
+    <table width="100%" border="0" class="attrs">
+<!--
+EOT;
+if($lower_cat){
+print <<<EOT
+-->
+        <tr class="attrs_cate">
+            <th>下级分类</th>
+            <td><div class="toggle_div"><a href="" rel="tip_open" class="tip_open"></a>
+<!--
+EOT;
+foreach ($lower_cat as $val){
+print <<<EOT
+-->
+                <a href="category.php?action=$val[uid]&sellshow=$sellshow&od=$od&ac=$ac&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&brand_uid=$brand_uid&attr=$attr">$val[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </div></td>
+        </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+        <tr class="attrs_cate">
+            <th>品牌</th>
+            <td><div class="toggle_div"><a href="" rel="tip_open" class="tip_open"></a>
+                <a rel="brand" class="hover" href="category.php?action=$action&sellshow=$sellshow&od=$od&ac=$ac&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&attr=$attr">全部</a>
+<!--
+EOT;
+foreach ($brand_list as $val){
+print <<<EOT
+-->
+                <a rel="brand" uid="$val[id]" href="category.php?action=$action&sellshow=$sellshow&od=$od&ac=$ac&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&brand_uid=$val[id]&attr=$attr">$val[brandname]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </div></td>
+        </tr>
+<!--
+EOT;
+foreach ($cat_list[att_list] as $key=>$val){
+print <<<EOT
+-->
+		<tr class="attrs_cate">
+		    <th>$key</th>
+			<td><div class="toggle_div"><a href="" rel="tip_open" class="tip_open"></a>
+			    <a rel="attr" n="$key" v="" href="#" class="hover">全部</a>
+<!--
+EOT;
+foreach ($val as $k=>$v){
+print <<<EOT
+-->
+				<a rel="attr" n="$key" v="$v" href="#">$v</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</div></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+        <tr class="attr_filter">
+            <td colspan="2"><ul>
+                <li class="sort">
+				    <a href="category.php?action=$action&sellshow=$sellshow&od=register_date&rel=change&ac=$ac&page=$page&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&attr=$attr" f="register_date" rel="od">日期</a> 
+                    <a href="category.php?action=$action&sellshow=$sellshow&od=goods_sale_price&rel=change&ac=$ac&page=$page&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&attr=$attr" f="goods_sale_price" rel="od">价格</a>
+                    <a href="category.php?action=$action&sellshow=$sellshow&od=goods_hit&rel=change&ac=$ac&page=$page&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&attr=$attr" f="goods_hit" rel="od">人气</a>
+                </li><li class="type">
+                    <a rel="sellshow" href="category.php?action=$action&sellshow=1&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&brand_uid=$brand_uid&attr=$attr" title="销售型商品">销售型</a>
+                    <a rel="sellshow" href="category.php?action=$action&sellshow=2&ps_search=$ps_search&min_money=$min_money&max_money=$max_money&brand_uid=$brand_uid&attr=$attr" title="展示型商品">展示型</a>
+                </li>     
+            </ul></td>
+        </tr>
+        <tr class="attr_filter">
+            <td colspan="2"><ul>
+                <li>
+                <form method="post" action="category.php?action=$action&sellshow=$sellshow">
+                    关键字 <input type="text" name="ps_search" class="text" size="10" value="$ps_search_txt" /> 
+
+                    价格 <input type="text" name="min_money" class="text" size="3" value="$min_money" /> - <input type="text" name="max_money" class="text" value="$max_money" size="3" />
+                    <input type="submit" class="sea_button" value="确定" />
+                </form>
+                </li>  
+            </ul></td>
+        </tr>   
+    </table>       
+    <div class="pro_list"><!-- 商品列表开始 -->
+    	<table>
+<!--
+EOT;
+foreach ($goods as $val){
+print <<<EOT
+-->		
+            <tr uid="$val[uid]">
+                <td width="120"><a href="$val[url]" target="_blank" class="goods_img"><img src="images/noimages/loading.gif" rel="lazy" path="$val[goods_file1]" style="height:100px;" alt="$val[title]" /></a></td>
+                <td>
+                    <p class="name">$val[addoption]<a href="$val[url]" title="$val[title]" target="_blank">$val[goods_name]</a></p>
+                    <p><span class="fr gray">(有<b class="red">$val[goods_hit]</b>人正在关注)</span><span class="red">$val[goods_sale_price]</span></p>
+                </td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+    	</table>
+    </div><!-- 商品列表结束 -->
+    <div class="page">$page_list</div>
+<!--
+EOT;
+?>-->

@@ -1,0 +1,131 @@
+<!--<?php 
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("form[@name=community_form]").submit(function(){
+	    var msg="";
+		if("$cmd"=="add" && $("select[@name='cat[]']:eq(0)").val()=="0") msg+="请选择圈子分类\\n";
+		if($("input[@name=c_name]").val()=="") msg+="请填写圈子名称\\n";
+		if($("input[@name=c_tag]").val()=="") msg+="请填写圈子标签\\n";
+		if(!$("input[@name=agree]").attr("checked")) msg+="您未同意《圈子指导原则》，无法提交";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+	
+	$("select[@name='cat[]']:eq(0)").change(function(){
+	    if($(this).val()=="0")
+		{
+		    $(this).siblings().hide();
+			return;
+		}
+		
+		var jq_sel=$(this);
+		jq_sel.attr("disabled",true);
+		var uid=$(this).val();
+		$.ajax({
+		    url:"ajax.php?action=get_child_category&uid="+uid,
+			type:"GET",
+			dataType:"json",
+			cache:false,
+			success:function(json){
+			    var jq_ch=$("select[@name='cat[]']:eq(1)");
+				jq_ch.empty();
+				$.each(json,function(i){
+				    jq_ch.append("<option value='"+this.uid+"'>"+this.category_name+"</option>");
+				});
+				if(jq_ch.children().size()<=0) jq_ch.hide();
+				else jq_ch.show();
+			},
+			complete:function(){
+			    jq_sel.attr("disabled",false);
+			}
+		});
+	});//end change
+});
+</script>
+<div class="mem_right">
+    <form name="community_form" action="member.php?action=$action&cmd=$cmd" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="step" value="1">
+	<input type="hidden" name="uid" value="$comm[uid]" />
+	<input type="hidden" name="p_url" value="$_GET[p_url]" />
+    <table cellspacing="0" class="table_list" rel="table">
+        <tr>
+            <th class="fcl red" colspan="2"><span class="fd">创建新圈子</span> <span class="gray">（创建跟商铺类型相关的圈子更容易通过审核哦！）</span></th>
+        </tr>
+        <tr>
+            <td class="fcl gray" colspan="2">圈子是圈友们讨论同一个感兴趣的话题的聚焦地</td>
+        </tr>
+		<tr>
+		    <td>当前分类</td>
+			<td>$cat_name</td>
+		</tr>
+        <tr>
+            <td width="70">圈子分类</td>
+            <td>
+			    <select name="cat[]">
+				   <option value="0">-- 请选择 --</option>
+<!--
+EOT;
+foreach($cat_parent as $val){
+print <<<EOT
+-->		
+				   <option value="$val[uid]">$val[category_name]</option>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</select>
+				<select name="cat[]" style="display:none;"></select>
+			</td>
+        </tr>
+        <tr>
+            <td>圈子名称</td>
+            <td><input class="text span_left" type="text" size="50" value="$comm[c_name]" name="c_name"></td>
+        </tr>
+        <tr>
+            <td>圈子介绍</td>
+            <td><textarea name="c_intro" rows="5" class="textarea">$comm[c_intro]</textarea></td>
+        </tr>
+        <tr>
+            <td>共同爱好</td>
+            <td><input class="text span_left" type="text" size="90" value="$comm[c_hobby]" name="c_hobby"></td>
+        </tr>
+		<tr>
+            <td>宣言</td>
+            <td><input class="text span_left" type="text" size="90" value="$comm[c_proclaim]" name="c_proclaim"></td>
+        </tr>
+		<tr>
+		    <td>当前LOGO</td>
+			<td><img src="$pic" width="350" height="250" /></td>
+		</tr>
+		<tr>
+            <td>LOGO上传</td>
+            <td><input class="text span_left" type="file" size="90" name="c_logo"></td>
+        </tr>
+        <tr>
+            <td>圈子标签</td>
+            <td><input class="text span_left" type="text" size="30" value="$comm[c_tag]" name="c_tag">&nbsp;&nbsp;(以空格分隔，最多三个)</td>
+        </tr>
+        <tr>
+            <td>加入方式</td>
+            <td>
+                <input name="join_check" type="radio" value="1" class="vmid" $join_checked_1 /> 需要圈子管理员批准才能加入<br />
+                <input name="join_check" type="radio" value="2" class="vmid" $join_checked_2 /> 允许任何人加入圈子<br />
+                <input name="agree" type="checkbox" value="1" class="vmid" /> 我已认真阅读并同意<a href="page.php?action=quanzi" target="_blank" class="blue">《圈子指导原则》</a>
+            </td>
+        </tr>
+    </table>
+    <p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

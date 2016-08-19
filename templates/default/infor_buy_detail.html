@@ -1,0 +1,234 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var comment_lock=false;
+    $("input[@rel=comment_submit]").click(function(){
+	    if(comment_lock) return;
+		var jq_form=$(this).parents("form:first");
+		var msg="";
+		if("$m_check_id"=="") msg+="您还未登录，请先登录\\n";
+		if(jq_form.find("input[@name=name]").val()=="") msg+="请填写您的联系姓名\\n";
+		if(jq_form.find("input[@name=tel]").val()=="") msg+="请填写您的联系方式\\n";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		comment_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=supply_buy&cmd=buy_msg",
+			type:"POST",
+			dataType:"json",
+			data:jq_form.serialize(),
+			cache:false,
+			success:function(json){
+			    jq_form.find("img[@rel=code]").trigger("click");
+				
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				alert(json.info);
+				jq_form.find("input[@type=text],textarea").val("");
+			},
+			complete:function(){
+			    comment_lock=false;
+			}
+		});
+	});//end click
+});
+</script>
+	<div class="fl bus_tleft">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="infor_buy" p="banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->	    
+<!--
+EOT;
+foreach($AD->GetAd('banner',2,'','infor_buy') as $val){
+print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+<!--
+EOT;
+} print <<<EOT
+-->	</div><!--banner-->
+    <div class="fr bus_tright">
+    	<p><a href="member.php?action=want_supply&cmd=add" class="fl">我要供应</a><a href="member.php?action=want_buy&cmd=add" class="fr">我要求购</a></h2></p>
+        <ul>
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->			<a href="#" rel="ad_apply" m="infor_buy" p="recommend" op="" t="2" class="pu"></a>
+<!--
+EOT;
+} print <<<EOT
+--> 
+<!--
+EOT;
+foreach($AD->GetAd('recommend',2,'','infor_buy') as $val){
+print <<<EOT
+-->			<li><a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>  
+    </div><!-- 供应 求购 -->
+    <div class="clear"></div>  
+    <table width="100%" border="0" class="attrs">
+        <tr class="attr_filter">
+            <td colspan="2">
+            <ul>
+            	<li class="tag"><a href="infor_supply.php">供应信息</a><a class="f14 fd red" href="infor_buy.php">求购信息</a></li>
+                <li>
+                 <form action="infor_buy_more.php" method="post">
+                    快速查找：
+                    <input type="text" name="search_txt" class="text" size="18" />
+                    <input type="submit" class="sea_button" value="确定" />
+                </form>
+                </li>
+            </ul></td>
+        </tr>
+        <tr class="attrs_cate">
+		    <th>行业分类</th>
+			<td>
+<!--
+EOT;
+foreach ($cat_parent as $cat_val){
+print <<<EOT
+-->				<a href="infor_buy_more.php?cat_uid=$cat_val[uid]">$cat_val[category_name]</a>       
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+    </table>        
+    <div class="clear"></div>        
+	<div class="h_oflow border bus_div">
+    	<div class="clear"></div>
+    	<div class="fl bus_left">
+            <div class="infoxx_left fl">
+                <img src="$buy[pic]" class="border fl" width="350" height="350" /> 
+            </div>
+            <div class="infoxx_right fr">
+                <h3 class="infoxx_title f14">$buy[goods_name]</h3>
+                <div class="infoxx_basic">
+				    状态：$buy[status]<br />
+                    分类：$cat[category_name]<br />
+                    数量：$buy[num] 件<br />
+                    目标价：$buy[price]<br />
+                    所在地：$buy[province] $buy[city] $buy[county]<br />
+					发布时间：$buy[register_date]<br />
+					联系电话：$buy[tel]<br />
+                    在线联系：
+<!--
+EOT;
+if($buy[qq]){
+print <<<EOT
+-->
+					<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$buy[qq]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$buy[qq]:52" alt="点击这里给我发消息" title="点击这里给我发消息" class="vmid"/></a> 
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($buy[ww]){
+print <<<EOT
+-->
+					<a target="_blank" href="http://www.taobao.com/webww/ww.php?ver=3&touid=$buy[ww]&siteid=cntaobao&status=2&charset=utf-8" ><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&uid=$buy[ww]&site=cntaobao&s=2&charset=utf-8" alt="点击这里给我发消息" class="vmid" /></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				    <p class="align">简介：<span class="gray">$buy[intro]</span></p>
+                </div>     
+            </div>
+            <div class="clear"></div>
+            <h3 class="shop_title f14">详细要求</h3>
+            <div class="shop_content align">$buy[detail]</div>
+            <h3 class="shop_title f14">我要留言</h3>
+                <form name="msg_form">
+				<input type="hidden" name="uid" value="$buy[uid]" />
+                <table width="100%" cellspacing="5">
+                    <tr>
+                        <td width="10%">联系姓名：</td>
+                        <td width="90%"><input name="name" type="text" class="text2" size="30" /></td>
+                    </tr> 
+                    <tr>
+                        <td width="10%">联系方式：</td>
+                        <td width="90%"><input name="tel" type="text" class="text2" size="30" /></td>
+                    </tr>
+                    <tr>
+                        <td width="10%">联系地址：</td>
+                        <td width="90%"><input name="address" type="text" class="text2" size="30" /></td>
+                    </tr>           
+                    <tr>
+                        <td>留言内容：</td>
+                        <td><textarea name="msg" rows="6" cols="70" class="textarea"></textarea></td>
+                    </tr>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+-->   
+					<tr>
+					    <td>验证码</td>
+						<td>
+						    <input name="code" type="text" class="text2 text_yzm" size="20" maxlength="8" /> 
+							<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:24px; margin-left:8px;" alt="验证码" />
+						</td>
+					</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+                    <tr>
+                        <td></td>
+                        <td><input rel="comment_submit" type="button" class="button3"/></td>
+                    </tr>
+                </table>
+				</form>
+        </div>
+        <div class="h_oflow fr bus_right">
+        	<div class="clear"></div>
+        	<h3 class="title_line "><span>黄金展位</span></h3>
+        	<ul class="bus_ad2">
+<!--
+EOT;
+foreach($AD->GetAd('cat_ad',2) as $val){
+print <<<EOT
+-->				<li>
+					<a href="$val[url]" target="_blank" rel="banner"><img src="images/noimages/loading.gif" rel="lazy" path="$val[pic]" alt="$val[title]"/></a>
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->					<a href="#" rel="ad_apply" m="infor_buy_detail" p="cat_ad" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</li>
+<!--
+EOT;
+} print <<<EOT
+-->         </ul>
+        </div>
+    </div>
+<!--
+EOT;
+?>-->	

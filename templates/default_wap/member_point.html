@@ -1,0 +1,134 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=buy_point]").click(function(e){
+	    e.preventDefault();
+		$("#block").css("display","block");
+		var address = $("div[@rel=naddress]");
+		
+		var itop=(document.documentElement.clientHeight-address.height())/2+$(document).scrollTop();
+		var ileft=(document.documentElement.clientWidth-address.width())/2+$(document).scrollLeft()-20;
+		address.css({"left":ileft+"px","top":itop+"px"});
+		address.fadeIn(1000);
+	});//end click
+	
+    $("span[@rel=close]").click(function(){ 
+	    var address = $("div[@rel=naddress]");
+		$("#block").css("display","none");
+		address.fadeOut(500);
+	});//end click
+	
+	$("input[@rel=btn_buy_point]").click(function(){
+	    var msg="";
+		var buy_point=parseInt($("input[@rel=buy_point]").val());
+		if(isNaN(buy_point) || buy_point<=0) msg+="请填写一个大于0的积分数量\\n";
+		if($("input[@name=pay_id][@checked]").size()<=0) msg+="请选择一种付款方式\\n";
+		var pay_id=$("input[@name=pay_id][@checked]").val();
+		var advance=$("input[@name=advance]").attr("checked")?1:0;
+		var pay_pass=$("input[@name=pay_pass]").val();
+		if(advance==1 && pay_pass=="") msg+="请填写支付密码\\n";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		
+		$.post(
+		    "account.php?action=$action&step=2&rnd="+Math.random(),
+			"buy_point="+buy_point+"&pay_id="+pay_id+"&advance="+advance+"&pay_pass="+pay_pass,
+			function(msg){
+			    if(msg.indexOf("ERROR")!=-1) alert(msg);
+			    else $("div[@rel=naddress]").find("div[@rel=form]").html(msg);
+			}
+		);//end post
+	});//end click
+	
+	$("input[@name=pay_id]:first").attr("checked",true);
+});
+</script>
+	
+	<div class="mem_right"><!-- 会员积分开始 -->
+		<div class="member_title fd red">积分明细 <span class="fn gray">MY POINT</span></div>
+		<p style="line-height:26px;">
+		    <span class="span_left">当前积分：<strong class="f16 orange">$mvm_member[member_point]</strong>&nbsp;&nbsp;</span>
+			<a href="page.php?action=Points" class="span_left blue ml6">&nbsp;积分是怎么来的？积分可用来做什么？</a> 
+            <a href="#" class="new_button blue f14 fd" rel="buy_point">购买积分</a>
+		</p>
+		
+        <div class="newopen" rel="naddress" style="width:300px;">
+		    <span class="close" rel="close"></span>
+			<div rel="form">
+				<table cellspacing="0" class="table_list">
+                    <tr>
+                        <th class="fcl red" colspan="2">购买积分</th>
+                    </tr>
+					<tr>
+						<td width="70">账户余额</td>
+						<td><strong class="red f16">{$mvm_member[member_money]}</strong>元</td>
+					</tr>
+					<tr>
+						<td>购买积分</td>
+						<td><span class=""><input type="text" class="text" rel="buy_point" /> 分</span><br /><p class="alert_info"><span class="icon_info"></span>提示：1元能购买{$mm_buy_point}积分</p></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+                            <input type="checkbox" checked name="advance" value="1" /> 使用预付款支付，不足部分使用其它支付方式
+						</td>
+					</tr>
+                    <tr>
+						<td>支付密码</td>
+						<td><input type="password" class="text" name="pay_pass" /></td>
+					</tr>
+                    <tr>
+						<td>付款方式</td>
+						<td>
+						
+<!--
+EOT;
+foreach($payment_list as $val){
+print <<<EOT
+-->			    			<input type="radio" name="pay_id" value="$val[id]" /> $val[name]  &nbsp;&nbsp;
+<!--
+EOT;
+} print <<<EOT
+-->						</td>
+					</tr>
+				</table>
+                <p class="mem_but fcr"><input type="button" value="" class="mem_button" rel="btn_buy_point" /></p>
+			</div>
+		</div>
+		
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+			    <th>交易单号</th>
+			</tr>
+<!--
+EOT;
+foreach ($point as $val){
+print <<<EOT
+-->			<tr>
+				<td>
+                	交易类型：<a href="#" class="tipsy_w" title="$val[other_info]">$val[type]：$val[point_reason]</a><br />
+                    交易单号：$val[point_sess]<br /> 
+                    创建时间：$val[reg_date]<br />
+                    会员：<a href="admincp.php?module=$module&action=list&ps_member=$val[point_id]">$val[point_id]</a><br />
+                    收支：$val[add] <span class="orange">$val[minus]</span><br />
+                    可用积分：<span class="red">$val[point_left]</span><br />
+                    状态$val[status]
+                </td>
+
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+<!--
+EOT;
+?>-->

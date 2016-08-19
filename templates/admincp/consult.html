@@ -1,0 +1,71 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">询单管理</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="15%">联系人</th>
+			<th width="25%">电话/手机</th>
+			<th>询单商铺</th>
+			<th width="15%">登记时间</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($ask_list as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td class="td1">$val[name]</td>
+			<td class="td1">$val[tel] / $val[mobile]</td>
+			<td class="td1"><a href="$val[shop_url]" target="_blank">$val[shop_name]</a></td>
+			<td>$val[reg_time]</td>
+			<td>
+			    <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=edit&uid=$val[uid]&page=$page" class="tipsy_s view" title="查看"></a>
+			    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="page"><span>$page_list</span></div>
+
+	</div>
+<!--
+EOT;
+?>-->

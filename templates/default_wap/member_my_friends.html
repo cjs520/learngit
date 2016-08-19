@@ -1,0 +1,53 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定成员？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th colspan="2">我的好友</th>	
+			</tr>
+<!--
+EOT;
+foreach($arr_member as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td ><img src="$val[member_image]" /></td>
+				
+				<td class="fcl">
+                	会员ID：$val[member_id]<br />
+                    会员等级：$val[member_class]<br />
+					添加时间：$val[register_date]<br />
+				    圈子：$val[comm_num]&nbsp;&nbsp;
+					话题：$val[topic_num]&nbsp;&nbsp;
+					评论：$val[comment_num]  <br />
+                	操作：
+				    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>
+				</td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

@@ -1,0 +1,40 @@
+body { background:#f4f4f4; }
+.top1 { background:#007eec; }
+/*-- 底部悬浮 --*/
+.footer1 { z-index:999; position:fixed; bottom:0; left:0; width:100%; height:62px; overflow:visible; background:url(bg.jpg) repeat-x 0 14px; }
+.footer1 li { width:18%; margin-top:16px; text-align:center; }
+.footer1 li.li3 { width:28%; margin:0; }
+.footer1 li a { color:#fff; }
+.home,.new,.tel,.my_acc { display:block; width:25px; height:23px; margin:0 auto; background:url(../default_wap/icon.png) 0 -30px; }
+.new { background-position:0 -60px; }
+.tel { background-position:0 -90px; }
+.my_acc { background-position:0 -120px; }
+.cart { display:block; width:64px; height:62px; margin:0 auto; background:url(../default_wap/gouwuc.png) -280px 0; text-indent:-1000em; }
+/*---------------------- 首页 ----------------------*/
+/*-- 手机推荐广告 --*/
+.recom_ad { clear:both; }
+.recom_ad p img { display:block; width:10rem; }
+.recom_ad li img { display:block; width:5rem; }
+/*-- 楼层广告 --*/
+.floor { background:#3ba4ff; }
+.ad_list img { width:10rem; }
+/*-- 分类商品 --*/
+.pro_list1 li { width:4.8rem; padding:0.1rem; }
+.pro_list1 .name { height:36px; margin:0.1rem 0; }
+.pro_list1 .goods_img img { display:inline; width:4.8rem; height:4.8rem; padding:0; border:0; }
+.pro_list1 a { color:#fff; }
+.pro_list1 .red { color:#ff0; }
+.pro_list1 .gray { color:#ff9; }
+/*-- 分类 --*/
+.index_cate { position:relative; height:6.2rem; }
+.index_cate li { position:absolute; width:2.8rem; height:2.8rem; border:2px solid #007eec; background:#fff; border-radius:50% 50% 50% 50%; }
+.index_cate li img { display:block; width:1.6rem; height:1.6rem; margin:0.3rem auto 0; }
+.index_cate .cate_name { display:block; width:2rem; height:20px; line-height:20px; overflow:hidden; margin:0 auto; color:#3ba4ff; text-align:center; }
+.index_cate .li1 { top:0.4rem; left:0.1rem; }
+.index_cate .li2 { top:0.4rem; left:3.5rem; }
+.index_cate .li3 { top:0.4rem; left:6.9rem; }
+.index_cate .li4 { top:2.7rem; left:1.8rem; }
+.index_cate .li5 { top:2.7rem; left:5.2rem; }
+.index_cate .li6 { top:5rem; left:0.1rem; }
+.index_cate .li7 { top:5rem; left:3.5rem; }
+.index_cate .li8 { top:5rem; left:6.9rem; }

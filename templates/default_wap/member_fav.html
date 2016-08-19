@@ -1,0 +1,56 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+--> 
+<script type="text/javascript">
+$(function(){
+    var t="$t";
+	$("a[@t="+t+"]").addClass("hover");
+	
+	$("a[@rel=del_fav]").click(function(){
+	    if(!confirm("确认删除指定收藏商铺？")) return;
+		var t=$(this).attr("t");
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&act=del&f_uid="+uid+"&t="+t+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right">
+		<div class="title_rate_list">
+		    <a href="member.php?action=myfav&t=0" t="0"><span>商铺收藏</span></a>
+		    <a href="member.php?action=myfav&t=1" t="1"><span>商品收藏</span></a>
+		</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th>logo</th>
+				<th>商铺名称</th>
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_fav as $val){
+print <<<EOT
+-->			<tr uid="$val[f_uid]">
+				<td><a href="$val[url]" target="_blank"><img src="$val[up_logo]" width="133" height="60" /></a></td>
+				<td><a href="$val[url]" target="_blank">$val[shop_name]</a></td>
+				<td>
+				    <a href="$val[url]" target="_blank" class="tipsy_s view blue" title="逛逛商铺">逛逛商铺</a><br />
+					<a href="#" rel="del_fav" uid="$val[f_uid]" t="$val[t]" class="tipsy_s delete blue" title="删除">删除</a>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div>
+<!--
+EOT;
+?>-->

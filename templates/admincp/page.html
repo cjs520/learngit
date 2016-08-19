@@ -1,0 +1,63 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">页面管理</td>
+			<td class="tright"><a href="admincp.php?module=$module&action=add" class="but1">添加页面</a></td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+		    <th width="5%"><input type="checkbox" id="chkall" /></th>
+			<th width="33%">页面名称</th>
+			<th>页面英文名称</th>
+			<th>登记日期</th>
+			<th width="10%">操作</th>
+		</tr>
+
+<!--
+EOT;
+foreach ($arr_page as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+		   <td><input type="checkbox" value="$val[uid]" name="uid_check[]" rel="del_chk" /></td>
+			<td class="td1"><a href="page.php?action=$val[page_name]" target="_blank" class="tipsy_w views" title="查看">$val[page_subject]</a></td>
+			<td class="td1"><a href="page.php?action=$val[page_name]" target="_blank" class="tipsy_w newlink" title="前台连接地址: page.php?action=$val[page_name]">$val[page_name]</a></td>
+			<td>$val[register_date]</td>
+			<td>
+			    <a href="$val[edit]" class="tipsy_s modify" title="修改"></a> 
+				<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>	
+</form>
+	<div id="page"><b style="float:left;"><input type="submit" id="delall" value="删除所选" class="button1" /></b><span>$page_list</span></div>	
+</div>
+<!--
+EOT;
+?>-->

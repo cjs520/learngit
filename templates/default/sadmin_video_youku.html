@@ -1,0 +1,169 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var page=1;
+	var loading_lock=false;
+	var push_lock=false;
+	var total_page=-1;
+	var VIDEO_STATE={
+	    normal:"正常",
+		encoding:"转码中",
+		fail:"转码失败",
+		checking:"审核中",
+		blocked:"已屏蔽"
+	};
+	var VIDEO_PUBLIC_TYPE={
+	    all:"公开",
+		friend:"仅好友观看",
+		password:"输入密码观看"
+	};
+	
+	$.extend({
+	    LoadPage:function(p){
+		    if(loading_lock) return;
+			if("$oauth_data[access_token]"=="")
+			{
+			    alert("请先申请登录授权");
+				return;
+			}
+			loading_lock=true;
+			$.ajax({
+			    url:"sadmin.php?module=$module&action=video_list&page="+p,
+				type:"GET",
+				dataType:"json",
+				cache:true,
+				success:function(json){
+				    if(json.error)
+					{
+					    alert(json.error.description);
+						return;
+					}
+					if(json.count<=0)
+					{
+					    total_page=p;
+					    alert("这已经是最后一页");
+						return;
+					}
+					
+					$("tr[@rel=video_header]").siblings().remove();
+					var html="";
+					$.each(json.videos,function(i){
+					    html+="<tr>";
+						html+="<td>"+this.title+"</td>";
+						html+="<td><img src='"+this.thumbnail+"' /></td>";
+						html+="<td>"+VIDEO_PUBLIC_TYPE[this.public_type]+"</td>";
+						html+="<td>"+VIDEO_STATE[this.state]+"</td>";
+						html+="<td>";
+						html+="<a class='tipsy_s view' title='预览' href='"+this.link+"' target='_blank'></a> ";
+						html+="<a class='tipsy_s push' title='推送:"+this.title+"' href='#' rel='push' yid='"+this.id+"' title='"+this.title+"' img='"+this.thumbnail+"' pt='"+this.public_type+"' state='"+this.state+"' l='"+this.link+"'></a>"
+						html+="</td>";
+						html+="</tr>";
+					});//end each
+					if(html!="") $("tr[@rel=video_header]").after(html);
+					$.SetEvents();
+				},
+				complete:function(){
+				    loading_lock=false;
+				}
+			});//end ajax
+		},//end LoadPage
+		SetEvents:function(){
+		    $("a[@rel=push]").unbind();
+			$("a[@rel=push]").click(function(e){
+			    e.preventDefault();
+				if(push_lock) return;
+				if(!confirm("确定要推送指定的视频到商城？")) return;
+				
+				var youku_id=$(this).attr("yid");
+				var title=$(this).attr("title");
+				var img=$(this).attr("img");
+				var public_type=$(this).attr("pt");
+				var state=$(this).attr("state");
+				var url=$(this).attr("l");
+				
+				push_lock=true;
+				$.ajax({
+				    url:"sadmin.php?module=$module&action=push&step=1",
+					type:"POST",
+					dataType:"json",
+					cache:false,
+					data:{
+					    youku_id:youku_id,
+						title:title,
+						img:img,
+						public_type:public_type,
+						state:state,
+						url:url
+					},
+					success:function(json){
+					    if(json.err)
+						{
+						    alert(json.err);
+							return;
+						}
+						window.location="sadmin.php?module=video_mall&action=add&uid="+json.uid;
+					},
+					complete:function(){
+					    push_lock=false;
+					}
+				});//end ajax
+				
+			});//end click
+		}//end SetEvents
+	});
+	
+	$("a[@rel=prev_page]").click(function(e){
+	    e.preventDefault();
+		if(loading_lock) return;
+		if(page<=1)
+		{
+		    alert("这已经是第一页了");
+			return;
+		}
+		$.LoadPage(page-1);
+	});//end click
+	
+	$("a[@rel=next_page]").click(function(e){
+	    e.preventDefault();
+		if(total_page>=0 && total_page<=(page+1))
+		{
+		    alert("这已经是最后一页了");
+			return;
+		}
+		$.LoadPage(page+1);
+	});//end click
+	
+	$.LoadPage(1);
+});
+</script>
+	<div class="mem_right txsq1">
+		<div class="member_title fd red">
+		    <a href="sadmin.php?module=$module&action=add" class="span_right white mem_add">发布视频</a>
+		    优酷视频管理
+		</div>
+        <p><span class="orange">※使用须知：</span></p>
+		<p class="dot_icon">首先，您需要一个优酷账号。如果还没有，请先<a href="http://login.youku.com/user/signup" target="_blank" class="fd red">点击这里进行注册</a></p>
+		<p class="dot_icon">其次，如果您已经拥有自己的优酷账号，请<a href="{$youku_oauth->get_login_url()}" class="fd red">点击这里进行授权登录</a></p>
+		<p class="dot_icon h_oflow"><span class="fl">您当前的状态：</span>$youku_status</p>
+        <div class="clear8"></div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn" rel="video_header">
+				<th width="24%">视频名称</th>
+				<th>缩略图</th>
+				<th>视频权限</th>
+				<th>视频状态</th>
+				<th width="15%">操作</th>
+			</tr>
+		</table>
+		<div class="page">
+		    <a href="#" rel="prev_page">上一页</a>
+			<a href="#" rel="next_page">下一页</a>
+		</div>
+	</div>	
+<!--
+EOT;
+?>-->

@@ -1,0 +1,283 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+	$.extend({
+	    LoadCat:function(uid){
+		    $("tr[@pid="+uid+"]").remove();
+		    $.ajax({
+			    url:"admincp.php?module=$module&action=load_sub&uid="+uid,
+				type:"GET",
+				cache:false,
+				dataType:"json",
+				success:function(json){
+				    $("img[@rel=cat_show][@uid="+uid+"]").attr("is_load","load");
+					var lvl=$("tr[@uid="+uid+"]").attr("lvl");
+					var margin_left=lvl*3;
+					lvl=parseInt(lvl)+1;
+				    if(json["err"])
+					{
+						alert(json["err"]);
+						return false;
+					}
+					$.each(json,function(i){
+						var str_html='<tr align="center" uid="'+this.uid+'" pid="'+this.category_id+'" lvl="'+lvl+'">';
+						str_html+='<td><input type="checkbox" value="'+this.uid+'" name="uid_check[]" rel="del_chk" /></td>';
+						str_html+='<td align="left"><img src="images/admincp/plus.gif" rel="cat_show" uid="'+this.uid+'" style="cursor:pointer;margin-left:'+margin_left+'em" /> <span rel="edit" f="category_name" uid="'+this.uid+'">'+this.category_name+'</span></td>';
+						str_html+='<td style="cursor:pointer;"><span rel="edit" f="category_rank" uid="'+this.uid+'">'+this.category_rank+'</span></td>';
+						str_html+='<td><a href="#" rel="iframe_url" iframe_url="admincp.php?module=$module&action=add&category_id='+this.uid+'" class="tipsy_s add"></a></td>';
+						str_html+='<td><a href="#" rel="addcat" uid="'+this.uid+'" class="copy" title="复制分类"></a> <a href="#" rel="iframe_url" iframe_url="admincp.php?module=$module&action=edit&uid='+this.uid+'" class="modify" title="修改"></a> <a href="#" rel="del" uid="'+this.uid+'" class="delete" title="删除"></a></td>';
+						str_html+='</tr>';
+						$("tr[@uid="+uid+"]").after(str_html);
+					});//end each
+					$.SetEvent();
+					$.OpenCat(uid);
+				}
+			});//end ajax
+		},
+		CloseCat:function(uid){
+		    var new_img="./images/admincp/plus.gif";
+			var jq_tr=$("tr[@uid="+uid+"]");
+		    jq_tr.find("img[@rel=cat_show]:first").attr("src",new_img);
+			var arr_uid=[uid];
+			for(jq_rtl=jq_tr.next("tr");jq_rtl.size()>0;jq_rtl=jq_rtl.next())
+			{
+			    if($.inArray(jq_rtl.attr("pid"),arr_uid)==-1) continue;
+				arr_uid[arr_uid.length]=jq_rtl.attr("uid");
+				jq_rtl.find("img[@rel=cat_show]").attr("src",new_img);
+				jq_rtl.hide();
+			}
+		},
+		OpenCat:function(uid){
+		    $("tr[@uid="+uid+"]").find("img[@rel=cat_show]").attr("src","./images/admincp/minus.gif");
+			$("tr[@pid="+uid+"]").show();
+		},
+		SetEvent:function(){
+		    $("img[@rel=cat_show]").unbind("click");
+			$("img[@rel=cat_show]").click(function(){
+	             var uid=$(this).attr("uid");
+		         var img_path=$(this).attr("src");
+	             if(!$(this).attr("is_load")) $.LoadCat(uid);
+		         else if(img_path.indexOf("minus")!=-1) $.CloseCat(uid);
+		         else $.OpenCat(uid);
+	         });//end click
+					 
+			$("span[@rel=edit]").unbind("click");
+			$("span[@rel=edit]").css("cursor","pointer").click(function(){
+			    var f=$(this).attr("f");
+		        var v=$(this).html();
+		        var uid=$(this).attr("uid");
+		        if($(this).children("input[@name=tmp_txt]").size()>0) return false;
+						 
+				var jq_span=$(this);
+		        $(this).html("");
+		        $(this).append("<input type='text' name='tmp_txt' style='border:1px solid black;' value='"+v+"' />");
+		        $(this).children("input[@name=tmp_txt]").trigger("focus");
+			    $(this).children("input[@name=tmp_txt]").one("blur",function(){
+			        var new_v=$(this).val();
+			        if(new_v!=v)
+			        {
+			            $.get("admincp.php?module=$module&action=ajax&field="+f+"&v="+encodeURIComponent(new_v)+"&uid="+uid+"&rnd="+Math.random());
+			        }
+			        jq_span.children("input[@name=tmp_txt]").remove();
+			        jq_span.html(new_v);
+		         });//end one blur
+		    });//end click
+					 
+		    $("a[@rel=del]").unbind("click");
+		    $("a[@rel=del]").click(function(e){
+		        e.preventDefault();
+			    var uid=$(this).attr("uid");
+			    $.get(
+			        "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+				    function(msg){
+					    alert(msg);
+					    if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+				    }
+			    );//end get
+		    });//end click
+					 
+		    $("a[@rel=addcat]").unbind("click");
+			$("a[@rel=addcat]").click(function(e){
+			    e.preventDefault();
+			    var uid=$(this).attr("uid");
+			    $.ajax({
+				url:"admincp.php?module=$module&action=copy_parent&uid="+uid,
+				type:"GET",
+				dataType:"json",
+				cache:false,
+				success:function(json){
+				        if(json["err"])
+			            {
+						    alert(json["err"]);
+						    return false;
+					    }
+					    $.LoadCat(uid);
+				    }
+			    });//end ajax
+		    });//end click
+			
+			$("a[@rel=iframe_url]").unbind("click");
+			$("a[@rel=iframe_url]").click(function(e){
+			    e.preventDefault();
+				var url=$(this).attr("iframe_url")+"&rnd="+Math.random();
+				var o=$("div.newopen");
+				var o_block=$("#block");
+						
+				o_block.show();
+		        var itop=(document.documentElement.clientHeight-o.height())/2+$(document).scrollTop();
+                var ileft=(document.documentElement.clientWidth-o.width())/2+$(document).scrollLeft();
+                o.css({
+                    position:"absolute",
+                    top:itop+"px",
+                    left:ileft+"px"
+                });
+				var jq_iframe=$('<iframe frameborder="0" scrolling="auto" width="100%" height="390px" src="'+url+'"></iframe>');
+				var old_jq_iframe=o.find("iframe");
+				if(old_jq_iframe.size()>0) old_jq_iframe.remove();
+				o.find("div[@rel=content]").append(jq_iframe);
+				o.show();
+			});//end click
+	    }
+	});//end extend
+	
+	$.SetEvent();
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("#chkall").click(function(e){
+	    $("input[@rel=del_chk]").attr("checked",$(this).attr("checked"));
+	});//end click
+	
+	$("input[@rel=update_cat]").click(function(e){
+	    var jq_input=$(this);
+		jq_input.hide();
+	    $.get(
+		    "admincp.php?module=$module&action=create_level_cat&rnd="+Math.random(),
+			function(msg){
+			    jq_input.show();
+				alert(msg);
+			}
+		);//end get
+	});//end click
+	
+	$("input[@rel=correct]").click(function(){
+	    if(!confirm("错误的分类将会自动删除，确认进行自动纠错？")) return;
+		
+		$.get(
+		    "admincp.php?module=$module&action=correct&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+			}
+		);//end get
+	});//end click
+});
+</script>
+<script type="text/javascript">
+function iframe_callback(msg,other_info)
+{
+    $("a[@rel=close_apply]").trigger("click");
+    var obj=other_info.split("||");
+	var str_html='<tr align="center" uid="'+obj[1]+'" pid="'+obj[3]+'" lvl="0">';
+	str_html+='<td><input type="checkbox" value="'+obj[1]+'" name="uid_check[]" rel="del_chk" /></td>';
+	str_html+='<td align="left"><img src="images/admincp/plus.gif" rel="cat_show" uid="'+obj[1]+'" style="cursor:pointer;" /> <span rel="edit" f="category_name" uid="'+obj[1]+'">'+obj[2]+'</span></td>';
+	str_html+='<td style="cursor:pointer;"><span rel="edit" f="category_rank" uid="'+obj[1]+'">'+obj[4]+'</span></td>';
+	str_html+='<td><a href="#" rel="iframe_url" iframe_url="admincp.php?module=$module&action=add&category_id='+obj[1]+'" class="tipsy_s add"></a></td>';
+	str_html+='<td><a href="#" rel="addcat" uid="'+obj[1]+'" class="copy" title="复制分类"></a> <a href="#" rel="iframe_url" iframe_url="admincp.php?module=$module&action=edit&uid='+obj[1]+'" class="modify" title="修改"></a> <a href="#" rel="del" uid="'+obj[1]+'" class="delete" title="删除"></a></td>';
+	str_html+='</tr>';
+	var o_html=$(str_html);
+	
+	if(obj[0]=="add" && obj[3]=="0")
+	{
+	    $("tr[@rel=cat_header]").after(o_html);
+		
+	}
+	else if(obj[3]!=0)
+	{
+	    if(obj[0]=="edit") $("tr[@uid="+obj[1]+"]").remove();
+		
+		var p_tr=$("tr[@uid="+obj[3]+"]");
+		
+	    if(p_tr.size()>0)
+		{
+			var lvl=parseInt(p_tr.attr("lvl"));
+			if(isNaN(lvl) || lvl<1) lvl=1;
+			lvl++;
+			o_html.attr("lvl",lvl);
+			var jq_img=o_html.find("img[@rel=cat_show]");
+			jq_img.css("marginLeft",(lvl*3-3)+"em");
+			var jq_p_img=p_tr.find("img[@rel=cat_show]");
+			if(jq_p_img.attr("is_load")=="load" && jq_p_img.attr("src").indexOf("minus")>=0) p_tr.after(o_html);
+		}
+	}
+	$.SetEvent();
+}
+</script>
+
+<div class="newopen" style="display:none; width:800px; height:400px;" p_url="$prev_url">
+    <a class="close" href="#" rel="close_apply"></a>
+	<div rel="content"></div>
+</div>
+<div id="right">
+<form action="admincp.php?module=$module" method="post">
+    <input type="hidden" name="step" value="1" />
+	<input type="hidden" name="action" value="all_delete" />
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">商品分类</td>
+			<td class="tright"><a href="#" rel="iframe_url" iframe_url="admincp.php?module=category&action=add" class="but1">添加分类</a></td>
+		</tr>
+	</table>
+	<div style="padding:1px 0 3px; line-height:20px;">
+		<img src="images/admincp/zy.gif" style="float:left; margin-top:2px;" />
+		<p style="padding-left:18px;">当修改完分类后，请点击“更新分类列表”按钮，保持主站和商铺分类同步更新</p>
+	</div>
+	<table cellpadding="0" cellspacing="1" class="list" id="tree_list">
+		<tr rel="cat_header">
+		    <th width="5%"><label for="chkall"><input type="checkbox" id="chkall" /></label></th>
+			<th>分类名称</th>
+			<th width="15%">输出顺序</th>
+			<th width="15%">添加下级分类</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_cat as $key=>$val){
+print <<<EOT
+--> 
+    <tr align="center" uid="$val[uid]" pid="$val[category_id]" lvl="1">
+	    <td><input type="checkbox" value="$val[uid]" name="uid_check[]" rel="del_chk" /></td>
+    	<td align="left">&nbsp;
+		    <img src="images/admincp/plus.gif" rel="cat_show" uid="$val[uid]" style="cursor:pointer;" /> 
+			<span rel="edit" f="category_name" uid="$val[uid]">$val[category_name]</span>
+		</td>
+   	 	<td><span rel="edit" f="category_rank" uid="$val[uid]">$val[category_rank]</span></td>
+   	 	<td><a href="#" rel="iframe_url" iframe_url="admincp.php?module=$module&action=add&category_id=$val[uid]" class="tipsy_s add" title="添加分类"></a></td>
+    	<td>
+		    <a href="#" rel="addcat" uid="$val[uid]" class="tipsy_s copy" title="复制"></a>
+		    <a href="#" rel="iframe_url" iframe_url="admincp.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="修改"></a>
+			<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+		</td>
+  </tr>
+<!--
+EOT;
+} print <<<EOT
+-->	   
+  </table>
+  <div style="margin-top:6px;">
+      <input type="submit" value="删除选定" class="button1" style="float:left;" /> 
+	  <span style="float:left; line-height:24px; padding:0 6px;">更新顺序：</span>
+	  <input type="button" value="更新分类列表"  rel="update_cat" class="button2" style="float:left;" /> <span style="float:left; line-height:24px; padding:0 3px;">-></span>
+	  <input type="button" value="分类层次自动纠错" rel="correct" class="button2" style="width:120px;" />
+	 </div>
+</form>
+
+
+</div>
+<!--
+EOT;
+?>-->
+

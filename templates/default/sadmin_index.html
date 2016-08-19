@@ -1,0 +1,179 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=wait]").each(function(i){
+	    var num=parseInt($(this).attr("num"));
+		if(isNaN(num) || num<=0) $(this).removeClass("blue").addClass("gray");
+	});//end click
+	
+	if(parseInt("$shop_file[isSupplier]")>=2) $("div[@rel=cert_area]").find("span[@rel=cert_house]:first").removeClass("uncert").addClass("cert");
+	if(parseInt("$shop_file[certified_type]") & 1) $("div[@rel=cert_area]").find("a[@rel=name_check]:first").removeClass("uncert0").addClass("cert0").attr("title","已实名认证");
+	if(parseInt("$shop_file[certified_type]") & 2) $("div[@rel=cert_area]").find("a[@rel=company_check]:first").removeClass("uncert1").addClass("cert1").attr("title","已实体认证");
+	if(parseInt("$shop_file[certified_type]") & 4) $("div[@rel=cert_area]").find("a[@rel=xb_check]:first").removeClass("unxb").addClass("xb").attr("title","已消保认证");
+});
+</script>
+	<div class="mem_right">
+		<div class="span_right mem_rig">
+            <div class="border_box mem_gg" style="width:216px;">
+                <h3 class="mem_title f13"><a href="board.php?action=notice" target="_blank" class="span_right fn f12">更多></a>商城公告</h3>
+                <ul>
+<!--
+EOT;
+foreach (GetBoard('notice',0,8,'14') as $val){
+print <<<EOT
+-->					<li><a href="$val[url]" target="_blank">$val[board_subject]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->	
+            	</ul>   
+            </div>
+            <div class="mt10 border_box mem_gg" style="width:216px;">
+                <h3 class="mem_title f13"><a href="$mm_url[news]" target="_blank" class="span_right fn f12">更多></a>最新资讯</h3>
+                <ul>
+<!--
+EOT;
+foreach (GetBoard('',0,8,'14') as $val){
+print <<<EOT
+-->					<li><a href="$val[url]" target="_blank">$val[board_subject]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->	
+            	</ul>   
+            </div>
+		</div>
+		<div class="span_left mem_lef">
+			<p class="member_title">
+			    <a href="$mm_url[investment]" class="span_right white mem_add fd" target="_blank">我的商铺</a>
+				<span class="mem_new"></span>&nbsp;消息提醒：<a href="account.php?action=mysms">您有(<strong class="orange">$sms_new</strong>)条新消息</a> 
+<!--
+EOT;
+if($broadcast){
+print <<<EOT
+-->
+				<a href="account.php?action=mysms&send=admin" class="red">[有新通知]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</p>	
+			<dl class="mem_info" style="height:145px; position:relative;"><!--
+EOT;
+if(!($shop_file[certified_type] & 4)){
+print <<<EOT
+--><p style="position:absolute; right:10px; line-height:22px;"><a href="sadmin.php?module=sup_check&action=list" class="new_button">马上申请</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<dt class="span_left"><img src="$shop_file[up_logo]" /></dt>
+				<dd class="span_right"><p class="fd">$shop_file[m_id] <span class="f12 fn">$shop_file[province] $shop_file[city] $shop_file[county]</span></p>
+<!--
+EOT;
+if($mm_subdomain==1){
+print <<<EOT
+-->
+				<p>商铺二级域名：<a href="http://$shop_file[member_homepage]{$_URL[2]}/" target="_blank">http://$shop_file[member_homepage]{$_URL[2]}/</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<p><a href="account.php?action=point" target="_blank" class="span_right new_button" style="margin-top:3px;">积分购买</a>商家信用：<strong class="orange">$seller_credit</strong> &nbsp; 买家信用：<strong class="orange">$buyer_credit</strong></p>
+				<p>商铺类型：<span class="orange">$sellshow_txt</span></p>
+				<div class="clear0"></div>
+<!--
+EOT;
+if($shop_file[shop_level]<4){
+print <<<EOT
+-->
+				<a href="sadmin.php?module=shop_update&action=list" class="new_button span_right">商铺升级</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<p class="mem_display"><span class="span_left">商铺等级：{$lang[shop_level][$shop_file[shop_level]]}&nbsp;</span><a href="$mm_url[level]" target="_blank" class="shop_dj{$shop_level_class}"></a> &nbsp; 
+				特权：<a href="$mm_url[level]" target="_blank" class="blue">详情</a> 
+				<span rel="tolink" class="mem_hover"><span>
+					可上传商品数量：{$allow_goods_items[$shop_file[shop_level]]}个<br />
+					图片空间：{$upload_size}M<br />
+					可添加页面数量：{$allow_page_items[$shop_file[shop_level]]}个
+				</span></span></p>
+				<div class="clear0"></div>
+				<p>到期时间：<strong class="orange">$shop_expire</strong> &nbsp; <img src="images/default/zy.gif" align="absmiddle" style="padding-right:3px;" />商铺到期不续费，将自动降级至免费商铺</p>
+				<p><a href="sadmin.php?module=shop_renew&action=list" style="margin-top:-6px;" class="new_button span_right">商铺续费</a></p>
+				</dd>
+			</dl>
+
+			<div class="clear"></div>
+			<div class="border_box" rel="cert_area">
+				<h3 class="mem_title f13">认证专区</h3>
+				<dl class="mem_cert">
+					<dt class="span_left"><span class="uncert" rel="cert_house"></span></dt>
+					<dd class="span_left" style="position:relative;">
+					    <p style="margin-top:10px;"><span class="span_left">认证等级：$member_level&nbsp;</span>
+						<a href="sadmin.php?module=sup_check&action=list" rel="name_check" class="tipsy_s uncert0" title="未实名认证"></a>&nbsp;
+						<a href="sadmin.php?module=sup_check&action=list" rel="company_check" class="tipsy_s uncert1" title="未实体认证"></a>
+						<a href="sadmin.php?module=sup_check&action=list" rel="xb_check" class="tipsy_s unxb" title="未消保认证"></a>
+						</p>
+						
+						<div class="clear"></div>
+					    <p>商家的服务态度：<span class="star_{$shop_statistics[seller_service]}"></span> {$shop_statistics[seller_service]}</p>
+					    <p>商家发货的速度：<span class="star_{$shop_statistics[seller_ship]}"></span> {$shop_statistics[seller_ship]}</p>
+					    <p>商品与描述相符：<span class="star_{$shop_statistics[match]}"></span> {$shop_statistics[match]}</p>
+					</dd>
+				</dl>
+			</div>
+
+
+			<div class="clear"></div>
+			<div class="border_box">
+				<h3 class="mem_title f13">交易提醒</h3>
+				<p class="mem_box mem_tx2 h_oflow">
+					<a href="sadmin.php?module=order&action=list&status=1" rel="wait" num="$wait_pay">等待买家付款($wait_pay)</a>
+					<a href="sadmin.php?module=order&action=list&status=3" class="blue" rel="wait" num="$wait_send">等待您发货<span class="orange">($wait_send)</span></a>
+					<a href="sadmin.php?module=back_order&action=list" class="blue" rel="wait" num="$wait_back">退款中的商品<span class="orange">($wait_back)</span></a>
+					<a href="sadmin.php?module=ctobuyer&action=list" class="blue" rel="wait" num="$wait_comment">等待您评价<span class="orange">($wait_comment)</span></a>
+				</p>
+			</div>
+			
+			<div class="clear"></div>
+			<div class="border_box">
+				<h3 class="mem_title f13">商品提醒</h3>
+				<div class="mem_box mem_tx">
+					<p>
+					    <span class="mem_txl">商品管理：</span>
+						<a href="sadmin.php?module=$goods_moeule&action=list">出售中的商品($goods_onsale)</a>
+<!--
+EOT;
+if($shop_file[sellshow]==1){
+print <<<EOT
+-->
+						<a href="sadmin.php?module=downgd&action=list">等待上架的商品($downgd_num)</a>
+<!--
+EOT;
+} print <<<EOT
+-->	
+					</p>
+					<p>
+					    <span class="mem_txl">广告推荐：</span>
+						<a href="sadmin.php?module=rcm_ad&action=list">广告位总数($ad_total)</a>
+						<a href="sadmin.php?module=rcm_ad&action=list">已被使用广告位($ad_use)</a>
+						<a href="sadmin.php?module=rcm_ad&action=list">您使用的广告位($my_ad)</a>
+						<a href="page.php?action=advert" class="blue" target="_blank">广告申请规则</a>
+					</p>
+					<p>
+					    <span class="mem_txl">商品留言：</span>
+						<a href="sadmin.php?module=comment&action=list">等待回复的留言($wait_reply)</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>	
+<!--
+EOT;
+?>-->

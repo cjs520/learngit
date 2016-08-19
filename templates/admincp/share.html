@@ -1,0 +1,83 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定分享信息？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+	
+	$("a[@rel=pic]").hover(
+	    function(){
+		    $(this).children("img").attr("width",200);
+	    },
+		function(){
+		    $(this).children("img").attr("width",60);
+		}
+	);//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">分享管理</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="mt6 list">
+		<tr>
+			<th width="20%">内容</th>
+			<th width="40%">图片</th>
+			<th width="20%">商品</th>
+			<th>会员ID</th>
+			<th>发布时间</th>
+			<th>操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_share as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td class="td1">$val[comment]</td>
+			<td class="td1">
+<!--
+EOT;
+foreach($val[pics] as $v){
+print <<<EOT
+-->
+			<a href="#" rel="pic"><img src="$v" width="60" /></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+			<td class="td1"><a href="$val[url]" target="_blank">$val[goods_name]</a></td>
+			<td>$val[member_id]</td>
+			<td>$val[register_date]</td>	
+			<td>
+			    <a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+</div>
+<!--
+EOT;
+?>-->

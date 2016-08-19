@@ -1,0 +1,49 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("input[@name=od][@value=$od]").attr("checked",true);
+	$("input[@name=range][@value=$range]").attr("checked",true);
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red">商品退货次数排行</div>
+		<form name="search_form" action="sadmin.php?module=$module&action=$action" method="POST">
+        <p>商品搜索：
+            商品名称 <input type="text" name="goods_name" value="$goods_name" size="20" class="text" /> &nbsp;
+            排序范围：
+            <input type="radio" name="range" value="all" /> 总排行 
+            <input type="radio" name="range" value="month" /> 本月 
+            <input type="radio" name="range" value="week" /> 本周
+            排序方式：<input type="radio" name="od" value="desc" /> 降序 <input type="radio" name="od" value="asc" /> 升序  
+            <input name="member" type="submit" value="确 定" class="button" />
+		</p>
+	    </form>
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th>商品名称</th>
+				<th>累计退货数量</th>
+				<th>排名</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_statistics as $val){
+print <<<EOT
+-->			<tr>
+				<td><a href="$val[goods_url]" target="_blank">$val[goods_name]</a></td>
+				<td>$val[back_num]</td>
+				<td>$val[rank]</td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+        <div class="page">$page_list</div>
+	</div>	
+<!--
+EOT;
+?>-->

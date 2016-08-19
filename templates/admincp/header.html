@@ -1,0 +1,56 @@
+<!--<?php print <<<EOT
+--><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=7" />
+<title>Mvmmall 后台管理</title>
+<link rel="stylesheet" type="text/css" href="images/admincp/adminmvm.css">
+<link rel="stylesheet" type="text/css" media="all" href="images/admincp/calendar.css" />
+<script type="text/javascript" src="include/javascript/jquery.js"></script>
+<script type="text/javascript" src="include/javascript/mvm.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.city.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+<script type="text/javascript" src="include/javascript/calendar.js"></script>
+<script type="text/javascript" src="language/$mm_lang/admin/lang.js"></script>
+<script type="text/javascript" src="include/javascript/date.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.tipsy.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("tr").hover(
+	    function(){
+            $(this).addClass("trover");
+        },
+        function(){
+			$(this).removeClass("trover");
+        }
+	);//end hover
+});
+
+$(function(){
+	$("#block").width($("body").width());
+	if($("body").height()<=700) 
+	{
+    	if($.browser.msie && $.browser.version=="6.0") 
+		{
+	    	$("#block").height($("html").height());
+		}
+		else 
+		{
+			$("#block").css("height","100%");
+		}
+	}
+	else 
+	{
+		$("#block").height($("body").height());
+	}	
+	$("#block").animate({opacity:0.4});
+});
+</script> 
+</head>
+<body>
+<span id="temp"></span>
+<div id="block"></div>
+<!--
+EOT;
+?>-->

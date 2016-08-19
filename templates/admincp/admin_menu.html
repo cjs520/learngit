@@ -1,0 +1,103 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("input[@rel=od]").blur(function(){
+	    var uid=$(this).attr("uid");
+		var v=$(this).val();
+		$.post(
+		    "admincp.php?module=$module&action=ajax&rnd="+Math.random(),
+			"field=menu_order&uid="+uid+"&v="+v,
+			function(){}
+		);//end post
+	});//end blur
+});
+</script>
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">管理菜单</td>
+			<td class="tright"><a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=add" class="but1">添加菜单</a></td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<div class="list-div" id="listDiv">
+	<form action="admincp.php?module=admin_menu" name="form" method="post">
+		<input type="hidden" name="action" value="bat_view" />
+	<table cellpadding="0" cellspacing="1" class="list" id="tree_list">
+		<tr>
+			<th width="5%">普通</th>
+			<th width="5%">扶植</th>
+			<th width="5%">标准</th>
+			<th width="5%">拓展</th>
+			<th width="5%">旗舰</th>
+			<th width="5%">主站</th>
+			<th>菜单名称</th>
+			<th width="10%">输出顺序</th>
+			<th width="10%">添加菜单</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_tree as $key=>$val){
+$checked=$val[5][0]=='1'?'checked':'';
+$val[2]*=2;
+$level0_checked=$val[5][1]=='1'?'checked':'';
+$level1_checked=$val[5][2]=='1'?'checked':'';
+$level2_checked=$val[5][3]=='1'?'checked':'';
+$level3_checked=$val[5][4]=='1'?'checked':'';
+$level4_checked=$val[5][5]=='1'?'checked':'';
+$main_show_checked=$val[5][6]=='1'?'checked':'';
+print <<<EOT
+--> 
+    <tr align="center" style="background:#f1f1f1;" uid="$key">
+		<td><input type="checkbox" name="shop_level0[]" value="$key" $level0_checked /></td>
+		<td><input type="checkbox" name="shop_level1[]" value="$key" $level1_checked /></td>
+		<td><input type="checkbox" name="shop_level2[]" value="$key" $level2_checked /></td>
+		<td><input type="checkbox" name="shop_level3[]" value="$key" $level3_checked /></td>
+		<td><input type="checkbox" name="shop_level4[]" value="$key" $level4_checked /></td>
+		<td><input type="checkbox" name="main_show[]" value="$key" $main_show_checked /></td>
+    	<td align="left" class="td1"><img src="images/admincp/minus.gif" style="margin-left:$val[2]em" /> $val[0]</td>
+   	 	<td><input type="text" class="text" value="$val[4]" size="4" rel="od" uid="$key" /></td>
+   	 	<td><a href="#" rel="apply_page" apply_url="admincp.php?module=$module&amp;action=add&amp;menu_id=$key">添加菜单</a></td>
+    	<td>
+		    <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&amp;action=edit&amp;uid=$key" class="tipsy_s modify" title="修改"></a> 
+			<a href="#" uid="$key" rel="del" class="tipsy_s delete" title="删除"></a>
+		</td>
+  </tr>
+<!--
+EOT;
+} print <<<EOT
+-->	 </table>
+	<div id="page"><input type="submit" value="批量设置" class="button1" /></div>
+  	</form>
+	</div>
+</div>
+<!--
+EOT;
+?>-->
+

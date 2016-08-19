@@ -1,0 +1,12 @@
+<?php
+$banner_config=array(
+    'list_ggz1'=>array('desc'=>'左侧预留广告1','w'=>230,'h'=>200),
+    'list_ggz2'=>array('desc'=>'左侧预留广告2','w'=>230,'h'=>200),
+    'list_ggz3'=>array('desc'=>'左侧预留广告3','w'=>230,'h'=>200),
+    'list_ggz4'=>array('desc'=>'左侧预留广告4','w'=>230,'h'=>200),
+    'shop_banner'=>array('desc'=>'banner','w'=>1200,'h'=>160),
+	'wap_banner'=>array('desc'=>'手机轮转广告','w'=>300,'h'=>115),
+	'wap_recom'=>array('desc'=>'手机推荐广告','w'=>150,'h'=>150),
+	'wap_recom2'=>array('desc'=>'手机推荐广告2','w'=>150,'h'=>70),
+);
+?>

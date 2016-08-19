@@ -1,0 +1,126 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=task]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认更新数据？")) return false;
+		
+		var jq_this=$(this);
+		var m=$(this).attr("module");
+		var action=$(this).attr("action");
+		var url="task.php?module="+m;
+		if(action) url+="&action="+action;
+		url+="&rnd="+Math.random();
+		$.get(
+		    url,
+			function(msg){
+			    alert("更新成功");
+				jq_this.children("em").html(msg);
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+    <div class="msgbox" style="display:none">
+    	<h3>MvMmall 更新通知</h3>
+        <p class="red_strong">您当前使用的程序版本有重要更新，请参照以下提示进行及时升级</p>
+        <div id="msg">$check_rtl</div>
+        <p class="tips">当您修补完毕，此提示不再出现</p>
+        <p class="close"><a href="#" title="关闭提示">&nbsp;&nbsp;</a></p>
+    </div>
+	<table cellpadding="0" cellspacing="1" class="list list_main">
+		<tr>
+			<th colspan="2" class="td1">您好，欢迎使用非常商城！</th>
+		</tr>
+        <tr>
+			<td colspan="2" class="td1">实时统计数据</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="thead td1">主站事务</td>
+		</tr>
+        <tr>
+			<td class="td1">会员统计</td>
+			<td class="td1">
+                <a href="#">会员总数<em class="gray">$member_total</em ></a>
+                <a href="#">今日新增会员<em class="gray">$member_today</em ></a>
+            </td>
+		</tr>
+        <tr>
+			<td class="td1">商铺管理</td>
+			<td class="td1">
+                <a href="#">商铺总数<em class="gray">$shop_total</em ></a>  
+                <a href="#">普通<em class="gray">$shop_level_0</em ></a>  
+                <a href="#">扶持<em class="gray">$shop_level_1</em ></a>
+                <a href="#">标准<em class="gray">$shop_level_2</em ></a>
+                <a href="#">拓展<em class="gray">$shop_level_3</em ></a>
+                <a href="#">旗舰<em class="gray">$shop_level_4</em ></a>
+                <a href="#">新增商铺<em class="gray">$shop_today</em ></a>
+                <a href="#">待认证/审核商铺<em class="gray">$shop_to_certify</em ></a>
+            </td>
+		</tr>
+        <tr>
+			<td class="td1">广告管理</td>
+			<td class="td1">
+                <a href="#">广告位总数<em class="gray">$ad_total</em ></a>
+                <a href="#">已展示广告位<em class="gray">$ad_shown</em ></a>
+                <a href="#">待展示广告位<em class="gray">$ad_apply_certified</em ></a>
+                <a href="#">待审核广告位<em class="gray">$ad_apply_uncertified</em ></a>
+                <a href="#">三日内过期广告位<em class="gray">$ad_expire</em ></a>
+            </td>
+		</tr>
+        <tr>
+			<td class="td1">促销活动</td>
+			<td class="td1">
+                <a href="#">团购总数<em class="gray">$group_total</em ></a>
+                <a href="#">待审核团购<em class="gray">$group_uncertified</em ></a>
+                <a href="#">拍卖总数<em class="gray">$auction_total</em ></a>
+                <a href="#">待审核拍卖<em class="gray">$auction_uncertified</em ></a>
+                <a href="#">秒杀总数<em class="gray">$onsale_total</em ></a>
+				<a href="#">优惠券种类<em class="gray">$coupon_cat_total</em ></a>
+				<a href="#">优惠券持有数量<em class="gray">$coupon_total</em ></a>
+            </td>
+		</tr>
+		<tr>
+			<td colspan="2" class="thead td1">商铺监管</td>
+		</tr> 
+        <tr>
+			<td class="td1">商品管理</td>
+			<td class="td1">
+                <a href="#">商品总数<em class="gray">$goods_total</em ></a>
+                <a href="#">下架商品总数<em class="gray">$downgoods_total</em ></a>
+                <a href="#">销售型商品总数<em class="gray">$goods_sell_total</em ></a>
+				<a href="#">展示型商品总数<em class="gray">$goods_show_total</em ></a>
+			</td>
+		</tr>
+        <tr>
+			<td class="td1">订单管理</td>
+			<td class="td1">
+                <a href="#">总订单<em class="gray">$order_total</em ></a>
+                <a href="#">今日新增订单<em class="gray">$order_today</em ></a>
+                <a href="#">待付款订单<em class="gray">$order_status_1</em ></a>
+                <a href="#">已付款订单<em class="gray">$order_status_3</em ></a>
+                <a href="#">已发货订单<em class="gray">$order_status_4</em ></a>
+                <a href="#">已完成订单<em class="gray">$order_status_5</em ></a>
+                <a href="#">申请退货商品总数<em class="gray">$order_back_total</em ></a>
+            </td>
+		</tr>
+		<tr>
+			<td colspan="2" class="thead td1">定期任务</td>
+		</tr> 
+		<tr>
+		    <td class="td1">搜索提示数据</td>
+			<td class="td1">
+			    <a href="#" title="点击进行数据更新" class="tipsy_s" rel="task" module="clear_search_hint">
+				    <em class="gray">上次更新时间：$search_time &nbsp; 当前商品提示数据量：$search_num 条 文章提示数据量：$article_num 条 商铺提示数据量：$shop_num 条</em> 点击进行更新
+				</a>
+			</td>
+		</tr>
+	</table>
+</div>
+<!--
+EOT;
+?>-->

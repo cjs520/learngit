@@ -1,0 +1,50 @@
+﻿<!--<?php
+print <<<EOT
+<!--右边开始-->
+<!--form content-->
+<script language="javascript">
+$(function(){
+$("#send_chck").click(function(e){
+if($('input[@name=send_type][@checked]').val()==1){
+$('#send_nums').html("$grant_menu");
+}else{
+$('#send_nums').html('<input type="text" name="receivers" id="receivers" size="30" maxlength="20" class="text" /><span style="color: #999999;">←多个号码请以 , 间隔</span>');
+}
+});
+});
+</script>
+	<form name="mvmmall" action="admincp.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="p_url" value="$p_url" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th colspan="2">发送短信息</th>
+		</tr>
+		<tr>
+			<td width="25%">发送方式</td>
+			<td id="send_chck">
+				<input type="radio" value="0" name="send_type" id="send_type" checked /> 手动输入
+				<input type="radio" value="1" name="send_type" id="send_type" /> 会员等级
+			</td>
+		</tr>
+		<tr>
+			<td>接收号码</td>
+			<td id="send_nums">
+				<input type="text" name="receivers" id="receivers" class="text2 text_3" /><p class="alert_info"><span class="icon_info"></span>多个号码请以 , 间隔</p></span>
+			</td>
+		</tr>
+		<tr>
+			<td>发送内容</td>
+			<td>
+				<textarea name="message" id="message" rows="5" class="text text_4"></textarea>
+				<p class="cpsm">$lang[prices_need]</p>
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot">
+	  	<input type="submit" name="Submit" value="确定" class="button" onclick="" />
+	  	<input type="reset" name="reset" value="重置" class="button" />
+	</div>
+	</form>
+<!--
+EOT;
+?>-->

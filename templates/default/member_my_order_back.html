@@ -1,0 +1,92 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="member_title fd red"><b class="fr pad8">申请主站介入：<a class="vmid" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$mm_client_qq1&site=qq&menu=yes"><img src="./images/default/qq.jpg"></a></b>我的退货通道</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th width="30%">退货商品</th>
+				<th>订单号</th>
+				<th width="30%">退货信息</th>
+				<th>状态</th>
+				<th width="12%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_back as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td class="fcl">
+				    <a href="$val[goods_url]" target="_blank"><img src="$val[goods_file1]" width="80" height="80" class="span_left border" /></a>$val[goods_name]
+				</td>               
+				<td>$val[ordersn]</td>
+				<td style="text-align:left;padding:8px;">
+				    退货原因：{$val[info1][reason]}<br />
+					退货金额：{$val[info1][money]}<br />
+					退货说明：{$val[info1][memo]}<br />
+					<b>退货地址：$val[back_address]</b>
+				</td>
+				<td>$val[status_txt]</td>
+				<td>
+<!--
+EOT;
+if($val[status]==2){
+print <<<EOT
+-->
+				    <a href="member.php?action=order_back&og_uid=$val[og_uid]" target="_blank" class="next" title="下一步"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+					<a href="member.php?action=order_back&og_uid=$val[og_uid]" target="_blank" class="view" title="查看"></a>
+<!--
+EOT;
+if($val[status]==-1){
+print <<<EOT
+-->
+					<a href="#" rel="del" uid="$val[uid]" class="delete" title="删除"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+            </tr>
+<!--
+EOT;
+if($val[status]==-1){
+print <<<EOT
+-->
+			<tr uid="$val[uid]">
+			    <td colspan="5" style="text-align:left;padding:8px;">拒绝理由：$val[reject]</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

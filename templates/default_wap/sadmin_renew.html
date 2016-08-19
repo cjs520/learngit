@@ -1,0 +1,136 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	
+<script type="text/javascript">
+$(function(){
+    $("input[@name=pay_id]:first").attr("checked",true);
+	$("input[@name=renew_level]:first").attr("checked",true);
+    
+	var update_lock=false;
+	$("input[@rel=renew_submit]").click(function(){
+	    var msg="";
+		if(update_lock) return;
+	    if($("input[@name=advance]").attr("checked") && $("input[@name=pay_pass]").val()=="") msg+="请填写您的支付密码\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		
+		update_lock=true;
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=add",
+			type:"POST",
+			dataType:"json",
+			data:$("form[@name=renew_form]").serialize(),
+			cache:false,
+			success:function(json){
+			    if(json.err)
+				{
+				    alert(json.err);
+					return;
+				}
+				
+				$("tr[@rel=pay_span]").show();
+				$("tr[@rel=pay_span]").children("td:eq(1)").html(json.form_code);
+			},
+			complete:function(){
+			    update_lock=false;
+			}
+		});//end ajax
+	});//end submit
+});
+</script>
+    <div class="mem_right">
+		<div class="member_title fd red">商铺续费 <span class="gray fn">商铺到期不续费，将自动降级至免费商铺</span></div>
+		<form name="renew_form">
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<td width="72">商铺到期时间</td>
+				<td>$shop_expire</td>
+			</tr>
+			<tr>
+			    <td>当前商铺等级</td>
+				<td>$shop_level</td>
+			</tr>
+<!--
+EOT;
+if($shop_file[shop_level]>0){
+print <<<EOT
+-->
+            <tr>
+				<td>商铺续费金额</td>
+				<td class="red f14 fd">
+				    $renew_price/年
+				    <input type="hidden" name="renew_level" value="$shop_file[shop_level]" />
+				</td>
+			</tr>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+			<tr>
+				<td>请选择续费等级</td>
+				<td class="f14 fd">
+<!--
+EOT;
+foreach($arr_renew_level as $key=>$val){
+print <<<EOT
+-->
+				<input type="radio" name="renew_level" value="$key" /> $val[0]（$val[1]） 
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+			<tr>
+				<td>商铺续费年限</td>
+				<td>
+                	<select name="year">
+                    	<option value="1">1年</option>
+                        <option value="2">2年</option>
+                        <option value="3">3年</option>
+                        <option value="5">5年</option>
+                    </select>
+                </td>
+			</tr>
+			<tr>
+			    <td>支付方式</td>
+				<td>
+				    <input type="checkbox" name="advance" value="1" checked />用预付款支付，不足部分使用其他方式<br />
+				    您当前预付款账户余额为$mvm_member[member_money] <br />
+				    支付密码：<input type="password" name="pay_pass" class="text" value="" /><br />
+<!--
+EOT;
+foreach ($payment as $val){
+print <<<EOT
+-->				<input type="radio" name="pay_id" value="$val[id]"> $val[name] <span class="gray">$val[pay_desc]</span><br />
+<!--
+EOT;
+} print <<<EOT
+-->				
+				</td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td><input type="button" rel="renew_submit" value="进行续费" /></td>
+			</tr>
+			<tr rel="pay_span" style="display:none;">
+			    <td></td>
+				<td></td>
+			</tr>
+		</table>
+		</form>
+
+	</div>	
+    
+<!--
+EOT;
+?>-->

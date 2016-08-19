@@ -1,0 +1,452 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=preview]").click(function(e){
+			e.preventDefault();
+			
+			var img_path="$b_img";
+			
+			$("div[@rel=show_preview]").children("img").attr("src",img_path);
+			var o=$("div[@rel=show_preview]");
+			var itop=(document.documentElement.clientHeight-o.height())/2+$(window).scrollTop();
+			var ileft=(document.documentElement.clientWidth-o.width())/2+$(window).scrollLeft();
+			o.css({
+				position:"absolute",
+				top:itop+"px",
+				left:ileft+"px"
+			}).fadeIn(1000);
+			$("#block").css("display","block");
+		});//end click
+		$("span[@rel=preview_close]").click(function(e){
+			e.preventDefault();
+			$("div[@rel=show_preview]").fadeOut(1000);
+			$("#block").css("display","none");
+		});//end click
+	});
+	</script>
+
+	<div class="mem_right">
+		<div rel="show_preview" class="disn open_window open_window1">
+			<span rel="preview_close" class="close"></span>
+			<img src="" style="clear:both;" />
+		</div>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<form action="" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="action" value="add"/>
+		<input type="hidden" name="type" value="$type"/>	
+<!--
+EOT;
+if($type=='env_set' || $type=='all'){print <<<EOT
+-->		
+        <table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl fd">核心设置</th></tr>
+			<tr>
+				<td width="18%">商铺名称</td>
+				<td width="32%"><input type="text" name="post_shop[shop_name]"  value="$shop_file[shop_name]" class="text text_5" /></td>
+				<td width="18%">当前模板</td>
+				<td width="32%">
+				    <span class="span_left">$tpl[tpl_name]</span>&nbsp;
+					<a href="#" rel="preview" class="button m1">点击预览</a>&nbsp;
+					<a href="sadmin.php?module=tpl&action=list" class="button m1">更换模板</a>
+				</td>
+			</tr>
+			<tr>
+				<td>公司地址</td>
+				<td><input type="text" name="config[mm_mall_address]"  value="$ucfg[mm_mall_address]" class="text text_5" /></td>
+				<td>ICP备案号码</td>
+				<td><input type="text" name="config[mm_company_num]"  value="$ucfg[mm_company_num]" class="text text_5" /></td>
+			</tr>
+			<tr>
+				<td>主营项目</td>
+				<td><textarea name="post_shop[run_product]" class="text text_5" style="height:auto;" rows="2">$shop_file[run_product]</textarea></td>
+				<td>商铺描述</td>
+				<td><textarea name="config[mm_description]" class="text text_5" style="height:auto;" rows="2">$ucfg[mm_description]</textarea><p class="alert_info2 text_55"><span class="icon_info"></span>用于记录商铺概要与描述，可增加搜索引擎关注度</p></td>
+			</tr>
+			<tr>
+				<td>联系电话</td>
+				<td><input type="text" name="config[mm_tel]"  value="$ucfg[mm_tel]" class="text text_5" /></td>
+				<td>手机号码</td>
+				<td><input type="text" name="config[mm_mobile]"  value="$ucfg[mm_mobile]" class="text text_5" /></td>
+			</tr>
+			<tr>
+				<td>所在区域</td>
+				<td>
+				    <script language="javascript" src="include/javascript/jquery.city.js"></script>
+				    <select id="province" name="post_shop[province]"></select>
+			        <select id="city" name="post_shop[city]"></select>
+			        <select id="county" name="post_shop[county]"></select>
+					<script type="text/javascript">
+			        $(function(){
+			            $.init_area(new Array("province","city","county"),new Array("$shop_file[province]","$shop_file[city]","$shop_file[county]"));
+			        });
+			        </script>
+				</td>
+				<td>详细地址</td>
+				<td><input type="text" name="post_shop[shop_address]"  value="$shop_file[shop_address]" class="text text_5" /></td>
+			</tr>
+			<tr>
+			    <td>商铺LOGO</td>
+				<td colspan="3">$up_logo<br /><input type="file" name="up_logo" size="24" class="text text_5" /></td>
+			</tr>
+			<tr>
+			    <td>商铺BANNER</td>
+				<td colspan="3">$shop_banner_img<br /><input type="file" name="shop_banner" size="24" class="text text_5" /><p class="gray">为达到最佳显示效果，请应用990*130像素的图片</p></td>
+			</tr>
+			<!--  
+			<tr>
+			    <td>微信二维码</td>
+				<td colspan="3">$wx_logo<br /><input type="file" name="up_wx_logo" size="24" class="text text_5" /></td>
+			</tr>
+			<tr>
+			    <td>使用WAP自定义页面</td>
+				<td>
+				    <input type="radio" value="1" name="config[wap_user_index]" $wap_user_index_y /> 是　
+			       <input type="radio" value="0" name="config[wap_user_index]"  $wap_user_index_n /> 否
+				</td>
+			</tr>
+		</table>
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl fd">微信公众号整合</th></tr>
+			<tr>
+				<td width="18%">TOKEN</td>
+				<td><input type="text" name="config[mm_wx_token]"  value="$ucfg[mm_wx_token]" class="text text_5" /></td>
+			</tr>
+			<tr>
+				<td>APP ID</td>
+				<td><input type="text" name="config[mm_wx_app_id]"  value="$ucfg[mm_wx_app_id]" class="text text_5" /></td>
+			</tr>
+			<tr>
+			    <td>APP SECRET</td>
+				<td><input type="text" name="config[mm_wx_app_secret]"  value="$ucfg[mm_wx_app_secret]" class="text text_5" /></td>
+			</tr>
+			<tr>
+			    <td>一键关注URL</td>
+				<td>
+				    <input type="text" name="config[mm_wx_news_url]"  value="$ucfg[mm_wx_news_url]" class="text" size="70" /><br />
+					( 填写公众号后台的素材管理URL，网页上可以进行一键关注 )
+				</td>
+			</tr>
+			<tr>
+			    <td>一键关注图片</td>
+				<td colspan="3">$wx_res_img<br /><input type="file" name="up_wx_res_img" size="24" class="text text_5" /></td>
+			</tr>
+			<tr>
+			    <td>微店LOGO</td>
+				<td colspan="3">$mm_wx_shop_logo<br /><input type="file" name="mm_wx_shop_logo" size="24" class="text text_5" /></td>
+			</tr>
+			<tr>
+			    <td></td>
+			    <td>
+				    <p class="cpsm">↑ 还没有接入应用？<a href="http://mp.weixin.qq.com/" target="_blank" class="orange">点击此处进行申请>></a></p>
+					<p class="cpsm">回调URL：$mm_mall_url/oauth_back.php?oauth_type=wx&amp;supid=$page_member_id</p>
+				</td>
+			</tr>
+		</table>
+		-->
+		
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl fd">当前提现账号设置</th></tr>
+			<tr>
+				<td width="18%">账号类型</td>
+				<td>$account_type</td>
+			</tr>
+<!--
+EOT;
+if($member_account){print <<<EOT
+-->	
+			<tr>
+			    <td>账号信息</td>
+				<td style="line-height:20px;">
+<!--
+EOT;
+if($member_account[type]==0){print <<<EOT
+-->	
+				    支付宝账号：$member_account[account]<br />
+					真实姓名：$member_account[member_name]
+<!--
+EOT;
+}else if($member_account[type]==1){print <<<EOT
+-->	
+					银行卡账号：$member_account[account]<br />
+					开户行：$member_account[bank]<br />
+					开户名：$member_account[member_name]
+<!--
+EOT;
+}print <<<EOT
+-->	
+				</td>
+			</tr>
+<!--
+EOT;
+}print <<<EOT
+-->	
+		</table>
+		<div class="clear"></div>
+<!--
+EOT;
+}if($type=='msg_set' || $type=='all'){print <<<EOT
+-->		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl fd">客服信息设置</th></tr>
+			<tr>
+				<td width="18%">客服 电话</td>
+				<td width="32%"><input type="text" name="config[mm_ceo_phone]" value="$ucfg[mm_ceo_phone]" class="text text_5" /></td>
+				<td width="18%">客服 E-mail</td>
+				<td width="32%"><input type="text" name="config[mm_client_email]" value="$ucfg[mm_client_email]" class="text text_5" /></td>
+			</tr>
+			<tr>
+				<td>客服 旺旺</td>
+				<td><input type="text" name="config[mm_client_ww]" value="$ucfg[mm_client_ww]" class="text text_5" /></td>
+				<td>客服 传真</td>
+				<td><input type="text" name="config[mm_client_fax]" value="$ucfg[mm_client_fax]" class="text text_5" /></td>
+			</tr>
+			<tr>
+				<td>客服 QQ 1</td>
+				<td><input type="text" name="config[mm_client_qq1]" value="$ucfg[mm_client_qq1]" class="text text_5" /></td>
+				<td>客服 QQ 2</td>
+				<td><input type="text" name="config[mm_client_qq2]" value="$ucfg[mm_client_qq2]" class="text text_5" /></td>
+			</tr>
+			<tr>
+				<td>客服服务时间</td>
+				<td colspan="3"><textarea name="config[mm_client_time]" class="border" cols="80" rows="3">$ucfg[mm_client_time]</textarea></td>
+			</tr>
+			<tr>
+				<td>配送说明</td>
+				<td colspan="3"><textarea name="config[mm_dist_instr]" class="border" cols="80" rows="3">$ucfg[mm_dist_instr]</textarea></td>
+			</tr>
+			<tr>
+				<td>配送范围</td>
+				<td colspan="3"><textarea name="config[mm_dist_range]" class="border" cols="80" rows="3">$ucfg[mm_dist_range]</textarea></td>
+			</tr>
+		</table>
+		<div class="clear"></div>
+<!--
+EOT;
+}if($type=='img_set' || $type=='all'){print <<<EOT
+-->		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">水印设置</th></tr>
+			<tr>
+				<td>水印位置</td>
+				<td><input type="radio" value="0" name="config[mm_watermark]" $watermark_0 />中部 
+				<input type="radio" value="1" name="config[mm_watermark]" $watermark_1 />左上角 
+				<input type="radio" value="2" name="config[mm_watermark]" $watermark_2 />右上角 
+				<input type="radio" value="3" name="config[mm_watermark]" $watermark_3 />右下脚 
+				<input type="radio" value="4" name="config[mm_watermark]" $watermark_4 />左下脚 
+				<input type="radio" value="5" name="config[mm_watermark]" $watermark_5 />顶中部 
+				<input type="radio" value="6" name="config[mm_watermark]" $watermark_6 />右中部 
+				<input type="radio" value="7" name="config[mm_watermark]" $watermark_7 />底中部 
+				<input type="radio" value="8" name="config[mm_watermark]" $watermark_8 />左中部
+				</td>
+			</tr>
+			<tr>
+				<td>水印添加</td>
+				<td><input type="checkbox" value="1" name="config[mm_thumb_wate]" $mm_thumb_wate_y/> 缩略图添加 <input type="checkbox" value="1" name="config[mm_big_wate]" $mm_big_wate_y/> 详细大图添加</td>
+			</tr>
+			<tr>
+			    <td>当前水印图片</td>
+				<td><img src="$ucfg[mm_wate_img]" /></td>
+			</tr>
+			<tr>
+				<td>水印图片</td>
+				<td><input type="file" name="wate_img" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>水印类型</td>
+				<td><input type="radio" value="1"  name="config[mm_wate_class]" $mm_wate_class_y/> 文字水印 <input type="radio" value="0"  name="config[mm_wate_class]" $mm_wate_class_n/> 图片水印</td>
+			</tr>
+			<tr>
+				<td>水印文字</td>
+				<td><input type="text" name="config[mm_text_wate]"  value="$ucfg[mm_text_wate]" size="40" class="text" style="color:$ucfg[mm_text_color];" /></td>
+			</tr>
+			<tr>
+				<td>水印大小</td>
+				<td><input type="text" name="config[mm_text_size]"  value="$ucfg[mm_text_size]" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>字体颜色</td>
+				<td><input type="text" name="config[mm_text_color]" value="$ucfg[mm_text_color]" size="40" class="text" /> 
+					<select name="select_color" size="1"> 
+						<option value="">选择颜色</option>
+						<option style="background-color: #FF0000;color:#FF0000" selected="true"></option> 
+						<option style="background-color: #FFFFFF;color:#FFFFFF" value="#FFFFFF">$lang[color_white]</option>
+						<option style="background-color:Black;color:Black" value="#000000">$lang[color_black]</option> 
+						<option style="background-color:Red;color:Red" value="#FF0000">$lang[color_red]</option> 
+						<option style="background-color:Yellow;color:Yellow" value="#FFFF00">$lang[color_yellow]</option> 
+						<option style="background-color:Green;color:Green" value="#008000">$lang[color_green]</option> 
+						<option style="background-color:Orange;color:Orange" value="#FF8000">$lang[color_orange]</option> 
+						<option style="background-color:Purple;color:Purple" value="#800080">$lang[color_purple]</option> 
+						<option style="background-color:Blue;color:Blue" value="#0000FF">$lang[color_blue]</option> 
+						<option style="background-color:Brown;color:Brown" value="#800000">$lang[color_brown]</option> 
+						<option style="background-color:#00FFFF;color: #00FFFF" value="#00FFFF">$lang[color_aqua]</option> 
+						<option style="background-color:#7FFFD4;color: #7FFFD4" value="#7FFFD4">$lang[color_aquamarine]</option> 
+						<option style="background-color:#FFE4C4;color: #FFE4C4" value="#FFE4C4">$lang[color_bisque]</option> 
+						<option style="background-color:#7FFF00;color: #7FFF00" value="#7FFF00">$lang[color_chartreuse]</option> 
+						<option style="background-color:#D2691E;color: #D2691E" value="#D2691E">$lang[color_chocolate]</option> 
+						<option style="background-color:#FF7F50;color: #FF7F50" value="#FF7F50">$lang[color_coral]</option> 
+						<option style="background-color:#6495ED;color: #6495ED" value="#6495ED">$lang[color_cornflowerblue]</option> 
+						<option style="background-color:#DC143C;color: #DC143C" value="#DC143C">$lang[color_crimson]</option> 
+						<option style="background-color:#FF1493;color: #FF1493" value="#FF1493">$lang[color_deeppink]</option>
+						<option style="background-color:#FF00FF;color: #FF00FF" value="#FF00FF">$lang[color_fuchsia]</option> 
+						<option style="background-color:#FFD700;color: #FFD700" value="#FFD700">$lang[color_gold]</option> 
+						<option style="background-color:#DAA520;color: #DAA520" value="#DAA520">$lang[color_goldenrod]</option> 
+						<option style="background-color:#808080;color: #808080" value="#808080">$lang[color_gray]</option> 
+						<option style="background-color:#778899;color: #778899" value="#778899">$lang[color_lightslategray]</option> 
+						<option style="background-color:#B0C4DE;color: #B0C4DE" value="#B0C4DE">$lang[color_lightsteelblue]</option> 
+					</select> 
+					<script type="text/javascript">
+					$(function(){
+						$("input[@name='config[mm_text_color]']").val("$ucfg[mm_text_color]");
+						$("input[@name='config[mm_text_wate]']").css("color","$ucfg[mm_text_color]");
+						$("select[@name=select_color]").change(function(){
+							var color=$(this).val();
+							if(!color) return false;
+							$("input[@name='config[mm_text_color]']").val(color);
+							$("input[@name='config[mm_text_wate]']").css("color",color);
+						});
+					});
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>水印字体</td>
+				<td>$fonts_menu</td>
+			</tr>
+		</table>
+		<div class="clear"></div>
+<!--
+EOT;
+}if($type=='sms_set' || $type=='all'){print <<<EOT
+-->		<div class="newopen" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">短信平台设置</th></tr>
+			<tr>
+				<td width="18%">当前短信剩余数量</td>
+				<td>$mm_shop_sms 条</td>
+			</tr>
+			<tr>
+				<td>当前预存款</td>
+				<td>$mvm_member[member_money] 元</td>
+			</tr>
+			<tr>
+				<td>短信充值</td>
+				<td>
+				    <script type="text/javascript">
+					$(function(){
+					    $("input[@rel=apply_sms_pay]").click(function(){
+						    var apply_sms_num=$("select[@rel=apply_sms_num]").val();
+							apply_sms_num=parseInt(apply_sms_num);
+							if(isNaN(apply_sms_num) || apply_sms_num<=0)
+							{
+							    alert("请选择正确的申请数量");
+								return false;
+							}
+							if(!confirm("您当前准备购买"+apply_sms_num+"元短信，确定继续？")) return false;
+							$.get(
+							    "ajax.php?action=supplier_apply_sms&num="+apply_sms_num+"&rnd="+Math.random(),
+								function(msg){
+									if(msg=="OK")
+									{
+									    alert("申请成功");
+									    window.location.reload();
+										return;
+									}
+									alert(msg);
+								}
+							);//end get
+						});//end click
+						
+						$("select[@rel=apply_sms_num]").change(function(){
+						    var num=$(this).children("option[@selected]").attr("num");
+							if(!num || num=="") $("span[@rel=sms_num_info]").html("");
+							else $("span[@rel=sms_num_info]").html("您可以购得短信"+num+"条");
+						});//end change
+					});
+					</script>
+				    <select rel="apply_sms_num">
+					    <option value="----" num="">----</option>
+					    <option value="50" num="$mm_sms_apply_num_50">50 元</option>
+						<option value="100" num="$mm_sms_apply_num_100">100 元</option>
+						<option value="200" num="$mm_sms_apply_num_200">200 元</option>
+						<option value="500" num="$mm_sms_apply_num_500">500 元</option>
+						<option value="1000" num="$mm_sms_apply_num_1000">1000 元</option>
+					</select> 
+					<input type="button" rel="apply_sms_pay" value="预付款购买" /> 
+					<span rel="sms_num_info" style="color:red;"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>自定义发送</td>
+				<td><a href="#" rel="apply_page" apply_url="sadmin.php?module=sendsms&action=add" target="_blank" class="orange">[自定义发送]</a></td>
+			</tr>
+			<tr>
+			    <td>短信提醒</td>
+				<td>
+				
+				 <input type="checkbox" name="config[mm_sms_group_order]" value="1" $mm_sms_group_order_y /> 现场消费验证
+				<br/>
+				 <input type="checkbox" name="config[mm_sms_order_pay_to_shop]" value="1" $mm_sms_order_pay_to_shop_y /> 订单支付通知店主
+				<br/>
+				 <input type="checkbox" name="config[mm_sms_order_stock_up_shop]" value="1" $mm_sms_order_stock_up_shop_y /> 提醒买家已备货
+				</td>
+			</tr>
+			
+			<tr>
+				<td>使用者发送<br /></td>
+				<td>
+				    <div class="mem_sms2"><input type="checkbox" name="config[mm_sms_order]" value="1" $mm_sms_order_y /> 待付款<br />
+				    <textarea name="config[mm_sms_message1]" class="border" rows="8">$ucfg[mm_sms_message1]</textarea></div>
+				    <div class="mem_sms2"><input type="checkbox" name="config[mm_sms_receipt]" value="1" $mm_sms_receipt_y /> 已付款<br />
+				    <textarea name="config[mm_sms_message2]" class="border" rows="8">$ucfg[mm_sms_message2]</textarea></div>
+				    <div class="mem_sms2"><input type="checkbox" name="config[mm_sms_delivery]" value="1" $mm_sms_delivery_y /> 已发货<br />
+				    <textarea name="config[mm_sms_message3]" class="border" rows="8">$ucfg[mm_sms_message3]</textarea></div>
+				    <div class="mem_sms2"><input type="checkbox" name="config[mm_sms_comment]" value="1" $mm_sms_comment_y /> 已评价<br />
+				    <textarea name="config[mm_sms_message4]" class="border" rows="8">$ucfg[mm_sms_message4]</textarea></div>
+				</td>
+			</tr>
+		</table>
+		<div class="clear"></div>
+<!--
+EOT;
+}if($type=='env_set' || $type=='all'){print <<<EOT
+-->		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl fd">基本显示设置</th></tr>
+			<tr>
+				<td width="18%">是否开启发票</td>
+				<td width="32%"><input type="radio" value="0" name="config[mm_close_cess]" $mm_close_cess_n /> 使用 <input type="radio" value="1" name="config[mm_close_cess]"  $mm_close_cess_y /> 不使用</td>
+			    <td width="18%"></td>
+				<td width="32%"></td>
+			</tr>
+			<tr>
+			    <td width="18%">是否关闭网店</td>
+				<td width="32%"><input type="radio" value="1" name="config[mm_close]" $mm_close_y /> 关闭 <input type="radio" value="0" name="config[mm_close]" $mm_close_n /> 开启</td>
+				<td width="18%">关闭原因</td>
+				<td width="32%"><textarea name="config[mm_close_desc]" class="text text_5" style="height:auto;" rows="3">$ucfg[mm_close_desc]</textarea></td>
+			</tr>
+			<tr>
+			    <td>底部代码</td>
+				<td colspan="3"><textarea name="config[mm_footer_code]" class="text" style="height:auto;" rows="3" cols="100">$ucfg[mm_footer_code]</textarea></td>
+			</tr>
+		</table>
+<!--
+EOT;
+}print <<<EOT
+-->		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>		
+<!--
+EOT;
+?>-->

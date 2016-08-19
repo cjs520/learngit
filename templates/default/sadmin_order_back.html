@@ -1,0 +1,83 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" media="all" href="images/admincp/calendar.css" />
+<script type="text/javascript" src="include/javascript/calendar.js"></script>
+<script language="javascript" src="language/cn/admin/lang.js"></script>
+<script language="javascript" src="include/javascript/date.js"></script>
+
+	<div class="mem_right">
+		<div class="member_title fd red">申请退货</div>
+		<div class="newopen" style="width:880px;" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="title_rate_list">
+			<a href="sadmin.php?module=order&action=list"><span>所有订单</span></a>
+			<a href="sadmin.php?module=order&action=list&cmd=delay"><span>申请延期收货</span></a>
+			<a href="sadmin.php?module=back_order&action=list" class="hover"><span>退货通道</span></a>
+			<a href="sadmin.php?module=order&action=list&cmd=group_check"><span>现场订单验证</span></a>
+		</div>		
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="20%">退货商品</th>
+				<th>订单号</th>
+				<th>订单折扣</th>
+				<th width="25%">退货信息</th>
+				<th>状态</th>
+				<th>申请时间</th>
+				<th width="8%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_order as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]" rel="order_row" status="$val[status_code]">
+				<td><a href="$val[goods_url]" target="_blank">$val[goods_name]</a></td>
+				<td>$val[ordersn]</td>
+				<td>$val[discount]</td>
+				<td style="text-align:left;">
+				    申请人：$val[m_id]<br />
+				    退货原因：{$val[info1][reason]}<br />
+					退货金额：{$val[info1][money]}<br />
+					退货说明：{$val[info1][memo]}<br />
+				</td>
+				<td>$val[status_txt]</td>
+				<td>$val[register_date]</td>
+				<td><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&uid=$val[uid]" class="modify" title="编辑"></a></td>
+			</tr>
+					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		
+		<form action="sadmin.php?module=$module&action=$action" method="post">
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="5" class="red fcl">退货记录搜索</td></tr>
+			<tr>
+				<td width="15%">申请时间</td>
+				<td>
+				    <input type="text" name="start_time" value="$start_time" id="start_time" class="text" onclick="return showCalendar('start_time', 'y-m-d');" /> ~ 
+				    <input type="text" name="end_time" value="$end_time" id="end_time" class="text" onclick="return showCalendar('end_time', 'y-m-d');" />
+				</td>
+				<td width="15%">申请人</td>
+				<td><input type="text" name="username" id="username" value="$username" size="30" class="text" /></td>
+				<td><input type="submit" class="mem_button" value="" /></td>
+			</tr>
+		</table>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

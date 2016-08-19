@@ -1,0 +1,143 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除生活圈？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+	
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定审核指定的生活圈？")) return;
+		
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=check&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    window.location.reload();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=back]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("驳回指定的生活圈？")) return;
+		
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		var back_reason=$(this).siblings("input[@rel=back_reason]").val();
+		if(back_reason=="")
+		{
+		    alert("请填写您的驳回理由");
+			return;
+		}
+		
+		$.post(
+		    "admincp.php?module=$module&action=back&uid="+uid+"&rnd="+Math.random(),
+			"back_reason="+back_reason,
+			function(msg){
+			    window.location.reload();
+			}
+		);//end post
+	});//end click
+	
+	$("a[@rel=tab]:eq($t)").addClass("curtab");
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">生活圈管理</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+	
+	<div class="mt6">
+        <a href="admincp.php?module=$module&action=$action&t=0" class="but1" rel="tab">已审核</a>
+        <a href="admincp.php?module=$module&action=$action&t=1" class="but1" rel="tab">未审核</a>
+		<a href="admincp.php?module=$module&action=$action&t=2" class="but1" rel="tab">已驳回</a>
+	</div>
+	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="mt6 list">
+		<tr>
+			<th width="30%">生活圈名称</th>
+			<th>分类</th>
+			<th>标签</th>
+			<th>参与情况</th>
+			<th>状态</th>
+			<th>权重</th>
+			<th>操 作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_community as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td class="td1">
+			    <img src="$val[c_logo]" width="150" class="span_left" />&nbsp;
+				<span class="sptm pad8"><a href="life_detail.php?action=$val[uid]" target="_blank">$val[c_name]</a></span>
+			</td>
+			<td>$val[c_cat]</td>
+			<td>$val[c_tag]</td>
+			<td>
+			    <a>会员数量：$val[member_num]</a><br />
+			    <a>话题数量：$val[topic_num]</a><br />
+				<a>评论数量：$val[comment_num]</a><br />
+			</td>
+			<td>$val[status]</td>
+			<td>$val[od]</td>
+			<td>
+			    <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="修改"></a> 
+				<a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+<!--
+EOT;
+if($val[approval_date]==0){
+print <<<EOT
+-->
+                <a href="#" rel="check" uid="$val[uid]" class="tipsy_s check" title="审核"></a>
+				<a href="#" rel="back" uid="$val[uid]" class="tipsy_s che" title="驳回"></a>
+				驳回原因：<input type="text" class="text" rel="back_reason" style="width:100px;" />
+<!--
+EOT;
+}else if($val[approval_date]<0){ print <<<EOT
+-->	
+			     驳回理由：$val[back_reason]
+<!--
+EOT;
+} print <<<EOT
+-->	
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+</div>
+<!--
+EOT;
+?>-->

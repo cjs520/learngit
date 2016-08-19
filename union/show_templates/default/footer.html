@@ -1,0 +1,93 @@
+<!--<?php print <<<EOT
+--><div class="clear0"></div>
+</div>
+<div class="footer_bg"><div id="footer" class="clearfix">
+	<div class="help_faq clearfix"><!--- 帮助链接 开始 --->
+<!--
+EOT;
+$i=0;
+foreach($nav2_help as $val){
+$i++;
+print <<<EOT
+-->		<dl class="span_left">
+			<dt><span class="help_faq{$i}"><a href="$val[link]">$val[title]</a></span></dt>
+			<dd>
+<!--
+EOT;
+foreach($val[child] as $v){
+print <<<EOT
+-->				<a href="$v[link]">$v[title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->			</dd>
+		</dl>
+<!--
+EOT;
+} print <<<EOT
+-->	</div><!--- 帮助链接 结束 --->
+	<ul class="h_oflow site">
+    	<li><span class="site1">实体认证</span></li>
+    	<li><span class="site2">商铺托管</span></li>
+    	<li><span class="site3">全场正品</span></li>
+    	<li><span class="site4">七天退换货</span></li>
+    	<li><span class="site5">积分回馈</span></li>
+    </ul>
+	<div class="footer_nav"><!--
+EOT;
+foreach($nav_foot as $val){
+print <<<EOT
+--><a href="$val[link]" $val[target] title="$val[alt]">$val[title]</a><span rel="footnav">|</span><!--
+EOT;
+} print <<<EOT
+-->	</div>
+	<div class="footer_info">
+		<p class="copy3">Copyright &copy; 2014 All Rights Reserved &nbsp; ICP证：$mm_company_num</p>
+		<p>软件著作权登记号：<span class="orange">2011SR020550</span> $lang_powered_mvmmall</p> 
+		<p><a href="http://www.mvmmall.cn/" target="_blank">程序开发商:迈维软件有限公司</a></p>
+		<p>$mm_footer_code</p>   
+	</div>
+</div></div>
+<script type="text/javascript">
+$(function(){
+    var script_name="$script";
+	var param="$script_param";
+	var arr_param=param==""?new Array():param.split("|");
+	var i,j,flag;
+	var select_index=-1,weight=0,w;
+	
+	for(i=0;i<$("a[@rel=nav_head]").size();i++)
+	{
+	    w=0;
+	    if($("a[@rel=nav_head]").eq(i).attr("href").indexOf(script_name)==-1) continue;
+		w+=5;
+		if($("a[@rel=nav_head]").eq(i).attr("href").indexOf(script_name+".")!=-1) w+=5;
+		for(j=0;j<arr_param.length;j++)
+		{
+			if($("a[@rel=nav_head]").eq(i).attr("href").indexOf(arr_param[j])!=-1) w++;
+		}
+		if(w>weight)
+		{
+		    weight=w;
+			select_index=i;
+		}
+	}
+	
+	if(select_index==-1) return;
+	$("a[@rel=nav_head]").eq(select_index).addClass("self");
+	$("span[@rel=footnav]:last").html("");
+});
+</script>
+<script type="text/javascript">
+$(function(){
+	$("#block").width($("body").width());
+	$("#block").height($("body").height());
+	$("#block").animate({opacity:0.4});
+});
+</script>
+<div id="block"></div>
+</body>
+</html>
+<!--
+EOT;
+?>-->

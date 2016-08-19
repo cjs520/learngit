@@ -1,0 +1,78 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return false;
+		var supid=$(this).attr("supid");
+		$.get(
+		    "admincp.php?module=$module&action=del&supid="+supid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@supid="+supid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		var jq_a=$(this);
+		var supid=$(this).attr("supid");
+		$.get(
+		    "admincp.php?module=$module&action=check&supid="+supid+"&rnd="+Math.random(),
+			function(msg){
+			    jq_a.html(msg);
+			}
+		);//end get
+	});//end click
+	
+	$("input[@rel=set]").blur(function(){
+	    var supid=$(this).attr("supid");
+		var domain_name=$(this).val();
+		$.post(
+		    "admincp.php?module=$module&action=edit&supid="+supid+"&rnd="+Math.random(),
+			"domain_name="+domain_name,
+			function(msg){}
+		);//end post
+	});//end blur
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">顶级域名申请</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>顶级域名</th>
+			<th>申请商铺</th>
+			<th>会员ID</th>
+			<th width="10%">状态</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_tld as $val){
+print <<<EOT
+-->
+        <tr supid="$val[supplier_id]">
+		    <td><input type="text" class="text" supid="$val[supplier_id]" rel="set" value="$val[domain_name]" /></td>
+			<td><a target="_blank" href="$val[url]">$val[shop_name]</a></td>
+			<td>$val[m_id]</td>
+			<td><a href="#" rel="check" supid="$val[supplier_id]">$val[status]</a></td>
+			<td><a href="#" rel="del" supid="$val[supplier_id]" class="delete" title="删除"></a></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+</div>
+<!--
+EOT;
+?>-->

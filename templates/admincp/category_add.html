@@ -1,0 +1,156 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $.extend({
+	    SetEvents:function(){
+		    $("a[@rel=add_att_v]").unbind("click");
+			$("a[@rel=add_att_v]").click(function(e){
+			    e.preventDefault();
+				$(this).before('<input name="att_value[]" type="text" class="att_txt" value="" />');
+			});//end click
+		}
+    });//end extend
+	
+	$("a[@rel=add_att]").click(function(e){
+	    e.preventDefault();
+		if($("input[@name='att_name[]']").size()>=9)
+		{
+		    alert("属性数量不能超过9个");
+			return false;
+		}
+		
+		var html="";
+		html+="<tr>";
+		html+='<td class="td1" valign="top"><input name="att_name[]" type="text" value="" class="att_name" />：</td>';
+		html+='<td class="td2"><p><input name="att_value[]" type="text" class="att_txt" value="" /><a rel="add_att_v" href="#" class="add" title="添加"></a></p></td>';
+        html+="</tr>";
+		$("table[@rel=att_list]").append(html);
+		
+		$.SetEvents();
+	});//end click
+	
+	$.SetEvents();
+	
+	$("form[@name=category]").submit(function(){
+	    if($("input[@name=category_name]").val()=="")
+		{
+		    alert("请填写分类名称");
+			return false;
+		}
+		
+	    $("input[@name='att_name[]']").each(function(i){
+	        $(this).val($.trim($(this).val()));
+			if($(this).val()=="") $(this).parent().parent().remove();
+		});//end each
+		$("input[@name='att_value[]']").each(function(i){
+		    $(this).val($.trim($(this).val()));
+			if($(this).val()=="") $(this).remove();
+		});//end each
+		
+		$("table[@rel=att_list]").find("tr").each(function(i){
+		    $(this).find("input[@name='att_name[]']").attr("name","att_name["+i+"]");
+			$(this).find("input[@name='att_value[]']").each(function(j){
+			    $(this).attr("name","att_value["+i+"_"+j+"]");
+			});
+		});//end each
+		return true;
+	});//end submit
+});
+</script>
+<style>
+html { overflow-x:hidden; }
+.attr_add_table { width:600px; overflow:hidden; }
+.attr_add_table .td1 { width:100px; }
+.attr_add_table .td2 { width:500px; overflow:hidden; vertical-align:top; }
+.attr_add_table .td2 p { width:500px; overflow:hidden;  }
+</style>
+<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+<div id="right">
+<form name="category" action="admincp.php?module=$module&action=$action" method="post" enctype="multipart/form-data">
+<input type="hidden" name="step" value="1"/>
+<input type="hidden" name="uid" value="$uid"/>
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg">
+		<tr>
+			<th colspan="4">添加或修改分类</th>
+		</tr>
+		<tr>
+			<td width="100">分类名称</td>
+			<td width="200"><input type="text" name="category_name" value="$category_name" maxLength="90" class="text text_1" /></td>
+			<td width="80">上级分类</td>
+			<td width="200">
+			    <span rel="goods_category"></span>
+				<script type="text/javascript">
+				$(function(){
+				    $("span[@rel=goods_category]").GoodsCategory("$category_id");
+				});
+				</script>
+				<p class="alert_info2 text_11"><span class="icon_info"></span>如该分类是顶级分类，此处留空</p>
+			</td>
+		</tr>
+		<tr>
+			<td>分类关键字</td>
+			<td><textarea name="category_key" id="category_key" rows="2" class="text text_1">$category_key</textarea></td>
+			<td>分类描述</td>
+			<td><textarea name="category_desc" id="category_desc" rows="2" class="text text_1">$category_desc</textarea></td>
+		</tr>
+		<tr>
+			<td>输出顺序</td>
+			<td><input type="text" name="category_rank" value="$category_rank" maxLength="10" class="text text_1" /><p class="alert_info2 text_11"><span class="icon_info"></span>请直接输入数字，数值越小，显示越靠前</p></td>
+		    <td>佣金比例</td>
+			<td><input type="text" name="rate" size="45" value="$rate" class="text text_1" /><p class="alert_info2 text_11"><span class="icon_info"></span>请填写界于0-1之间的小数（小数位不限），否则自动归零。</p></td>
+		</tr>
+
+		<tr>
+			<td>分类图标</td>
+			<td colspan="3"><input type="file" name="category_file1" size="26" class="text span_left" /> <span id="r$uid">$cat_img</span><p class="alert_info"><span class="icon_info"></span>为达到最佳显示效果，请上传36*36像素的图片</p></td>
+		</tr>
+		<tr>
+			<td valign="top">筛选属性<a rel="add_att" href="#" class="add" title="添加"></a></td>
+			<td colspan="3">
+                <table border="0" rel="att_list" class="attr_add_table">
+<!--
+EOT;
+foreach ($att_list as $key=>$val){
+print <<<EOT
+-->
+				  <tr>
+                    <td class="td1" valign="top"><input name="att_name[]" type="text" value="$key" class="att_name" />：</td>
+                    <td class="td2"><p>
+<!--
+EOT;
+foreach ($val as $v){
+print <<<EOT
+-->
+					    <input name="att_value[]" type="text" class="att_txt" value="$v" />
+<!--
+EOT;
+} print <<<EOT
+-->
+						<a rel="add_att_v" href="#" class="add" title="添加"></a>
+					</p></td>
+                  </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+                  <tr>
+                    <td class="td1" valign="top"><input name="att_name[]" type="text" value="" class="att_name" />：</td>
+                    <td class="td2"><p><input name="att_value[]" type="text" class="att_txt" value="" /><a rel="add_att_v" href="#" class="add" title="添加"></a></p></td>
+                  </tr>
+                </table>
+            </td>
+		</tr>
+	</table>
+	<div id="tfoot">
+	  	<input type="submit" name="Submit" value="确定" class="button" />
+	  	<input type="reset" name="reset" value="重置" class="button" />
+	</div>
+	</form>
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

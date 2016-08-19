@@ -1,0 +1,63 @@
+<!--<?php
+require_once template('header');
+print <<<EOT
+--> <script type="text/javascript">
+	$(function(){
+		$("a[@rel=menu_head]").click(function(e){
+	    e.preventDefault();
+		var o=$(this).parent().siblings("dd");
+		$(this).toggleClass("show").toggleClass("hide");
+		if(o.size()>=1)
+		{
+		    if(o.get(0).style.display=="none") o.slideDown(300);
+			else o.slideUp(300);
+		}
+		});
+		$("dl[@rel=hnav]:last").css("border","none");
+	});
+	</script>
+	<div class="board_left"><!-- 帮助中心开始 -->
+		<div class="border h_nav h_oflow">
+			<h3 class="titlea bzzx"><span>帮助中心</span></h3>
+<!--
+EOT;
+$i=1;
+foreach($nav2_help as $val){
+$style=$i==1?'':'style="display:none;"';
+$class=$i==1?'class="show"':'class="hide"';
+$i++;
+print <<<EOT
+-->			<dl rel="hnav">
+				<dt><a $class rel="menu_head" href="#">$val[title]</a></dt>
+            	<dd $style><!--
+EOT;
+foreach($val[child] as $child){
+print <<<EOT
+--><a href="$child[link]" title="$child[alt]">$child[title]</a><!--
+EOT;
+} print <<<EOT
+--></dd>
+			</dl>
+<!--
+EOT;
+} print <<<EOT
+-->		</div>
+	</div><!-- 左边结束 -->
+
+    <div class="board_right">
+		<div class="border help_info h_oflow">
+    		<h3 class="titlea f13">销售型订购流程</h3>
+			<p class="buy_guide"><span>浏览商品-加入购物车-支付-买家收货-交易完成</span></p>
+		</div>
+		<div class="border help_info h_oflow">
+    		<h3 class="titlea f13">展示型订购流程</h3>
+			<p class="show_guide"><span>浏览商品-询价洽谈-订购确认-支付-买家收货-交易完成</span></p>
+		</div>
+		<div class="border help_info h_oflow">
+    		<h3 class="titlea f13">开店流程</h3>
+			<p class="shop_guide"><span>会员登录-选择商铺类型-填写商铺资料-发布5件商品-等待工作人员审核-通过审核-成功开启商铺-自主管理等待订单</span></p>
+		</div>
+    </div>
+<!--
+EOT;
+?>-->	

@@ -1,0 +1,111 @@
+ <!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("#reg_form").submit(function(){
+	    var msg="";
+		if($("input[@name=login_id]").val()=="") msg+="请填写用户名\\n";
+		if($("input[@name=pass1]").val()=="") msg+="请填写密码\\n";
+		if($("input[@name=pass1]").val()!=$("input[@name=pass2]").val()) msg+="两次填写的密码不一致\\n";
+		if(!$("input[@name=agree]").attr("checked")) msg+="您未同意本商城会员协议，无法注册\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+	
+	$("input[@name=login_id]").blur(function(){
+	    var jq_span=$("span[@rel=login_id]");
+		jq_span.html("");
+		if($(this).val()=="")
+		{
+		    jq_span.html("请填写注册会员ID");
+			return;
+		}
+		$.post(
+		    "ajax.php?action=user&rnd="+Math.random(),
+			"id="+$(this).val(),
+			function(msg){
+			    jq_span.html(msg);
+			}
+		);//end post
+	});//end blur
+	
+	$("input[@name=pass1]").blur(function(){
+	    var jq_span=$("span[@rel=pass1]");
+		jq_span.html("");
+	    if($(this).val()=="") jq_span.html("请填写密码");
+		else if($("input[@name=pass2]").val()!="" && $("input[@name=pass2]").val()!=$(this).val()) jq_span.html("两次密码输入不一致");
+	});//end blur
+	
+	$("input[@name=pass2]").blur(function(){
+	    var jq_span=$("span[@rel=pass1]");
+		jq_span.html("");
+		
+		if($(this).val()=="") jq_span.html("请填写确认密码");
+		else if($("input[@name=pass1]").val()!=$(this).val()) jq_span.html("两次密码输入不一致");
+	});//end blur
+});
+</script>
+    <p class="fl"><img src="images/default/reg.jpg" /></p>
+	<div class="fl logform">    
+<!--
+EOT;
+if($oauth=='qq'){
+print <<<EOT
+-->
+    	<p class="mt10 alert_info">来自<b>QQ</b>的$auth_info[nickname]，您好<br />立即设置一个密码，就可以直接登录{$mm_mall_title}了</p> 
+<!--
+EOT;
+}else if($oauth=='sina'){ print <<<EOT
+-->
+    	<p class="mt10 alert_info">来自<b>新浪微博</b>的$auth_info[nickname]，您好<br />立即设置一个密码，就可以直接登录{$mm_mall_title}了</p>
+<!--
+EOT;
+} print <<<EOT
+-->
+    	<form method="post" id="reg_form" action="register.php">
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" name="oauth" value="$oauth" />
+        <table style="margin:20px">
+<!--
+EOT;
+if(!$oauth){
+print <<<EOT
+-->
+        	<tr><th>&nbsp;</th><td><span class="fl">没有帐号？请注册</span><span class="fr">已注册？<a href="logging.php?action=login" class="blue">请登陆</a></span></td><td>&nbsp;</td></tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		    <tr><th>用户名：</th><td><input name="login_id" maxlength="40" value="$auth_info[nickname]" type="text" class="text2" size="40" /></td><td><span rel="login_id" class="red"></span></td></tr>
+        	<tr><th>请设定密码：</th><td><input name="pass1" maxlength="32" type="password" class="text2" size="40" /></td><td><span rel="pass1" class="red"></span></td></tr>  
+        	<tr><th>请确认密码：</th><td><input name="pass2" maxlength="32" type="password" class="text2" size="40" /></td><td></td></tr>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+-->        	<tr>
+                <th>验证码：</th>
+				<td>
+				    <input name="code" type="text" class="text2 text_yzm" size="20" maxlength="8" /> 
+					<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:32px" alt="验证码" />
+					<span rel="code" style="display:none;">请输入验证码</span>
+				</td>
+                <td></td>
+			</tr> 
+<!--
+EOT;
+} print <<<EOT
+-->         <tr><th></th><td colspan="2"><input type="checkbox" checked="checked" name="agree" value="1" class="vmid"/> 我已经认真阅读并且完全同意 <a href="page.php?action=member" title="用户服务协议" target="_blank" class="blue">《用户服务协议》</a> 中的所有条款。</td></tr>
+			<tr><th></th><td colspan="2"><input type="submit" value="" class="reg_button" /></td></tr>
+        </table>
+        </form>
+    </div><!-- 会员注册资料结束 -->
+<!--
+EOT;
+?>-->

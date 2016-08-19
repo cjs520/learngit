@@ -1,0 +1,80 @@
+ <!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">会员注册</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+    $("#bind_form").submit(function(){
+	    var login_id=$(this).find("input[@name=login_id]").val();
+		var pass1=$(this).find("input[@name=pass1]").val();
+		var msg="";
+		if(login_id=="") msg+="请填写用户名\\n";
+		if(pass1=="") msg+="请填写密码\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+});
+</script>
+	<div class="logform">
+<!--
+EOT;
+if($oauth=='wx'){
+print <<<EOT
+-->
+    	<p class="mb10 fct" style="line-height:30px;">来自微信客户端的<span class="red f16">$auth_info[nickname]</span><br />绑定商城账号就能实现同步登录了</p>
+		<p class="mb10 fct"><a href="register.php?oauth=$oauth" class="newuser_button">我想注册成为新用户</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		
+   	  <form method="post" id="bind_form" action="register.php?oauth=$oauth">
+		<input type="hidden" name="step" value="2" />
+        <table>
+		    <tr><th>用户名：</th><td><input name="login_id" maxlength="40" value="" type="text" class="text" size="40" /><br /><br /><span rel="login_id" class="red"></span></td></tr>
+        	<tr><th>请设定密码：</th><td><input name="pass1" maxlength="32" type="password" class="text" size="40" /><br /><br /><span rel="pass1" class="red"></span></td></tr>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+-->        	<tr>
+                <th>验证码：</th>
+				<td>
+                    <input name="code" type="text" class="text text_yzm" size="20" maxlength="8" style="width:102px;" />&nbsp;
+					<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:32px" alt="验证码" />
+                    <br /><br /><span rel="code" style="display:none;">请输入验证码</span>
+				</td>
+			</tr> 
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($auth_info[headimgurl]){
+print <<<EOT
+-->
+            <tr>
+		        <td>远程头像</td>
+			    <td>
+			        <img src="$auth_info[headimgurl]" style="width:5rem;" /><br />
+					<input type="checkbox" name="use_blog_head" value="1" checked /> 使用远程头像作为商城头像
+					<input type="hidden" name="headimgurl" value="$auth_info[headimgurl]" />
+			    </td>
+		    </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+			<tr><th></th><td><input type="submit" value="" class="bang_button" /></td></tr>
+        </table>
+        </form>
+    </div><!-- 会员注册资料结束 -->
+<!--
+EOT;
+?>-->

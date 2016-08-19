@@ -1,0 +1,69 @@
+<!--<?php
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(e){
+    $("input[@rel=item]").click(function(e){
+	    var v=$(this).attr("id");
+		$("input[@rel=input]:last").val(v);
+	});
+	
+	if($("input[@name=service]").size()>0)
+	{
+	    $("input#"+$("input[@name=service]").val()).attr("checked",true);
+	}
+});
+</script>
+<!--form content-->
+	<form action="admincp.php?module=$module&action=$action" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="step" value="1" />
+	<input type="hidden" name="name" value="$_GET[name]" />
+	<input type="hidden" name="uid" value="$uid" />
+	<input type="hidden" name="p_url" value="$p_url" />
+	<table cellpadding="0" cellspacing="1" class="list1  list_bg mb0">
+		<tr><th colspan="2">$lang[payment_install]</th></tr>
+		<tr>
+			<td width="20%">$lang[name]</td>
+			<td><input type="text" name="pay_name" id="pay_name" value="$name" maxlength="20" class="text text_4" /></td>
+		</tr>
+		<tr>
+			<td>$lang[description]</td>
+			<td><textarea name="pay_desc" id="pay_desc" rows="5" class="text text_4">$desc</textarea></td>
+		</tr>
+<!--
+EOT;
+foreach ($fields as $key=>$val){
+print <<<EOT
+-->			
+		<tr>
+			<td>$val[label]</td>
+			<td>
+<!--
+EOT;
+if($val[t]=='upload'){
+print <<<EOT
+-->		
+				<input rel="input" type="file" name="$val[name]" class="text text_4" /> $val[tag] <br />
+				(上传之前，请确认文件名为$val[value])
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+				<input rel="input" type="text" name="$val[name]" value="$val[value]" class="text text_4" />
+<!--
+EOT;
+} print <<<EOT
+-->   
+			</td>
+		</tr>
+		
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" onclick="" /> <input type="reset" name="reset" value="重置" class="button" /></div>
+	</form>
+<!--
+EOT;
+?>-->

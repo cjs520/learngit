@@ -1,0 +1,59 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定成员？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="member_title fd red">我的好友</div>
+
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th width="20%">好友</th>
+				<th>会员等级</th>
+				<th>添加时间</th>
+				<th width="25%">活跃度</th>
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_member as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td class="fcl"><img src="$val[member_image]" class="fl"/><span class="sptm">$val[member_id]</span></td>
+				<td>$val[member_class]</td>
+				<td>$val[register_date]</td>
+				<td>
+				    圈子：$val[comm_num]&nbsp;&nbsp;
+					话题：$val[topic_num]&nbsp;&nbsp;
+					评论：$val[comment_num]
+				</td>
+				<td>
+				    <a href="account.php?action=mysms&to=$val[member_id]" target="_blank" class="tipsy_s send" title="发送短消息"></a>
+				    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+				</td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

@@ -1,0 +1,130 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除？")) return false;
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+				function(msg){
+					$("tr[@uid="+uid+"]").remove();
+				}
+			);//end get
+		});//end click
+		
+		$("a[@rel=check]").click(function(e){
+			e.preventDefault();
+			var jq_this=$(this);
+			var uid=jq_this.attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=edit&uid="+uid+"&rnd="+Math.random(),
+				function(msg){
+					jq_this.html(msg);
+				}
+			);//end get
+		});//end click
+	});
+	</script>
+	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=reply]").click(function(e){
+			e.preventDefault();
+			var o=$("#reply");	
+			var uid=$(this).attr("uid");
+			var cnt=$(this).siblings("a[@rel=comment_body]").html();
+			o.find("input[@name=uid]").val(uid);
+			o.find("p[@rel=comment_body]").html("回复："+cnt);
+			o.find("textarea[@name=reply]").val("");
+			
+			var itop=(document.documentElement.clientHeight-o.height())/2+$(window).scrollTop();
+			var ileft=(document.documentElement.clientWidth-o.width())/2+$(window).scrollLeft();
+			o.css({
+				width:300+"px",
+				position:"absolute",
+				top:itop+"px",
+				left:ileft+"px"
+			}).fadeIn(1000);
+			$("#block").css("display","block");
+		});//end click
+		
+		$("span[@rel=close_reply]").click(function(e){
+			e.preventDefault();
+			$("#reply").fadeOut(1000);
+			$("#block").css("display","none");
+		});//end click
+		
+		$("input[@rel=reply_submit]").click(function(){
+		    var o=$("#reply");	
+			var data=o.find("form").serialize();
+			$.post(
+			    "sadmin.php?module=$module&action=reply&rnd="+Math.random(),
+				data,
+				function(msg){
+				    if(msg=="ok") window.location.reload();
+					else alert(msg);
+				}
+			);//end post
+		});//end click
+	});
+	</script>
+	
+	<div class="disn open_window" id="reply"><span class="close" rel="close_reply"></span>
+		<form action="" method="post">
+		    <input type="hidden" name="uid" value="" />
+			<p rel="comment_body"></p>
+			<p><textarea name="reply" rows="6" class="textarea"></textarea></p>
+			<p class="fcr"><input type="button" rel="reply_submit" class="mem_button" value="" /></p>
+		</form>
+	</div>
+	<div class="mem_right">
+		<div class="member_title fd red">咨询管理</div>
+		
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th width="20%">商品名称</th>
+				<th width="25%">咨询内容</th>
+				<th>时间</th>
+				<th>评论者</th>
+				<th>状态</th>
+				<th width="10%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_comment as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl mem_display"><a href="$val[glink]" target="_blank">$val[goods_name]</a><span rel="tolink" class="mem_hover"><span><img src="$val[goods_file1]" width="160" height="160" /></span></span></td>
+				<td class="fcl"><a href="$val[glink]" target="_blank" rel="comment_body">$val[comment_body]</a> <a href="#" rel="reply" uid="$val[uid]"><span class="tipsy_s da" title="回复"></span></a></td>
+				<td>$val[register_date]</td>
+				<td>$val[m_id]</td>
+				<td><a rel="check" href="#" uid="$val[uid]">$val[status]</a></td>
+				<td>
+				    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a> 
+				</td>
+			</tr>
+<!--
+EOT;
+if($val[reply]){
+print <<<EOT
+-->		
+			<tr uid="$val[uid]">
+			    <td colspan="6" class="fcl"><span class="red">店主回复:</span> $val[reply]</td>
+	        </tr>
+<!--
+EOT;
+} print <<<EOT
+-->		
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		
+	</div>	
+<!--
+EOT;
+?>-->

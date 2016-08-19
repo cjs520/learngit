@@ -1,0 +1,35 @@
+<!--<?php
+print <<<EOT
+-->
+<!--form content-->
+	<script type="text/javascript">
+	$(function(){
+		$("input[@name=send_type]").click(function(e){
+			if($('input[@name=send_type][@checked]').val()==1) $('#send_nums').html("$grant_menu");
+			else $('#send_nums').html('<input type="text" name="receivers" id="receivers" class="sadmin_text1" /><br />←多个号码请以 , 间隔。');
+		});//end click
+	});
+	</script>
+		<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input name="action" type="hidden" value="sendsms"/>
+		<input type="hidden" name="action" value="$action"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">发送短信息</th></tr>
+			<tr>
+				<td width="70">发送方式</td>
+				<td><input type="radio" value="0" name="send_type" checked="checked" /> 手动输入 <input type="radio" value="1" name="send_type" /> 会员等级</td>
+			</tr>
+			<tr>
+				<td>接收号码</td>
+				<td id="send_nums"><input type="text" name="receivers" id="receivers" size="32" class="text2" /> <p class="alert_info"><span class="icon_info"></span>多个号码请以 , 间隔。</p></td>
+			</tr>
+			<tr>
+				<td>发送内容</td>
+				<td><textarea name="message" id="message" class="textarea" rows="5"></textarea></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

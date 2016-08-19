@@ -1,0 +1,30 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+.title1 { border-right:1px solid #e4e4e4; background:url(title_bg.jpg); text-indent:35px; }
+.title1 span { color:#436300; }
+.title2 { padding:4px 8px; border:1px solid #ddd; line-height:34px; }
+.title2 span { padding:0 8px; color:#060; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; }
+.zn_search { margin-top:7px; padding:7px 0; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:10px auto 8px; }
+.top3_bg { background:url(bg_new.jpg) repeat-x 0 7px; }
+.top3 { position:relative; height:50px; }
+.top3 ul { float:left; width:725px;  }
+.top3 li .navtab { float:left; padding:0 14px; line-height:36px; color:#fff; font-size:14px; text-align:center; margin-top:7px; }
+.top3 li .self { background:url(nav_bg.jpg) repeat-x; color:#436300; font-weight:bold; padding:0 0 0 20px; height:50px; margin-top:0; line-height:44px; padding-bottom:5px; line-height:40px; }
+.top3 li .self span { display:block; background:url(nav_bg.jpg) repeat-x right 0; padding:5px 20px 0 0; }
+.top3 li a:hover { text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:36px; margin-top:7px; padding:0 0 0 10px; line-height:36px; background:#2f4502; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:9px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:2px; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#344d02;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#fff; }
+.top_cate dt.self { background:#465e16; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#465e16; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#fff; }
+.sub_category a:hover { background:#344d02; color:#fff; }

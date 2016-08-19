@@ -1,0 +1,30 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">生活圈</div>
+<div class="wrapper">
+<div class="all_quan">
+	<ul>
+<!--
+EOT;
+foreach ($arr_community as $val){
+print <<<EOT
+-->
+		<li class="h_oflow border">
+            <a href="$val[detail_url]" class="fl"><img src="$val[c_logo]" /></a>
+            <p class="fl">
+                <a href="$val[detail_url]" class="f14 fd name">$val[c_name]</a><br />
+                <span class="gray">成员($val[member_num])<br />话题($val[topic_num])</span><br />
+                <a href="$val[join_url]" class="green">申请加入</a>
+            </p>
+        </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</ul>
+	<div class="page">$page_list</div>
+</div><!-- 全部圈子 -->
+<!--
+EOT;
+?>-->	

@@ -1,0 +1,496 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){    //联动部分
+    var json_data='($json_data)';
+	var json;
+	if(json_data.length>0) json=eval(json_data);
+	if(json)
+	{
+	    var tmpi;
+		var i=0;
+	    for(tmpi in json)
+		{
+		    $("select[@name=module]").append("<option value='"+tmpi+"'>"+tmpi+"</option>");
+			if(i==0)    //在第一个位置的时修，初始化第二个和第三个下拉框
+			{
+			    if(json[tmpi]['other_param'])
+				{
+				    for(var tmpi2 in json[tmpi]['other_param']) 
+					    $("select[@name=other_param]").append("<option value='"+json[tmpi]['other_param'][tmpi2]+"'>"+json[tmpi]['other_param'][tmpi2]+"</option>");
+				}
+				else $("select[@name=other_param]").append("<option value='0'>无</option>");
+				
+				if(json[tmpi]['pos'])
+				{
+				    for(var tmpi3 in json[tmpi]['pos']) 
+					    $("select[@name=pos]").append("<option value='"+json[tmpi]['pos'][tmpi3]+"'>"+json[tmpi]['pos'][tmpi3]+"</option>");
+				}
+				else $("select[@name=pos]").append("<option value='0'>无</option>");
+			}
+			i++;
+		}
+	}
+	
+	$("select[@name=module]").change(function(e){
+	    e.preventDefault();
+		var selv=$(this).val();
+		$("select[@name=other_param]").empty();
+		$("select[@name=pos]").empty();
+		
+		if(json[selv]['other_param'])
+		{
+		    for(var tmpi2 in json[selv]['other_param']) 
+				$("select[@name=other_param]").append("<option value='"+json[selv]['other_param'][tmpi2]+"'>"+json[selv]['other_param'][tmpi2]+"</option>");
+		}
+		else $("select[@name=other_param]").append("<option value='0'>无</option>");
+				
+		if(json[selv]['pos'])
+		{
+			for(var tmpi3 in json[selv]['pos']) 
+				$("select[@name=pos]").append("<option value='"+json[selv]['pos'][tmpi3]+"'>"+json[selv]['pos'][tmpi3]+"</option>");
+		}
+		else $("select[@name=pos]").append("<option value='0'>无</option>");
+	});
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    var arr_color=['darkblue','skyblue','royalblue','blue','orange','orangered','crimson','red','firebrick','darkred','green','limegreen','seagreen','teal','deeppink','tomato','coral','purple','indigo','burlywood','sandybrown','sienna','chocolate','silver'];
+	for(var oi in arr_color)
+	    $("select[@name=color]").append("<option value='"+arr_color[oi]+"' style='background-color:"+arr_color[oi]+";color:"+arr_color[oi]+";'>"+arr_color[oi]+"</option>");
+	
+    $("input[@name=ad_type]").click(function(e){
+	    var v=$(this).val();
+		$("tr[@rel=content]").hide();
+		$("tr[@rel=content][@v="+v+"]").show();
+	});
+	
+	var ad_type="$ad_type";
+	if(ad_type!="") $("input[@type=radio][@name=ad_type][@value="+ad_type+"]").trigger("click");
+});
+</script>
+<script type="text/javascript">
+$(function(e){
+    $("#btn_goods_search").click(function(e){    //商品搜索
+	    var goods_name=$("#search_goods").val();
+		var goods_type=$("input[@name=goods_type][@checked]").val();
+		goods_name=$.trim(goods_name);
+		if(goods_name.length<=0)
+		{
+		    alert("请填写搜索关键字");
+			return false;
+		}
+		
+		goods_name=encodeURI(goods_name);
+		
+		$.ajax({
+		    type:"GET",
+		    url:"admincp.php?module=rcm_ad&action=search_goods&goods_name="+goods_name+"&goods_type="+goods_type,
+			cache:false,
+			dataType:"json",
+			success:function(json){
+			            if(json)
+						{
+						    if(json.error)
+							{
+							    alert(json.error);
+								return false;
+							}
+							$("#search_goods_rtl").empty();
+							$("body").data("goods_json",json);
+							$("#search_goods_rtl").append("<option value='0'>----</option>");
+							
+							for(var tmpi in json["goods_info"])
+							    $("#search_goods_rtl").append("<option value='"+json["goods_info"][tmpi]["uid"]+"'>"+json["goods_info"][tmpi]["goods_name"]+"</option>");
+						}
+						else
+						{
+						    alert("没有返回任何数据");
+						}
+			        }
+		});
+	});
+	$("#search_goods_rtl").change(function(e){
+	    var json=$("body").data("goods_json");
+		var v=$(this).val();
+		if(v!="0" && json["goods_info"][v])
+		{
+		    $("#goods_id").val(json["goods_info"][v]["uid"]);
+			$("#goods_name").val(json["goods_info"][v]["goods_name"]);
+			$("#show_goods_img").show().attr("src",json["goods_info"][v]["photo"]);
+			$("#now_goods_img").val(json["goods_info"][v]["photo"]);
+			$("#goods_desc").val(json["goods_info"][v]["goods_advance"]);
+			$("#goods_shop_name").val(json["goods_info"][v]["shop_name"]);
+		}
+	});
+});
+</script>
+<script type="text/javascript">
+$(function(){    //搜索商家
+    $("#btn_shop_search").click(function(e){    //商品搜索
+	    var shop_name=$("#search_shop").val();
+		shop_name=$.trim(shop_name);
+		if(shop_name.length<=0)
+		{
+		    alert("请填写搜索关键字");
+			return false;
+		}
+		shop_name=encodeURI(shop_name);
+		
+		$.ajax({
+		    type:"GET",
+		    url:"admincp.php?module=rcm_ad&action=search_shop&shop_name="+shop_name,
+			cache:false,
+			dataType:"json",
+			success:function(json){
+			            if(json)
+						{
+						    if(json.error)
+							{
+							    alert(json.error);
+								return false;
+							}
+							$("#search_shop_rtl").empty();
+							$("body").data("shop_json",json);
+							$("#search_shop_rtl").append("<option value='0'>----</option>");
+							for(var tmpi in json["shop_info"])
+							    $("#search_shop_rtl").append("<option value='"+json["shop_info"][tmpi]["m_uid"]+"'>"+json["shop_info"][tmpi]["shop_name"]+"</option>");
+						}
+						else
+						{
+						    alert("没有返回任何数据");
+						}
+			        }
+		});
+	});
+	$("#search_shop_rtl").change(function(e){
+	    var json=$("body").data("shop_json");
+		var v=$(this).val();
+		if(v!="0" && json["shop_info"][v])
+		{
+		    $("#shop_id").val(json["shop_info"][v]["m_uid"]);
+			$("#shop_name").val(json["shop_info"][v]["shop_name"]);
+			$("#show_shop_logo").show().attr("src",json["shop_info"][v]["shop_logo"]);
+			$("#now_shop_logo").val(json["shop_info"][v]["shop_logo"]);
+			$("#shop_desc").val(json["shop_info"][v]["shop_intro"]);
+		}
+	});
+});
+</script>
+<script type="text/javascript">
+$(function(){    //表单提交前的验证
+    $("form[@name=ad_form]").submit(function(e){
+	    if($("input[@name=ad_type][@checked]").size()<=0)
+		{
+		    alert("请选择一种您要发布的广告类型");
+			return false;
+		}
+		var msg=""
+		var ad_type=$("input[@name=ad_type][@checked]").val();
+		if(ad_type=="0")
+		{
+		    if($.trim($("#goods_name").val())=="") msg+="请输入商品名称\\n";
+		}
+		else if(ad_type=="1")
+		{
+		    if($.trim($("#shop_name").val())=="") msg+="请输入商家店名\\n";
+		}
+		else if(ad_type=="2")
+		{
+		    if($.trim($("#ad_title").val())=="") msg+="请输入广告标题\\n";
+			if($.trim($("#ad_url").val())=="") msg+="请输入广告链接地址\\n";
+		}
+		else msg="广告类型选择出错";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		$("tr[@rel=content][@v!="+ad_type+"]").remove();
+		
+		return true;
+	});
+});
+</script>
+
+<script type="text/javascript">
+$(function(){    //如果是action=edit，在这里做页面相关初始化
+    if("$action"=="edit")
+	{
+	    $("select[@name=color]").val("$color");
+	    $("select[@name=module]").val("$module").trigger("change");
+	    $("select[@name=other_param]").val("$other_param");
+	    $("select[@name=pos]").val("$pos");
+		if("$ad_type"=="0")
+		{
+		    var goods_type="$goods[goods_type]";
+			$("input[@name=goods_type][@value="+goods_type+"]").attr("checked",true);
+		}
+	}
+    else
+	{
+	    $("input[@name=goods_type]:first").attr("checked",true);
+	}
+});
+</script>
+
+<script type="text/javascript">
+$(function(){
+	$("input[@rel=clear_apply]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定清除用户申请内容？")) return false;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=rcm_ad&action=clear_apply&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert("清除成功");
+				window.location.reload();
+			}
+		);
+	});
+});
+</script>
+
+<div id="right">
+	<form name="ad_form" action="" enctype="multipart/form-data" method="post">
+    <input type="hidden" name="step" value="1" />
+	<input type="hidden" name="uid" value="$uid" />
+	<input type="hidden" name="page" value="$page" />
+	<input type="hidden" name="page_info" value="$page_info" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th colspan="2">添加或修改广告</th>
+		</tr>
+		<tr>
+			<td width="10%">广告位置</td>
+			<td>
+			    广告模块：<select name="module" id="module" style="width:120px;"></select> 
+				其它参数：<select name="other_param"  style="width:120px;"></select> 
+				广告位置：<select name="pos"  style="width:120px;"></select>
+			</td>
+		</tr>
+		<tr>
+		    <td>广告类型</td>
+			<td>
+			    <input type="radio" name="ad_type" value="0" />{$ad_config[ad_type][0]} 
+				<input type="radio" name="ad_type" value="1" />{$ad_config[ad_type][1]} 
+				<input type="radio" name="ad_type" value="2" />{$ad_config[ad_type][2]} 
+			</td>
+		</tr>
+		<tr style="display:none;" rel="content" v="0">
+		    <td>广告内容</td>
+			<td>
+               <table width="100%" cellpadding="0" cellspacing="1">
+                    <tr>
+						<td>搜索商品：</td>
+						<td colspan="3">
+						    <input type="radio" name="goods_type" value="0" /> 销售型普通商品 
+							<input type="radio" name="goods_type" value="4" /> 促销商品 
+							<input type="radio" name="goods_type" value="5" /> 团购商品 
+							<input type="radio" name="goods_type" value="6" /> 积分换购商品 
+							<input type="radio" name="goods_type" value="7" /> 拍卖商品 
+							<input type="radio" name="goods_type" value="8" /> 展示型商品 
+							<br />
+						    <input type="text" name="search_goods" id="search_goods" class="text2 text_3" /> 
+							<input type="button" value="确定" class="button3" name="btn_goods_search" id="btn_goods_search" />&nbsp;
+							<select name="search_goods_rtl" id="search_goods_rtl"></select></td>
+					</tr>
+                    <tr>	
+						<td>商品图：</td>
+						<td colspan="3">
+						    <input type="file" name="goods_img" class="text text_3" /><input type="hidden" value="$goods[img]" name="now_goods_img" id="now_goods_img" /> 
+							<img id="show_goods_img" rel="delay_load" src="images/noimages/noproduct.jpg" max_width="500" max_height="200" path="$goods[img]" align="absmiddle" />
+						</td>
+					</tr>
+                    <tr>
+						<td width="12%">商品名：</td>
+						<td width="38%"><input type="text" name="goods_name" id="goods_name" class="text2 text_3" value="$goods[goods_name]" rel="necessary" /><span rel="tip" style="display:none;"><p class="alert_error"><span class="icon_error"></span>请填写商品名称</p></span></td>
+						<td width="12%">商品ID：</td>
+						<td width="38%"><input type="text" class="text text_3" name="goods_id" id="goods_id" value="$goods[goods_id]" /></td>
+					</tr>
+                    <tr>
+						<td>商家名称：</td>
+						<td><input type="text" name="goods_shop_name" id="goods_shop_name" value="$goods[shop_name]" class="text text_3" /></td>
+						<td>简短描述：</td>
+						<td><textarea name="goods_desc" id="goods_desc" class="text text_3" cols="30" rows="2">$goods[desc]</textarea></td>
+					</tr>
+					<tr>	
+						<td>积分：</td>
+						<td><input type="text" name="price" value="$rtl[price]" class="text2 text_3" /><p class="alert_info"><span class="icon_info"></span>申请一天所需积分</p></td>
+						<td>长宽：</td>
+						<td><input type="text" name="wh" value="$rtl[wh]" class="text text_3" /></td>
+					</tr>
+                    <tr>
+						<td>排序：</td>
+						<td><input type="text" name="order" value="$goods[ad_order]" class="text text_3" /></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>前台显示：</td>
+						<td><input type="text" name="tip" value="$rtl[tip]" class="text text_3" /></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+                    <tr>
+						<td>申请人：</td>
+						<td>$rtl[m_id]</td>
+						<td rel="user_apply">申请商品：</td>
+						<td>{$goods[user_apply][goods_name]}</td>
+					</tr>
+					<tr>
+						<td rel="user_apply" >申请描述：</td>
+						<td>{$goods[user_apply][goods_desc]}</td>
+						<td rel="user_apply">申请图片：</td>
+						<td><img src="$goods[user_img]" /></td>
+					</tr>
+				   	<tr>
+						<td></td>
+						<td colspan="3"><input type="button" rel="clear_apply" uid="$uid" value="清空申请内容" class="button2 span_left" /><p class="alert_warning"><span class="icon_waring"></span>如果不接受广告申请,清空将把客户申请内容清除</p></td>
+					</tr>
+				</table>
+		  	</td>
+		</tr>
+		
+		
+		<tr style="display:none;" rel="content" v="1">
+		    <td>广告内容</td>
+			<td>
+               <table width="100%" cellpadding="0" cellspacing="1">
+                    <tr>
+						<td>搜索商家：</td>
+						<td colspan="3"><input type="text" name="search_shop" id="search_shop" class="text2 text_3" /> <input type="button" value="搜索" class="button3" name="btn_shop_search" id="btn_shop_search" />&nbsp;<select name="search_shop_rtl" id="search_shop_rtl"></select></td>
+					</tr>
+                    <tr>
+						<td>商家logo：</td>
+						<td colspan="3">
+						    <input type="file" name="shop_logo" class="text text_3" /><input type="hidden" value="$shop[logo]" name="now_shop_logo" id="now_shop_logo" /> 
+							<img id="show_shop_logo" rel="delay_load" src="images/noimages/noproduct.jpg" max_width="500" max_height="200" path="$shop[logo]" align="absmiddle" /></td>
+					</tr>
+                    <tr>
+						<td width="12%">商家名称：</td>
+						<td width="38%"><input type="text" name="shop_name" id="shop_name" value="$shop[shop_name]" class="text text_3" /></td>
+						<td width="12%">商家ID：</td>
+						<td width="38%"><input type="text" class="text text_3" name="shop_id" id="shop_id" value="$shop[shop_id]" /></td>
+					</tr>
+                    <tr>
+						<td>商家描述：</td>
+						<td><textarea name="shop_desc" id="shop_desc" class="text text_3" cols="30" rows="2">$shop[shop_desc]</textarea></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>积分：</td>
+						<td><input type="text" name="price" value="$rtl[price]" class="text2 text_3" /><p class="alert_info"><span class="icon_info"></span>申请一天所需积分</p></td>
+						<td>长宽：</td>
+						<td><input type="text" name="wh" value="$rtl[wh]" class="text text_3" /></td>
+					</tr>
+                    <tr>
+						<td>排序：</td>
+						<td><input type="text" name="order" value="$shop[ad_order]" class="text text_3" /></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>前台显示：</td>
+						<td><input type="text" name="tip" value="$rtl[tip]" class="text text_3" /></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+                    <tr>
+						<td>申请人：</td>
+						<td>$rtl[m_id]</td>
+						<td rel="user_apply">申请商家：</td>
+						<td>{$shop[user_apply][shop_name]}</td>
+					</tr>
+				    <tr>
+						<td rel="user_apply">申请描述：</td>
+						<td>{$shop[user_apply][shop_desc]}</td>
+						<td rel="user_apply">申请图片：</td>
+						<td><img src="$shop[user_img]" /></td>
+					</tr>
+				     <tr>
+					 	<td></td>
+						<td colspan="3"><input type="button" rel="clear_apply" uid="$uid" value="清空申请内容" class="button2 span_left" /><p class="alert_warning"><span class="icon_waring"></span>如果不接受广告申请,清空将把客户申请内容清除</p></td>
+					</tr>
+				</table>
+		  	</td>
+		</tr>
+		<tr style="display:none;" rel="content" v="2">
+		    <td>广告内容</td>
+			<td>
+            	<table width="100%" cellpadding="0" cellspacing="1">
+                    <tr>
+						<td>广告插图：</td>
+						<td colspan="3">
+						    <input type="file" name="ad_pic" class="text text_3" /><input type="hidden" name="now_ad_pic" value="$ad[pic]" /> 
+							<img rel="delay_load" src="images/noimages/noproduct.jpg" max_width="500" max_height="200" path="$ad[pic]" align="absmiddle" />
+						</td>
+					</tr>
+                    <tr>
+						<td width="12%">广告标题：</td>
+						<td width="38%"><input type="text" name="ad_title" id="ad_title" value="$ad[title]" class="text text_3" /></td>
+						<td width="12%">显示类别：</td>
+						<td width="38%"><input type="text" name="show_cat" id="show_cat" value="$ad[show_cat]" class="text text_3" /></td>
+					</tr>
+                    <tr>
+						<td>广告链接：</td>
+						<td><input type="text" name="ad_url" id="ad_url" value="$ad[url]" class="text text_3" /></td>
+						<td>摘要：</td>
+						<td><textarea name="desc" id="desc" class="text text_3" cols="30" rows="2">$ad[desc]</textarea></td>
+					</tr>
+					<tr>
+						<td>积分：</td>
+						<td><input type="text" name="price" value="$rtl[price]" class="text2 text_3" /><p class="alert_info"><span class="icon_info"></span>申请一天所需积分</p></td>
+						<td>长宽：</td>
+						<td><input type="text" name="wh" value="$rtl[wh]" class="text text_3" /></td>
+					</tr>
+                    <tr>
+						<td>排序：</td>
+						<td><input type="text" name="order" value="$ad[ad_order]" class="text text_3" /></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>前台显示：</td>
+						<td><input type="text" name="tip" value="$rtl[tip]" class="text text_3" /></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+                    <tr>
+						<td>申请人：</td>
+						<td>$rtl[m_id]</td>
+						<td rel="user_apply">申请图片：</td>
+						<td><img src="$ad[user_img]" /></td>
+					</tr>
+				    <tr>
+						<td rel="user_apply">申请标题：</td>
+						<td>{$ad[user_apply][title]}</td>
+						<td rel="user_apply">申请链接：</td>
+						<td><a href="{$ad[user_apply][url]}" target="_blank">{$ad[user_apply][url]}</a></td>
+					</tr>
+					<tr>
+						<td rel="user_apply">申请描述：</td>
+						<td colspan="3">{$ad[user_apply][desc]}</td>
+					</tr>
+				    <tr>
+						<td></td>
+						<td colspan="3"><input type="button" rel="clear_apply" uid="$uid" value="清空申请内容" class="button2 span_left" /><p class="alert_warning"><span class="icon_waring"></span>如果不接受广告申请,清空将把客户申请内容清除</p></td>
+					</tr>
+				</table>
+		  	</td>
+		</tr>
+	</table>
+	<div id="tfoot">
+	  <input type="submit" name="submit" id="submit" value="确定" class="button" />
+	  <input type="reset" name="reset" value="重置" class="button" />
+	</div>
+</form>
+</div>
+<!--
+EOT;
+?>-->

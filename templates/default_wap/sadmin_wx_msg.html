@@ -1,0 +1,108 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	
+<script type="text/javascript">
+$(function(){
+	$("a[@rel=del]").click(function(e){
+		e.preventDefault();
+		if(!confirm("确定删除指定的咨询信息？")) return false;
+		var uid=$(this).attr("uid");
+		$.get(
+			"sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+				$("tr[@uid="+uid+"]").remove();
+				alert("删除成功");
+			}
+		);//end get
+	});//end click
+		
+	var reply_lock=false;
+	$("a[@rel=wx_reply]").click(function(e){
+	    e.preventDefault();
+		if(reply_lock) return;
+		
+		var uid=$(this).attr("uid");
+		var reply=$("textarea[@rel=reply][@uid="+uid+"]").val();
+		reply=$.trim(reply);
+		if(!reply || reply=="")
+		{
+		    alert("请输入回复内容");
+			return;
+		}
+		
+		reply_lock=true;
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=edit",
+			type:"POST",
+			cache:false,
+			data:{
+			    uid:uid,
+				reply:reply
+			},
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			},
+			complete:function(){
+			    reply_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+	
+	<div class="newopen" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+ 
+	<div class="mem_right">
+		<div class="member_title fd red">微信咨询客服管理</div>
+
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="">微信咨询详情</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_msg as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl">
+                	会员：$val[m_id]<br />
+                    留言内容：$val[content]<br />
+                    留言时间：$val[register_date]<br />
+                    回复内容：<textarea class="text aaa" rel="reply" uid="$val[uid]">$val[reply]</textarea><br />
+                    回复时间：$val[reply_date] $val[reply_m_id]<br />
+<!--
+EOT;
+if($val[reply_expire]){
+print <<<EOT
+-->	
+				    (回复已过期)<br />
+<!--
+EOT;
+} print <<<EOT
+-->
+					操作：
+<!--
+EOT;
+if(!$val[reply_expire] && !$val[reply]){
+print <<<EOT
+-->
+			        <a href="#" rel="wx_reply" uid="$val[uid]" class="tipsy_s wx_reply blue" title="回复">回复</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				    <a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete blue" title="删除">删除</a>
+			    </td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div>	
+<!--
+EOT;
+?>-->

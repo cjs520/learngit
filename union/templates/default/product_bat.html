@@ -1,0 +1,491 @@
+<!--<?php
+require_once template('header'); 
+require_once template('pro_right'); 
+print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.jqzoom.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("#jqzoom").jqueryzoom({
+        xzoom: 300,
+	    yzoom: 300,
+	    offset: 0,
+	    position: "right", 
+	    preload:1,
+	    lens:1
+	});//end jqueryzoom
+	
+	$("a[@rel=gallery]").hover(
+	    function(e){
+		    var img_small=$(this).attr("img_small");
+			var img_big=$(this).attr("img_big");
+			$("#jqzoom").children("img").attr("src",img_small).attr("jqimg",img_big);
+		},
+		function(e){}
+	);//end hover
+	
+	$.get(
+	    "ajax.php?action=get_gcontent&uid=$product[uid]",
+		function(msg){
+		    $("div[@rel=goods_main]").html(msg);
+		}
+	);//end get
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $.extend({
+	    LoadConsult:function(jq_list){
+		    if(jq_list.data("loaded")=="loaded") return;
+			jq_list.data("loaded","loaded");
+			
+			$.get(
+			    "ajax.php?action=gcomment&step=read&g_uid=$product[uid]&mod=$script",
+				function(msg){
+				    jq_list.html(msg);
+				}
+			);//end get
+		},
+		LoadComment:function(jq_list){
+		    if(jq_list.data("loaded")=="loaded") return;
+			jq_list.data("loaded","loaded");
+			$.get(
+			    "ajax.php?action=order_comment&cmd=read&g_uid=$product[uid]&gt=$goods_table",
+				function(msg){
+				    jq_list.html(msg);
+					$.SetUsableEvent();
+				}
+			);//end get
+		},
+		LoadOrder:function(jq_list){
+		    if(jq_list.data("loaded")=="loaded") return;
+			jq_list.data("loaded","loaded");
+			console.log("ajax.php?action=order_rec&g_uid=$product[uid]&gt=$goods_table");
+			$.get(
+			    "ajax.php?action=order_rec&g_uid=$product[uid]&gt=$goods_table",
+				function(msg){
+				    if(msg=="") return;
+					jq_list.append(msg)
+				    $.SetFriendEvent();    //in mvm.js
+				}
+			);//end get
+		},
+		SetUsableEvent:function(){
+		    $("a[@rel=usable],a[@rel=unusable]").unbind("click");
+			$("a[@rel=usable],a[@rel=unusable]").click(function(e){
+			    e.preventDefault();
+				var tag=$(this).attr("rel");
+				var uid=$(this).attr("uid");
+				var num=$(this).children("b:first").html();
+				$(this).children("b:first").html(parseInt(num)+1);
+				$.get("ajax.php?action=order_comment&cmd=write&uid="+uid+"&tag="+tag);
+			});//end click
+		}
+	});//end extend
+
+    $("a[@rel=tab_title]").hover(
+	    function(e){
+		    $("a[@rel=tab_title]").removeClass("hover");
+			$(this).addClass("hover");
+		    var idx=$("a[@rel=tab_title]").index(this);
+			var jq_tab_body=$("div[@rel=tab_body][@n=product]");
+			jq_tab_body.hide();
+			jq_tab_body.eq(idx).show();
+			if(idx==1) $.LoadConsult(jq_tab_body.children("ul[@rel=consult]:first"));
+			else if(idx==2) $.LoadComment(jq_tab_body.children("table[@rel=order_comment]:first"));
+			else if(idx==3) $.LoadOrder(jq_tab_body.children("table[@rel=order_rec]:first"));
+		},
+		function(e){}
+	);//end hover
+	
+	$("div[@rel=gcomment]").children("input[@rel=gcomment_submit]").click(function(){
+	    var jq_form=$("div[@rel=gcomment]");
+	    var comment_body=jq_form.children("textarea[@name=comment_body]").val();
+		var code=jq_form.children("input[@name=code]").val();
+		var msg="";
+		comment_body=$.trim(comment_body);
+		if(comment_body=="") msg+="请填写咨询内容\\n";
+		if(comment_body.length>150) msg+="您的咨询内容过于冗长，请精简后再提交\\n";
+		if(jq_form.data("loading")=="loading") msg+="您的提交过于频繁，请稍候...\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		jq_form.data("loading","loading");
+		$.post(
+		    "ajax.php?action=gcomment&step=write&g_uid=$product[uid]&type=$product[type]&mod=$script",
+			{comment_body:comment_body,code:code},
+			function(msg){
+			    jq_form.data("loading","");
+			    
+				if(msg.indexOf("ERR")==-1)
+				{
+				    jq_form.children("textarea[@name=comment_body]").val("");
+					jq_form.children("input[@name=code]").val("");
+					jq_form.find("img[@rel=code]").trigger("click");
+					
+					var jq_ul=$("ul[@rel=consult]");
+					jq_ul.children("li[@rel=first_row]").remove();
+					jq_ul.prepend(msg);
+					jq_ul.children("li:first").slideDown("slow");
+				}
+				else alert(msg);
+			}
+		);//end post
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    var attr_val="$product[attr_val]";
+	var attr_store="$product[attr_store]";
+	
+	$.extend({
+	    AttrLayout:function(){
+		    if(attr_val=="")
+			{
+			    $("dl[@rel=ps_num]").show();
+			    return;
+			}
+			
+			var html="";
+		    var arr_attr=attr_val.split("||");
+			var attr_val_num=0;
+			var arr_attr_order=[];
+			for(var i in arr_attr)
+			{
+			    arr_attr[i]=arr_attr[i].split("|");
+				html+="<th key='"+arr_attr[i][0]+"'>"+arr_attr[i][0]+"</th>";
+				arr_attr_order.push(arr_attr[i][0]);
+				attr_val_num++;
+			}
+			html+="<th width='12%'>属性加价</th>";
+			html+="<th width='12%'>库存量</th>";
+			html+='<th width="14%">数量</th>';
+			$("tr[@rel=attr_head]").html(html);
+			
+			html='<tr class="tr2" rel="attr_row">';
+			for(var i=0;i<attr_val_num;i++) html+="<td></td>";
+			html+='<td rel="attr_price"></td><td rel="goods_stock"></td><td><input type="text" rel="bat_num" value="0" class="No_input" size="3" /></td></tr>';
+			
+			var arr_store=attr_store.split("||");
+			for(var i=0;i<arr_store.length;i++)
+			{
+			    $("tr[@rel=attr_head]").after(html);
+			}
+			
+			var jq_rows=$("tr[@rel=attr_row]");
+			for(var i=0;i<arr_store.length;i++)
+			{
+				var jq_cur_row=jq_rows.eq(i);
+			    var str_tmp=arr_store[i];
+				var idx_tmp=str_tmp.lastIndexOf("|");
+				str_tmp=str_tmp.substring(0,idx_tmp);
+				jq_cur_row.attr("attr",str_tmp);
+				
+				arr_store[i]=arr_store[i].split("|");
+				for(var j=0;j<arr_store[i].length;j++)
+				{
+				    if(j==arr_store[i].length-1)    //库存
+					{
+					    jq_cur_row.children("td[@rel=goods_stock]").html(arr_store[i][j]);
+						jq_cur_row.find("input[@rel=bat_num]:first").attr("goods_stock",arr_store[i][j]);
+					}
+					else if(j==arr_store[i].length-2)    //库存
+					{
+					    jq_cur_row.children("td[@rel=attr_price]").html(currency("$main_settings[mm_price_sign]",arr_store[i][j]));
+					}
+					else    //属性
+					{
+					    var arr_tmp=arr_store[i][j].split(":");
+						var idx=$.inArray(arr_tmp[0],arr_attr_order);
+						if(idx==-1) continue;
+						jq_cur_row.children("td").eq(idx).html(arr_tmp[1]);
+					}
+				}
+			}
+			
+			if($("tr[@rel=attr_row]").size()>3) $.SetMorePropertyEvent();
+		},
+		SetMorePropertyEvent:function(){
+		    $("tr[@rel=attr_row]:gt(2)").hide();
+			$("a[@rel=more_property]").parent("p").show();
+			$("a[@rel=more_property]").click(function(e){
+			    e.preventDefault();
+				if($(this).attr("show")=="show")
+				{
+				    $("tr[@rel=attr_row]:gt(2)").hide();
+					$(this).attr("show","");
+				}
+				else
+				{
+				    $("tr[@rel=attr_row]:gt(2)").show();
+					$(this).attr("show","show");
+				}
+			});//end click
+		}
+	});
+	$.AttrLayout();
+	
+	$("a[@rel=add_cart]").click(function(e){
+	    e.preventDefault();
+		var str_num="";
+		var str_attr="";
+		if(attr_val=="")    //no attr exist
+		{
+		    str_attr="arr_attr[]=";
+			var ps_num=parseInt($("#ps_num").val());
+			if(isNaN(ps_num) || ps_num<=0) ps_num=1;
+			if(ps_num>parseInt("$product[goods_stock]"))
+			{
+			    alert("库存数量不足");
+				return;
+			}
+			str_num="&arr_ps_num[]="+ps_num;
+		}
+		else
+		{
+		    $("tr[@rel=attr_row]").find("input[@rel=bat_num]").each(function(i){
+			    var ps_num=parseInt($(this).val());
+				if(isNaN(ps_num) || ps_num<=0) return true;
+				var goods_stock=parseInt($(this).attr("goods_stock"));
+				if(isNaN(goods_stock) || goods_stock<0) return false;
+				
+				if(ps_num>goods_stock)
+				{
+				    alert("库存数量不足");
+					$(this).parents("tr[@rel=attr_row]:first").children("td").css("backgroundColor","#ffeeee");
+					return false;
+				}
+				
+				str_num+="&arr_ps_num[]="+ps_num;
+				str_attr+="&arr_attr[]="+$(this).parents("tr[@rel=attr_row]:first").attr("attr");
+			});//end each
+		}
+		if(str_num=="")
+		{
+		    alert("请正确选择您需要的批发商品");
+			return;
+		}
+		$("tr[@rel=attr_row]").children("td").css("backgroundColor","#fff");
+		
+		var o = $(this).position();
+		var url=$(this).attr("url");
+        $.ajax({
+	        type: "POST",
+	        url: "ajax.php?action=cart_add&step=bat&rnd="+Math.random(),
+	        cache:false,
+	        dataType:'json',
+			data: "g_uid=$product[uid]&gt=$goods_table&module=$script"+str_num+str_attr,
+	        success: function(json){
+			     if(json.err)
+				 {
+				     alert(json.err);
+				     return false;
+				 }
+				 if(url && url!="")
+				 {
+					 window.location=url;
+					 return;
+				 }
+				 $("#show_cart").html('<div id="gm"><h3><i></i>商品已成功加入购物车！</h3><p>购物车中已有<span class="red fd">'+json["info"]["total_num"]+'</span>商品 应付总额（不含运费）：<span class="red fd">'+json["info"]["total_price_txt"]+'</span></p><p><a href="$main_settings[mm_mall_url]/cart.php?action=list">去购物车结算</a><a href="#" onclick="\$(\'#show_cart\').fadeOut(200);return false;">继续购物</a></p></div>');
+				 var height = $("#show_cart").height()+8;
+				 var width = $("div.product_right").width()+"px";
+				 height = o.top-height+"px";
+				 $("#show_cart").css({"top":height,"width":width}).show();
+			 }
+        });//end ajax
+	});//end click
+});
+</script>
+
+	<div class="left2">
+        <div class="h_oflow border">
+            <div class="product_left fl">
+                <div id="jqzoom" class="jqzoom"><img src="{$arr_gallery[0][0]}" jqimg="{$arr_gallery[0][1]}" width="420" height="420" /></div>
+                <div class="pro_little">
+<!--
+EOT;
+foreach($arr_gallery as $val){
+print <<<EOT
+-->
+                	<a href="$val[0]" rel="gallery" img_small="$val[0]" img_big="$val[1]" target="_blank"><img src="$val[0]"/></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+                </div>
+            </div>
+            <div class="product_right fl">
+                <h3 class="product_title f14">$product[addoption] $product[goods_name]</h3>
+                <ul class="attr_basic">
+                    <li>销售价格：<span class="red f16 fd">$product[goods_sale_price]</span></li>
+                    <li>市场价格：<span class="mline">$product[goods_market_price]</span></li>
+                </ul>
+                <div class="clear6"></div>
+                <dl class="mb8 price_bat">
+                	<dt class="fl">批发价：</dt>
+                	<dd class="fl">
+<!--
+EOT;
+foreach($product[wholesale_price] as $v){
+$point=(int)$v[2];
+$v[2]=currency($v[2]);
+print <<<EOT
+-->
+<!--
+EOT;
+if($v[1]>0){
+print <<<EOT
+-->
+                    	<p><span>$v[0] - $v[1]件</span> <strong>$v[2]</strong><i>赠送 $point 积分</i></p>
+<!--
+EOT;
+}else{ print <<<EOT
+-->	
+						<p><span>$v[0]件以上</span> <strong>$v[2]</strong><i>赠送 $point 积分</i></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+} print <<<EOT
+-->
+                    </dd>
+                </dl>
+                <ul class="attr_basic">
+                    <li>品牌：$product[goods_brand]</li>
+                    <li>商品编号：$product[goods_code]</span></li>
+                    <li>总销量：$statistics[total_sale]</li>
+                    <li><span class="span_left">商品评论：</span> <span class="rate_good" title="好评"></span><span class="span_left">$statistics[good]</span><span class="rate_soso" title="中评"></span><span class="span_left">$statistics[normal]</span><span class="rate_bad" title="差评"></span><span class="span_left">$statistics[bad]</span></li>
+                </ul>
+                <div class="clear8"></div>
+                <table width="100%" border="0" cellspacing="0" class="property_bat">
+                  <tr class="tr1" rel="attr_head"></tr>
+                </table>
+                <p class="more_property" style="display:none;"><a class="fd" rel="more_property" href="#">更多</a></p>
+                <dl class="property" rel="ps_num" style="display:none;">
+                    <dt>数量：</dt>
+                    <dd><input name="ps_num" id="ps_num" type="text" align="absmiddle" value="1" class="No_input" size="3" /> <span class="gray">当前商品库存 <b rel="goods_stock" class="red">$product[goods_stock]</b> 件</span></dd>
+                </dl>
+                <div class="clear6"></div>
+                <div class="property_div">
+                    <div class="product_button">
+<!--
+EOT;
+if($product[goods_stock]>0){
+print <<<EOT
+-->
+                        <a href="#" rel="add_cart" url="$mm_url[cart]" class="pro_cart">立即购买</a>
+                        <a href="#" rel="add_cart" class="add_cart">加入购物车</a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+                        <a href="#" id="no_product" class="no_product">卖光了</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+                    </div>
+                    <div id="show_cart"></div>	
+                </div>
+                <div class="share_fav_bar">
+				    <div class="fl bshare-custom"><a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis" style="margin:2px 35px 0 0;">分享</a></div>
+                    <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script>
+					<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script> 
+					<a href="#" class="fav_goods" rel="fav" t="1" uid="$product[uid]" module="$script" gt="$goods_table">收藏本商品<span>({$favorite_num})</span></a> 
+					<a href="#" class="fav_shop" rel="fav" t="0" uid="$page_member_id" module="" gt="">收藏本商铺<span></span></a> 
+				</div>
+            </div>
+        </div><!-- 商品详细 -->
+		<div class="clear"></div>
+		<ul id="nav" class="product_tab">
+			<li><a rel="tab_title" class="hover">商品详细</a></li>
+			<li><a rel="tab_title">商品咨询<strong class="red"></strong></a></li>
+			<li><a rel="tab_title">商品评论<strong class="red"></strong></a></li>
+            <li><a rel="tab_title">成交记录<strong class="red"></strong></a></li>
+		</ul>	
+		<div rel="tab_body" n="product" class="product_con border h_oflow">
+        	<ul class="h_oflow mb10 pro_attr">
+<!--
+EOT;
+foreach($product[filter_attr] as $key=>$val){
+print <<<EOT
+-->
+            	<li>{$key}: {$val}</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </ul>
+			<div rel="goods_main">商品内容加载中...</div>
+		</div><!-- 商品详细 -->
+		<div rel="tab_body" n="product" class="product_con border h_oflow" style="display:none">           
+        	<ul class="pro_spzx" rel="consult">
+			    <li rel="first_row" style="height:24px;">咨询内容努力加载中...</li>
+        	</ul>
+			<div class="clear"></div>
+			<div rel="gcomment">
+				<textarea name="comment_body" rows="6" cols="90" class="border"></textarea><br />
+<!--
+EOT;
+if($main_settings[mm_code_use]==1){
+print <<<EOT
+-->
+				验证码：<input name="code" type="text" class="text_yzm" size="20" maxlength="8" /> 
+				<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:32px" alt="验证码" />
+<!--
+EOT;
+} print <<<EOT
+-->
+				<input type="button" rel="gcomment_submit" value="确定" class="s_button mt10" />
+			</div>
+		</div><!-- 商品咨询 -->
+		<div rel="tab_body" n="product" class="product_con border h_oflow" style="display:none">
+			<div class="pro_satisfaction">
+				<p><strong class="fl">商品满意度 &nbsp;</strong> <span class="gray fl">(有$statistics[comment_total]人评论)</span><span class="rate_good" title="好评"></span><span class="orange f13"><span class="fl">$statistics[good] &nbsp;</span><span class="rate_soso" title="中评"></span> <span class="fl">$statistics[normal] &nbsp;</span> <span class="rate_bad" title="差评"></span> <span class="fl">$statistics[bad]</span> </span></p>
+			</div>
+			<div class="clear"></div>
+            <table cellspacing="0" class="pro_comment" rel="order_comment">
+			    <tr>
+                    <td>评论内容加载中...</td>
+                </tr>
+            </table>
+		</div><!-- 商品评论 -->
+        <div rel="tab_body" n="product" class="product_con border h_oflow" style="display:none">
+			<table cellpadding="0" class="pro_jyjl" rel="order_rec">
+				<tr>
+					<th>买家</th>
+                    <th>价格</th>
+                    <th width="10%">数量</th>
+                    <th width="20%">付款时间</th>
+                    <th>款式和型号</th>	
+				</tr>
+			</table>
+		</div><!-- 成交记录 -->    
+	</div><!-- End Product Display -->
+	
+    <div class="clear"></div>
+    <h3 class="titlec pad8"><span>购买该商品的用户还购买了</span></h3>
+    <ul class="h_oflow bg_gray buy_other">
+<!--
+EOT;
+foreach ($arr_relation as $val){
+print <<<EOT
+-->
+		<li><a href="$val[url]"><img src="$val[goods_file1]" class="border" /></a>
+            <p class="name"><a href="$val[url]" title="$val[goods_name]">$val[goods_name]</a></p>
+			<p class="red">$val[goods_sale_price]</p>
+		</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</ul><!-- 购买该商品的用户还购买了 -->
+<!--
+EOT;
+?>-->

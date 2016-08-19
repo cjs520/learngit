@@ -1,0 +1,73 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+--> <div class="mem_right">
+		<div class="member_title fd red">买家回复留言</div>
+		<div class="title_rate_list">
+			<a href="sadmin.php?module=$module&action=list" id="bay1" $bay_reply_class><span>商品留言/回复</span></a>
+			<a href="sadmin.php?module=$module&action=supplier_para" id="bay2" $para_class><span>商家留言/回复</span></a>
+		</div>
+
+<!--
+EOT;
+if($action=='list'){
+print <<<EOT
+--> 	<form action="" method="post">
+		<input type="hidden" name="step" value="1" />
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th class="fcl">商品名称</th>
+				<th>买家名单</th>
+				<th>留言日期</th>
+				<th>留言状态</th>
+			</tr>
+<!--
+EOT;
+foreach ($msg_list as $val){
+print <<<EOT
+-->			<tr>
+				<td class="fcl"><a href="$val[url]" target="_blank">$val[goods_name]</a></td>
+				<td>$val[member_id]</td>
+				<td>$val[add_time]</td>
+				<td><a href="$val[reply_url]" target="_blank">$val[status]</a></td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		</form>
+<!--
+EOT;
+}elseif($action=='supplier_para'){
+print <<<EOT
+-->		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th class="fcl">商铺名称</th>
+				<th>掌柜名称</th>
+				<th>留言日期</th>
+				<th>留言状态</th>
+			</tr>
+<!--
+EOT;
+foreach ($msg_list as $val){
+print <<<EOT
+-->			<tr>
+				<td class="fcl"><a href="$val[url]" target="_blank">$val[shop_name]</a></td>
+				<td>$val[member_id]</td>
+				<td>$val[add_time]</td>
+				<td>$val[status]</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>			
+<!--
+EOT;
+} print <<<EOT
+-->	</div>	
+<!--
+EOT;
+?>-->

@@ -1,0 +1,26 @@
+<!--<?php
+require_once template('header'); 
+require_once template('board_left'); 
+print <<<EOT
+-->	<div class="span_right border board_right"><!-- 文章开始 -->
+		<div class="location"><span class="loca_icon"></span><a href="board.php?action=$action">{$b_cat[$action][board_title]}</a> >> $article[board_subject]</div>
+		<div class="board">
+			<h3 class="board_title">$article[board_subject]</h3>
+			<table cellspacing="0" class="board_info">
+				<tr>
+					<th class="fcl" width="33%">点击数：$article[board_hit]</th>
+					<th width="33%">作者：$article[author]</th>
+					<th class="fcr">发布时间：$article[register_date]</th>
+				</tr>
+			</table>
+			<div class="board_content">
+				$article[board_body]
+			</div>
+			<div class="board_art"><span>上一篇文章：<a href="{$sibling_art[prev][link]}">{$sibling_art[prev][art_name]}</a></span><span>下一篇文章：<a href="{$sibling_art[next][link]}">{$sibling_art[next][art_name]}</a></span></div>
+
+			</div>
+		</div>
+	</div><!-- 文章结束 -->
+<!--
+EOT;
+?>-->

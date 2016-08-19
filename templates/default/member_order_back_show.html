@@ -1,0 +1,157 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+	<ul class="member_tab f12 fd" rel="member_tab">
+		<li class="hover"><a href="member.php?action=index" class="white">我是买家</a></li>
+		<li><a href="sadmin.php?module=index">我是商家</a></li>
+		<li><a href="account.php?action=index">账号管理</a></li>
+        <li><a href="member.php?action=want_supply">我的社交</a></li>
+	</ul><br />
+
+<!--
+EOT;
+if($order_back[status]==1){
+print <<<EOT
+-->
+    	<div class="h_oflow refund_flow refund_flow2"><h3></h3><p></p></div><!-- 退货第2步开始 -->
+		<div class="refund_div">
+        	<div class="h_oflow fl refund_goods">
+				商铺：<a href="$shop[url]" target="_blank">$shop[shop_name]</a> <a class="vmid" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$shop[qq]&site=qq&menu=yes"><img src="./images/default/qq.jpg"></a>
+                <dl class="h_oflow">
+                	<dt><a href="$product[url]" target="_blank"><img src="$product[goods_file1]" class="border" /></a></dt>
+                    <dd>
+                        <a href="$product[url]" target="_blank" class="name">$product[goods_name]</a>
+                        $order_goods[goods_attr]
+                    </dd>
+                </dl>
+                <p>
+                    单价：$order_goods[buy_price]*$order_goods[buy_number]<br />
+                    积分：$order_goods[buy_point]积分<br />
+                    实付：<span class="red">$order_goods[total_price_txt]</span>（不含运费）<br />
+					申请退款：<span class="red">{$order_back[info1][money]}</span><br />
+                    订单号：$order_info[ordersn]
+                </p>
+            </div>
+            <script type="text/javascript" src="include/javascript/jquery.countdown.js"></script>
+			<script type="text/javascript">
+			$(function(){
+				$("span[@rel=countdown]").count_down("$order_back[left_time]");
+			});
+			</script>
+            <div class="refund_why">
+            	<div class="refund_con">
+                    <h3 class="f14 mb10">请等待卖家处理</h3>
+                    <p>如果卖家同意，会将退货地址发给您，需要您退货给卖家。</p>
+                    <p>如果卖家拒绝，需要您重新进行申请。</p>
+                    <p>如果卖家在 <span class="countdown" rel="countdown"><span rel="day"></span>天<span rel="hour"></span>时<span rel="minute"></span>分<span rel="second"></span></span>秒内未处理，退货申请将自动达成。</p>
+                </div>
+            </div>
+        </div>
+<!--
+EOT;
+}else if($order_back[status]==3){
+print <<<EOT
+-->
+    	<div class="h_oflow refund_flow refund_flow3"><h3></h3><p></p></div><!-- 退货第3步开始 -->
+		<div class="refund_div">
+        	<div class="h_oflow fl refund_goods">
+				商铺：<a href="$shop[url]" target="_blank">$shop[shop_name]</a> <a class="vmid" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$shop[qq]&site=qq&menu=yes"><img src="./images/default/qq.jpg"></a>
+                <dl class="h_oflow">
+                	<dt><a href="$product[url]" target="_blank"><img src="$product[goods_file1]" class="border" /></a></dt>
+                    <dd>
+                        <a href="$product[url]" target="_blank" class="name">$product[goods_name]</a>
+                        $order_goods[goods_attr]
+                    </dd>
+                </dl>
+                <p>
+                    单价：$order_goods[buy_price]*$order_goods[buy_number]<br />
+                    积分：$order_goods[buy_point]积分<br />
+                    实付：<span class="red">$order_goods[total_price_txt]</span>（不含运费）<br />
+					申请退款：<span class="red">{$order_back[info1][money]}</span><br />
+                    订单号：$order_info[ordersn]
+                </p>
+            </div>
+			<div class="refund_why">
+            	<div class="refund_con">
+                    <h3 class="f14 mb10">请等待卖家处理</h3>
+                    <p>如果卖家同意，会将金额退到您的预付款账户上。</p>
+                    <p>如果卖家拒绝，需要您重新进行申请。</p>
+                </div>
+            </div>
+        </div><!-- 退货第3步开始 -->
+<!--
+EOT;
+}else if($order_back[status]==4){
+print <<<EOT
+-->
+    	<div class="h_oflow refund_flow refund_flow4"><h3></h3><p></p></div><!-- 退货第4步开始 -->
+		<div class="refund_div">
+        	<div class="h_oflow fl refund_goods">
+				商铺：<a href="$shop[url]" target="_blank">$shop[shop_name]</a> <a class="vmid" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$shop[qq]&site=qq&menu=yes"><img src="./images/default/qq.jpg"></a>
+                <dl class="h_oflow">
+                	<dt><a href="$product[url]" target="_blank"><img src="$product[goods_file1]" class="border" /></a></dt>
+                    <dd>
+                        <a href="$product[url]" target="_blank" class="name">$product[goods_name]</a>
+                        $order_goods[goods_attr]
+                    </dd>
+                </dl>
+                <p>
+                    单价：$order_goods[buy_price]*$order_goods[buy_number]<br />
+                    积分：$order_goods[buy_point]积分<br />
+                    实付：<span class="red">$order_goods[total_price_txt]</span>（不含运费）<br />
+					申请退款：<span class="red">{$order_back[info1][money]}</span><br />
+                    订单号：$order_info[ordersn]
+                </p>
+            </div>
+			<div class="refund_why">
+            	<div class="refund_con">
+                    <h3 class="f14 mb10">退款成功！</h3>
+                    <p>卖家已成功退款<span class="red">{$order_back[info1][money]}</span></p>
+                    <a href="account.php?action=money" class="mt10 add_com_a">查看钱款去向</a>
+                </div>  
+            </div>
+		</div>
+<!--
+EOT;
+}else if($order_back[status]==-1){
+print <<<EOT
+-->
+    	<div class="h_oflow refund_flow"><h3></h3><p></p></div><!-- 退货第2步开始 -->
+		<div class="refund_div">
+        	<div class="h_oflow fl refund_goods">
+				商铺：<a href="$shop[url]" target="_blank">$shop[shop_name]</a> <a class="vmid" target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$shop[qq]&site=qq&menu=yes"><img src="./images/default/qq.jpg"></a>
+                <dl class="h_oflow">
+                	<dt><a href="$product[url]" target="_blank"><img src="$product[goods_file1]" class="border" /></a></dt>
+                    <dd>
+                        <a href="$product[url]" target="_blank" class="name">$product[goods_name]</a>
+                        $order_goods[goods_attr]
+                    </dd>
+                </dl>
+                <p>
+                    单价：$order_goods[buy_price]*$order_goods[buy_number]<br />
+                    积分：$order_goods[buy_point]积分<br />
+                    实付：<span class="red">$order_goods[total_price_txt]</span>（不含运费）<br />
+					申请退款：<span class="red">{$order_back[info1][money]}</span><br />
+                    订单号：$order_info[ordersn]
+                </p>
+            </div>
+            <div class="refund_why">
+            	<div class="refund_con">
+                    <h3 class="f14 mb10">卖家已拒绝您的申请</h3>
+                    <p>卖家拒绝您的退货申请，您可以尝试：</p>
+                    <p>1、重新进行退货申请。</p>
+					<p>2、申请平台管理员介入。</p>
+                </div>
+            </div>
+        </div>
+<!--
+EOT;
+} print <<<EOT
+-->
+
+        
+
+<!--
+EOT;
+?>-->

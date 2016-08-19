@@ -1,0 +1,180 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del_f]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定好友？")) return;
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "ajax.php?action=del_f&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    jq_a.parents("li[@uid="+uid+"]:first").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=invite]").click(function(e){
+	    e.preventDefault();
+		var jq_input=$(this).parents("li:first").find("input:first");
+		jq_input.attr("checked",!jq_input.attr("checked"));
+	});//end click
+	
+	var invite_lock=false;
+	$("a[@rel=invite_f]").click(function(e){
+	    e.preventDefault();
+		if(invite_lock) return;
+		var jq_input=$("input[@name=invite_friend][@checked]");
+		if(jq_input.size()<=0)
+		{
+		    alert("请先择您要邀请的好友");
+			return;
+		}
+		if(jq_input.size()>20)
+		{
+		    alert("一次邀请的好友不能大于20位");
+			return;
+		}
+		
+		invite_lock=true;
+		var arr=[];
+		jq_input.each(function(){
+		    arr.push($(this).val());
+		});
+		$.ajax({
+		    url:"ajax.php?action=life_detail&cmd=invite_friends",
+			type:"POST",
+			dataType:"json",
+			data:{
+			    c_uid:"$comm[uid]",
+				f_uid:arr.join(",")
+			},
+			cache:false,
+			success:function(json){
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				alert(json.info);
+			},
+			complete:function(){
+			    invite_lock=false;
+			}
+		});
+	});//end click
+});
+</script>
+
+<div class="left_quan">
+	<div class="h_oflow border">
+    	<div class="lifexx_left fl" style="position:relative;">
+<!--
+EOT;
+if($m_check_uid==$comm[m_uid]){
+print <<<EOT
+-->
+        	<a href="member.php?action=my_community&cmd=edit&uid=$comm[uid]&p_url=$p_url" class="modify_fm">修改封面</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+			<img src="$comm[c_logo]" class="fl" width="350" height="250" /> 
+		</div>
+        <div class="lifexx_right fr">
+			<h4 class="h_oflow">
+			    <a href="$comm[url]" class="f14 fl lifexx_title">$comm[c_name]</a>
+			</h4> 
+            <p class="mt10 gray"><span class="fr">建立日期：$comm[register_date]</span>成员：{$member_num}&nbsp;&nbsp;&nbsp;&nbsp;话题：{$topic_num}&nbsp;&nbsp;&nbsp;&nbsp;评论：{$comment_num}</p>
+			<div class="clear6"></div>
+            <p class="mb6"><strong>圈子分类：</strong>$comm[c_cat]</p>
+            <p class="mb6"><strong>圈子标签：</strong>$comm[c_tag]</p>
+            <p class="mb6"><strong>共同爱好：</strong>$comm[c_hobby]</p>
+            <p class="mb6"><strong>圈子宣言：</strong>$comm[c_proclaim]</p>
+            <div class="lifexx_jx"><strong>圈子简介：</strong>$comm[c_intro]</div>   
+        </div>
+    </div>
+    <div class="clear"></div>  
+    <ul class="mb10 life_tab">
+        <li><a class="hover">我的好友</a></li>
+    </ul>
+    <div>
+        <ul class="quan_act1 quan_act2">
+<!--
+EOT;
+foreach ($my_friend as $val){
+print <<<EOT
+-->
+            <li uid="$val[uid]">
+			    <a href="#" rel="invite"><img src="$val[member_image]" /></a>
+				<a href="#" class="fct" rel="invite">$val[member_id]</a>
+				<a href="#" rel="del_f" uid="$val[uid]" class="gray_but1">取消好友</a>
+				<p class="mt8 fct"><input name="invite_friend" type="checkbox" value="$val[member_uid]" /></p>
+			</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul><!-- 我的好友 -->
+        <p><a href="#" rel="invite_f" class="f14 fn fr green_but">邀请好友</a></p>
+    </div>
+</div>
+<div class="right_quan">
+	<div class="h_oflow quan_zhu">
+    	<dl class="h_oflow">
+    		<dt class="fl"><img src="$man_image" /></dt>
+    		<dd class="fr">
+            	<p>圈主：<span class="fd blue">$comm[m_id]</span></p>
+                <p><span class="fr">好友($man_friend_num)</span>圈子($man_community_num)</p>
+                <p><span class="fr">评论($man_comment_num)</span><a href="life_list.php?m_uid=$comm[m_uid]" class="blue">话题($man_topic_num)</a></p>
+                <p>
+<!--
+EOT;
+if($man_shop_url){
+print <<<EOT
+-->					<a href="$man_shop_url" target="_blank" class="blue">TA的店铺</a>
+<!--
+EOT;
+} print <<<EOT
+-->                
+				</p>
+            </dd>
+    	</dl>  
+        <p class="mt10 mb10"><a rel="friend" m_uid="$comm[m_uid]" href="#" class="f14 fn fr green_but ">加为好友</a></p>
+    </div>
+    <h3 class="mt10 titlec"><span>最新话题</span><a class="red">更多>></a></h3>
+    <ul class="quan_news">
+<!--
+EOT;
+foreach (get_new_topic() as $val){
+print <<<EOT
+-->
+    	<li><a href="$val[url]" target="_blank">$val[t_name]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </ul><!-- 最新话题 -->
+	
+	<h3 class="mt10 titlec"><span>最新加入</span></h3>
+    <ul class="quan_act1">
+<!--
+EOT;
+foreach ($new_join as $val){
+print <<<EOT
+-->
+    	<li><a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加为好友"><img src="$val[member_image]" /></a><a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加为好友" class="fct">$val[member_id]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </ul><!-- 最新加入 -->
+
+</div>
+<!--
+EOT;
+?>-->

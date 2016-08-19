@@ -1,0 +1,588 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div id="right">
+	<form action="admincp.php?module=$module&action=edit" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="step" value="1"/>
+	<input type="hidden" name="action" value="add"/>
+	<input type="hidden" name="type" value="$type"/>
+<!--
+EOT;
+if($type=='basis' || $type=='all'){
+print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="4%">ID</th>
+			<th width="30%">商铺基础设置</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>商铺URL<p class="cpsm">←格式：http://www.domain.com</p></td>
+			<td><input type="text" name="config[mm_mall_url]"  value="$mm_mall_url" size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>URL配置1（域名名称）<p class="cpsm">←格式：domain 注意只取域名中间段部分</p></td>
+			<td><input type="text" name="config[mm_domain_name]"  value="$mm_domain_name" size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>URL配置2（COOKIE）<p class="cpsm">←格式：.domain.com 注意域名前一定要带&quot;.&quot;</p></td>
+			<td><input type="text" name="config[mm_cookie_domain]"  value="$mm_cookie_domain" size="30" class="text" /></td>
+		</tr>
+        <tr>
+        	<td>4</td>
+			<td>商城名称</td>
+			<td><input type="text" name="config[mm_mall_title]"  value="$mm_mall_title" size="30" class="text" /></td>
+		</tr>
+        <tr>
+        	<td>5</td>
+			<td>企业名称</td>
+			<td><input type="text" name="config[mm_mall_address]"  value="$mm_mall_address" size="30" class="text" /></td>
+		</tr>
+        <tr>
+        	<td>6</td>
+			<td>ICP备案号码</td>
+			<td><input type="text" name="config[mm_company_num]"  value="$mm_company_num" size="30" class="text" /></td>
+		</tr>
+        	<td>7</td>
+			<td>货币符号</td>
+			<td><input type="text" name="config[mm_price_sign]"  value="$mm_price_sign" size="30" class="text" /></td> 
+		<tr>
+			<td>8</td>
+			<td>主页Title</td>
+			<td><input type="text" name="config[mm_mall_name]"  value="$mm_mall_name" size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>模板选择<p class="cpsm">←可以自己制作模板上传到[templates]文件夹下，并在后台相应的选择即可。</p></td>
+			<td>$tplpath_menu</td>
+		</tr>
+        <tr>
+        	<td>10</td>
+			<td>LOGO</td>
+			<td><input type="file" name="mm_logo" size="30" class="text" /> <img src="$mm_logo" align="absmiddle" /></td>
+		</tr>
+		<tr>
+        	<td>11</td>
+			<td>微信二维码</td>
+			<td><input type="file" name="mm_wx_logo" size="30" class="text" /> <img src="$mm_wx_logo" align="absmiddle" /></td>
+		</tr>
+		<tr>
+			<td>12</td>
+			<td>标题附加字<p class="cpsm">↑ 网页标题通常是搜索引擎关注的重点，本附加字设置将出现在标题中商铺名称的后面，如果有多个关键字，建议用 "|"、","(不含引号) 等符号分隔。</p></td>
+			<td><textarea name="config[mm_seotitle]" rows="2" cols="75" class="text">$mm_seotitle</textarea></td>
+		</tr>
+		<tr>
+			<td>13</td>
+			<td>关键字<p class="cpsm">↑ 用于记录商城关键字，多个关键字请用半角逗号隔开，填写此栏可增加搜索引擎关注度。</p></td>
+			<td><textarea name="config[mm_keywords]" rows="2" cols="75" class="text">$mm_keywords</textarea></td>
+		</tr>
+		<tr>
+			<td>14</td>
+			<td>描述<p class="cpsm">↑ 用于记录商城概要与描述，可增加搜索引擎关注度。</p></td>
+			<td><textarea name="config[mm_description]" rows="2" cols="75" class="text">$mm_description</textarea></td>
+		</tr>
+		<tr>
+			<td>15</td>
+			<td>是否支持二级域名<p class="cpsm">↑ 只有域名泛解析正确设置，才能支持二级域名自动绑定!</p></td>
+			<td class="td_right">
+			    <input type="radio" value="1"  name="config[mm_subdomain]" $mm_subdomain_y /> 支持　
+			    <input type="radio" value="0" name="config[mm_subdomain]"  $mm_subdomain_n /> 不支持
+			</td>
+		</tr>
+		<tr>
+			<td>16</td>
+			<td>是否开启伪静态<p class="cpsm">↑ 有利于搜索引擎关注，轻微加重服务器负担。</p></td>
+			<td class="td_right">
+			<input type="radio" value="1" name="config[rewrite]" $rewrite_y />开启　
+			<input type="radio" value="0" name="config[rewrite]"  $rewrite_n />关闭
+			</td>
+		</tr>
+		<tr>
+			<td>17</td>
+			<td>使用WAP自定义页面</td>
+			<td class="td_right">
+			    <input type="radio" value="1" name="config[wap_user_index]" $wap_user_index_y /> 是　
+			    <input type="radio" value="0" name="config[wap_user_index]"  $wap_user_index_n /> 否
+			</td>
+		</tr>
+		<tr>
+        	<td>18</td>
+		    <td>是否关闭网店</td>
+			<td>
+			    <input type="radio" value="1" name="config[mm_close]"  $mm_close_y />开启　
+			    <input type="radio" value="0" name="config[mm_close]" $mm_close_n />关闭
+			</td>
+		</tr>
+		<tr>
+        	<td>19</td>
+			<td>关闭原因</td>
+			<td><textarea name="config[mm_close_desc]" id="close_desc" rows="3" cols="75" class="text">$mm_close_desc</textarea></td>
+		</tr>
+		<tr>
+        	<td>20</td>
+			<td>底部代码<p class="cpsm">如：流量统计，外接在线客服系统代码</p></td>
+			<td><textarea name="config[mm_footer_code]"  rows="3" cols="75" class="text">$mm_footer_code</textarea></td>
+		</tr>
+	</table>
+<!--
+EOT;
+}if($type=='msg_set' || $type=='all'){print <<<EOT
+-->	
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th colspan="4">客服信息设置</th>
+		</tr>
+		<tr>
+			<td width="15%">公司电话号码</td>
+			<td width="35%"><input type="text" name="config[mm_ceo_phone]" value="$mm_ceo_phone" size="30" class="text" /></td>
+			<td width="15%">公司传真号码</td>
+			<td width="35%"><input type="text" name="config[mm_ceo_fax]" value="$mm_ceo_fax" size="30" class="text" /></td>
+		</tr>
+		
+		
+		<tr>
+			<td>客服E-mail</td>
+			<td><input type="text" name="config[mm_client_email]" value="$mm_client_email" size="30" class="text" /></td>
+			<td>免费电话号码</td>
+			<td><input type="text" name="config[mm_client_phone3]" value="$mm_client_phone3" size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>客服 QQ1</td>
+			<td><input type="text" class="text" name="config[mm_client_qq1]" size="30" value="$mm_client_qq1" /></td>
+			<td>客服 QQ2</td>
+			<td><input type="text" class="text" name="config[mm_client_qq2]" size="30" value="$mm_client_qq2" /></td>
+		</tr>
+		<tr>
+			<td>客服 QQ3</td>
+			<td><input type="text" class="text" name="config[mm_client_qq3]" size="30" value="$mm_client_qq3" /></td>
+			<td>客服 QQ4</td>
+			<td><input type="text" class="text" name="config[mm_client_qq4]" size="30" value="$mm_client_qq4" /></td>
+		</tr>
+        <tr>
+			<td>客服 旺旺</td>
+			<td colspan="3"><input type="text" name="config[mm_client_ww]" value="$mm_client_ww" size="30" class="text"/></td>
+		</tr>
+		<tr style="display:none;">
+		    <td>短信反馈</td>
+			<td colspan="3">
+			    <input type="text" class="text" name="config[mm_sms_reply]" size="30" value="$mm_sms_reply" /> 
+				（请填写正确的手机号码，手机客户端用户可以直接把反馈信息发送到您的手机上）
+			</td>
+		</tr>
+		<tr>
+			<td>客服服务时间</td>
+			<td colspan="3"><textarea name="config[mm_client_time]" rows="5" cols="74" class="text">$mm_client_time</textarea></td>
+		</tr>
+	</table>
+<!--
+EOT;
+}if($type=='email_set' || $type=='all'){print <<<EOT
+-->
+    <script type="text/javascript">
+	$(function(){
+	    $("input[@rel=use_sendcloud]").click(function(){
+		    $("#mail_smtphost").val("smtpcloud.sohu.com");
+			$("input[@name='config[mm_mail_smtpport]']").val("25");
+			$("input[@name='config[mm_mail_smtpauth]']:first").attr("checked","checked");
+			alert("基本资料设置成功,请填写[验证用户名]、[验证用户名(群发)]、[密码]、[发送名称]后，再点击[确定]按钮");
+		});//end click
+	});
+	</script>
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="4%">ID</th>
+			<th width="25%">邮件平台设置</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>邮件发送方式</td>
+			<td>SMTP</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>邮件服务器发邮地址</td>
+			<td>
+			    <input type="text" name="config[mm_mail_smtphost]" id="mail_smtphost" value="$mm_mail_smtphost" size="30" class="text" /> 
+				<input type="button" rel="use_sendcloud" value="使用搜狐云邮件？推荐！" /> 
+				<a href="http://www.mvmmall.cn/notice/notice_15.html" target="_blank">附：搜狐云邮件使用说明</a>
+			</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>邮件端口<p class="cpsm">← 默认不需修改。</p></td>
+			<td><input type="text" name="config[mm_mail_smtpport]" value="$mm_mail_smtpport" size="30" maxlength="5" class="text" /></td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>发信人地址</td>
+			<td><input type="text" name="config[mm_mail_smtpfrom]" value="$mm_mail_smtpfrom" size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>是否需要 AUTH LOGIN 验证</td>
+			<td>
+			    <input type="radio" value="1" name="config[mm_mail_smtpauth]" $mm_mail_smtpauth_y /> 是　
+			    <input type="radio" value="0" name="config[mm_mail_smtpauth]" $mm_mail_smtpauth_n /> 否
+			</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>验证用户名</td>
+			<td><input type="text" name="config[mm_mail_smtpuser]" value="$mm_mail_smtpuser" size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>验证用户名（群发）</td>
+			<td>
+			    <input type="text" name="config[mm_mail_smtpuser_ad]" value="$mm_mail_smtpuser_ad" size="30" class="text" /> 
+				( 搜狐云邮件使用 )
+			</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>验证密码</td>
+			<td><input type="password" name="config[mm_mail_smtppass]"  value="$mm_mail_smtppass" size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>9</td>
+			<td>发件人名称</td>
+			<td><input type="text" name="config[mm_mail_name]" value="$mm_mail_name" size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>邮件发送</td>
+			<td rel="mail_box">
+			    <script type="text/javascript">
+				$(function(){
+				    $("td[@rel=mail_box]").find("input").click(function(){
+					    var name=$(this).attr("name");
+						name=name.replace("config[","");
+						name=name.replace("]","");
+						if($(this).attr("checked")) $("div[@rel="+name+"]").show();
+						else $("div[@rel="+name+"]").hide();
+					});//end click
+					
+					$("td[@rel=mail_box]").find("input").each(function(i){
+					    var name=$(this).attr("name");
+						name=name.replace("config[","");
+						name=name.replace("]","");
+						if($(this).attr("checked")) $("div[@rel="+name+"]").show();
+						else $("div[@rel="+name+"]").hide();
+					});//end each
+				});
+				</script>
+			    <input type="checkbox" value="1" name="config[mm_mail_order]" $mm_mail_order_y /> 待付款
+			    <input type="checkbox" value="1" name="config[mm_mail_receipt]" $mm_mail_receipt_y /> 已付款
+			    <input type="checkbox" value="1" name="config[mm_mail_delivery]" $mm_mail_delivery_y /> 已发货
+			    <input type="checkbox" value="1" name="config[mm_mail_comment]" $mm_mail_comment_y /> 已评价
+			    <input type="checkbox" value="1" name="config[mm_mail_shop_apply]" $mm_mail_shop_apply /> 商铺申请
+			    <input type="checkbox" value="1" name="config[mm_mail_shop_pass]" $mm_mail_shop_pass /> 商铺验证
+			    <input type="checkbox" value="1" name="config[mm_mail_shop_update]" $mm_mail_shop_update /> 商铺升级
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td colspan="2" class="newset">
+				<div rel="mm_mail_order" style="display:none;"><p>待付款</p><textarea name="config[mm_mail_order_cnt]" class="text" cols="25" rows="4">$mm_mail_order_cnt</textarea></div>						
+				<div rel="mm_mail_receipt" style="display:none;"><p>已付款</p><textarea name="config[mm_mail_receipt_cnt]" class="text" cols="25" rows="4">$mm_mail_receipt_cnt</textarea></div>
+				<div rel="mm_mail_delivery" style="display:none;"><p>已发货</p><textarea name="config[mm_mail_delivery_cnt]" class="text" cols="25" rows="4">$mm_mail_delivery_cnt</textarea></div>
+				<div rel="mm_mail_comment" style="display:none;"><p>已评价</p><textarea name="config[mm_mail_comment_cnt]" class="text" cols="25" rows="4">$mm_mail_comment_cnt</textarea></div>
+				<div rel="mm_mail_shop_apply" style="display:none;"><p>商铺申请</p><textarea name="config[mm_mail_shop_apply_cnt]" class="text" cols="25" rows="4">$mm_mail_shop_apply_cnt</textarea></div>
+				<div rel="mm_mail_shop_pass" style="display:none;"><p>商铺验证</p><textarea name="config[mm_mail_shop_pass_cnt]" class="text" cols="25" rows="4">$mm_mail_shop_pass_cnt</textarea></div>
+				<div rel="mm_mail_shop_update" style="display:none;"><p>商铺升级</p><textarea name="config[mm_mail_shop_update_cnt]" class="text" cols="25" rows="4">$mm_mail_shop_update_cnt</textarea></div>
+			</td>
+		</tr>
+	</table>
+<!--
+EOT;
+}if($type=='sms_set' || $type=='all'){print <<<EOT
+-->		
+	<a name="s10"></a>
+	<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="4%">ID</th>
+			<th width="35%">短信平台设置</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>短信帐号</td>
+			<td><input type="text" name="config[mm_sms_system_id]" value="$mm_sms_system_id" class="text text_3" /></td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>密码</td>
+			<td><input type="password" name="config[mm_sms_system_pass]" value="$mm_sms_system_pass" class="text text_3" /></td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>扩展功能<p class="cpsm"> </p></td>
+			<td>
+			    <script type="text/javascript">
+					$(function(){
+					    $("a[@rel=sms_remain]").click(function(e){
+						    e.preventDefault();
+							var jq_a=$(this);
+							if($(this).attr("isLoading")=="y") return false;
+							
+							var account_id=$("input[@name='config[mm_sms_system_id]']").val();
+						    var account_pass=$("input[@name='config[mm_sms_system_pass]']").val();
+							if($.trim(account_id)=="" || $.trim(account_pass)=="")
+							{
+							    alert("缺少短信账号或密码，请重新申请或联系管理员");
+								return;
+							}
+							$("span[@rel=sms_info]").html("查询中，可能需要一段时间，请稍等...");
+							
+							$(this).attr("isLoading","y")
+							$.ajax({
+							    "url":"ajax.php?action=query_sms_remain&account_id="+account_id+"&account_pass="+account_pass+"&rnd="+Math.random(),
+							    "type":"GET",
+							    "success":function(msg){
+								              alert(msg);
+									      },
+								"complete":function(o,status){
+								               jq_a.attr("isLoading","");
+											   $("span[@rel=sms_info]").html("");
+										   }
+							});//end ajax
+						});//end click
+					});
+					</script>
+			    <a href="#" rel="sms_remain" class="but1" style="float:left; padding:0 8px 2px; padding:0 9px 1px !important; height:21px\9; line-height:23px\9; overflow:hidden;">查看短信余额</a> 
+				<a href="#" rel="apply_page" apply_url="admincp.php?module=sendsms&action=add1" class="but1" style="float:left; margin-left:5px; padding:0px 8px; padding:0 9px 1px !important; height:21px\9; line-height:23px\9; overflow:hidden;">自定义发送</a>  
+				<span rel="sms_info"></span>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>5</td>
+			<td>当前用户申请短信</td>
+			<td>$total_sms_apply 条</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>短信申请费用</td>
+			<td>
+			    <p style="margin-top:4px;"><span style="float:left; width:50px;">50元</span><input type="text" name="config[mm_sms_apply_num_50]" value="$mm_sms_apply_num_50" size="20" class="text" /> 条</p>
+				<p style="margin-top:4px;"><span style="float:left; width:50px;">100元</span><input type="text" name="config[mm_sms_apply_num_100]" value="$mm_sms_apply_num_100" size="20" class="text" /> 条</p>
+				<p style="margin-top:4px;"><span style="float:left; width:50px;">200元</span><input type="text" name="config[mm_sms_apply_num_200]" value="$mm_sms_apply_num_200" size="20" class="text" /> 条</p>
+				<p style="margin-top:4px;"><span style="float:left; width:50px;">500元 </span><input type="text" name="config[mm_sms_apply_num_500]" value="$mm_sms_apply_num_500" size="20" class="text" /> 条</p>
+				<p style="margin-top:4px;"><span style="float:left; width:50px;">1000元</span><input type="text" name="config[mm_sms_apply_num_1000]" value="$mm_sms_apply_num_1000" size="20" class="text" /> 条</p>
+			</td>
+		</tr>
+	</table>
+<!--
+EOT;
+}if($type=='reg_set' || $type=='all'){print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="4%">ID</th>
+			<th width="25%">会员注册设定</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>会员注册认证</td>
+			<td>
+			<input type="radio" value="1" name="config[mm_member_reg]" $mm_member_reg_y />开通注册
+			<input type="radio" value="0" name="config[mm_member_reg]" $mm_member_reg_n/>关闭注册
+			</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>注册奖励积分<p class="cpsm">← 会员加入时奖励的积分。</p></td>
+			<td><input type="text" name="config[mm_point_member]"  value="$mm_point_member" size="20" maxlength="10" class="text" /></td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>注册奖励预付款<p class="cpsm">← 会员加入时奖励的预付款。</p></td>
+			<td><input type="text" name="config[mm_mony_member]" value="$mm_mony_member" size="20" maxlength="10" class="text" /></td>
+		</tr>
+		<tr>
+		    <td>4</td>
+			<td>验证码使用</td>
+			<td>
+			    <input type="radio" value="1" name="config[mm_code_use]" $mm_code_use_y />使用　
+			    <input type="radio" value="0" name="config[mm_code_use]" $mm_code_use_n/>不使用
+			</td>
+		</tr>
+		<tr>
+		    <td>5</td>
+		    <td>验证码设置</td>
+			<td>
+			    宽: <input type="text" name="config[mm_code_width]"  value="$mm_code_width" size="8" maxlength="20" class="text" />&nbsp;
+			    高: <input type="text" name="config[mm_code_height]"  value="$mm_code_height" size="8" maxlength="20" class="text" />
+			</td>
+		</tr>
+		<tr>
+        	<td>6</td>
+			<td>
+			    QQ账号整合
+				<p class="cpsm">↑ 还没有接入应用？<a href="http://connect.qq.com/" target="_blank" class="orange">点击此处进行申请>></a></p>
+				<p>回调地址：$mm_mall_url/oauth_back-qq-1.html <b>( 要求服务器安装伪静态组件 )</b></p>
+			</td>
+			<td>
+			    <table cellpadding="0" cellspacing="0" class="newwb">
+					<tr><th width="145">验证代码：</th><td><textarea rows="1" name="config[mm_qq_oauth_head]" class="text" style="width:400px;height:30px;">$mm_qq_oauth_head</textarea></td></tr>
+					<tr><th>APP ID：</th><td><input type="text" name="config[mm_qq_app_id]"  value="$mm_qq_app_id" size="30" class="text" /></td></tr>
+					<tr><th>APP KEY：</th><td><input type="text" name="config[mm_qq_app_key]"  value="$mm_qq_app_key" size="30" class="text" /></td></tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+        	<td>7</td>
+			<td>
+			    新浪微博账号整合
+				<p class="cpsm">↑ 还没有接入应用？<a href="http://open.weibo.com/" target="_blank" class="orange">点击此处进行申请>></a></p>
+			</td>
+			<td>
+			    <table cellpadding="0" cellspacing="0" class="newwb">
+					<tr><th width="145">验证代码：</th><td><textarea rows="1" name="config[mm_sina_oauth_head]" class="text" style="width:400px;height:30px;">$mm_sina_oauth_head</textarea></td></tr>
+			    	<tr><th>APP KEY：</th><td><input type="text" name="config[mm_sina_app_key]"  value="$mm_sina_app_key" size="30" class="text" /></td></tr>
+					<tr><th>APP SECRET：</th><td><input type="text" name="config[mm_sina_app_secret]"  value="$mm_sina_app_secret" size="30" class="text" /></td></tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+        	<td>8</td>
+			<td>
+			    微信公众平台整合
+				<p class="cpsm">↑ 还没有接入应用？<a href="http://mp.weixin.qq.com/" target="_blank" class="orange">点击此处进行申请>></a></p>
+				<p>回调URL：$mm_mall_url/oauth_back.php?oauth_type=wx</p>
+			</td>
+			<td>
+			    <table cellpadding="0" cellspacing="0" class="newwb">
+					<tr><th width="145">TOKEN：</th><td><textarea rows="1" name="config[mm_wx_token]" class="text" style="width:400px;height:30px;">$mm_wx_token</textarea></td></tr>
+					<tr><th>APP ID：</th><td><input type="text" name="config[mm_wx_app_id]"  value="$mm_wx_app_id" size="30" class="text" /></td></tr>
+					<tr><th>APP SECRET：</th><td><input type="text" name="config[mm_wx_app_secret]"  value="$mm_wx_app_secret" size="30" class="text" /></td></tr>
+					<tr>
+					    <th>一键关注URL：</th>
+						<td>
+						    <input type="text" name="config[mm_wx_news_url]"  value="$mm_wx_news_url" size="65" class="text" /><br />
+							( 填写公众号后台的素材管理URL，网页上可以进行一键关注 )
+						</td>
+					</tr>
+					<tr>
+					    <th>一键关注图片：</th>
+						<td>
+						    <input type="file" name="mm_wx_res_img"  class="text" /><br />
+							<img src="$mm_wx_res_img" align="absmiddle" width="80%" />
+						</td>
+					</tr>
+					<tr>
+					    <th>推收消息类型：</th>
+						<td>
+						    <input type="radio" name="config[mm_wx_event_type]" value="0" $mm_wx_event_type_n /> 验证消息 
+							<input type="radio" name="config[mm_wx_event_type]" value="1" $mm_wx_event_type_y /> 其余推送消息
+						</td>
+					</tr>
+					<tr>
+					    <th>关注提示图片：<br />(只允许上传png/jpg格式，长宽为360*200时效果最好)</th>
+						<td><input type="file" name="mm_wx_focus_img" size="30" class="text" /> <img src="$mm_wx_focus_img" align="absmiddle" /></td>
+					</tr>
+					<tr>
+					    <th>微店LOGO：<br />(只允许上传png/jpg格式，长宽为35*35时效果最好)</th>
+						<td><input type="file" name="mm_wx_shop_logo" size="30" class="text" /> <img src="$mm_wx_shop_logo" align="absmiddle" /></td>
+					</tr>
+				</table>
+			</td>
+			<tr>
+        	<td>9</td>
+			<td>
+			    优酷开放平台整合
+				<p class="cpsm">↑ 还没有接入应用？<a href="http://open.youku.com/" target="_blank" class="orange">点击此处进行申请>></a></p>
+				<p>回调URL：$mm_mall_url/oauth_back.php?oauth_type=youku</p>
+			</td>
+			<td>
+			    <table cellpadding="0" cellspacing="0" class="newwb">
+					<tr><th>client id：</th><td><input type="text" name="config[mm_youku_client_id]"  value="$mm_youku_client_id" size="30" class="text" /></td></tr>
+					<tr><th>client secret：</th><td><input type="text" name="config[mm_youku_client_secret]"  value="$mm_youku_client_secret" size="30" class="text" /></td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+<!--
+EOT;
+}if($type=='show_set' || $type=='all'){print <<<EOT
+-->		
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th colspan="4">分值比例设置</th>
+		</tr>
+		<tr>
+			<td width="15%">商品库使用积分</td>
+			<td><input type="text" class="text" name="config[mm_storage_point]" value="$mm_storage_point" /></td>
+			<td width="15%">商品库分发积分</td>
+			<td><input type="text" class="text" name="config[mm_storage_send_point]" value="$mm_storage_send_point" /></td>
+		</tr>
+		<tr>
+			<td>团购活动申请积分</td>
+			<td><input type="text" class="text" name="config[mm_groupgd_point]" value="$mm_groupgd_point" /></td>
+			<td>积分汇申请积分</td>
+			<td><input type="text" class="text" name="config[mm_changegd_point]" value="$mm_changegd_point" /></td>
+		</tr>
+		<tr>
+			<td>拍卖申请积分</td>
+			<td><input type="text" class="text" name="config[mm_auction_point]" value="$mm_auction_point" /></td>
+			<td>积分购买价格</td>
+			<td><input type="text" name="config[mm_buy_point]"  value="$mm_buy_point" class="text" /> 分/元</td>
+		</tr>        
+		<tr>
+			<td>最低提现额度</td>
+			<td><input type="text" name="config[mm_withdraw_lbound]"  value="$mm_withdraw_lbound" class="text" /> 元</td>
+            <td>提现手续费比例</td>
+			<td><input type="text" name="config[mm_withdraw_rate]"  value="$mm_withdraw_rate" class="text" size="5" /> % <span class="orange">(从当笔提现资金中扣除)</span></td>
+		</tr>
+		<tr>
+			<td>每日签到赠送积分</td>
+			<td><input type="text" name="config[mm_sign_point]"  value="$mm_sign_point" class="text" /> 积分</td>
+            <td>商户优惠券数量</td>
+			<td><input type="text" name="config[mm_shop_coupon]" value="$mm_shop_coupon" class="text" /></td>
+		</tr>
+		<tr>
+			<td>创建生活圈的数量</td>
+			<td><input type="text" name="config[mm_open_community]" value="$mm_open_community" class="text" /> 个</td>
+			<td>生活圈会员数量限制</td>
+			<td><input type="text" name="config[mm_join_community]" value="$mm_join_community" class="text" /> 个</td>
+		</tr>
+		<tr>
+		    <td>消保金最低额度</td>
+			<td><input type="text" name="config[mm_member_money]"  value="$mm_member_money" class="text" /> 元</td>
+			<td>延迟收货最长时间</td>
+			<td><input type="text" name="config[mm_max_delay]"  value="$mm_max_delay" class="text" /> 天</td>
+		</tr>
+        <tr>
+			<td>自动确认收货</td>
+			<td><input type="text" name="config[mm_order_confirm]" value="$mm_order_confirm" class="text" /> 天</td>
+			<td>预定预付期限</td>
+			<td><input type="text" name="config[mm_order_preorder]" value="$mm_order_preorder" class="text" /> 天</td>
+		</tr>
+	</table>
+<!--
+EOT;
+}print <<<EOT
+-->
+	<div id="tfoot"><input type="submit" name="Submit" value="确 定" onclick="" class="button" /> <input type="reset" name="reset" value="重 置" class="button" /></div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

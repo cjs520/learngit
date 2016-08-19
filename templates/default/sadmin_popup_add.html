@@ -1,0 +1,55 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	
+<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+<script type="text/javascript">
+KindEditor.ready(function(K) {
+	var editor1 = K.create('textarea[name="body"]', {
+		uploadJson : 'sadmin.php?module=editor&action=upload',
+		fileManagerJson : 'sadmin.php?module=editor&action=list_files',
+		allowFileManager : true,
+		items:kindecitor_items
+    });			
+});
+</script>
+	<div class="mem_right">
+		<form action="sadmin.php?module=$module&action=add" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">添加弹窗广告</th></tr>
+			<tr>
+		        <td width="18%">清除弹窗内容</td>
+			    <td><a href="sadmin.php?module=$module&action=del" onClick="return confirm('确认清除？');">点击清除弹窗内容</a></td>
+		    </tr>
+			<tr>
+				<td>弹窗标题</td>
+				<td><input type="text" name="subject" value="$popup[subject]" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>弹窗位置</td>
+				<td>
+				    左侧距离：<input type="text" name="left" value="$popup[left]" size="10" class="text" /> px 
+					顶部距离：<input type="text" name="top" value="$popup[top]" size="10" class="text" /> px
+				</td>
+			</tr>
+			<tr>
+				<td>弹窗大小</td>
+				<td>
+				    弹窗宽度：<input type="text" name="width" value="$popup[width]" size="10" class="text" /> px 
+					弹窗高度：<input type="text" name="height" value="$popup[height]" size="10" class="text" /> px
+				</td>
+			</tr>
+			<tr>
+				<td>内容</td>
+				<td><textarea name="body" style="width:755px;height:400px;visibility:hidden;">$popup[body]</textarea></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

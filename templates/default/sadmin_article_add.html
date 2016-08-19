@@ -1,0 +1,53 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+<script type="text/javascript">
+KindEditor.ready(function(K) {
+	var editor1 = K.create('textarea[name="board_body"]', {
+		uploadJson : 'sadmin.php?module=editor&action=upload',
+		fileManagerJson : 'sadmin.php?module=editor&action=list_files',
+		allowFileManager : true,
+		items:kindecitor_items
+    });			
+});
+</script>
+	<div class="mem_right">
+		<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">添加/修改资讯</th></tr>
+			<tr>
+				<td width="18%">资讯名称</td>
+				<td><input type="text" name="board_subject" value="$article[board_subject]" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>版块名称</td>
+				<td>$sel_code</td>
+			</tr>
+			<tr>
+				<td>是否置顶</td>
+				<td><input type="checkbox" name="is_top" value="1" $is_top_checked /> 置顶</td>
+			</tr>
+			<tr>
+				<td>当前封面</td>
+				<td><img src="$article[cover]" /></td>
+			</tr>
+			<tr>
+				<td>封面上传</td>
+				<td><input type="file" name="cover" class="text" /></td>
+			</tr>
+			<tr>
+				<td>资讯内容</td>
+				<td><textarea name="board_body" style="width:755px;height:400px;visibility:hidden;">$article[board_body]</textarea></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

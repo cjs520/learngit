@@ -1,0 +1,69 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=tab]:eq($t)").addClass("hover");
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认要删除（退出）指定生活圈？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="member_title fd red">我加入的生活圈</div>
+        <div class="title_rate_list">
+        	<a href="member.php?action=$action&t=0" rel="tab"><span>已审核</span></a>
+            <a href="member.php?action=$action&t=1" rel="tab"><span>未审核</span></a>
+			<a href="member.php?action=$action&t=2" rel="tab"><span>已拒绝</span></a>
+        </div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th colspan="2">我加入的生活圈</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_community as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td><img src="$val[c_logo]" width="100" /></td>
+				<td class="fcl">	 
+                    名称：$val[c_name]<br />
+                    分类：$val[category_name]<br />
+                    爱好：$val[c_hobby]<br />
+                	加入时间：$val[register_date]<br />
+<!--
+EOT;
+if($t==2){
+print <<<EOT
+-->					拒绝原因：$val[back_reason]<br />
+<!--
+EOT;
+} print <<<EOT
+-->
+                    操作：
+                    <a href="$val[view_url]" target="_blank" class="tipsy_s view blue" title="去逛逛">去逛逛</a>
+                    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>
+				</td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

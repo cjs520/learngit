@@ -1,0 +1,33 @@
+<!--<?php
+require_once template('header'); 
+require_once template('board_left'); 
+print <<<EOT
+-->		
+    <div class="board_right">
+    	<h3 class="titlec"><span>$mm_board[board_title]</span></h3>
+<!--
+EOT;
+foreach ($arr_board as $key=>$val){
+print <<<EOT
+-->
+        <table width="100%" class="search_news">
+          <tr>
+            <td colspan="2">
+                <a href="$val[url]" target="_blank" class="fd fl">$val[board_subject]</a>
+                <p class="gray fcr fr"><a href="$val[url]" target="_blank">作者：$val[author]</a>　发布日期：$val[register_date]</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="col2" width="78%">$val[board_body]...</td>
+            <td></td>
+          </tr>
+        </table> 
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="page">$page_list</div>
+    </div><!-- 右边结束 -->
+<!--
+EOT;
+?>-->

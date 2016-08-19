@@ -1,0 +1,139 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定删除？")) return false;
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert("删除成功");
+				$("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=cancel]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定撤销？")) return false;
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "admincp.php?module=$module&action=cancel&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    if(msg=="ok")
+				{
+				    alert("撤销成功");
+					window.location.reload();
+					return false;
+				}
+				alert(msg);
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定审核？")) return false;
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "admincp.php?module=$module&action=check&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    if(msg=="ok")
+				{
+				    alert("审核成功");
+					window.location.reload();
+					return false;
+				}
+				alert(msg);
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">积分明细</td>
+			<td class="tright">
+			</td>
+		</tr>
+	</table>
+	<form action="" method="post" style="float:right;">
+		<span style="float:left; line-height:22px;">指定会员明细：</span>
+		<input type="text" class="text2" name="ps_member" value="$ps_member" />
+		<input type="submit" value="搜索" class="button3" />
+	</form>
+	<div style="margin-top:6px; float:left;">
+		<a href="admincp.php?module=$module&action=list" class="but1">所有记录</a>
+		<a href="admincp.php?module=$module&action=list&ps_member=$ps_member&t=1" class="but1">获取记录</a>
+		<a href="admincp.php?module=$module&action=list&ps_member=$ps_member&t=2" class="but1">使用记录</a>
+		<a href="admincp.php?module=$module&action=list&ps_member=$ps_member&t=3" class="but1" style="display:none;">撤销记录</a>
+	</div>
+	<div style="clear:both; height:3px; overflow:hidden;"></div>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+        	<th width="10%">会员</th>
+		    <th width="12%">交易类型</th>
+			<th>交易单号</th>
+			<th width="10%">收支</th>
+			<th width="10%">可用积分</th>
+			<th width="12%">创建时间</th>
+			<th width="10%">状态</th>
+			<th width="10%" style="display:none;">操作</th>
+		</tr>
+
+<!--
+EOT;
+foreach ($member_point as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+        	<td><a href="admincp.php?module=$module&action=list&ps_member=$val[point_id]">$val[point_id]</a></td>
+		    <td class="td1">$val[type]</td>
+			<td class="td1">$val[point_sess]</td>
+			<td>$val[add] <span class="orange">$val[minus]</span></td>
+			<td>$val[point_left]</td>
+			<td>$val[reg_date]</td>
+			<td>$val[status]</td>
+			<td style="display:none;">
+<!--
+EOT;
+if($val[approval_date]==0){
+print <<<EOT
+-->	
+				<a href="#" rel="check" uid="$val[uid]" class="check" title="审核"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($val[approval_date]>0){
+print <<<EOT
+-->
+			    <a href="#" uid="$val[uid]" rel="cancel" class="tipsy_s che" title="撤销" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+		
+	</table>	
+	<div id="page"><span>$page_list</span></div>	
+</div>
+<!--
+EOT;
+?>-->

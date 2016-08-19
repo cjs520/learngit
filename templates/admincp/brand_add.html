@@ -1,0 +1,98 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+
+<script type="text/javascript">
+$(function(){
+    $("input[@name=merge]").click(function(e){
+	    if(!confirm("确定对两个品牌进行合并？")) return;
+		
+		$("form[@name=brand_form]").attr("action","admincp.php?module=$module&action=merge");
+	    $("form[@name=brand_form]").trigger("submit");
+	});//end click
+	
+	$("form[@name=brand_form]").submit(function(){
+	    var msg="";
+		if($("input[@name=brandname]").val()=="") msg+="请填写品牌名称\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end click
+});
+</script>
+<div id="right">
+	<form name="brand_form" action="admincp.php?module=$module&action=$action" method="post" enctype="multipart/form-data" >
+	<input type="hidden" name="last" value="$_GET[isCheck]" />
+	<input type="hidden" name="step" value="1"/>
+	<input type="hidden" name="uid" value="$uid"/>
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg">
+		<tr>
+			<th colspan="2">添加或修改品牌</th>
+		</tr>
+		<tr>
+			<td width="17%">品牌名称</td>
+			<td><input type="text" name="brandname" value="$brandname" maxlength="20" class="text2 text_1" /><p class="alert_info"><span class="icon_info"></span>请填写所经营商品品牌</p></td>
+		</tr>
+		<tr>
+			<td>网 址</td>
+			<td><input type="text" name="weburl" value="$weburl" class="text2 text_1" /><p class="alert_info"><span class="icon_info"></span>请填写所经营品牌官方网址</p></td>
+		</tr>
+		<tr>
+			<td>所属分类</td>
+			<td>
+			    <p style="float:left;  "><span rel="goods_category"></span>
+				<script type="text/javascript">
+				$(function(){
+					$("span[@rel=goods_category]").GoodsCategory("$category_id");
+				});
+				</script></p>
+				<p class="alert_warning"><span class="icon_waring"></span>请正确选择您经营品牌的分类,否则官方审核不通过!</p>
+			</td>
+		</tr>
+		<tr>
+			<td>排序</td>
+			<td><input type="text" name="train" value="$train" maxLength="5" class="text text_1" /></td>
+		</tr>
+		<tr>
+			<td>品牌LOGO</td>
+			<td><input type="file" name="logo_file" class="text2 text_1" size="26" /><p class="alert_error"><span class="icon_error"></span>请上传所经营品牌logo，尺寸要求：130*60px</p></td>
+		</tr>
+		<tr>
+			<td>关键字</td>
+			<td><textarea name="keywords" rows="3" class="text text_1">$keywords</textarea></td>
+		</tr>
+		<tr>
+			<td>是否通过验证</td>
+			<td><input type="checkbox" name="isCheck" value="1" $is_check /></td>
+		</tr>
+<!--
+EOT;
+if((int)$isCheck==0 && $action=='edit'){
+print <<<EOT
+-->
+        <tr>
+			<td>合并品牌</td>
+			<td><span class="span_left">$check_brand_list</span><input type="button" value="合并" name="merge" class="button3" /></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<tr>
+			<td>品牌描述</td>
+			<td>
+			    <textarea name="brief" id="brief" rows="3" class="text2 text_1">$brief</textarea> 
+				<p class="alert_info"><span class="icon_info"></span>请与官网品牌描述保持一致，非个人商铺信息</p>
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" onclick="document.getElementById('action').value='$action';" /> <input type="reset" name="reset" value="重置" class="button" /></div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

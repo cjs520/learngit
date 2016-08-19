@@ -1,0 +1,15 @@
+union/data/session/*.*
+
+union/data/malldata/*.config
+data/malldata/*.config
+
+config/config_db.php
+config/install.lock
+uniconfig/config_db.php
+
+.htaccess
+union/.htaccess
+
+.settings/*.*
+*.buildpath
+*.project

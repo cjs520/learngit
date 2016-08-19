@@ -1,0 +1,161 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<style type="text/css">
+.lucky_goods li { float:left; margin:10px; list-style:none; }
+</style>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=add]").click(function(e){
+	    e.preventDefault();
+		$("tr[@rel=act_goods]:last").after($("tr[@rel=act_goods]:first").clone());
+	});//end click
+	
+	$("a[@rel=minus]").click(function(e){
+	    e.preventDefault();
+		if($("tr[@rel=act_goods]").size()<=1) return;
+		$("tr[@rel=act_goods]:last").remove();
+	});//end click
+	
+	$("form[@rel=lucky_form]").submit(function(){
+	    var msg="";
+		if($("textarea[@name=name]").val()=="") msg+="请填写抽奖活动的名称\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+	
+	$("a[@rel=del_goods]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del_goods&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("li[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+	<form rel="lucky_form" method="post" action="admincp.php?module=$module&action=$action" enctype="multipart/form-data"> 
+	<input type="hidden" name="uid" value="$uid"/>
+	<input type="hidden" name="step" value="1"/>
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="18%">抽奖活动修改</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>活动名称</td>
+			<td><textarea name="name" class="text text_4" rows="2">$name</textarea></td>
+		</tr>
+		<tr>
+			<td>所需积分</td>
+			<td><input type="text" class="text" name="point" value="$point" /></td>
+		</tr>
+		<tr>
+			<td>起始时间</td>
+			<td>
+			    <input type="text" name="start_time" value="$start_time" class="text text_4" /> 
+				(时间格式示例：2014-7-1 18:00)
+			</td>
+		</tr>
+		<tr>
+			<td>终止时间</td>
+			<td>
+			    <input type="text" name="end_time" value="$end_time" class="text text_4" /> 
+				(时间格式示例：2014-7-2 18:00)
+			</td>
+		</tr>
+		<tr>
+			<td>无奖概率</td>
+			<td><input type="text" class="text" name="fail_rate" value="$fail_rate" /></td>
+		</tr>
+		<tr>
+			<td>无奖角度范围</td>
+			<td>
+			    <input type="text" class="text" name="fail_degree_min" value="$fail_degree_min" /> ~ 
+				<input type="text" class="text" name="fail_degree_max" value="$fail_degree_max" />
+			</td>
+		</tr>
+		<tr>
+		    <td>当前转盘</td>
+			<td><img src="$img" border="0" width="350" /></td>
+		</tr>
+		<tr>
+			<td>转盘上传</td>
+			<td><input type="file" class="text" name="img" /> (长宽为 530*530 像素 ，一定要严格按照这个大小，建议格式为png)</td>
+		</tr>
+<!--
+EOT;
+if($arr_lucky_goods){
+print <<<EOT
+-->	
+		<tr>
+		    <th colspan="2">当前活动奖品</th>
+		</tr>
+		<tr>
+		    <td>奖品展示</td>
+			<td>
+            <ul class="lucky_goods">
+
+<!--
+EOT;
+foreach ($arr_lucky_goods as $val){
+print <<<EOT
+-->	
+			<li uid="$val[uid]">
+			    <img src="$val[goods_img]" /><br />
+				<a href="$val[url]" $val[target]>$val[goods_name]</a><br />
+				角度范围：$val[degree_min] ~ $val[degree_max]<br />
+				排序：$val[od] 概率：$val[rate]<br />
+				<a href="#" rel="del_goods" uid="$val[uid]">删除</a>
+			</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </ul>	
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<tr>
+		    <th colspan="2">上传活动奖品 <a href="#" rel="add">[添加]</a> <a href="#" rel="minus">[减少]</a></th>
+		</tr>
+		<tr rel="act_goods">
+		    <td>活动奖品</td>
+			<td>
+			    <p>奖项：<input type="text" class="text" name="lucky_name[]" style="width:60px; " /> 
+				奖品名称：<input type="text" class="text" name="goods_name[]"  />
+				奖品图样：<input type="file" class="text" name="goods_img[]" /> 
+				概率权重：<input type="text" class="text" name="rate[]" style="width:35px;" /></p>
+				<p style="padding-top:3px;">URL：<input type="text" class="text" name="url[]" />
+				角度范围：<input type="text" class="text" name="degree_min[]" /> ~ <input type="text" class="text" name="degree_max[]" /> 
+				排序：<input type="text" class="text" name="od[]"  /></p>
+			</td>
+		</tr>
+		<tr>
+		    <td colspan="2">
+			    注意：<br />
+				1、奖品的角度要严格按照转盘图标正确标明<br />
+				2、奖项的起始角度范围为[0,359]或[1,360]<br />
+				3、奖品的角度不能有重叠，否则可能会产生意外的效果<br />
+				4、转盘各个奖品的获奖概率可以不相等
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="$lang[submit]" class="button" /> <input type="reset" name="reset" value="$lang[reset]" class="button" /></div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

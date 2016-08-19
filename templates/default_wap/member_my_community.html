@@ -1,0 +1,93 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+	    if(!confirm("确认删除指定的生活圈？")) return;
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "member.php?action=$action&cmd=del&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=finish]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认结束指定供应信息？")) return;
+		
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&cmd=finish&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    jq_a.parent().siblings("p[@rel=status]").html("已结束");
+					jq_a.remove();
+				}
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right">
+		<div class="member_title fd red">我的生活圈</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th colspan="2">生活圈详情</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_community as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td><img src="$val[c_logo]" width="100"/>
+                <p>名称：$val[c_name]</p>
+				<p rel="status">
+<!--
+EOT;
+if($val[approval_date]<0){
+print <<<EOT
+-->		
+				    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s" title="理由：$val[back_reason]">$val[status]</a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+					$val[status]
+<!--
+EOT;
+} print <<<EOT
+-->
+				</p>                
+                </td>
+				<td class="fcl">
+                	分类：$val[c_cat]<br />
+                    标签：$val[c_tag]<br />
+					会员数量：$val[member_num]<br />
+					话题数量：$val[topic_num]<br />
+					评论数量：$val[comment_num]<br />
+                    操作：
+				    <a href="life_detail.php?action=$val[uid]" target="_blank" class="tipsy_s view blue" title="查看">查看</a>
+					<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

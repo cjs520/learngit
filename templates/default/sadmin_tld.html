@@ -1,0 +1,82 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+$mm_client_qq1 && $mm_client_qq1="<a target='_blank' href='http://wpa.qq.com/msgrd?v=3&uin=$mm_client_qq1&site=qq&menu=yes'><img src='http://wpa.qq.com/pa?p=2:$mm_client_qq1:45' alt='' title='' align='absmiddle'></a> ";
+print <<<EOT
+-->
+    <script type="text/javascript">
+	$(function(){
+	    $("form[@name=tld_form]").submit(function(){
+		    if("$is_check"=="1" && !confirm("当前的域名为审核状态，提交后需要重新等待审核才会生效！确定提交？")) return false;
+		    var msg="";
+			if($.trim($("#domain_name").val())=="") msg+="请输入您申请顶级域名\\n";
+			if(msg!="")
+			{
+			    alert(msg);
+				return false;
+			}
+			return true;
+		});//end submit
+		
+		$("form[@name=subdomain_form]").submit(function(){
+		    var msg="";
+			if($.trim($("#member_homepage").val())=="") msg+="请输入正确的二级域名\\n";
+			if(msg!="")
+			{
+			    alert(msg);
+				return false;
+			}
+			return true;
+		});//end submit
+	});
+	</script>
+	<div class="mem_right">
+	    <form action="" method="post" name="subdomain_form">
+		<input name="step" id ="step"  type="hidden" value="2"/>
+		<p class="alert_warning" style="float:none; margin:0;"><span class="icon_waring"></span>谨慎填写，提交完成，如需修改联系管理员</p>
+        <div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">域名设置</th></tr>
+			<tr>
+			    <td width="18%">二级域名</td>
+				<td>
+<!--
+EOT;
+if($allow_modify){
+print <<<EOT
+-->
+				http://<input name="member_homepage" value="$shop_file[member_homepage]" id="member_homepage"  maxlength="34" type="text" class="text" size="23" style="padding:1px;" />{$mm_cookie_domain}/ <input type="submit" class="mem_button" value="" />		    
+<!--
+EOT;
+}else{
+print <<<EOT
+-->				<span class="span_left">http://{$shop_file[member_homepage]}{$mm_cookie_domain}/</span> <p class="alert_warning"><span class="icon_waring"></span>如需修改联系管理员</p>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+		</table>
+		</form>
+		<div class="clear"></div>
+		<form action="" method="post" name="tld_form">
+		<input name="step" id ="step"  type="hidden" value="1"/>
+        <p class="alert_info" style="float:none; margin:0;"><span class="icon_info"></span>请确认域名是否已通过备案，并做好域名解析。有问题可咨询客服 <span class="orange">$mm_ceo_phone</span> $mm_client_qq1</p>
+        <div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">域名设置</th></tr>
+			<tr>
+				<td width="18%">顶级域名</td>
+				<td><input type="text" name="domain_name" id="domain_name" value="$domain_name" size="40" class="text" style="padding:1px;" /> <input type="submit" class="mem_button" value="" /> <span class="gray">例 ：www.mydomain.com </span></td>
+			</tr>
+			<tr>
+			    <td>状态</td>
+				<td>$status</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

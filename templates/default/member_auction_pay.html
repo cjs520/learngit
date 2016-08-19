@@ -1,0 +1,348 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+var ship_req=null;
+$(function(){
+    $.extend({
+	    LoadAddress:function(){
+		    $.ajax({
+			    url:"ajax.php?action=address",
+				type:"GET",
+				dataType:"json",
+				cache:false,
+				success:function(json){
+				    var jq_p=$("p[@rel=loading_address]:first");
+					var html="";
+					$.each(json,function(i){
+					    html+='<p class="moren_addr">';
+						html+='<input type="radio" name="address_uid" province="'+this.province+'" city="'+this.city+'" county="'+this.county+'" address="'+this.address+'" consignee="'+this.consignee+'" mobile="'+this.mobile+'" zipcode="'+this.zipcode+'" value="'+this.uid+'" '+this.is_buy+' class="vmid"/> ';
+						html+=" 收货人："+this.consignee;
+						html+=" 收货地址："+this.province+" "+this.city+" "+this.county+" "+this.address;
+						html+=" 联系电话："+this.mobile;
+						html+=" 邮编："+this.zipcode;
+						html+="</p>";
+						
+					});//end each
+					jq_p.after(html);
+					jq_p.remove();
+					
+					$.SetAddressEvent();
+					if($("input[@name=address_uid]").size()<=1) $("input[@name=address_uid]:first").trigger("click");
+					else $("input[@name=address_uid]").filter("input[@checked]").trigger("click");
+				}
+			});//end ajax
+		},
+		SetAddressEvent:function(){
+		    $("input[@name=address_uid]").click(function(e){
+			    if(ship_req!=null)
+				{
+				    ship_req.abort();
+					ship_req=null;
+				}
+				
+				var province=$(this).attr("province");
+				var city=$(this).attr("city");
+				var county=$(this).attr("county");
+				if($(this).val()==-1)
+				{
+				    province=$("#province").val();
+					city=$("#city").val();
+					county=$("#county").val();
+				}
+			    
+				var post_data="province="+province+"&city="+city+"county="+county;
+				$("div[@rel=cart_table]").each(function(i){
+				    var supid=$(this).attr("supid");
+					var kg=$(this).attr("kg");
+					var price=$(this).attr("price");
+					
+					post_data+="&arr_kg["+supid+"]="+kg+"&arr_price["+supid+"]="+price;
+				});//end each
+				
+				$("select[@rel=ship]").empty();
+				ship_req=$.ajax({
+				    url:"ajax.php?action=ship",
+					type:"POST",
+					dataType:"json",
+					data:post_data,
+					cache:false,
+					success:function(json){
+					    if(json.err!="")
+						{
+						    alert(json.err);
+							return;
+						}
+						for(var i in json["ship_list"])
+						{
+						    var jq_sel=$("select[@name='ship["+i+"]']");
+							var html="";
+							$.each(json["ship_list"][i],function(j){
+							    html+="<option value='"+this.uid+"' price='"+this.price+"'>"+this.name+" ("+this.price+"元)</option>";
+							});//end each
+							jq_sel.html(html);
+							jq_sel.trigger("change");
+						}
+					},
+					complete:function(){
+					    ship_req=null;
+					}
+				});//end ajax
+			});//end click
+		}
+	});//end extend
+	
+	$.LoadAddress();
+});
+
+function address_callback(province,city,county)
+{
+    if(!$("input[@name=address_uid]:last").attr("checked")) return;
+	if(ship_req!=null)
+	{
+	    ship_req.abort();
+		ship_req=null;
+	}
+	var post_data="province="+province+"&city="+city+"county="+county;
+	$("div[@rel=cart_table]").each(function(i){
+		var supid=$(this).attr("supid");
+		var kg=$(this).attr("kg");
+		var price=$(this).attr("price");
+		
+		post_data+="&arr_kg["+supid+"]="+kg+"&arr_price["+supid+"]="+price;
+	});//end each
+	
+	ship_req=$.ajax({
+	    url:"ajax.php?action=ship",
+		type:"POST",
+		dataType:"json",
+		data:post_data,
+		cache:false,
+		success:function(json){
+		    if(json.err!="")
+			{
+			    alert(json.err);
+				return;
+			}
+			for(var i in json["ship_list"])
+			{
+		        var jq_sel=$("select[@name='ship["+i+"]']");
+				jq_sel.empty();
+				var html="";
+				$.each(json["ship_list"][i],function(j){
+				    html+="<option value='"+this.uid+"' price='"+this.price+"'>"+this.name+" ("+this.price+"元)</option>";
+				});//end each
+				jq_sel.html(html);
+			}
+		},
+		complete:function(){
+		    ship_req=null;
+		}
+	});//end ajax
+}
+</script>
+
+<script type="text/javascript">
+$(function(){
+    var order_lock=false;
+    $("input[@name=pay_id]:first").attr("checked",true);
+	$("a[@rel=confirm_pay]").click(function(e){
+	    e.preventDefault();
+		if(order_lock)
+		{
+		    alert("订单数据提交中，请稍等...");
+			return;
+		}
+		var jq_form=$("form[@rel=order_form]");
+		if(jq_form.size()>0) jq_form.remove();
+		$("div[@rel=payment_frame]:first").append("<form rel='order_form'></form>");
+	    jq_form=$("form[@rel=order_form]");
+		
+		var jq_advance=$("input[@name=advance][@checked]");
+		var jq_pay_pass=$("input[@name=pay_pass]");
+		var jq_pay_id=$("input[@name=pay_id][@checked]");
+		if(jq_advance.size()<=0 && jq_pay_id.size()<=0)
+		{
+		    alert("请选择支付方式");
+			return;
+		}
+		if(jq_advance.size()>0 && jq_pay_pass.val()=="")
+		{
+		    alert("请填写支付密码");
+			return;
+		}
+		
+		var province,city,county,address,consignee,mobile,zipcode;
+		var jq_address_uid=$("input[@name=address_uid][@checked]");
+		if(jq_address_uid.val()=="-1")
+		{
+		    province=$("#province").val();
+			city=$("#city").val();
+			county=$("#county").val();
+			address=$("input[@name=address]:first").val();
+			consignee=$("input[@name=consignee]:first").val();
+			mobile=$("input[@name=mobile]:first").val();
+			zipcode=$("input[@name=zipcode]:first").val();
+		}
+		else
+		{
+		    province=jq_address_uid.attr("province");
+			city=jq_address_uid.attr("city");
+			county=jq_address_uid.attr("county");
+			address=jq_address_uid.attr("address");
+			consignee=jq_address_uid.attr("consignee");
+			mobile=jq_address_uid.attr("mobile");
+			zipcode=jq_address_uid.attr("zipcode");
+		}
+		jq_form.append("<input type='hidden' name='province' value='"+province+"' />");
+		jq_form.append("<input type='hidden' name='city' value='"+city+"' />");
+		jq_form.append("<input type='hidden' name='county' value='"+county+"' />");
+		jq_form.append("<input type='hidden' name='address' value='"+address+"' />");
+		jq_form.append("<input type='hidden' name='consignee' value='"+consignee+"' />");
+		jq_form.append("<input type='hidden' name='mobile' value='"+mobile+"' />");
+		jq_form.append("<input type='hidden' name='zipcode' value='"+zipcode+"' />");
+		if(jq_advance.size()>0)
+		{
+			jq_form.append("<input type='hidden' name='advance' value='1' />");
+			jq_form.append("<input type='hidden' name='pay_pass' value='"+jq_pay_pass.val()+"' />");
+		}
+		jq_form.append("<input type='hidden' name='pay_id' value='"+jq_pay_id.val()+"' />");
+		
+		if($("select[@rel=ship]:first").children("option").size()<=0)
+		{
+		    alert("您选择的地区无配送方式，请联系商铺管理员");
+			return;
+		}
+		jq_form.append("<input type='hidden' name='ship_uid' value='"+$("select[@rel=ship]:first").val()+"' />");
+		jq_form.append("<input type='hidden' name='ship_price' value='"+$("select[@rel=ship]:first").children("option[@selected]").attr("price")+"' />");
+		
+		order_lock=true;
+		//alert(jq_form.serialize());
+		$.ajax({
+		    url:"member.php?action=$action&sn=$sn&step=1",
+			type:"POST",
+			dataType:"json",
+			cache:false,
+			data:jq_form.serialize(),
+			success:function(json){
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				$("div[@rel=payment_frame]").replaceWith(json.form_code);
+			},
+			complete:function(){
+			    order_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+		<h3 class="titlec pad8"><span>拍卖详情</span></h3>
+        <div rel="cart_table" supid="$order_info[supplier_id]" kg="$product[goods_kg]" price="$price" class="h_oflow bg_gray cart_pay_list">
+        	<table width="100%" border="0" class="table_list" style="background:#fff;">
+              <tr>
+                <td width="13%">当前订单状态</td>
+                <td colspan="5" class="red"> 商品已拍下，请在3天内付款；若未及时付款，系统将自动取消订单，且保证金不予退还。</td>
+              </tr>
+              <tr>
+                <td width="13%">订单编号</td>
+                <td width="20%">$order_info[ordersn]</td>
+                <td width="13%">保证金</td>
+                <td width="20%">$product[assure]</td>
+                <td width="13%">起拍价格</td>
+                <td width="20%">$product[start_price]</td>
+              </tr>
+              <tr>
+                <td>成交时间</td>
+                <td>$order_info[addtime]</td>
+                <td>一口价</td>
+                <td>$product[end_price]</td>
+                <td>加价幅度</td>
+                <td>$product[bid_add]</td>
+              </tr>
+              <tr>
+                <td>商铺名称</td>
+                <td colspan="5"><a href="$shop[url]" target="_blank">$shop[shop_name]</a> <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$shop[qq]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$shop[qq]:52" alt="点击这里给我发消息" title="点击这里给我发消息" class="vmid"/></a></td>
+              </tr>
+              <tr>
+                <td>拍卖商品</td>
+                <td colspan="5"><a href="$product[url]" target="_blank" class="">$order_goods[goods_name]</a></td>
+              </tr>
+              <tr>
+                <td>成交价</td>
+                <td colspan="5" class="red fd f18">$order_info[goods_amount]</td>
+              </tr>
+            </table>   
+        </div>
+        
+		<h3 class="titlec pad8"><span>我的收货地址</span><a href="account.php?action=address" target="_blank" class="blue">[管理收货地址]</a></h3>
+		<div class="cartbox" rel="address_frame">
+		<p class="moren_addr" rel="loading_address">收货地址加载中...</p>
+		<div class="cart2 mt8"><input type="radio" name="address_uid" value="-1" class="vmid" /> 使用新的收货地址</div>
+        <div id="other_address">	
+        <table class="cart_addr">
+            <tr>
+                <th>所在地区</th>
+                <td>
+                <script language="javascript" src="include/javascript/jquery.city.js"></script>
+                <select id="province" name="province"></select>
+                <select id="city" name="city"></select>
+                <select id="county" name="county"></select>
+                <script type="text/javascript">
+                    $(function(){
+                        $.init_area(new Array("province","city","county"),[],address_callback);
+                    });
+                </script>
+                </td>
+            </tr>
+            <tr>
+                <th>街道地址：</th>
+                <td><input name="address" type="text" class="text" size="40" maxlength="100" /> <span class="gray">(请填写您的详细地址，不需要重复填写省、市、地区)请写街道地址。</span></td>
+            </tr>
+            <tr>
+                <th>收货人：</th>
+                <td><input type="text" name="consignee" class="text" size="40"/></td>
+            </tr>
+            <tr>
+                <th>联系电话：</th>
+                <td><input type="text" name="mobile" class="text" size="40" maxlength="15" /></td>
+            </tr>
+			<tr>
+                <th>邮政编码：</th>
+                <td><input type="text" name="zipcode" class="text" size="40"/></td>
+            </tr>
+        </table>
+        </div>
+        </div><!-- 收货人信息 -->
+    
+        <div class="h_oflow cart_pay_bg" style="display:" rel="payment_frame">   
+			<dl class="cart_pay">
+			    <dd>配送方式： <select name="ship[$order_info[supplier_id]]" rel="ship" supid="$order_info[supplier_id]"></select></dd>
+			</dl>
+			<dl class="cart_pay">
+			    <dd>
+				    <input type="checkbox" name="advance" checked value="1" /> 使用预付款支付，您当前账户预付款余额：<b>{$mm_price_sign}{$mvm_member[member_money]}</b>不足部分使用其它方式支付 
+					支付密码：<input name="pay_pass" type="password" class="text vmid" /> 
+					&nbsp;<a href="account.php?action=profile" target="_blank">还未设置支付密码？请点击这里，进行设置</a>
+				</dd>
+<!--
+EOT;
+foreach($cache->get_cache('payment') as $val){
+if($val[class_name]=='COD') continue;
+print <<<EOT
+-->
+            	<dd><input type="radio" name="pay_id" class_name="$val[class_name]" value="$val[id]" class="vmid"> $val[name] $val[pay_desc]</dd>
+<!--
+EOT;
+} print <<<EOT
+-->
+            	<dd><a class="but_pay" rel="confirm_pay" style="float:right;">确认付款</a></dd>
+			</dl>
+        </div>    
+        
+<!--
+EOT;
+?>-->

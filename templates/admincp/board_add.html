@@ -1,0 +1,32 @@
+<!--<?php
+print <<<EOT
+-->
+<!--form content-->
+	<form name="board_make" action="admincp.php?module=$module&action=$action" method="post">
+	<input type="hidden" name="step" value="1"/>
+	<input type="hidden" name="uid" value="$uid"/>
+	<input type="hidden" name="p_url" value="$p_url" />
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg">
+		<tr>
+			<th colspan="4">资讯系统设置</th>
+		</tr>
+		<tr>
+			<td width="18%">资讯系统编码</td>
+			<td width="32%"><input type="text" name="board_code" value="$board_name_code" class="text2 text_3"  rel="necessary" /><span rel="tip" style="display:none;"><p class="alert_error2"><span class="icon_error"></span>请输入资讯系统编码</p></span></td>
+			<td width="18%">资讯系统标题</td>
+			<td width="32%"><input type="text" name="board_title" value="$board_title" class="text text_3" /></td>
+		</tr>
+		<tr>
+		    <td>排序</td>
+			<td><input type="text" name="od" value="$od" class="text text_3" /></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	
+
+	<div id="tfoot"><input type="submit" name="Submit" value="提 交" class="button" onclick="" /> <input type="reset" name="reset" value="重 置" class="button" /></div>
+	</form>
+<!--
+EOT;
+?>-->

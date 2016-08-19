@@ -1,0 +1,137 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=order_num]").each(function(i){
+	    if($(this).attr("num")=="0")
+		{
+		    $(this).removeClass("blue");
+			$(this).addClass("gray");
+		}
+	});//end each
+});
+</script>
+	<div class="mem_right"><!-- 会员中心首页 开始 -->
+		<p class="member_title">
+		    <span class="mem_new"></span>&nbsp;消息提醒：<a href="account.php?action=mysms">您有(<strong class="orange">$sms_new</strong>)条新消息</a>
+<!--
+EOT;
+if($broadcast){
+print <<<EOT
+-->			<a href="account.php?action=mysms&send=admin" class="red">[有新通知]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</p>
+		<div class="mem_info mem_info_mj">
+			<dl class="mem_info h_oflow">
+				<dt class="span_left"><img src="$mvm_member[member_image]" width="80" height="80" /></dt>
+				<dd class="span_right"><h3 class="fd f12">$m_check_id <span class="f12 fn">$mvm_member[province]$mvm_member[city]</span></h3>
+				<p>商家信用：<strong class="orange">$seller_credit</strong> &nbsp; 
+				买家信用：<strong class="orange">$buyer_credit</strong></p>
+				<p><span class="span_left">我是<span class="orange">$mvm_member[member_class]</span>，当前的积分为：<span class="orange">$mvm_member[member_point]</span>&nbsp;&nbsp;</span><a href="page.php?action=member_system" class="new_button" target="_blank">会员等级</a></p>
+<!--
+EOT;
+if(!$mvm_member[member_email]){
+print <<<EOT
+-->
+				<p>您还没有设置自己的邮箱，现在马上添加<a href="account.php?action=profile" class="new_button">添加邮箱</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<p>支付密码是保障您预存款安全的措施，现在就去设置 <a href="account.php?action=profile" class="new_button">支付密码</a></p>
+                </dd>
+			</dl>
+			<div class="clear"></div>
+			<ul>
+				<li><span class="span_left">交易管理：</span>
+					<a href="member.php?action=order&status=1" class="blue" rel="order_num" num="$order_status_1">等待您付款<span class="orange">($order_status_1)</span></a>
+		            <a href="member.php?action=order&status=3" class="blue" rel="order_num" num="$order_status_3">等待商家发货<span class="orange">($order_status_3)</span></a>
+				    <a href="member.php?action=order&status=4" class="blue" rel="order_num" num="$order_status_4">等待确认收货<span class="orange">($order_status_4)</span></a>
+				    <a href="member.php?action=scomment" class="blue" rel="order_num" num="$order_comment">等待您评价<span class="orange">($order_comment)</span></a>
+		            <a href="member.php?action=order" class="blue" rel="order_num" num="$order_in_three_month">三个月买入<span class="orange">($order_in_three_month)</span></a>
+				</li>
+				<li><span class="span_left">账户管理：</span>
+					<a href="account.php?action=index">基本信息</a>
+					<a href="account.php?action=money">资金明细</a>
+					<a href="account.php?action=point">积分明细</a>
+					<a href="account.php?action=mysms">短消息</a>
+					<a href="account.php?action=address">收货地址管理</a>
+				</li>
+			</ul>
+	  	</div>
+		
+		<div class="clear"></div>
+		<div class="border_box">
+			<h3 class="mem_title f13">我收藏的商铺</h3>
+			<ul class="mem_box mem_fav h_oflow">
+<!--
+EOT;
+foreach($fav_shop as $val){
+print <<<EOT
+-->				<li>
+				    <p><a href="$val[url]" target="_blank"><img src="$val[up_logo]" width="130" height="60" /></a></p>
+					<p><a href="$val[url]" target="_blank">$val[shop_name]</a></p>
+				</li>
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>				
+		</div>
+		
+				<div class="clear"></div>
+		<div class="border_box">
+			<h3 class="mem_title f13">我收藏的商品</h3>
+			<ul class="mem_box mem_fav h_oflow">
+<!--
+EOT;
+foreach($fav_goods as $val){
+print <<<EOT
+-->				<li rel="fav">
+				    <p><a href="$val[url]" target="_blank"><img src="$val[goods_file1]" width="130" /></a></p>
+					 <p><a href="$val[url]" target="_blank">$val[goods_name]</a></p>
+				</li>
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>				
+		</div>	
+		<div class="clear"></div>
+		<div class="span_left border_box mem_gg">
+			<h3 class="mem_title f13"><a href="board.php?action=notice" target="_blank" class="span_right fn f12">更多></a>商城公告</h3>
+			<ul>
+<!--
+EOT;
+foreach (GetBoard('notice',0,8,'25') as $val){
+print <<<EOT
+-->				<li><a href="$val[url]" target="_blank">$val[board_subject]</a><span class="gray">($val[register_date])</span></li>
+<!--
+EOT;
+} print <<<EOT
+-->	
+			</ul>
+		</div>
+		<div class="span_right border_box mem_gg">
+			<h3 class="mem_title f13"><a href="$mm_url[news]" target="_blank" class="span_right fn f12">更多></a>最新资讯</h3>
+			<ul>
+<!--
+EOT;
+foreach (GetBoard('',0,8,'25') as $val){
+print <<<EOT
+-->				<li><a href="$val[url]" target="_blank">$val[board_subject]</a><span class="gray">($val[register_date])</span></li>
+<!--
+EOT;
+} print <<<EOT
+-->	
+			</ul>
+				
+		</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

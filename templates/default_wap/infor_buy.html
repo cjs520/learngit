@@ -1,0 +1,64 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">求购信息</div>
+<div class="wrapper">
+    <div class="member_title fd red">
+        <form action="infor_buy_more.php" method="post">
+            快速查找：
+            <input type="text" name="search_txt" class="text" size="18" />
+            <input type="submit" class="sea_button" value="确定" />
+        </form>
+    </div>
+    <table width="100%" border="0" class="attrs">
+        <tr class="attr_filter">
+            <td colspan="2">
+            <ul>
+            	<li class="tag"><a href="infor_supply.php">供应信息</a><a class="f14 fd red" href="infor_buy.php">求购信息</a></li>
+            </ul></td>
+        </tr>
+        <tr class="attrs_cate">
+		    <th>行业分类</th>
+			<td><div class="toggle_div"><a href="" rel="tip_open" class="tip_open"></a>
+<!--
+EOT;
+foreach ($cat_parent as $cat_val){
+print <<<EOT
+-->				<a href="infor_buy_more.php?cat_uid=$cat_val[uid]">$cat_val[category_name]</a>       
+<!--
+EOT;
+} print <<<EOT
+-->
+			</div></td>
+		</tr>
+    </table> 
+	<div class="bus_div">
+<!--
+EOT;
+foreach ($cat_parent as $cat_val){
+print <<<EOT
+-->
+		<h3 class="titlec">
+			<span>$cat_val[category_name]</span>
+            <a class="red" href="infor_buy_more.php?cat_uid=$cat_val[uid]">更多>></a>
+		</h3>
+		<ul class="infor_text">
+<!--
+EOT;
+foreach (get_infor_list($cat_val[uid],0,10) as $val){
+print <<<EOT
+-->			<li><a href="$val[url]" title="$v[goods_name]">$val[goods_name]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>
+        <div class="clear"></div>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </div>
+<!--
+EOT;
+?>-->	

@@ -1,0 +1,32 @@
+<!--<?php
+require_once template('header'); 
+require_once template('left');
+print <<<EOT
+-->	<div class="right"><!-- 文章列表开始 -->
+    	<h3 class="titlec"><span>$board[board_title]</span></h3>
+<!--
+EOT;
+foreach ($arr_article as $val){
+print <<<EOT
+-->
+        <table width="100%" class="board_moer">
+          <tr>
+            <td rowspan="2" width="60"><a href="$val[url]" target="_blank"><img src="$val[cover]" width="50" height="60" /></a>&nbsp;</td>
+            <td colspan="2">
+                <a href="$val[url]" target="_blank" class="fd fl">$val[board_subject]</a>
+                <p class="gray fcr fr"><a href="$val[url]" target="_blank">作者：$val[author]</a>　发布日期：$val[register_date]</p></td>
+            </tr>
+          <tr>
+            <td class="col2" width="78%">$val[board_body]……</td>
+            <td></td>
+            </tr>
+        </table>
+<!--
+EOT;
+} print <<<EOT
+-->
+        <div class="page">$page_list</div>
+	</div><!-- 文章列表结束 -->
+<!--
+EOT;
+?>-->

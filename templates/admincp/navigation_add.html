@@ -1,0 +1,97 @@
+<!--<?php
+print <<<EOT
+<!--右边开始-->
+<script type="Text/Javascript" language="JavaScript">
+function add_navi(key)
+{
+    var nav = new Object;
+<!--
+EOT;
+foreach ($nav_system as $key=>$val){
+print <<<EOT
+-->	
+        nav[$key] = new Array();
+        nav[$key][0] = '$val[0]';
+        nav[$key][1] = '$val[1]';
+<!--
+EOT;
+} print <<<EOT
+-->
+        if (key != '--'){
+        document.getElementById('title').value = nav[key][0];
+        document.getElementById('alt').value = nav[key][0];
+        document.getElementById('link').value = nav[key][1];
+    }
+}
+</script>
+<!--form content-->
+	<form name="mvmmall" action="admincp.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="setp" value="1"/>
+	<input type="hidden" name="p_url" value="$p_url" />
+	<input name="uid" type="hidden" value="$uid" />
+	<input name="nav_img" type="hidden" id="nav_img" value="$nav_img" />
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg mb0">
+		<tr><th colspan="2">添加或修改导航</th></tr>
+		<tr style="display:none;">
+			<td width="20%">$lang[system_tab]</td>
+			<td>$menu_sys</td>
+		</tr>
+		<tr>
+			<td width="20%">上级导航</td>
+			<td>$p_menu</td>
+		</tr>
+		<tr>
+			<td>$lang[title]</td>
+			<td><input type="text" name="title" id="title" value="$title" maxlength="20" class="text2 text_1" rel="necessary" /><span rel="tip" style="display:none;"><p class="alert_error"><span class="icon_error"></span>$lang[enter_title]</p></span></td>
+		</tr>
+		<tr>
+			<td>$lang[font_style]</td>
+			<td>
+			<select name="color" id="color">
+             <option value="" selected>$lang[title_color]</option>
+            $color_select
+            </select>
+			<input name="b" type="checkbox" id="b" value="1" $b_check>$lang[bold]
+			<input name="i" type="checkbox" id="i" value="1" $i_check>$lang[italics]
+			<input name="u" type="checkbox" id="u" value="1" $u_check>$lang[underline]
+			</td>
+		</tr>
+		<tr>
+			<td>$lang[picture]</td>
+			<td><input type="file" name="nav_img" id="nav_img" value="$nav_img" class="text2 text_1" /><p class="alert_info"><span class="icon_info"></span>$lang[the_design]</p></td>
+		</tr>
+		<tr>
+			<td>$lang[section_url]</td>
+			<td><input type="text" name="link" id="link" value="$link" maxlength="255" class="text2 text_1" rel="necessary" /><span rel="tip" style="display:none;"><p class="alert_error"><span class="icon_error"></span>请输入栏目连接</p></span></td>
+		</tr>
+		<tr>
+			<td>$lang[text]</td>
+			<td><input type="text" name="alt" id="alt" value="$alt" maxlength="20" class="text2 text_1" /><p class="alert_info"><span class="icon_info"></span>$lang[link_text]</p></td>
+		</tr>
+		<tr>
+			<td>$lang[framework_objectives]</td>
+			<td>
+			<input type="radio" name="target" value="0" $self_check />$lang[the_window]
+			<input type="radio" name="target" value="1" $blank_check/>$lang[new_window]
+			</td>
+		</tr>
+		<tr>
+			<td>$lang[type_columns]</td>
+			<td>
+			    <input type="radio" name="pos" value="head" $head_check/>$lang[head_navigation]
+			    <input type="radio" name="pos" value="middle" $middle_check/>$lang[central_navigation]
+			    <input type="radio" name="pos" value="foot" $foot_check />$lang[bottom_navigation]
+			    <input type="radio" name="pos" value="help" $help_check/>$lang[help]
+                <input type="radio" name="pos" value="news" $news_check/>资讯导航
+			</td>
+		</tr>
+		<tr>
+			<td>$lang[sort_location]</td>
+			<td><input type="text" name="view" id="view" value="$view" maxlength="20" class="text2 text_1" /><p class="alert_info"><span class="icon_info"></span>$lang[display]</p></td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" /> <input type="reset" name="reset" value="重置" class="button" /></div>
+	</form>
+<!--
+EOT;
+?>-->

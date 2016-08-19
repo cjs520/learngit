@@ -1,0 +1,136 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    if("$od"=="price") $("a[@rel=od]:eq(0)").addClass("curtab");
+	else if("$od"=="time") $("a[@rel=od]:eq(1)").addClass("curtab");
+	else if("$od"=="stock") $("a[@rel=od]:eq(2)").addClass("curtab");
+	
+	$("input[@rel=goods_name],input[@rel=goods_code],input[@rel=goods_sale_price]").blur(function(){
+	    var v=$(this).val();
+		var field=$(this).attr("rel");
+		var uid=$(this).attr("uid");
+		
+		$.post(
+		    "admincp.php?module=$module&action=ajax_edit&uid="+uid+"&rnd="+Math.random(),
+			"v="+v+"&field="+field,
+			function(){}
+		);//end post
+	});//end blur
+	
+	$("input[@name=chkall]").click(function(){
+	    $("input[@name='uid_check[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+	
+	$("input[@rel=bat_del]").click(function(){
+	if(!confirm("确认删除选择的商品？")) return;
+	    if($("input[@name='uid_check[]'][@checked]").size()<=0)
+		{
+		    alert("请选择需要删除的商品");
+			return;
+		}
+		$.post(
+		    "admincp.php?module=$module&action=del&rnd="+Math.random(),
+			$("input[@name='uid_check[]'][@checked]").serialize(),
+			function(msg){
+			    alert(msg);
+				window.location.reload();
+			}
+		);
+	});//end click
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				$("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">秒杀商品列表</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<form name="search_form" action="admincp.php?module=$module&action=list" method="POST">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th>商品搜索</th>
+		</tr>
+		<tr>
+			<td>
+			    商品名称 <input type="text" name="ps_subject" value="$ps_subject_txt" size="20" class="text" /> &nbsp;
+				商品编码 <input type="text" name="ps_code" value="$ps_code_txt"  size="20" class="text" /> 
+				<input name="member" type="submit" value="确 定" class="button" /></td>
+		</tr>
+	</table>
+	</form>
+	
+	<div>
+	    <strong>排序方式：</strong>
+        <a href="admincp.php?module=$module&action=$action&od=price" rel="od" class="but1">商品价格</a> 
+        <a href="admincp.php?module=$module&action=$action&od=time" rel="od" class="but1">上传时间</a>
+	    <a href="admincp.php?module=$module&action=$action&od=stock" rel="od" class="but1">商品库存</a>
+	</div>
+	
+	<table cellpadding="0" cellspacing="1" class="list" style="margin-top:6px;">
+		<tr>
+			<th width="4%"><input type="checkbox" name="chkall" value="1" /></th>
+			<th>商品信息</th>
+            <th>商品编码</th>
+			<th>秒杀价格</th>
+			<th>总库存</th>
+			<th>开始时间</th>
+			<th>结束时间</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($goods_rt as $val){
+print <<<EOT
+-->	
+		<tr uid="$val[uid]">
+			<td><input type="checkbox" name="uid_check[]" value="$val[uid]" /></td>
+			<td>
+			    <input type="text" class="text" rel="goods_name" uid="$val[uid]" value="$val[goods_name]" style="width:250px;" />
+				<span class="td1">
+				    <a href="$val[goods_url]" target="_new">
+					    <img src="images/admincp/zoom.gif" align="absmiddle" />
+					    <span style="width:auto;"><img src="$val[goods_file1]" /></span>
+					</a>
+				</span>
+			</td>
+			<td><input type="text" class="text" rel="goods_code" uid="$val[uid]" value="$val[goods_code]" style="width:100px;" /></td>
+			<td><input type="text" class="text" rel="goods_sale_price" uid="$val[uid]" value="$val[goods_sale_price]" style="width:100px;" /></td>
+			<td>$val[goods_stock]</td>
+			<td>$val[start_date]</td>
+			<td>$val[end_date]</td>
+			<td>
+			    <a href="$val[edit]" class="tipsy_s modify" title="修改"></a>
+				<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="page">
+	    <span style="float:left;">
+		    <input type="button" value="删除选定" rel="bat_del" class="button1" /> 
+		</span>
+		<span>$page_list</span>
+	</div>
+<!--
+EOT;
+?>-->

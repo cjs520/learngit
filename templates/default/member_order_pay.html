@@ -1,0 +1,150 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("input[@name=pay_id]:first").attr("checked",true);
+	$("input[@name=pay_id]").click(function(){
+	    var cls_name=$(this).attr("class_name");
+		if(cls_name=="COD")
+		{
+		    $("input[@name=advance]").attr("checked",false);
+			$("input[@name=advance]").attr("disabled",true);
+		}
+		else
+		{
+		    $("input[@name=advance]").attr("disabled",false);
+		}
+	});//end click
+	
+	var pay_lock=false;
+	$("a[@rel=confirm_pay]").click(function(e){
+	    e.preventDefault();
+		if(pay_lock) return;
+		
+		var jq_a=$(this);
+		pay_lock=true;
+		$.ajax({
+		    url:"member.php?action=order_pay_ajax&cmd=pay&sn=$order_info[ordersn]",
+			type:"POST",
+			dataType:"json",
+			cache:false,
+			data:{
+				advance:$("input[@name=advance]").attr("checked")?1:0,
+				pay_pass:$("input[@name=pay_pass]").val(),
+				pay_id:$("input[@name=pay_id][@checked]").val()
+			},
+			success:function(json){
+			    if(json.succ=="0")
+				{
+				    alert(json.err);
+					return;
+				}
+				$("div[@rel=payment_frame]").replaceWith(json.form_code);
+			},
+			complete:function(){
+			    pay_lock=false;
+			}
+		});//end ajax
+	});//end click
+	
+    var refresh_lock=false;
+    $("a[@rel=refresh]").click(function(e){
+	    e.preventDefault();
+		if(refresh_lock) return;
+		
+		var jq_a=$(this);
+		jq_a.html("加载中...");
+		$.ajax({
+		    url:"member.php?action=order_pay_ajax&cmd=refresh&sn=$order_info[ordersn]",
+			type:"GET",
+			dataType:"json",
+			cache:false,
+			success:function(json){
+			    if(json.succ=="0")
+				{
+				    alert(json.err);
+					return;
+				}
+				$("span[@rel=discount]").html(json.discount);
+				$("span[@rel=sh_price]").html(json.sh_price);
+				$("span[@rel=order_amount]").html(json.order_amount);
+			},
+			complete:function(){
+			    jq_a.html("刷新");
+			    refresh_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+    <div class="h_oflow cart_flow cart_flow3"><h3></h3><p></p></div><!-- 购物车第三步开始 -->
+        <div class="h_oflow cart_pay_bg" style="display:" rel="payment_frame">   
+			<dl class="cart_pay">
+            	<dd>   当前订单状态： 商品已拍下，请在3天内付款；若未及时付款，系统将自动取消订单 </dd>
+			    <dd>
+				    <input type="checkbox" name="advance" checked value="1" /> 使用预付款支付，您当前账户预付款余额：<b>{$mm_price_sign}{$mvm_member[member_money]}</b>不足部分使用其它方式支付 
+					支付密码：<input name="pay_pass" type="password" class="text vmid" /> 
+					&nbsp;<a href="account.php?action=profile" target="_blank">还未设置支付密码？请点击这里，进行设置</a>
+				</dd>
+<!--
+EOT;
+foreach($cache->get_cache('payment') as $val){
+print <<<EOT
+-->
+            	<dd><input type="radio" name="pay_id" class_name="$val[class_name]" value="$val[id]" class="vmid"> $val[name] $val[pay_desc]</dd>
+<!--
+EOT;
+} print <<<EOT
+-->
+            	<dd><a class="but_pay" rel="confirm_pay" style="float:right;">确认付款</a></dd>
+			</dl>
+        </div>        
+		<h3 class="titlec pad8"><span>订单详情</span></h3>
+        <div class="h_oflow bg_gray cart_pay_list">
+            <ul>
+                <li>商铺名称：$shop[shop_name] <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$shop[qq]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$shop[qq]:52" alt="点击这里给我发消息" title="点击这里给我发消息" class="vmid"/></a></li> 
+                <li>订单编号：$order_info[ordersn]</li>
+                <li>收货地址：$order_info[ordersn]，$order_info[consignee]，$order_info[mobile]，$order_info[zipcode]</li>
+                <li>成交时间：$order_info[addtime]</li>
+				<li>配送方式：$ship[name] 运费：<span rel="sh_price">$order_info[sh_price]</span></li>
+                <li>商铺优惠：<span rel="discount">$order_info[discount]</span></li>
+                <li class="mt10 mb10">应付款：<span class="red fd f18" rel="order_amount">$order_info[order_amount]</span> <a href="#" rel="refresh" class="blue">刷新</a></li>
+            </ul>
+        </div>
+		<h3 class="f14 mb8 mt8 pad8">商品清单</h3>
+        <ul class="cart_ul">
+            <li class="li_name1">商品名称</li>
+            <li class="li_attr">属性</li>
+            <li class="li_price">销售单价</li>
+			<li class="li_price">余额单价</li>
+            <li class="li_nums">数量</li>
+            <li class="li_op">共计</li>
+        </ul>
+		<div class="cart_shop">商铺：<a href="$shop[url]" target="_blank">$shop[shop_name]</a> <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$shop[qq]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$shop[qq]:52" alt="点击这里给我发消息" title="点击这里给我发消息" class="vmid"/></a></div>
+        <table cellspacing="0" class="cart_table">
+<!--
+EOT;
+foreach($arr_order_goods as $val){
+print <<<EOT
+-->
+            <tr>
+                <td class="li_name li_name1"><img src="$val[goods_file1]" class="border fl" /><a href="$val[url]" target="_blank">$val[goods_name]</a></td>
+                <td class="li_attr" uid="$val[uid]" kg="$kg" price="$price"><p>$val[goods_attr]</p></td>
+                <td class="li_price">$val[buy_price] + $val[buy_point]积分</td>
+				<td class="li_price">$val[rest_price]</td>
+                <td class="li_nums">$val[buy_number]</td>
+                <td class="li_op red">$val[buy_total_price]</td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </table><!-- 商品清单 -->
+        <p class="fcr ca2">共有 <span class="red">$total_goods_num</span> 件商品 应付总额：<span class="fd f18 red" rel="order_amount">$order_info[order_amount]</span></p>	
+ 
+
+<!--
+EOT;
+?>-->

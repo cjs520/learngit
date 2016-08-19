@@ -1,0 +1,164 @@
+<!--<?php
+require_once template('header');
+print <<<EOT
+-->	
+<div class="top1">
+	<div class="topsearth_tab">
+        <form method="post" name="search_goods" action="search.php" class="border">
+            <input type="submit" class="searchtop_button" value="" />
+            <input type="text" class="searchtop_input" name="ps_search" id="search_gn" value="请输入商品名称" onfocus="if(this.value=='请输入商品名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+            <p class="searchtop_radio"><input type="radio" name="sellshow" value="1" checked />销售型 <input type="radio" name="sellshow" value="2" />展示型</p> 
+        </form>
+        <div class="search_jg" rel="search_span" style="display:none;" id="goods_search_span" url="ajax.php?action=search_hint&ctrl=g&sellshow=1"></div>
+    </div><!-- 搜索框 -->
+</div>
+<div class="wrapper" style="padding:0;">
+<script language="javascript" src="include/javascript/jquery.flashv3.js"></script>
+<script type="text/javascript">
+$(function (){
+	//手机轮转
+	$("div[@rel=frame]").flashv3("$pics","$urls","$titles",735,"2.45rem",30,2);
+	//快捷图标
+	$(".li15 a").click(function(){
+		$(".li15").hide();
+		$(".tip").animate({height:'8.7rem'});
+	})
+	//楼层标题
+	$("h3[@rel=floor_title1] a").html("服装鞋包街");
+	$("h3[@rel=floor_title2] a").html("美妆护理街");
+	$("h3[@rel=floor_title3] a").html("珠宝手表街");
+	$("h3[@rel=floor_title4] a").html("母婴玩具街");
+	$("h3[@rel=floor_title5] a").html("数码电器街");
+	$("h3[@rel=floor_title6] a").html("家居装修街");
+});
+</script>
+	<div class="tel_flash_div">
+		<a rel="banner"><div class="tel_flash" rel="frame"></div></a>
+	</div><!-- 手机轮转 -->
+    <div class="clear"></div>
+    <ul class="tip">
+        <li class="li11"><a href="member.php?action=order">我的订单</a><span>我的订单</span></li>
+        <li class="li10"><a href="topics.php">专题</a><span>专题</span></li>
+        <li class="li2"><a href="miaosha.php">秒杀</a><span>秒杀</span></li>
+        <li class="li3"><a href="group.php?action=list">团购</a><span>团购</span></li>
+        <li class="li4"><a href="auction.php?action=list">拍卖</a><span>拍卖</span></li>
+        <li class="li13"><a href="coupon.php">优惠券</a><span>优惠券</span></li>
+        <li class="li12"><a href="daren.php">分享</a><span>分享</span></li>  
+		<li class="li9"><a href="point.php">积分汇</a><span>积分汇</span></li>
+        <li class="li1"><a href="life_all.php">生活圈</a><span>生活圈</span></li>
+        <li class="li5"><a href="news.php">资讯</a><span>资讯</span></li>
+        <li class="li6"><a href="sort.php">找商铺</a><span>找商铺</span></li>
+        <li class="li15"><a>更多</a><span>更多</span></li>
+        <li class="li14"><a href="infor_supply.php">找商机</a><span>找商机</span></li>
+        <li class="li7"><a href="brand.php?action=list">品牌</a><span>品牌</span></li>
+        <li class="li8"><a href="preorder.php">预定</a><span>预定</span></li>   
+    </ul><!-- 快捷图标 -->
+    <div class="mt10 qian">
+<!--
+EOT;
+if(!$m_check_id){
+print <<<EOT
+-->
+        <a href="$mm_url[login]" class="qian_no">未签到</a>
+<!--
+EOT;
+}else if(!$is_sign){
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var sign_lock=false;
+    $("a[@rel=member_sign]").click(function(e){
+	    e.preventDefault();
+		if(sign_lock) return;
+		
+		var jq_this=$(this);
+		sign_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=member_sign&rnd="+Math.random(),
+			type:"GET",
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    jq_this.unbind();
+				    jq_this.replaceWith('<span class="qian_yes">已签到</span>');
+				}
+			},
+			complete:function(){
+			    sign_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+        <a href="#" rel="member_sign" class="qian_no">未签到</a>
+<!--
+EOT;
+}else if($is_sign){
+print <<<EOT
+-->
+	    <span class="qian_yes">已签到</span>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</div><!-- 签到 -->
+<!--
+EOT;
+if($mm_wx_news_url && $is_wx){
+print <<<EOT
+-->
+	<a href="$mm_wx_news_url" class="finger"><img src="images/default_wap/finger.jpg" alt=""></a>    
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+for($i=0;$i<6;$i++){
+$j=$i+1;
+print <<<EOT
+-->
+	<div class="floor clearfix h_oflow">	
+    	<h3 class="floor_title" rel="floor_title$j"><a href="{$index_floor[$i][more_link]}" target="_blank"></a></h3>
+		<ul class="h_oflow floor_banner">
+<!--
+EOT;
+foreach($AD->GetAd("floor{$j}_banner",2,'','default_wap') as $val){
+print <<<EOT
+-->			<li><a href="$val[url]" title="$val[title]" target="_blank" rel="banner"><img src="images/noimages/loading.gif" rel="lazy" path="$val[pic]" alt="$val[title]" style="height:3rem;" /></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>
+		<div class="clear4"></div>
+		<ul class="h_oflow floor_brand">
+<!-- 
+EOT;
+foreach($AD->GetAd("floor{$j}_brands",1,'','default_wap') as $val){
+print <<<EOT
+-->			<li><a href="$val[shop_link]" title="$val[shop_name]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[shop_logo]" style="height:0.92rem;" alt="$val[shop_name]" class="border_img" /></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>	
+	</div><!--- 第1到第6楼 --->
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($mm_wx_res_img && file_exists($mm_wx_res_img) && $is_wx){
+print <<<EOT
+-->
+	<img style="width:100%" src="$mm_wx_res_img" alt="关注我">
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+?>-->	

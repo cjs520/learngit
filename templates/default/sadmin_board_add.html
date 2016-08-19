@@ -1,0 +1,29 @@
+<!--<?php
+print <<<EOT
+-->	
+<!--form content-->
+		<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<input type="hidden" name="p_url" value="$p_url" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl fd">资讯系统设定</th></tr>
+			<tr>
+				<td width="20%">资讯系统编码</td>
+				<td width="30%"><input type="text" name="board_code" id="board_code" value="$board_name_code" size="20" class="text" /></td>
+				<td width="20%">资讯系统标题</td>
+				<td width="30%"><input type="text" name="board_title" id="board_title" value="$board_title" size="20" class="text" /></td>
+			</tr>
+			<tr>
+			    <td>排序</td>
+				<td><input type="text" name="od" value="$od" size="20" class="text" /></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+		
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

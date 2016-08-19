@@ -1,0 +1,57 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">$cat_list[category_name]</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function (){
+	$(".sub_cate dl:odd").css({"background":"#fafafa"});
+});
+</script>
+	<div class="sub_cate"> 
+<!--
+EOT;
+foreach($sub_top_cat as $val){
+print <<<EOT
+-->		<dl rel="sub_cate">
+        	<dt><img src="$val[category_file1]" /><a href="$val[url]" title="$val[category_name]">$val[category_name]</a></dt>
+            <dd>
+<!--
+EOT;
+foreach($val[child] as $cval){
+print <<<EOT
+--><a href="$cval[url]" title="$cval[0]">$cval[0]</a><!--
+EOT;
+} print <<<EOT
+-->			</dd>
+        </dl>
+<!--
+EOT;
+} print <<<EOT
+-->	</div>
+	<div class="clear"></div>   
+    <h3 class="titlec"><span>新品上市</span></h3>
+    <div class="pro_list"><!-- 商品列表开始 -->
+    	<table>
+<!--
+EOT;
+for($i=0;$i<48;$i++){
+if(!isset($new_goods[$i])) break;
+print <<<EOT
+-->	
+            <tr uid="$val[uid]">
+                <td width="120"><a href="{$new_goods[$i][url]}" title="{$new_goods[$i][goods_name]}" target="_blank" class="goods_img"><img src="images/noimages/loading.gif" rel="lazy" path="{$new_goods[$i][goods_file1]}" style="height:100px;" alt="$val[goods_name]" /></a></td>
+                <td>
+                    <p class="name"><a href="{$new_goods[$i][url]}" title="{$new_goods[$i][goods_name]}" target="_blank">{$new_goods[$i][goods_name]}</a></p>
+                    <p class="red">{$new_goods[$i][goods_sale_price]}</p>
+                </td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+    	</table>
+    </div><!-- 商品列表结束 -->
+<!--
+EOT;
+?>-->

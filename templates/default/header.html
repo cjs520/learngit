@@ -1,0 +1,380 @@
+<!--<?php print<<<EOT
+--><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta property="qc:admins" content="5430366277665215144636" />
+$mm_qq_oauth_head
+$mm_163_oauth_head
+$mm_sina_oauth_head
+<meta name="Copyright" content="www.mvmmall.cn" />
+<meta name="keywords" content="$mm_keywords" />
+<meta name="description" content="$mm_description" />
+<title>$mm_mall_title,$mm_mall_name-$mm_seotitle</title>
+<link rel="stylesheet" type="text/css" href="images/default/public.css" />
+<link rel="stylesheet" type="text/css" href="$imgpath/mvm.css" />
+<!--
+EOT;
+if(in_array($script,array('member','account','sadmin','user_rate'))){
+print <<<EOT
+--><link rel="stylesheet" type="text/css" href="images/default/member.css" />
+<!--
+EOT;
+} print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.lazyload.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.searchhint.js"></script>
+<script type="text/javascript" src="include/javascript/mvm.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.tipsy.js"></script>
+<script type="text/javascript">
+$(function(){
+	var script_name="$script";
+	var param="$script_param";
+	var arr_param=param==""?new Array():param.split("|");
+	var i,j,flag;
+	var select_index=-1,weight=0,w;
+	
+	for(i=0;i<$("a[@rel=mid_link]").size();i++)
+	{
+		w=0;
+		if($("a[@rel=mid_link]").eq(i).attr("href").indexOf(script_name)==-1) continue; 
+		
+		w+=5;
+		if($("a[@rel=mid_link]").eq(i).attr("href").indexOf(script_name+".")!=-1) w+=5;
+		for(j=0;j<arr_param.length;j++)
+		{
+			if($("a[@rel=mid_link]").eq(i).attr("href").indexOf(arr_param[j])!=-1) w++;
+		}
+		if(w>weight)
+		{
+			weight=w;
+			select_index=i;
+		}
+	}
+	if(select_index!=-1)
+	{
+	    $("a[@rel=mid_link]").eq(select_index).addClass("self");
+	}
+	
+	$("img[@rel=lazy]").lazyload();
+	
+	$("#search_gn").Hint($("#goods_search_span"));
+	$("#search_article").Hint($("#article_search_span"));
+	$("#search_shop").Hint($("#shop_search_span"));
+	
+	$("form[@name=search_goods]").find("input[@name=sellshow]").click(function(){
+	    var v=$(this).val();
+		$("#goods_search_span").attr("url","ajax.php?action=search_hint&ctrl=g&sellshow="+v);
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $.fn.extend({
+        DropDownMenu:function(show_hover,right_px,callback){
+			$(this).hover(
+			    function()
+			    {
+				    var shoupp = $(this).children("p").position();
+				    var top = shoupp.top+29+"px";
+				    var left = shoupp.left+right_px+"px";
+				    $(this).children("div").css({"left":left,"top":top});
+				    $(this).children("p").addClass(show_hover);
+				    $(this).children("div").show();
+					
+					if(typeof callback=="function") callback(this);
+			    },
+				function(){
+				    $(this).children("p").removeClass(show_hover);
+				    $(this).children("div").hide();
+			    }
+			);//end hover
+        }	 
+    });//end extend
+	
+	$("div.top_tel").DropDownMenu("totel_show",-45);
+	$("div.top_list").DropDownMenu("tolist_show",0);
+	$("div.top_cart").DropDownMenu("tocart_show",0,function(obj){
+	    if($(obj).attr("load")=="load") return;
+		$(obj).attr("load","load");
+		
+		$.ajax({
+		    url:"cart.php?action=simple_list",
+			type:"GET",
+			dataType:"json",
+			cache:false,
+			success:function(json){
+			    var jq_list=$("div[@rel=cart_list]:first");
+				jq_list.empty();
+				if(json.length<=0)
+				{
+				    jq_list.html('<p><span class="span_left red">您购物车里还没有任何商品。</span><a href="$mm_url[cart]" class="check_cart">查看我的购物车</a></p>');
+				    return;
+				}
+				
+				var price=$("strong[@rel=cart_num]").attr("price");
+				var html="";
+				html+='<div class="cart_mid h_oflow">';
+				$.each(json,function(i){
+				    html+='<dl rel="cart_list">';
+					html+='<dt><img src="'+this.goods_file1+'" width="40" height="40" /></dt>';
+					html+='<dd><p>'+this.goods_name+'</p><p class="red">'+this.cart_price+' <span class="gray">'+this.attr+'</span><span class="fr gray">'+this.cart_num+'件</span></p></dd>';
+					html+='<dd><a rel="del_cart" href="'+this.url+'" target="_new">查看</a></dd>';
+					html+='</dl>';
+				});//end each
+				html+='<div class="clear"></div>';
+                html+='<p><span class="span_left">总计：<span class="red f14" rel="cart_price">'+price+'</span></span><a href="$mm_url[cart]" class="check_cart">查看我的购物车</a></p>';
+			    html+='</div>';
+				jq_list.html(html);
+			}
+		});//end ajax
+	});
+});
+</script>
+<script type="text/javascript">
+$(function(){
+	//属性的伸缩
+	$("a[@rel=tip_open]").toggle(
+		function(){//点击第一次
+			$(this).parent().css("height","auto");
+			$(this).addClass("tip_close");
+			},
+		function (){//点击第二次
+			$(this).parent().css("height","31px");
+			$(this).removeClass("tip_close");
+			$(this).addClass("tip_open");
+	})
+});
+</script>
+</head>
+<body><a name="top"></a>
+<div id="header" class="clearfix">
+	<div class="top1_bg"><div class="top1">
+		<div class="span_right">
+        	<div class="top_tel">
+                <p class="totel"><i></i>手机版</p>
+                <div class="totel_child"><img src="images/noimages/wap_code.png" /></div>
+            </div><!-- 手机版 -->
+            <div class="top_list">
+				<p class="tolist">特色服务<span></span></p>
+            	<div class="tolist_child tolist_child2">
+                    <dl>
+                		<dt>商家</dt>
+                		<dd><a href="sadmin.php?module=sup_apply&action=list">托管服务</a></dd>
+                	</dl>
+                    <dl>
+                		<dt>买家</dt>
+                		<dd><a href="$mm_url[help]">帮助中心</a></dd>
+                	</dl>
+                    <dl>
+                		<dt>招商</dt>
+                		<dd><a href="join.php">招商加盟</a></dd>
+                	</dl>
+            	</div>               
+            </div><!-- 特色服务 -->
+            <div class="top_list">
+				<p class="tolist"><a href="$mm_url[my_account]">我的账户</a><span></span></p>
+                <div class="tolist_child">
+                    <a href="member.php?action=order">我的订单</a>
+                    <a href="account.php?action=point">我的积分</a>
+                    <a href="member.php?action=mycoupon">我的优惠券</a>
+                    <a href="member.php?action=pai">我的竞拍</a>
+                    <a href="member.php?action=myfav">我的收藏</a>
+                    <a href="member.php?action=my_lucky">幸运抽奖</a>         
+                </div>
+            </div><!-- 我的账户 -->
+			<p class="tnav"><!--
+EOT;
+if($mvm_member[isSupplier]>=1){
+print <<<EOT
+--><a href="$mm_url[investment]" target="_blank" class="red">我的商铺</a><!--
+EOT;
+}else{
+print <<<EOT
+--><a href="member.php?action=shop_apply&sellshow=1&shop_level=0" class="red">我要开店</a><!--
+EOT;
+} print <<<EOT
+-->|</p>
+            <div class="top_cart">    
+            	<p class="tocart"><i></i><a href="$mm_url[cart]">购物车</a> <strong class="orange" rel="cart_num" price="$cart_info[total_price_txt]">$cart_info[total_num]</strong> 件</p>
+				<div class="tocart_child" rel="cart_list"><p>购物车加载中...</p></div>   
+            </div><!-- 购物车 -->
+		</div>
+		<div class="top_login">
+<!--
+EOT;
+if($m_check_id){
+print <<<EOT
+-->		欢迎您,$m_check_id&nbsp;&nbsp;<span class="red">[$member_level]</span> 
+<!--
+EOT;
+if($mm_adminid==1){
+print <<<EOT
+-->		<a href="admincp.php?module=index" target="_blank">[管理]</a>
+<!--
+EOT;
+} print <<<EOT
+--><!--
+EOT;
+if($m_un_activate==1){
+print <<<EOT
+-->
+		<a href="activate.php" rel="activate">[点击这里激活]</a>
+<!--
+EOT;
+} print <<<EOT
+-->		<a href="$mm_url[logout]">[退出]</a>
+<!--
+EOT;
+} else { 
+print <<<EOT
+-->		您好，欢迎来{$mm_mall_name}！<a href="$mm_url[login]" class="orange">请登录</a>
+		<a href="$mm_url[user_reg]" class="orange">免费注册</a>
+<!--
+EOT;
+} print <<<EOT
+-->     </div>
+	</div></div><!-- 头部第一块 -->
+
+	<div class="top2_bg"><div class="top2"><!-- 头部第二块开始 -->
+		<div class="topsearch">
+			<h3 class="span_left">
+				<a rel="tab_head" n="h2" class="hover">商品</a>
+				<a rel="tab_head" n="h2">商铺</a>
+				<a rel="tab_head" n="h2">资讯</a>
+			</h3>		
+			<div class="topsearth_tab topsearth_tab1" rel="tab_body" n="h2"><span class="topsearth_tabr fr"></span><span class="topsearth_tabl topsearth_tabl2 fl"></span>
+				<form method="post" name="search_goods" action="search.php">
+					<input type="submit" class="searchtop_button" value="" />
+					<input type="text" class="searchtop_input" name="ps_search" id="search_gn" value="请输入商品名称" onfocus="if(this.value=='请输入商品名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+                    <p class="searchtop_radio"><input type="radio" name="sellshow" value="1" checked />销售型 <input type="radio" name="sellshow" value="2" />展示型</p> 
+				</form>
+                <div class="search_jg" rel="search_span" style="display:none;" id="goods_search_span" url="ajax.php?action=search_hint&ctrl=g&sellshow=1"></div>
+			</div>		
+			<div class="topsearth_tab" rel="tab_body" n="h2" style="display:none;"><span class="topsearth_tabr fr"></span><span class="topsearth_tabl fl"></span>
+				<form method="post" action="shop.php">
+					<input type="submit" class="searchtop_button" value="" />
+					<input type="text" class="searchtop_input" name="shop_name" id="search_shop" value="请输入商铺名称" onfocus="if(this.value=='请输入商铺名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+				    <div class="search_jg" rel="search_span" style="display:none;" id="shop_search_span" url="ajax.php?action=search_hint&ctrl=shop"></div>
+				</form>
+			</div>		
+			<div class="topsearth_tab" rel="tab_body" n="h2" style="display:none;"><span class="topsearth_tabr fr"></span><span class="topsearth_tabl fl"></span>
+				<form method="post" action="board.php">
+					<input type="submit" class="searchtop_button" value="" />
+					<input type="text" class="searchtop_input" name="ps_search" id="search_article" value="请输入资讯名称" onfocus="if(this.value=='请输入资讯名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+				</form>
+				<div class="search_jg" rel="search_span" style="display:none;" id="article_search_span" url="ajax.php?action=search_hint&ctrl=article"></div>
+			</div>	
+			<p class="top_new"><!--
+EOT;
+foreach($nav_news as $val){
+print <<<EOT
+--><a href="$val[link]" $val[target] title="$val[alt]">$val[title]</a><!--
+EOT;
+} print <<<EOT
+--></p>	
+		</div>
+		<h1><a href="$mm_mall_url"><img src="$mm_logo" /></a></h1>
+	</div></div><!-- 头部第二块 -->
+
+	<div class="top3_bg"><div class="top3" style="position:relative; height:auto; z-index:998">
+		<a href="$mm_url[goodcat]" title="所有分类" class="allcat" rel="allcatnew">所有商品分类<span></span><i></i></a>
+		<p class="top_nav">
+<!--
+EOT;
+foreach($nav_middle as $val){
+print <<<EOT
+-->			<a href="$val[link]" $val[target] title="$val[alt]" $val[add] rel="mid_link">$val[title]</a><!--
+EOT;
+} print <<<EOT
+-->		</p>
+		<script language="javascript" src="include/javascript/jquery.submenu.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			$("dl.category").DXDSubMenu();
+			$("dl.category>dt:first").css({"borderTop":"none"});
+			$("a[@rel=allcatnew],div[@rel=tcategory]").hover(
+				function(){
+					$("div[@rel=tcategory]").show();
+					$("a[@rel=allcatnew]>i").addClass("on");
+				},
+				function(){
+					$("div[@rel=tcategory]").hide();
+					$("a[@rel=allcatnew]>i").removeClass("on");
+				}
+			);
+		});
+		</script>
+		<div class="cate_tree cate_tree_top" rel="tcategory">
+			<dl class="category">
+            	<dt uid="0" style="height:1px; padding:0;"></dt>
+<!--
+EOT;
+$i=0;
+foreach ($cat_parent as $val){
+$i++;
+print <<<EOT
+-->				<dt uid="$val[uid]">
+				    <a href="$val[sub_url]" $val[blank] class="f14 fd">$val[category_name]</a><span class="cate_arrow"><s></s></span>
+				    <p><!--
+EOT;
+foreach ($val[children] as $child){
+print <<<EOT
+--><a href="$child[url]" $child[blank]>$child[category_name]</a>|<!--
+EOT;
+} print <<<EOT
+--></p>
+				</dt>
+				<dd uid="$val[uid]">
+				<div class="cart_cate">
+<!--
+EOT;
+foreach ($val[children] as $child){
+print <<<EOT
+-->				<ul>
+					<li>
+						<h4><a href="$child[url]" $child[blank] class="f14">$child[category_name]</a></h4>
+						<p>
+<!--
+EOT;
+foreach ($child[children] as $ch){
+print <<<EOT
+-->						<a href="$ch[url]">$ch[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->						</p>
+					</li>
+				</ul>
+<!--
+EOT;
+} print <<<EOT
+-->				</div>
+				<div class="cart_brand"><strong>推荐品牌</strong><ul>
+<!--
+EOT;
+foreach (get_brands_by_cat($val[uid]) as $ch_brand){
+print <<<EOT
+-->	
+				    <li><a href="$ch_brand[url]" target="_blank"><img src="$ch_brand[logo]" alt=""></a><a href="$ch_brand[url]" target="_blank">$ch_brand[brandname]</a></li> 
+<!--
+EOT;
+} print <<<EOT
+-->	
+				</ul></div> 
+                </dd>
+<!--
+EOT;
+} print <<<EOT
+-->			</dl>
+			<div class="sub_category"></div>
+		</div>
+	</div></div><!-- 头部第三块 -->
+</div>
+<div class="clear0"></div>
+<div class="wrapper mt10">
+<!--
+EOT;
+?>-->

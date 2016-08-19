@@ -1,0 +1,139 @@
+<!--<?php
+print <<<EOT
+-->
+<!--右边开始 -->
+<script language="javascript">
+$(function(){
+ //查询商品
+$("#query_goods").click(function(e){
+$.getJSON(
+"ajax.php",
+{action:"searchgoods",goods_name:$('#goods_name').val(),rand:Math.random()},
+function(json){
+$("#goods_id").empty();
+if(!json)
+{
+    alert("没有搜索到任何结果");
+    return;
+}
+$.each(json, function(i){
+ if(i==0){
+   get_goods(json[i].uid);
+ }
+$("<option value='"+json[i].uid+"'>"+json[i].goods_name+"</option>").appendTo("#goods_id");
+});
+});
+});
+//添加商品
+$("#goods_id").change(function(e){
+get_goods($('#goods_id').val());
+});
+//加入订单
+$("#join_orders").click(function(e){ 
+$.ajax({
+   type: "POST",
+   url: "admincp.php",
+   dataType:"json",
+   cache:false,
+   data: $('#order_goods :input').serialize(),
+   success: function(json){
+     if(json.err==0){
+//写入表单
+$("#new_goods").append(json.goods_html);
+$('#order_price').html(json.order_amount);
+$('#order_amount').html(json.order_amount);
+$('#order_amount').html(json.order_amount);
+$('#cess_price').html(json.cess_price);
+$('#goods_amount').html(json.goods_amount);
+$('#goods_nums').html(json.nums);
+$('#goods_point').html(json.point);
+$('#goods_ship').html(currency(parseFloat(json.sh_exes)));
+$("#sh_exes").attr("value",parseFloat(json.sh_exes).toFixed(2));
+kg = json.kg;
+price = json.goods_amount;
+get_ship();
+}else {
+ alert(json.err);
+}
+   },
+   error:function() {
+    alert("error");
+  }
+});
+});
+});
+//商品信息
+function get_goods(goods_id){
+$.getJSON(
+"ajax.php",
+{action:"goods",goods_id:goods_id,rand:Math.random()},
+function(json){
+$('#subject_name').html(json.goods_name);
+$('#goods_code').html(json.goods_code);
+$('#category_name').html(json.category_name);
+$("#goods_brand").empty();
+$('#goods_brand').html(json.brandname);
+$('#buy_price').html('<input name="add_price" value="'+json.goods_market_price+'" type="radio">市场价 '+json.goods_market_price+'<br /><input name="add_price" value="'+json.goods_sale_price+'" checked="checked" type="radio">商城价 '+json.goods_sale_price+'<br /><input name="add_price" value="custom" type="radio">自定义价格<input name="custom_price" id="custom_price" value="" type="text"><br />');
+$("#goods_art").empty();
+$.each(json.goods_art, function(i){
+$("#goods_art").append(json.goods_art[i].name);
+$.each(json.goods_art[i].value,function(j){
+    $("#goods_art").append('<input name="att_value['+json.goods_art[i].value[j].bute_id+']"  type="radio"  value="'+json.goods_art[i].value[j].att_id+'">'+json.goods_art[i].value[j].title+'('+json.goods_art[i].value[j].price+') ');
+}); 
+});
+});
+}
+</script>
+	<form name="order_goods" id="order_goods" method="post" onsubmit="return false;">
+	<input type="hidden" name="module" id="module" value="$module" />
+	<input type="hidden" name="action" id="action" value="$action" />
+	<input type="hidden" name="setp" id="setp" value="1" />
+	<input type="hidden" name="per" id="per" value="add" />
+	<input type="hidden" name="order_id" id="order_id" value="$order_id" />
+	<table cellpadding="0" cellspacing="1" class="list1" style="margin-top:10px;">
+  		<tr>
+			<th colspan="3" style="height:30px;"><input type="text" name="goods_name" id="goods_name"  size="30" maxlength="255" class="text" /> <input type="button" name="query_goods" id="query_goods" value="搜索" class="inp" /> <select name="goods_id" id="goods_id" size="1"></select> <span style="color:#fff;">← 输入商品名称或编号进行搜索.</span></th>
+		</tr>
+  		<tr>
+			<td width="4%">1</td>
+    		<td width="20%" style="font-weight:bold;">商品名称</td>
+    		<td id="subject_name">&nbsp;</td>
+  		</tr>
+  		<tr>
+			<td>2</td>
+   		 	<td style="font-weight:bold;">货号</td>
+   		 	<td id="goods_code">&nbsp;</td>
+  		</tr>
+ 		<tr>
+			<td>3</td>
+    		<td style="font-weight:bold;">分类</td>
+    		<td id="category_name">&nbsp;</td>
+  		</tr>
+  		<tr>
+			<td>4</td>
+    		<td style="font-weight:bold;">品牌</td>
+    		<td id="goods_brand">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td style="font-weight:bold;">价格</td>
+			<td id="buy_price"></td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td style="font-weight:bold;">属性</td>
+			<td id="goods_art">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td style="font-weight:bold;">数量</td>
+			<td><input name="buy_number" id="buy_number" type="text" value="1" size="10"></td>
+		</tr>
+		<tr>
+    		<td colspan="3" align="center"><input name="join_orders" id="join_orders" type="submit" value="加入订单" class="button1" /></td>
+  		</tr>
+	</table>
+	</form>
+<!--
+EOT;
+?>-->

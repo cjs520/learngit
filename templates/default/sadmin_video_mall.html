@@ -1,0 +1,100 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=add_point]").click(function(e){
+	    e.preventDefault();
+		var uid=$(this).attr("uid");
+		
+		var offset=$(this).offset();
+		$("div[@rel=score_panel]").css("top",(offset.top-200)+"px").show();
+		$("div[@rel=score_panel]").find("input[@rel=score_submit]").attr("uid",uid);
+	});//end click
+	
+	$("a[@rel=cancel]").click(function(e){
+	    e.preventDefault();
+		$("div[@rel=score_panel]").hide();
+	});//end click
+	
+	var submit_lock=false;
+	$("input[@rel=score_submit]").click(function(e){
+	    if(submit_lock) return;
+	    if(!confirm("确认进行分数追加？")) return;
+		
+	    var uid=$(this).attr("uid");
+		var score=parseInt($(this).siblings("input[@name=score]").val());
+		if(isNaN(score) || score<=0)
+		{
+		    alert("追加分数不能小于0");
+			return;
+		}
+		submit_lock=true;
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=edit&uid="+uid,
+			type:"POST",
+			data:"score="+score,
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			},
+			complete:function(){
+			    submit_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+	<div class="mem_right" style="position:relative;">
+		<div class="member_title fd red"><a href="sadmin.php?module=video_youku&action=list" class="span_right white mem_add">推送视频</a>视频广告管理</div>
+        <div class="add_scores" rel="score_panel" style="display:none;"><span class="icon" rel="icon"></span>
+            <h3 class="gray"><span class="fl">追加分数</span><a class="fr fd red f14" rel="cancel">×</a></h3>
+            <div>
+                <input class="text" type="text" size="15" name="score">
+                <input class="" type="submit" value="确定" rel="score_submit">                
+            </div>
+        </div>
+		<p class="mb8"><span class="orange">※友情提醒：</span>您当前的积分余额为 <span class="fd red">$mvm_member[member_point]</span> 积分，积分竞价请慎重！</p>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="18%" class="fcl">视频名称</th>
+				<th>分类</th>
+				<th>积分</th>
+				<th class="fcl">视频截图</th>
+				<th width="18%" class="fcl">简介</th>
+				<th>日期/时段</th>
+				<th>状态</th>
+				<th width="10%">操作</th>
+			</tr>     
+<!--
+EOT;
+foreach ($arr_video as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl">
+				    <a href="$val[youku_link]" target="_blank">$val[title]</a><br />
+					推广：<br />
+					<a href="$val[url]" target="_blank">$val[url]</a>
+				</td>
+				<td>$val[cat_name]</td>
+				<td>$val[total_point]</td>
+				<td class="fcl mem_display"><img src="$val[pic]" width="160" /></td>
+				<td class="fcl">$val[description]</td>
+				<td>$val[start_date]~$val[end_date]<br />$val[time_area]</td>
+				<td>$val[status]</td>
+				<td>
+				    <a class="tipsy_s add_point" title="分数追加" href="#" rel="add_point" uid="$val[uid]"></a>
+				</td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div>	
+<!--
+EOT;
+?>-->

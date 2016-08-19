@@ -1,0 +1,162 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除？")) return false;
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+				function(msg){
+					$("tr[@uid="+uid+"]").remove();
+					alert(msg);
+				}
+			);//end get
+		});//end click
+		
+		$("input[@rel=chkall]").click(function(){
+			$("input[@name='uid_check[]']").attr("checked",$(this).attr("checked"));
+		});//end click
+		
+		$("input[@rel=all_del]").click(function(){
+		    if(!confirm("确认删除选中的商品？")) return;
+			if($("input[@name='uid_check[]'][@checked]").size()<=0)
+			{
+			    alert("您没有选中任何商品");
+				return;
+			}
+			$.post(
+				"sadmin.php?module=$module&action=del&rnd="+Math.random(),
+				$("input[@name='uid_check[]'][@checked]").serialize(),
+				function(msg){
+					alert(msg);
+					window.location.reload();
+				}
+			);//end post
+		});//end click
+		
+		$("input[@rel=bat_down]").click(function(){
+		    if(!confirm("确认下架选中的商品？")) return;
+			if($("input[@name='uid_check[]'][@checked]").size()<=0)
+			{
+			    alert("您没有选中任何商品");
+				return;
+			}
+			$.post(
+				"sadmin.php?module=$module&action=bat_down&rnd="+Math.random(),
+				$("input[@name='uid_check[]'][@checked]").serialize(),
+				function(msg){
+					alert(msg);
+					window.location.reload();
+				}
+			);//end post
+		});//end click
+		
+		$("input[@rel=bat_move]").click(function(){
+		    if(!confirm("确认移动选中的商品？")) return;
+			if($("input[@name='uid_check[]'][@checked]").size()<=0)
+			{
+			    alert("您没有选中任何商品");
+				return;
+			}
+			var cat_menu_move=$("#cat_menu_move").val();
+			if(cat_menu_move=="0" || cat_menu_move=="")
+			{
+			    alert("请选择移动的分类");
+				return;
+			}
+			$.post(
+				"sadmin.php?module=$module&action=bat_move&rnd="+Math.random(),
+				$("input[@name='uid_check[]'][@checked]").serialize()+"&cat_menu_move="+cat_menu_move,
+				function(msg){
+					alert(msg);
+					window.location.reload();
+				}
+			);//end post
+		});//end click
+		
+		$("[@rel=edit]").css("cursor","pointer").click(function(e){
+			var f=$(this).attr("f");
+			var v=$(this).html();
+			var uid=$(this).attr("uid");
+			if($(this).children("input[@name=tmp_txt]").size()>0) return false;
+			
+			var jq_span=$(this);
+			$(this).html("");
+			$(this).append("<input type='text' name='tmp_txt' class='text' class='text' value='"+v+"' />");
+			$(this).children("input[@name=tmp_txt]").trigger("focus");
+			$(this).children("input[@name=tmp_txt]").one("blur",function(){
+				var new_v=$(this).val();
+				if(new_v!=v)
+				{
+					$.get("sadmin.php?module=$module&action=ajax_edit&f="+f+"&v="+encodeURIComponent(new_v)+"&uid="+uid+"&rnd="+Math.random());
+				}
+				jq_span.children("input[@name=tmp_txt]").remove();
+				jq_span.html(new_v);
+			});//end one blur
+		});//end click
+		
+		$("a[@rel=openshop]").click(function(e){
+	    	e.preventDefault();
+			var href=$(this).attr("href");
+			var shop_step=parseInt("$shop_step");
+			if(isNaN(shop_step)) shop_step=0;
+			if(shop_step>=parseInt("$total_step"))
+			{
+			    window.location=href;
+				return false;
+			}
+			var o=$("div[@rel=dis_openshop]");
+			o.find("[@rel=shop_step]").hide().eq(shop_step).show();
+			o.css("width",260+"px");
+			var itop=$("[@class=mem_right]").position().top;
+			var ileft=$("[@class=mem_right]").position().left+($("[@class=mem_right]").width()-o.width())/2;
+			o.css({
+				position:"absolute",
+				top:itop+101+"px",
+				left:ileft+"px"
+			}).slideDown(500);
+		});
+		$("span[@rel=openshop_close]").click(function(e){
+			$("div[@rel=dis_openshop]").fadeOut(1000);
+		});
+	});
+	</script>
+
+	<div class="mem_right">
+		<div class="member_title fd red">
+		<form action="sadmin.php?module=$module&action=list" method="post" class="fl">
+			<p>搜索商品：$cat_menu <input type="text" name="ps_subject" value="$ps_subject_txt" class="text" /> <input type="submit" value="确定" class="sea_button" /></p>
+		</form>
+		</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th colspan="2" class="fcl">商品列表</th>
+			</tr>
+<!--
+EOT;
+foreach ($goods_rt as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl" width="80"><a href="$val[url]" target="_blank"><img src="$val[logo]" width="80" height="80" /></a></td>
+				<td class="fcl">
+                	<a href="$val[url]" target="_blank">$val[goods_name]</a><br />
+                	商城价格：<span class="red">$val[goods_sale_price]</span><br />
+                    发布时间：$val[register_date]<br />
+                    接受预订：$val[preorder]<br />
+					操作：<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>
+                </td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		
+	</div>	
+<!--
+EOT;
+?>-->

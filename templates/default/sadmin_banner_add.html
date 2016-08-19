@@ -1,0 +1,56 @@
+<!--<?php
+print <<<EOT
+-->
+<!--form content-->
+	<script language="javascript" src="include/javascript/date.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		$("#ad_select").change(function(){
+			var v=$(this).val();
+			var w=$(this).children("option:selected").attr("w");
+			var h=$(this).children("option:selected").attr("h");
+			$("#banner_subject").val(v);
+			$("#banner_point").val(v);
+			$('#banner_width').val(w);
+			$('#banner_height').val(h);
+		});//end change
+		$("#ad_select").trigger("change");
+	});
+	</script>
+	<form name="mvmmall" action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="p_url" value="$p_url" />
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<input type="hidden" name="banner_file1_text" id="banner_file1_text" value="$banner_file1"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">添加广告</th></tr>
+			<tr>
+				<td width="70">广告名</td>
+				<td><input type="text" name="banner_subject" id="banner_subject" value="$banner_subject" class="text text_3" /></td>
+			</tr>
+			<tr>
+				<td>广告位置</td>
+				<td><input type="text" name="banner_point" id="banner_point" value="$banner_point" class="text text_3" /> $ad_menu</td>
+			</tr>
+			<tr>
+				<td>广告大小</td>
+				<td><span class="fl"><input type="text" name="banner_width" readonly id="banner_width" value="$banner_width" size="10" class="text" /> X <input type="text" name="banner_height" readonly id="banner_height" value="$banner_height" size="10" class="text" /></span> <p class="alert_info"><span class="icon_info"></span>请按照提示尺寸上传广告图片</p></td>
+			</tr>
+			<tr>
+				<td>广告种类</td>
+				<td><input type="radio" name="banner_class" value="0" $bannner_class_p /> 图片广告 <input type="radio" name="banner_class" value="1" $banner_class_f /> flash广告</td>
+			</tr>
+			<tr>
+				<td>广告文件</td>
+				<td><input type="file" name="banner_file1" id="banner_file1" class="text text_3" /></td>
+			</tr>
+			<tr>
+				<td>广告URL</td>
+				<td><input type="text" name="banner_url" id="banner_url" value="$banner_url" class="text2 text_3" /> <p class="alert_error"><span class="icon_error"></span>用外部链接，请填务必加http:// </p></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

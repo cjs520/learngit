@@ -1,0 +1,308 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=order_status][@status=$status]").addClass("hover");
+	
+	$("a[@rel=cancel_order]").click(function(e){
+		e.preventDefault();
+		var status=$(this).attr("status");
+		var uid=$(this).attr("uid");
+		
+		if(!confirm("确认取消？")) return;
+		$(this).hide();
+		$.get(
+			"member.php?action=cancel_order&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+				if(msg=="ok")
+				{
+					alert("取消成功");
+					window.location.reload();
+					return;
+				}
+				alert(msg);
+			}
+		);//end get
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    var ship_lock=false;
+    $("a[@rel=ship_query]").click(function(e){
+	    e.preventDefault();
+		if(ship_lock) return;
+		var msg="";
+		var delivery_code=$(this).attr("dcode");
+		var sh_id=$(this).attr("shid");
+		if(!delivery_code || delivery_code=="") msg+="无快递单号，无法查看\\n";
+		if(!sh_id || sh_id=="0") msg+="快递方式错误\\n";
+		if(msg!="")
+		{
+			alert(msg);
+			return false;
+		}
+		
+		ship_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=ship_get_data&sh_id="+sh_id+"&dcode="+delivery_code,
+			type:"GET",
+			dataType:"json",
+			cache:false,
+			success:function(json){
+			    if(json.status!="200")
+				{
+				    alert(json.message);
+					return;
+				}
+				var str_html="<table><tr><th>时间</th><th>状态</th></tr>";
+				
+				for(var i=json["data"].length-1;i>=0;i--)
+				{
+				    var style=i==0?"style='color:red;'":"";
+				    str_html+="<tr><td "+style+">"+json["data"][i]["time"]+"</td><td "+style+" class=td2>"+json["data"][i]["context"]+"</td></tr>";
+				}
+				str_html+="</table>";
+				
+				var o=$("div[@rel=kd_info]");
+				o.appendTo("body");
+		        o.children("div[@rel=cnt]").html(str_html);
+				var itop=(document.documentElement.clientHeight-o.height())/2+$(window).scrollTop();
+		        var ileft=(document.documentElement.clientWidth-o.width())/2+$(window).scrollLeft();
+				o.css({
+	               position:"absolute",
+			       top:itop+"px",
+			        left:ileft+"px"
+		        }).show();
+				$("#block").css("display","block");
+				
+			},
+			complete:function(){
+			    ship_lock=false;
+			}
+		});//end ajax
+	});//end click
+		
+	$("a[@rel=close_kd_info]").click(function(e){
+	    e.preventDefault();
+		$("div[@rel=kd_info]").hide();
+		$("#block").css("display","none");
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=delay]").click(function(e){
+	    e.preventDefault();
+		var uid=$(this).attr("uid");
+		$("tr[@rel=delay][@uid="+uid+"]").show();
+	});//end click
+	
+	var delay_lock=false;
+	$("input[@rel=delay_submit]").click(function(){
+	    if(delay_lock) return;
+		var uid=$(this).attr("uid");
+	    var day=$(this).siblings("input[@rel=delay_day]").val();
+		var reason=$(this).siblings("input[@rel=delay_reason]").val();
+		var msg="";
+		var mm_max_delay=parseInt("$mm_max_delay");
+		if(isNaN(mm_max_delay)) return;
+		
+		day=parseInt(day);
+		if(day<=0) msg+="延长天数必须大于0\\n";
+		if(day>mm_max_delay) msg+="延长天数不得大于"+mm_max_delay+"天";
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		delay_lock=true;
+		$.ajax({
+		    url:"member.php?action=delay_order",
+			type:"POST",
+			data:{
+			    uid:uid,
+				day:day,
+				reason:reason
+			},
+			cache:false,
+			success:function(msg){
+			    $("tr[@rel=delay]").hide();
+			    alert(msg);
+			},
+			complete:function(){
+			    delay_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+
+	<div rel="kd_info" class="open_window fct" style="display:none; width:520px;"><a rel="close_kd_info" class="close"></a>
+		<div rel="cnt" class="cnt"></div>
+	</div>
+	<div class="mem_right"><!-- 会员订单列表开始 -->
+		<div class="newopen" style="width:880px;" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+        <a class="fn mem_page" target="_blank" href="page.php?action=order_code">什么是订单密码？</a>
+		<form action="member.php?action=$action" method="post" class="order_S">
+		<div class="member_title fd red">
+		    订单号：<input type="text" class="text" name="ordernum" value="$ordernum" style="padding:0;" /> 
+		    <input type="submit" class="button" value="搜索" />
+		</div>
+		</form>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="title_rate_list">
+			<a href="member.php?action=$action" rel="order_status" status="0"><span>所有订单</span></a>
+			<a href="member.php?action=$action&status=1" rel="order_status" status="1"><span>待付款</span></a>
+			<a href="member.php?action=$action&status=8" rel="order_status" status="8"><span>待备货</span></a>
+			<a href="member.php?action=$action&status=9" rel="order_status" status="9"><span>待付余款</span></a>
+			<a href="member.php?action=$action&status=2" rel="order_status" status="2"><span>已取消</span></a>
+			<a href="member.php?action=$action&status=3" rel="order_status" status="3"><span>已付款</span></a>
+			<a href="member.php?action=$action&status=4" rel="order_status" status="4"><span>已发货</span></a>
+			<a href="member.php?action=$action&status=5" rel="order_status" status="5"><span>已收货</span></a>
+			<a href="member.php?action=$action&status=6" rel="order_status" status="6"><span>已退货</span></a>
+		</div><!-- 所有订单 -->
+<!--
+EOT;
+foreach ($order_list as $val){
+print <<<EOT
+-->		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<th width="40%" class="fn fcl">订单号：$val[ordersn] <b class="red">订单密码：$val[code]</b></th>
+				<th colspan="2" class="fcl fn">
+				    <span class="span_right red p6">订单状态：$val[status] $val[add_status_info]</span>
+					<span class="span_left">商铺名称：<a href="{$val[shop][url]}" target="_blank">{$val[shop][shop_name]}</a></span> &nbsp; 
+					<a href="account.php?action=mysms&to=$val[to]" class="message" style="margin-bottom:-2px;" target="_blank" title="发送站内信"></a>
+				</th>
+			</tr>
+<!--
+EOT;
+foreach ($val[order_goods] as $child){
+print <<<EOT
+-->			<tr>
+				<td class="fcl"><a href="$child[url]" target="_blank"><img src="$child[goods_file1]" width="80" height="80" class="span_left border" />$child[goods_name]</a></td>
+				<td>
+				    单价：$child[buy_price] + $child[buy_point]积分 &nbsp; 
+					余额单价：$child[rest_price] &nbsp; 数量：$child[buy_number]
+				</td>
+				<td style="width:100px;">
+<!--
+EOT;
+if($child[status]==1){
+print <<<EOT
+-->
+				    <a href="member.php?action=order_back&og_uid=$child[uid]">申请退货</a>
+					<a href="member.php?action=order_share&og_uid=$child[uid]&cmd=add" class="orange">分享</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->			<tr>
+                <td colspan="3" class="fcr">
+				    支付方式：<span class="orange">$val[pay_name]</span> &nbsp; 
+					订单总价：<span class="orange">$val[order_amount]</span>  &nbsp; 
+					订单余额：<span class="orange">$val[goods_rest_amount_txt]</span>
+				</td>
+			</tr>
+<!--
+EOT;
+if ($val[status_code]==4){
+print <<<EOT
+-->
+            <tr class="fcr" style="display:none;" rel="delay" uid="$val[uid]">
+            	<td colspan="3">
+                	延迟时间：<input rel="delay_day" type="text" class="text" size="5" value="$mm_max_delay" /> 天&nbsp;&nbsp;
+                    延迟理由：<input rel="delay_reason" type="text" class="text" maxlength="80" />
+                    <input rel="delay_submit" uid="$val[uid]" type="button" value="确定"/>
+                </td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+			<tr><td colspan="3"><div class="span_right">
+<!--
+EOT;
+if ($val[status_code]==1){
+print <<<EOT
+--><a href="member.php?action=order_pay&sn=$val[ordersn]" title="付款" class="button">付款</a> <!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if ($val[goods_rest_amount]>0 && ($val[mark] & 8)){
+print <<<EOT
+--><a href="member.php?action=order_pay&sn=$val[ordersn]&rest=rest" title="付款" class="button">支付余款</a> <!--
+EOT;
+} print <<<EOT
+-->
+
+<!--
+EOT;
+if ($val[status_code]==4){
+print <<<EOT
+-->
+<!--
+EOT;
+if ($val[goods_rest_amount]<=0){
+print <<<EOT
+-->
+    <a href="member.php?action=confirm_order&uid=$val[uid]" class="button" title="确认收货">确认收货</a> 
+<!--
+EOT;
+} print <<<EOT
+-->
+	<a href="#" rel="delay" uid="$val[uid]" class="button" title="延迟收货">延迟收货</a> 
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if ($val[status_code]==1){
+print <<<EOT
+--><a href="#" rel="cancel_order" uid="$val[uid]" status="$val[status_code]" class="button" title="取消订单">取消订单</a> <!--
+EOT;
+} print <<<EOT
+--><a href="#" rel="apply_page" apply_url="member.php?action=edit_order&uid=$val[uid]" class="button" title="查看订单">查看</a>
+<!--
+EOT;
+if (in_array($val[status_code],array(4,5))){
+print <<<EOT
+-->
+   <a href="#" rel="ship_query" dcode="$val[delivery_code]" shid="$val[sh_uid]" class="button" title="快递查询">快递查询</a> 
+<!--
+EOT;
+} print <<<EOT
+-->
+        </div>
+		$val[addtime]
+		</td></tr>
+		</table>
+		<div class="clear"></div>
+<!--
+EOT;
+} print <<<EOT
+-->		<div class="page">$page_list</div>
+	</div><!-- 会员订单列表结束 -->
+<!--
+EOT;
+?>-->

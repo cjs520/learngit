@@ -1,0 +1,31 @@
+<!--<?php
+require_once template('header'); 
+require_once template('left');
+print <<<EOT
+-->	<div class="right"><!-- 文章列表开始 -->
+        <div class="board_list">
+<!--
+EOT;
+foreach ($arr_board as $val){
+print <<<EOT
+-->			<div class="border">
+                <h3><span>$val[board_title]</span><a href="board_more.php?action=$val[board_name_code]" class="fn red">更多>></a></h3>
+                <ul>
+<!--
+EOT;
+foreach ($val[article] as $v){
+print <<<EOT
+-->					<li><a href="$v[url]" target="_blank" class="fl">$v[board_subject]</a><span class="fr gray">$v[register_date]</span></li>
+<!--
+EOT;
+} print <<<EOT
+-->				</ul> 
+            </div>
+<!--
+EOT;
+} print <<<EOT
+-->		</div>  
+	</div><!-- 文章列表结束 -->
+<!--
+EOT;
+?>-->

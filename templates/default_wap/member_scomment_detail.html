@@ -1,0 +1,75 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">评价商品</div>
+<div class="wrapper">
+    <script type="text/javascript" src="include/javascript/jquery.sslide.js"></script>
+	<script type="text/javascript">
+	$(function(){ //Voting	
+		$("a[@group=match]").vote("hover","ding");
+		$("a[@group=seller_service]").vote("hover","ding");
+		$("a[@group=seller_ship]").vote("hover","ding");
+		$("a[@group=ship_service]").vote("hover","ding");
+	});
+	</script>
+
+        
+	<h3 class="titlec"><span>评价商品</span></h3>
+	<form action="member.php?action=$action&allow_uid=$allow_uid" method="post">
+		<input type="hidden" name="step" value="1" />
+<!--
+EOT;
+foreach ($order_goods as $val){
+print <<<EOT
+-->     
+        <div class="pro_list"><!-- 商品列表开始 -->
+            <table>
+                <tr uid="$val[uid]">
+                    <td width="120"><a href="$val[url]" target="_blank" class="goods_img"><img src="$val[goods_file1]"/></a></td>
+                    <td>
+                        <p class="name">$val[addoption]<a href="$val[url]" title="$val[title]" target="_blank">$val[goods_name]</a></p>
+                        <p class="gray">$val[goods_attr]</p>
+                    </td>
+                </tr>
+            </table>
+        </div><!-- 商品列表结束 -->      
+        <ul class="mt10 rate_icon">
+            <li><input type="radio" value="1" checked name="og_comment[$val[uid]]"> <span class="rate_good"></span></li>
+            <li><input type="radio" value="0" name="og_comment[$val[uid]]"> <span class="rate_soso"></span></li>
+            <li><input type="radio" value="-1" name="og_comment[$val[uid]]"> <span class="rate_bad"></span></li>
+        </ul>
+        <div class="clear"></div>
+        填写商品评价<br />
+        <textarea name="og_detail[$val[uid]]" cols="" rows="6" class="border" style="width:100%;"></textarea>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="clear"></div>
+        <dl class="post_com">
+            <dd class="mouse_star" rel="scomment" style="display:none;">
+                <input type="hidden" name="match" group="match" value="5" />
+                $lang[rate_product]：
+                <a href="#" class="ding" group="match" info="$lang[rate_product1]"></a><a href="#" class="ding" group="match" info="$lang[rate_product2]"></a><a href="#" class="ding" group="match" info="$lang[rate_product3]"></a><a href="#" class="ding" group="match" info="$lang[rate_product4]"></a><a href="#" class="ding" group="match" info="$lang[rate_product5]"></a><span group="match">$lang[rate_product5]</span>
+            </dd>
+            <dd class="mouse_star" rel="scomment" style="display:none;">
+                <input type="hidden" name="seller_service" group="seller_service" value="5" />
+                $lang[rate_service]：
+                <a href="#" class="ding" group="seller_service" info="$lang[rate_service1]"></a><a href="#" class="ding" group="seller_service" info="$lang[rate_service2]"></a><a href="#" class="ding" group="seller_service" info="$lang[rate_service3]"></a><a href="#" class="ding" group="seller_service" info="$lang[rate_service4]"></a><a href="#" class="ding" group="seller_service" info="$lang[rate_service5]"></a><span group="seller_service">$lang[rate_service5]</span>
+            </dd>
+            <dd class="mouse_star" rel="scomment" style="display:none;">
+                <input type="hidden" name="seller_ship" group="seller_ship" value="5" />
+                $lang[rate_delivery]：
+                <a href="#" class="ding" group="seller_ship" info="$lang[rate_delivery1]"></a><a href="#" class="ding" group="seller_ship" info="$lang[rate_delivery2]"></a><a href="#" class="ding" group="seller_ship" info="$lang[rate_delivery3]"></a><a href="#" class="ding" group="seller_ship" info="$lang[rate_delivery4]"></a><a href="#" class="ding" group="seller_ship" info="$lang[rate_delivery5]"></a><span group="seller_ship">$lang[rate_delivery5]</span>
+            </dd>
+            <dd class="mouse_star" rel="scomment" style="display:none;">
+                <input type="hidden" name="ship_service" group="ship_service" value="5" />
+                $lang[logistics_svc]：
+                <a href="#" class="ding" group="ship_service" info="$lang[logistics_svc1]"></a><a href="#" class="ding" group="ship_service" info="$lang[logistics_svc2]"></a><a href="#" class="ding" group="ship_service" info="$lang[logistics_svc3]"></a><a href="#" class="ding" group="ship_service" info="$lang[logistics_svc4]"></a><a href="#" class="ding" group="ship_service" info="$lang[logistics_svc5]"></a><span group="ship_service">$lang[logistics_svc5]</span>
+            </dd>
+            <dt><input type="submit" rel="comment_submit" class="but_comments" value="" /></dt>
+        </dl>
+	</form>     
+<!--
+EOT;
+?>-->

@@ -1,0 +1,57 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定删除优惠券？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red"><a href="sadmin.php?module=$module&action=add" class="span_right white mem_add">添加优惠券</a>优惠券管理</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="24%">优惠券名称</th>
+				<th>起始时间</th>
+				<th>终止时间</th>
+				<th>面额</th>
+				<th>状态</th>
+				<th width="10%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_coupon as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl">$val[name]<br />$val[other_info]</td>
+				<td>$val[start_date]</td>
+				<td>$val[end_date]</td>
+				<td>$val[discount]</td>
+				<td>$val[status]</td>
+				<td>
+				    <a href="sadmin.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="编辑"></a>&nbsp;
+					<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+				</td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+        <div style="color:red;float:right;padding-top:5px;">每家商铺最多能发布 $mm_shop_coupon 张优惠券</div>
+	</div>	
+<!--
+EOT;
+?>-->

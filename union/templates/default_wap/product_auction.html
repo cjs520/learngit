@@ -1,0 +1,367 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.jqzoom.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("#jqzoom").jqueryzoom({
+        xzoom: 300,
+	    yzoom: 300,
+	    offset: 0,
+	    position: "right", 
+	    preload:1,
+	    lens:1
+	});//end jqueryzoom
+	
+	$("a[@rel=gallery]").hover(
+	    function(e){
+		    var img_small=$(this).attr("img_small");
+			var img_big=$(this).attr("img_big");
+			$("#jqzoom").children("img").attr("src",img_small).attr("jqimg",img_big);
+		},
+		function(e){}
+	);//end hover
+	
+	$.get(
+	    "ajax.php?action=get_gcontent&uid=$product[uid]&detail_table=$detail_table",
+		function(msg){
+		    $("div[@rel=goods_main]").html(msg);
+		}
+	);//end get
+});
+</script>
+<script type="text/javascript">
+$(function(){ 
+	$("a[@rel=pay_assure]").click(function(e){
+	    e.preventDefault();
+		$("div[@rel=auction_bid]").fadeIn(100);
+	});//end click
+	
+	$("span[@rel=close],a[@rel=close]").click(function(e){ 
+	    e.preventDefault();
+		$("div[@rel=auction_bid]").fadeOut(100);
+	});	//end click
+})
+</script>
+<script type="text/javascript">
+$(function(){
+    var assure_lock=false;
+    $("a[@rel=confirm_assure]").click(function(e){
+	    e.preventDefault();
+		if(assure_lock) return;
+		if("$m_check_id"=="")
+		{
+		    alert("您还未登录，请先登录");
+			return;
+		}
+		if(!$("input[@name=agreement]").attr("checked"))
+		{
+		    alert("您未同意商城竞拍协议，无法支付保证金");
+			return;
+		}
+		
+		assure_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=auction_assure&uid=$product[uid]",
+			type:"GET",
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    $("a[@rel=pay_assure]").replaceWith('<a href="#" class="fr pro_cart" rel="pay_auction">立即拍</a>');
+				    $("div[@rel=auction_bid]").remove();
+				}
+				$.SetAuctionEvent();
+			},
+			complete:function(){
+			    assure_lock=false;
+			}
+		});//end ajax
+	});//end click
+	
+	var list_lock=false;
+	var pay_lock=false;
+	$.extend({
+	    SetAuctionEvent:function(){
+		    if("$product[status]"!="1") return;
+			if(pay_lock) return;
+		    $("a[@rel=pay_auction]").unbind("click");
+			$("a[@rel=pay_auction]").click(function(e){
+			    e.preventDefault();
+				if("$product[status]"!="1") return;
+				
+				var price=$("input[@name=pay_price]").val();
+				price=parseFloat(price);
+				if(isNaN(price) || price<=0)
+				{
+				    alert("请填写正确的竞拍金额");
+					return;
+				}
+				
+				pay_lock=true;
+				$.ajax({
+				    url:"ajax.php?action=auction_pay&uid=$product[uid]&price="+price,
+					type:"GET",
+					cache:false,
+					success:function(msg){
+					    alert(msg);
+						if(msg.indexOf("OK")!=-1) $.LoadAuctionList();
+					},
+					complete:function(){
+					    pay_lock=false;
+					}
+				});//end ajax
+			});//end click
+		},
+		LoadAuctionList:function(){
+		    if("$product[status]"=="0") return;
+			if(list_lock) return;
+			list_lock=true;
+			$.ajax({
+			    url:"ajax.php?action=auction_join&uid=$product[uid]",
+				type:"GET",
+				dataType:"json",
+				cache:false,
+				success:function(json){
+				    var html="";
+					$("tr[@rel=auction_head]").nextAll().remove();
+				    $.each(json,function(i){
+					    if(i==0)
+						{
+						    html+="$product[status]"==1?'<tr class="tr3">':'<tr class="tr5">';
+							html+="$product[status]"==1?'<td><span class="state">领先</span></td>':'<td><span class="state">成交</span></td>';
+                            html+="<td>"+this.m_id+"</td>";
+                            html+="<td>"+this.price+"</td>";
+                            html+="<td>"+this.register_date+"</td>";
+                            html+="</tr>";
+							
+							$("em[@rel=cur_price]").html(this.price);
+							$("span[@rel=success_time]").html(this.register_date);
+						}
+						else
+						{
+						    html+='<tr class="tr4">';
+                            html+='<td><span class="state">出局</span></td>';
+                            html+="<td>"+this.m_id+"</td>";
+                            html+="<td>"+this.price+"</td>";
+                            html+="<td>"+this.register_date+"</td>";
+                            html+="</tr>";
+						}
+					});//end each
+					if(html!="") $("tr[@rel=auction_head]").after(html);
+				},
+				complete:function(){
+				    list_lock=false;
+				}
+			});//end ajax
+		}
+	});//end extend
+	
+	$.SetAuctionEvent();
+	$.LoadAuctionList();
+});
+</script>
+		<div class="jqzoom"><img src="{$arr_gallery[0][0]}" jqimg="{$arr_gallery[0][1]}" width="100%" /></div>
+	<div class="box_product">  
+    	<h3 class="product_title">$product[addoption] $product[goods_name]</h3>   
+    	<div style="position:relative;">
+
+<!--
+EOT;
+if(!$assure){
+print <<<EOT
+-->
+            <div class="auction_bid" rel="auction_bid"><div>
+                <p class="f14 fd">系统将在您的账户中冻结 <span class="red f16">$product[assure]</span> 作为拍卖保证金</p>
+                <p class="fd">
+                    您当前预付款账户余额为 <span class="red f16">$mvm_member[member_money]</span>，如果资金不足，
+                    <a href="$main_settings[mm_mall_url]/account.php?action=money">请点充值</a>
+                </p>
+                <p class="mt8 mb8"><input name="agreement" type="checkbox" checked class="vmid" /> 我同意<a href="$_URL[0]/page.php?action=bidding_agreement" target="_blank">《竞拍协议》</a></p>
+                <p><a href="#" rel="confirm_assure" class="auc_qr">确认</a><a href="#" class="auc_qx" rel="close">取消</a></p>
+                <div class="clear8" style="padding:0;"></div>
+                <p>可到 <a href="$main_settings[mm_mall_url]/member.php?action=pai" class="blue">我的保证金</a> 查看明细</p>
+            </div></div><!--报名交保证金-->
+<!--
+EOT;
+} print <<<EOT
+-->
+
+
+
+    
+<!--
+EOT;
+if($product[status]==0){
+print <<<EOT
+-->
+            <script type="text/javascript" src="include/javascript/jquery.countdown.js"></script>
+            <script type="text/javascript">
+            $(function(){
+                $("p[@rel=time_bar]:first").count_down("$left_time");
+            });
+            </script>
+    		<p class="time_bar mb10" rel="time_bar">离开始时间还有：<span rel="day"></span>天<span rel="hour"></span>小时<span rel="minute"></span>分<span rel="second"></span>秒</p>
+            <div class="price_bar">
+                <table width="100%">
+                  <tr>
+                    <td colspan="2" class="au_input"><span class="disb fl">当前价：</span><em class="price_big red">$product[start_price]</em><span class="fr">出价：<input name="" type="text" class="text" /></span></td>
+                  </tr>
+                  <tr>
+                    <td>起拍价：$product[start_price]</td>
+                    <td class="fcr">保证金：$product[assure]</td>
+                  </tr>
+                  <tr>
+                    <td>加价幅度：$product[bid_add]</td>
+                    <td class="fcr">一口价：$product[end_price]</td>
+                  </tr>
+                </table> 
+            </div>
+            <div class="product_button">
+<!--
+EOT;
+if(!$assure){
+print <<<EOT
+-->
+                <a href="#" class="add_cart" rel="pay_assure">报名拍卖</a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+                <a href="#" class="fr bood_cart" rel="pay_auction">即将开始</a>
+<!--
+EOT;
+} print <<<EOT
+-->			</div>
+            <table width="100%" border="0" cellspacing="0" class="bids">
+              <tr class="tr1"><td colspan="4"><span class="fl">出价记录</span></td></tr>
+              <tr class="tr2" rel="auction_head">
+                <td>状态</td>
+                <td>拍卖号</td>
+                <td>拍卖价格</td>
+                <td>时间</td>
+              </tr>
+              <tr class="tr3">
+                  <td colspan="4">本拍卖还未开始，请耐心等待</td>
+              </tr>
+            </table>
+<!--
+EOT;
+}else if($product[status]==1){
+print <<<EOT
+-->
+            <script type="text/javascript" src="include/javascript/jquery.countdown.js"></script>
+            <script type="text/javascript">
+            $(function(){
+                $("p[@rel=time_bar]:first").count_down("$left_time");
+            });
+            </script>
+    		<p class="time_bar mb10" rel="time_bar">离结束时间还有：<span rel="day"></span>天<span rel="hour"></span>小时<span rel="minute"></span>分<span rel="second"></span>秒</p>
+            <div class="price_bar">
+                <table width="100%">
+                  <tr>
+                    <td colspan="2" class="au_input"><span class="disb fl">当前价：</span><em class="price_big red" rel="cur_price">$product[start_price]</em><span class="fr">出价：<input name="pay_price" type="text" class="text"/></span></td>
+                  </tr>
+                  <tr>
+                    <td>起拍价：$product[start_price]</td>
+                    <td class="fcr">保证金：$product[assure]</td>
+                  </tr>
+                  <tr>
+                    <td>加价幅度：$product[bid_add]</td>
+                    <td class="fcr">一口价：$product[end_price]</td>
+                  </tr>
+                </table>
+            </div>
+            <div class="product_button">
+<!--
+EOT;
+if(!$assure){
+print <<<EOT
+-->
+                <a href="#" class="add_cart" rel="pay_assure">报名拍卖</a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+                <a href="#" class="fr pro_cart" rel="pay_auction">立即拍</a>
+<!--
+EOT;
+} print <<<EOT
+-->			</div>            
+            <table width="100%" border="0" cellspacing="0" class="bids">
+              <tr class="tr1"><td colspan="4"><span class="fl">出价记录</span></td></tr>
+              <tr class="tr2" rel="auction_head">
+                <td>状态</td>
+                <td>拍卖号</td>
+                <td>拍卖价格</td>
+                <td>时间</td>
+              </tr>
+              <tr class="tr3">
+                  <td colspan="4">数据加载中。。。</td>
+              </tr>
+            </table>
+<!--
+EOT;
+}else if($product[status]==2){
+print <<<EOT
+-->
+            <p class="time_bar mb10">成交时间：<span rel="success_time">无</span></p>
+            <div class="price_bar">
+                <table width="100%">
+                  <tr>
+                    <td colspan="2" class="vmid"><span class="disb fl">成交价：</span><em class="price_big gray" rel="cur_price">$product[start_price]</em></td>
+                  </tr>
+                  <tr>
+                    <td>起拍价：$product[start_price]</td>
+                    <td class="fcr">保证金：$product[assure]</td>
+                  </tr>
+                  <tr>
+                    <td>加价幅度：$product[bid_add]</td>
+                    <td class="fcr">一口价：$product[end_price]</td>
+                  </tr> 
+                </table>
+            </div>
+            <div class="product_button"><a href="#" class="no_product">已结束</a></div>
+            <table width="100%" border="0" cellspacing="0" class="bids">
+              <tr class="tr1"><td colspan="4"><span class="fl">出价记录</span></td></tr>
+              <tr class="tr2" rel="auction_head">
+                <td>状态</td>
+                <td>拍卖号</td>
+                <td>拍卖价格</td>
+                <td>时间</td>
+              </tr>
+              <tr class="tr5">
+                  <td colspan="4">数据加载中。。。</td>
+              </tr>
+            </table>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </div>
+		<div class="clear"></div>
+		<ul id="nav" class="product_tab">
+			<li><a rel="tab_head" n="tab" class="hover">商品详细</a></li>
+            <li><a target="_blank" href="$_URL[0]/page.php?action=bidding_agreement">竞拍协议</a></li>
+		</ul>	
+		<div rel="tab_body" n="tab" class="product_con border h_oflow">
+        	<ul class="h_oflow mb10 pro_attr">
+<!--
+EOT;
+foreach($product[filter_attr] as $key=>$val){
+print <<<EOT
+-->
+            	<li>{$key}: {$val}</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </ul>
+			<div rel="goods_main">商品内容加载中...</div>
+		</div><!-- 商品详细 -->
+    </div>
+<!--
+EOT;
+?>-->

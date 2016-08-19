@@ -1,0 +1,45 @@
+<!--<?php print <<<EOT
+-->
+	<script type="text/javascript">
+    $(function(){	
+		//弹出框
+        $("a[@rel=top_info_a]").click(
+            function(){
+                $("div[@rel=top_sj]").toggle();
+            }
+        );
+    });
+    </script>
+	<div class="top1"><a href="#" rel="top_info_a" class="fr top_cate_a">我的社交</a><a class="fl" href="$mm_url[logout]">[退出]</a></div>
+    <div rel="top_sj" class="top1_toggle">
+		<dl>
+			<dt>找商机</dt>
+			<dd><a href="member.php?action=want_supply">供应信息</a></dd>
+			<dd><a href="member.php?action=want_buy">求购信息</a></dd>
+			<dd><a href="member.php?action=my_merchant_msg">我给别人的留言</a></dd>
+			<dd><a href="member.php?action=merchant_to_me">别人给我的留言</a></dd>
+			<dt>我是圈主</dt>
+			<dd><a href="member.php?action=my_community">我的生活圈</a></dd>
+			<dd><a href="member.php?action=my_c_member">成员管理</a></dd>
+			<dd><a href="member.php?action=my_c_topic">话题管理</a></dd>
+			<dd><a href="member.php?action=my_c_comment">评论管理</a></dd>
+			<dt>我的参与</dt>
+            <dd><a href="member.php?action=my_join_community">我加入的生活圈</a></dd>
+			<dd><a href="member.php?action=my_friends">我的好友</a></dd>
+			<dd><a href="member.php?action=my_jc_topic">我发表的话题</a></dd>
+			<dd><a href="member.php?action=my_jc_comment">我发表的评论</a></dd>	 
+		</dl>
+	</div><!--- 我的社交 --->	
+<div class="wrapper">
+    <table cellspacing="0" class="table_list fct table_list_nav" rel="member_tab">
+        <tr>
+        	<td><a href="member.php?action=index">我是买家</a></td>
+            <td><a href="sadmin.php?module=index">我是商家</a></td>
+            <td><a href="account.php?action=index">账号管理</a></td>
+            <td class="table_list_nav_hover"><a href="member.php?action=want_supply">我的社交</a></td> 
+        </tr>
+    </table>
+    <div class="clear"></div>
+<!--
+EOT;
+?>-->

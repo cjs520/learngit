@@ -1,0 +1,69 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("input[@rel=chkall]").click(function(){
+			$("input[@rel=subchk]").attr("checked",$(this).attr("checked"));
+		});//end click
+		
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除？")) return false;
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=del&uid="+uid+"&ajax=ajax&rnd="+Math.random(),
+				function(msg){
+					$("tr[@uid="+uid+"]").remove();
+					alert("删除成功");
+				}
+			);//end get
+		});//end click
+		
+		$("form[@name=link_form]").submit(function(){
+			if(!confirm("确认批量删除？")) return false;
+			return true;
+		});//end submit
+	});
+	</script>
+	<div class="mem_right">
+		<div class="member_title fd red"><!--
+EOT;
+if(!$is_full){
+print <<<EOT
+--><a href="sadmin.php?module=$module&action=add" class="span_right white mem_add">添加页面</a><!--
+EOT;
+} print <<<EOT
+-->页面管理</div>
+		<form name="link_form" action="sadmin.php?module=$module" method="post">
+		<input type="hidden" name="action" value="all_delete" />
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="8%" class="fcl"><input type="checkbox" rel="chkall" />&nbsp;<input type="submit" class="delete" value="" title="全部删除" /></th>
+				<th class="fcl">页面标题</th>
+				<th class="fcl">页面名称</th>
+				<th>登记日期</th>
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($page_rt as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl"><input type="checkbox" name="uid_check[]" rel="subchk" value="$val[uid]" /></td>
+				<td class="fcl"><a href="$val[link]" target="_blank">$val[page_subject]</a></td>
+				<td class="fcl"><a href="$val[link]" target="_blank">$val[page_name]</a></td>
+				<td>$val[register_date]</td>
+				<td><a href="$val[link]" target="_blank" class="tipsy_s view" title="预览"></a>&nbsp;<a href="sadmin.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="修改"></a>&nbsp;<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a></td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

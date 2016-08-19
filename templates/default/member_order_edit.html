@@ -1,0 +1,82 @@
+<!--<?php
+print <<<EOT
+-->	
+<!--form content-->
+		<div class="member_title fd red" style="margin-bottom:0;">订单查看</div>
+		<div style="width:868px; height:475px; padding:8px 5px; overflow-y:auto; overflow-x:hidden; border:solid 1px #fc9; border-top:none;">
+		<table cellspacing="0" class="table_list fct" rel="table" style="width:850px;">
+			<tr>
+				<th class="fcl">商品名称</th>
+				<th>属性</th> 
+				<th width="12%">价格</th>
+				<th width="10%">销售积分</th>
+				<th width="8%">数量</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->        <tr>
+				<td class="fcl"><a href="$val[url]" title="$val[title]" target="_blank">$val[goods_name]</a></td>
+				<td>&nbsp;$val[goods_attr]</td>
+				<td>$val[buy_price]</td>
+				<td>$val[buy_point]</td>
+				<td>$val[buy_number]</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->     </table>
+		<div class="ca2"><span class="span_right orange">商品总价：$order_info[goods_amount]+运费：$order_info[sh_price]-优惠：$order_info[discount]：订单总价：$order_info[order_amount]</span>商品数量：$goods_total_num</div>
+
+		
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table" style="width:850px;">
+			<tr>
+			    <th colspan="4" class="fcl">
+			        订单号：<span class="red">$order_info[ordersn]</span>&nbsp;&nbsp;
+					快递单号：<span class="red">$order_info[delivery_code]</span>
+				</th>
+			</tr>
+			<tr>
+				<td width="15%">收货人姓名</td>
+				<td width="35%">$order_info[consignee]</td>
+				<td width="15%">联系电话</td>
+				<td width="35%">$order_info[mobile]</td>
+			</tr>
+			<tr>
+				<td>收货地址</td>
+				<td>$order_info[address]</td>
+				<td>邮政编码</td>
+				<td>$order_info[zipcode]</td>
+			</tr>
+			<tr>
+				<td>客户留言</td>
+				<td colspan="3">$order_info[remark]</td>
+			</tr>
+		</table>
+		
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table" style="width:850px;">
+			<tr><th colspan="4" class="fcl">其他信息</th></tr>
+			<tr>
+				<td width="15%">配送方式</td>
+				<td width="35%">$order_info[sh_name]</td>
+				<td width="15%">配送价格</td>
+				<td width="35%">$order_info[sh_price]</td>
+			</tr>
+			<tr>
+				<td>订单状态</td>
+				<td>$order_info[status]</td>
+				<td>优惠券使用</td>
+				<td>$order_info[discount_name]</td>
+			</tr>
+			<tr>
+				<td>发票票头</td>
+				<td colspan="3">$order_info[invoice]</td>
+			</tr>
+		</table>
+		</div>
+<!--
+EOT;
+?>-->

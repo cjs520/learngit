@@ -1,0 +1,48 @@
+<!--<?php
+print <<<EOT
+-->
+<!--form content-->
+<form  method="post" action="account.php?action=$action" name="address">
+	<input type="hidden" name="step" value="1" />
+	<input type="hidden" name="act" value="$act" />
+	<input type="hidden" name="uid" value="$uid" />			
+	<table cellspacing="0" class="table_list" rel="table">
+		<tr><th colspan="2" class="fcl red">收货地址添加/修改</th></tr>
+		<tr>
+			<td>收货人<font color="red">(*)</font></td>
+			<td><input name="consignee" value="$add_info[consignee]" class="text" size="30"  type="text" />  &nbsp;<input name="is_buy" type="checkbox" value="1" $add_info[is_buy] /> 默认地址</td>
+		</tr>
+		<tr>
+			<td>手机号码<font color="red">(*)</font></td>
+			<td>
+			    <input name="mobile" value="$add_info[mobile]" class="text span_left" size="30"  type="text" />
+                <p class="alert_warning"><span class="icon_waring"></span>请正确填写，本手机号码用于接收团购验证等重要信息</p>
+			</td>
+		</tr>
+		<tr>
+			<td>所属地区</td>
+			<td>
+			<script language="javascript" src="include/javascript/jquery.city.js"></script>
+			<select id="province" name="province"></select>
+			<select id="city" name="city"></select>
+			<select id="county" name="county"></select>
+			<script type="text/javascript">
+			$(function(){
+				$.init_area(new Array("province","city","county"),new Array("$add_info[province]","$add_info[city]","$add_info[county]"));
+			});
+			</script></td>
+		</tr>
+		<tr>
+			<td>街道地址<font color="red">(*)</font></td>
+			<td><input name="address" value="$add_info[address]" class="text span_left" size="30"  type="text" /><p class="alert_warning"><span class="icon_waring"></span>请不要重复填写省市</p></td>
+		</tr>
+		<tr>
+			<td>邮政编码</td>
+			<td><input name="zipcode" value="$add_info[zipcode]" class="text span_left" size="30"  type="text" /></td>
+		</tr>
+	</table>
+	<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+</form>
+<!--
+EOT;
+?>-->

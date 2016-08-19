@@ -1,0 +1,186 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除求购信息？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+	
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定审核指定求购信息？")) return;
+		
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=check&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    window.location.reload();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=back]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("驳回指定的求购信息？")) return;
+		
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		var back_reason=$(this).siblings("input[@rel=back_reason]").val();
+		if(back_reason=="")
+		{
+		    alert("请填写您的驳回理由");
+			return;
+		}
+		
+		$.post(
+		    "admincp.php?module=$module&action=back&uid="+uid+"&rnd="+Math.random(),
+			"back_reason="+back_reason,
+			function(msg){
+			    window.location.reload();
+			}
+		);//end post
+	});//end click
+	
+	$("a[@rel=edit]").click(function(e){
+	    e.preventDefault();
+		var url=$(this).attr("apply_url");
+		var o=$("div.newopen");
+		var o_block=$("#block");
+		o.find("iframe").remove();
+		o.children("div[@rel=content]").html('<iframe src="'+url+'" frameborder="0" width="100%" height="390px"></iframe>');
+		
+		o_block.show();
+		var itop=(document.documentElement.clientHeight-o.height())/2+$(document).scrollTop();
+        var ileft=(document.documentElement.clientWidth-o.width())/2+$(document).scrollLeft();
+        o.css({
+            position:"absolute",
+            top:itop+"px",
+            left:ileft+"px"
+        });
+		o.show();
+	});//end click
+	
+	$("input[@rel=od]").blur(function(){
+	    var od=$(this).val();
+		if(od==$(this).attr("old_v")) return;
+		
+		var jq_input=$(this);
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=set_od&uid="+uid+"&od="+od+"&rnd="+Math.random(),
+			function(){
+			    jq_input.attr("old_v",od);
+			}
+		);//end get
+	});//end blur
+});
+</script>
+<script type="text/javascript">
+function iframe_callback(msg,other_info)
+{
+    $("#block").hide();
+	$("div.newopen").hide();
+	window.location.reload();
+}
+</script>
+
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+    <form name="search_form" action="admincp.php?module=$module&action=$action" method="post">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1" style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">求购信息管理</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list1" style="border-top:none;">
+		<tr>
+			<td width="10%">搜索</td>
+			<td>
+			    <input type="text" class="text" name="ps_search" value="$ps_search" size="30" />
+				<input name="member" type="submit" value="搜 索" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+        	<th>发布者</th>
+			<th width="30%">商品名称</th>
+			<th>分类名称</th>
+			<th>单价</th>
+			<th>数量</th>
+			<th>权重</th>
+			<th>留言数量</th>
+            <th>状态</th>
+			<th>操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_want_buy as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+        	<td>$val[member_id]</td>
+			<td class="td1"><img src="$val[pic]" width="80" height="80" class="span_left" />&nbsp;<span class="sptm">$val[goods_name]</span></td>
+			<td>$val[goods_category]</td>
+			<td>$val[price]</td>
+			<td>$val[num]</td>
+			<td><input type="text" class="text" rel="od" value="$val[od]" uid="$val[uid]" old_v="$val[od]" size="5" /></td>
+			<td>$val[msg_num]</td>
+            <td>$val[status]</td>
+			<td>
+			    <a href="#" rel="edit" apply_url="admincp.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="修改"></a> 
+				<a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+<!--
+EOT;
+if($val[approval_date]==0){
+print <<<EOT
+-->
+                <a href="#" rel="check" uid="$val[uid]" class="tipsy_s check" title="审核"></a>
+				<a href="#" rel="back" uid="$val[uid]" class="tipsy_s che" title="驳回"></a>
+				驳回原因：<input type="text" class="text" rel="back_reason" style="width:100px;" />
+<!--
+EOT;
+}else if($val[approval_date]<0){ print <<<EOT
+-->	
+			     驳回理由：$val[back_reason]
+<!--
+EOT;
+} print <<<EOT
+-->	
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+
+</div>
+<!--
+EOT;
+?>-->

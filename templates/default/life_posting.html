@@ -1,0 +1,130 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+<script type="text/javascript">
+var editor1;
+KindEditor.ready(function(K) {
+	editor1 = K.create('textarea[name="detail"]', {
+		uploadJson : 'member.php?action=editor&cmd=upload',
+		fileManagerJson : 'member.php?action=editor&cmd=list_files',
+		allowFileManager : true,
+		items:kindecitor_items
+	});
+});
+</script>
+
+<script type="text/javascript">
+$(function(){
+    $("form[@name=topic_form]").submit(function(){
+	    var msg="";
+		if($("input[@name=title]").val()=="") msg+="请填写标题内容\\n";
+		if(editor1.text()=="") msg+="请填写话题内容\\n";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		
+		var jq_img=$("<div>"+editor1.html()+"</div>").find("img:first");
+		var cover=jq_img.size()>0?jq_img.attr("src"):"";
+		$("input[@name=cover]").val(cover);
+		
+		$("input[@name=submit]").attr("disabled",true);
+		return true;
+	});//end click
+	
+	var tag_lock=false;
+	$("input[@name=create_tag]").click(function(){
+	    if(tag_lock) return;
+	    var content=editor1.text().substr(0,500);
+		if(content=="")
+		{
+		    alert("请先填写您的话题内容");
+			return;
+		}
+		
+		tag_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=create_tag",
+			type:"POST",
+			data:"content="+content,
+			cache:true,
+			success:function(msg){
+			    $("input[@name=tags]").val(msg);
+			},
+			complete:function(){
+			    tag_lock=false;
+			}
+		});
+	});//end click
+	
+	$("a[@rel=preview]").click(function(e){
+	    e.preventDefault();
+		var jq_form=$("#topic_form").clone();
+		jq_form.attr("target","_new");
+		jq_form.attr("action","life_post.php?cmd=preview");
+		jq_form.find("textarea[@name=detail]").val(editor1.html());
+		jq_form.trigger("submit");
+	});//end click
+});
+</script>
+
+<div class="left_quan">
+	<div class="h_oflow border">
+    	<div class="location"><span class="loca_icon"></span><a href="home.php">首页</a> >> <a href="life.php">生活圈</a> >> <a href="$detail_url">$comm[c_name]</a> >> 发表帖子</div>
+        <form id="topic_form" name="topic_form" method="post" action="life_posting.php?action=$comm[uid]">
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" name="cover" value="" />
+		<div class="h_oflow posting">    
+        	<div class="mb10">
+                标题：<input name="title" type="text" class="text" size="100" />&nbsp;&nbsp;       
+            </div>
+        	<textarea name="detail" class="textarea text_2" style="height:450px"></textarea>
+            <div class="mb10 mt10"><input name="tags" type="text" class="text text_3" /> <input name="create_tag" type="button" value="提取标签" /> 标签之间用空格隔开，限5个。</div>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+--> 
+			<div class="mb10 mt10">
+			    验证码：<input name="code" type="text" class="text text_yzm" size="20" maxlength="8" /> 
+				<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:32px" alt="验证码" />
+			</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+			<div class="mb10">
+			    <input type="submit" class="fl fd f14 green_but mr5" value="发布"/> 
+				<a href="#" rel="preview" class="fl fd f14 gray_but mr5" style="display:none;">预览</a>
+			</div>
+        </div>
+		</form>  
+    </div>
+</div>
+<div class="right_quan">
+    <h3 class="titlec"><span>热门圈子</span><a href="life_all.php" class="red">更多>></a></h3>
+    <div class="quan_recom">
+<!--
+EOT;
+foreach ($cache->get_cache('get_hot_community') as $val){
+print <<<EOT
+-->
+		<dl>
+        	<dt><a href="$val[detail_url]"><img src="$val[c_logo]" /></a></dt>
+            <dd><p><a href="$val[detail_url]" class="fd f13">$val[c_name]</a></p>
+            	<p class="gray">{$val[member_num]}个成员<br />$val[c_proclaim]</p>
+            </dd>
+        </dl>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </div><!-- 推荐圈子 -->
+</div>
+<!--
+EOT;
+?>-->	

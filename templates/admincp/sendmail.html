@@ -1,0 +1,208 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    var m_id='';
+	var grade='0';
+	var is_sup='0';
+	var page=1;
+	var total_page=0;
+	var search_lock=false;
+	
+	$.extend({
+	    SetPageEvent:function(){
+		    $("a[@rel=next_page]").unbind();
+			$("a[@rel=prev_page]").unbind();
+			
+			$("a[@rel=next_page]").click(function(e){
+			    e.preventDefault();
+				if(search_lock) return;
+				if(page+1>total_page)
+				{
+				    alert("当前已经是最后一页");
+					return;
+				}
+				page++;
+				$.SearchMember();
+			});//end click
+			
+			$("a[@rel=prev_page]").click(function(e){
+			    e.preventDefault();
+				if(search_lock) return;
+				if(page-1<=0)
+				{
+				    alert("当前已经是第一页");
+					return;
+				}
+				page--;
+				$.SearchMember();
+			});//end click
+		},
+		SetEmailEvent:function(){
+		    $("a[@rel=m_email]").unbind();
+			$("a[@rel=m_email]").click(function(e){
+			    e.preventDefault();
+				var email=$(this).attr("email");
+				var cur_receiver=$("textarea[@name=receiver]").val();
+				
+				if($(this).hasClass("hover"))
+				{
+				    $(this).removeClass("hover");
+					if(cur_receiver.indexOf(email)>=0) $("textarea[@name=receiver]").val($("textarea[@name=receiver]").val().replace(email+";",""));
+				}
+				else
+				{
+				    $(this).addClass("hover");
+					if(cur_receiver.indexOf(email)<0) $("textarea[@name=receiver]").val($("textarea[@name=receiver]").val()+email+";");
+				}
+			});//end click
+		},
+		SearchMember:function(){
+		    if(search_lock) return;
+			search_lock=true;
+			
+			$.ajax({
+			    url:"admincp.php?module=$module&action=search_member",
+				type:"POST",
+				dataType:"json",
+				cache:false,
+				data:{
+				    m_id:m_id,
+					grade:grade,
+					is_sup:is_sup,
+					page:page
+				},
+				success:function(json){
+				    total_page=json.total_page;
+					var html="";
+					var o_div=$("div[@rel=m_list]");
+					var cur_receiver=$("textarea[@name=receiver]").val();
+					o_div.empty();
+					
+					$.each(json.arr_member,function(i){
+					    var cls=cur_receiver.indexOf(this.member_email)<0?"":"hover";
+					    html+='<a href="#" rel="m_email" email="'+this.member_email+'" class="'+cls+'">'+this.member_id+'</a>';
+					});//end each
+					if(html!="") o_div.html(html);
+					$.SetEmailEvent();
+				    $.SetPageEvent();
+				},
+				complete:function(){
+				    search_lock=false;
+				}
+			});//end ajax
+		}
+	});//end extend
+	
+	$("input[@rel=search]").click(function(){
+	    m_id=$("input[@rel=m_id]").val();
+		grade=$("#grade").val();
+		is_sup=$("input[@name=is_sup][@checked]").val();
+		page=1;
+	
+	    $.SearchMember();
+	});//end click
+	
+	var submit_lock=false;
+	$("input[@rel=submit_email]").click(function(){
+	    if(submit_lock) return;
+		var msg="";
+		var receiver=$("textarea[@name=receiver]").val();
+		var mail_subject=$("input[@name=mail_subject]").val();
+		var mail_body=$("textarea[@name=mail_body]").val();
+		if(receiver=="") msg+="请填写接收人邮箱地址\\n";
+		if(mail_subject=="") msg+="请填写邮件标题\\n";
+		if(mail_body=="") msg+="请填写邮件内容\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		submit_lock=true;
+		$.ajax({
+		    url:"admincp.php?module=$module&action=send&step=1",
+			type:"POST",
+			cache:false,
+			data:{
+			    receiver:receiver,
+				mail_subject:mail_subject,
+				mail_body:mail_body
+			},
+			success:function(msg){
+			    alert(msg);
+			},
+			complete:function(){
+			    submit_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+<div id="right">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="4%">ID</th>
+			<th width="12%">发送邮件</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>会员检索</td>
+			<td id="send_chck">
+			    会员ID：<input type="text" rel="m_id" style="width:70px;" class="text text_4" /> 
+				会员等级：$sel_grade 
+				是否商铺：<input type="radio" name="is_sup" value="0" checked /> 全部 
+				          <input type="radio" name="is_sup" value="1" /> 普通会员 
+						  <input type="radio" name="is_sup" value="2" /> 商铺会员 
+				<input type="button" rel="search" value="点击搜索" />
+			</td>
+		</tr>
+  
+		<tr>
+		    <td>2</td>
+			<td>会员搜索结果</td>
+			<td  >
+                <div class="member_list" rel="m_list">还未搜索</div>
+				<a href="#" rel="prev_page">上一页</a>
+				<a href="#" rel="next_page">下一页</a>
+			</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>接收邮件</td>
+			<td>
+			    <textarea name="receiver" rows="3" cols="100" class="text"></textarea> 
+			   （手动填写，或从会员检索中直接选取；多个邮箱用;分隔）
+			</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>标题</td>
+			<td><input type="text" name="mail_subject" size="30" class="text text_4" /></td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>邮件内容</td>
+			<td>
+			    <textarea name="mail_body" rows="15" cols="110" class="text"></textarea><br />
+				（可填写HTML格式的文本）
+			</td>
+		</tr>
+		<tr>
+		    <td>6</td>
+			<td>说明</td>
+			<td>
+			    注意：如果您当前使用的是<b class="red">搜狐云邮件(推荐！)</b>，发送的内容需要经过云邮件平台的样本审核（特别注意：添加的样本类型为<b class="red">批量类型</b>），<a href="http://sendcloud.sohu.com" target="_blank">点击进入云邮件平台</a><br />
+				注意：一次群发的数量不能超过<b class="red">100</b>封<br />
+				如果需要更高级的功能，进行云邮件平台的深度整合，让商城的邮件功能更加强大，请咨询QQ客服：<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=61239508&site=qq&menu=yes"><img border="0" style="vertical-align:middle;" src="http://wpa.qq.com/pa?p=2:61239508:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a><br />
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="button" rel="submit_email" value="确定" class="button" /></div>
+</div>
+<!--
+EOT;
+?>-->

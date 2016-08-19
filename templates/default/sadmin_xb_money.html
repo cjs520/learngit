@@ -1,0 +1,45 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+	
+
+	<div class="mem_right">
+		<div class="member_title fd red">消保明细</div>
+		<p class="f14" style="padding:8px 0 16px 16px;">
+		    账户消保余额：<span class="fd f16 orange">$shop_file[xb_money] </span> 
+			您的消保账户不足？点击这里进行 <a class="new_button"  href="sadmin.php?module=sup_check&action=list">充值</a>
+		</p>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th>交易类型</th>
+			    <th width="8%">付款类别</th>
+			    <th width="14%">交易单号</th>
+		        <th width="10%">会员</th>
+			    <th width="10%">收支</th>
+			    <th width="8%">消保余额</th>
+			    <th width="15%">创建时间</th>
+			</tr>
+<!--
+EOT;
+foreach ($member_xb as $val){
+print <<<EOT
+-->			<tr uid="$val[id]">
+				<td class="td1">$val[money_reason]</td>
+			    <td>$val[type]</td>
+			    <td>$val[money_sess]</td>
+		        <td><a href="admincp.php?module=xb_money&action=list&ps_member=$val[money_id]">$val[money_id]</a></td>
+			    <td>$val[add] <span class="orange">$val[minus]</span></td>
+			    <td>$val[money_left]</td>
+			    <td>$val[register_date]</td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div>	
+<!--
+EOT;
+?>-->

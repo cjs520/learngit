@@ -1,0 +1,36 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+    <div class="mem_right">
+    	<div class="member_title fd red">我的竞拍</div>      
+        <table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th>商品</th>
+				<th>详细信息</th>
+			</tr>
+<!--
+EOT;
+foreach ($auction_list as $val){
+print <<<EOT
+-->			<tr>
+				<td class="fcl"><a href="$val[url]" target="_blank"><img src="$val[goods_file1]" class="border" width="80" height="80" /></a><br /><a href="$val[shop_url]" target="_blank">$val[shop_name]</a><br />
+</td>
+				<td class="fcl">
+                	<a href="$val[url]" target="_blank">$val[goods_name]</a><br />
+                	最新出价：<span class="orange">$val[cur_price]</span> ($val[buyer])<br />
+                	日期：$val[cur_date]<br />
+                	状态：$val[status]
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->				
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 竞拍商品 结束 -->
+<!--
+EOT;
+?>-->

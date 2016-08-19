@@ -1,0 +1,50 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+<script type="text/javascript">
+KindEditor.ready(function(K) {
+    var editor1 = K.create('textarea[name="page_body"]', {
+	    uploadJson : 'sadmin.php?module=editor&action=upload',
+		fileManagerJson : 'sadmin.php?module=editor&action=list_files',
+		allowFileManager : true,
+		items:kindecitor_items
+	});
+});
+</script>
+    <div class="mem_right">
+		<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<input type="hidden" name="page" value="$page" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd"><a href="sadmin.php?module=page&action=list" class="span_right white mem_add">返回页面</a>添加页面</th></tr>
+			<tr>
+				<td width="18%">页面网址名称</td>
+				<td><input type="text" name="page_name" id="page_name" value="$page_name" size="40" class="text" /> <span class="gray">输入page英文名称</span></td>
+			</tr>
+			<tr>
+				<td>页面名称</td>
+				<td><input type="text" name="page_subject" id="page_subject" value="$page_subject" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>关键字</td>
+				<td><textarea name="page_key" class="textarea" cols="80" rows="4">$page_key</textarea></td>
+			</tr>
+			<tr>
+				<td>描述</td>
+				<td><textarea name="page_desc" class="textarea" cols="80" rows="4">$page_desc</textarea></td>
+			</tr>
+			<tr>
+				<td>内容</td>
+				<td><textarea name="page_body" style="width:755px;height:400px;visibility:hidden;">$page_body</textarea></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>	
+<!--
+EOT;
+?>-->

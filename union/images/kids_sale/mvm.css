@@ -1,0 +1,40 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+body { background:url(bg_body.gif) repeat-y center; }
+.top1_bg { background:none; }
+.totel,.tocart,.tolist { border:solid #fff; border-width:0 1px; }
+.totel_show,.tocart_show,.tolist_show { border:solid #ddd; border-width:0 1px; }
+.wrapper { padding-bottom:50px; border-bottom:1px dashed #809A30; background:url(bg_top.gif) repeat-x bottom; }
+.footer_bg { border:none; }
+.title1 { background:#F3F5DD; }
+.title1 span { color:#536619; }
+.title2 { height:45px; padding:35px 50px 0 65px; background:url(title_bg.gif); }
+.title2 span { padding:0 8px; color:#ae5918; font-size:14px; line-height:34px; }
+.title2 img { height:34px; }
+.title2 a { float:right; }
+.zn_search { padding:7px 0; color:#6f8b05; }
+.zn_search .s_but { width:53px; height:22px;background:url(s_but.gif); }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:0 auto 10px; }
+.top3 { height:40px; padding-bottom:50px; background:url(bg_top.gif) repeat-x bottom; }
+.top3 ul { float:left; width:715px; }
+.top3 li .navtab { float:left; width:71px; height:40px; overflow:hidden; line-height:40px; font-size:12px; color:#809A30; font-weight:bold; background:url(nav_bg.gif) no-repeat top center; text-align:center; }
+.top3 li .self { float:left;  font-weight:bold;  }
+.top3 li a:hover { color:#333; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:40px; line-height:32px; padding:0 0 0 10px; background:url(cate_bg.png) 0 -60px; }
+.top3 .allcat span { display:block; position:absolute; left:15px; top:10px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:15px; top:3px; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#ffefb4;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#9a7d2f; }
+.top_cate dt.self { background:#fff4cc; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#fff4cc; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#9a7d2f; }
+.sub_category a:hover { background:#ffefb4; color:#9a7d2f; }
+/*-- 公告 --*/
+.artile_list { border:1px dashed #90B603; background:#F3F5DD; }
+.artile_list .title1 { border-bottom:1px dashed #90B603; }
+.artile_list .border { border:none; }
+.artile_list li { height:24px; line-height:24px; border-bottom:1px dotted #b5e505; background:url(notice_icon.gif) no-repeat 0 5px; text-indent:20px; }

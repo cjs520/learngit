@@ -1,0 +1,100 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("form[@name=share_form]").submit(function(){
+	    var msg="";
+		if($("textarea[@name=comment]").val()=="") msg+="请填写您的分享心得\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+	    return true;
+	});//end submit
+	
+	$("a[@rel=del_pic]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定图片")) return;
+		
+		var uid=$(this).attr("uid");
+		var pic_idx=$(this).attr("pic_idx");
+		
+		$.get(
+		    "member.php?action=$action&cmd=del_pic&uid="+uid+"&pic_idx="+pic_idx+"&rnd="+Math.random(),
+			function(){
+			    $("div[@rel=pic][@pic_idx="+pic_idx+"]").remove();
+				$("td[@rel=upload]").append('<input class="text" type="file" name="gallery[]"> <br />');
+			}
+		);//end get
+	});//end click
+});
+</script>
+
+    <div class="mem_right">
+	    <form name="share_form" action="member.php?action=$action&cmd=$cmd" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" name="og_uid" value="$og_uid" />
+		<input type="hidden" name="uid" value="$share[uid]" />
+		<input type="hidden" name="p_url" value="$_GET[p_url]" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="fcl red">我要晒单</th></tr>
+			<tr>
+                <td width="18%">商品信息：</td>
+                <td>
+				    <img src="$g[goods_file1]" alt="" width="80" height="80" class="fl"><span class="fl pad8"><a href="$g[url]" target="_blank">$og[goods_name]</a><br />$og[buy_price]<br />属性：$og[goods_attr]</span>
+                </td>
+            </tr>
+			<tr>
+            	<td>心得分享：</td>
+                <td><textarea name="comment" class="textarea" style="resize:none;">$share[comment]</textarea></td>
+            </tr>
+<!--
+EOT;
+if($cmd=='edit'){
+print <<<EOT
+-->
+			<tr>
+			    <td>当前图片</td>
+				<td>
+<!--
+EOT;
+foreach($arr_pics as $key=>$val){
+print <<<EOT
+-->
+				<div class="fl cycle_list" rel="pic" pic_idx="$key"><img src="$val" width="131" height="80" /><br /><a href="#" rel="del_pic" uid="$share[uid]" pic_idx="$key">[删除]</a></div>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+            <tr>
+            	<td>上传图片：</td>
+                <td rel="upload">
+<!--
+EOT;
+for($i=0;$i<$upload_num;$i++){
+print <<<EOT
+-->
+				    <input class="text" type="file" name="gallery[]"> <br />
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+            </tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div><!-- 晒单 -->
+<!--
+EOT;
+?>-->

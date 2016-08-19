@@ -1,0 +1,144 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<div class="mem_right">
+		<form action="sadmin.php?module=$module&action=edit" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+<!--
+EOT;
+if($mvm_member[certified_type] & 1 || $mvm_member[certified_type] & 2){
+print <<<EOT
+--><!--
+EOT;
+}else{ print <<<EOT
+-->
+		<p class="alert_warning" style="float:none;margin:0;"><span class="icon_waring"></span>为打造诚信购物环境，商铺必须经过实名或实体认证，未认证商铺不能正式开通，请及时提交个人身份证或营业执照等有效证件。您的认证信息，只有管理员可见，并向您郑重承诺，绝无外泄！</p>
+		<div class="clear"></div>
+<!--
+EOT;
+}print <<<EOT
+-->	
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+			  <th colspan="2" class="red fcl fd">实体商铺认证（营业执照证书）</th>
+			</tr>
+			<tr>
+				<td width="15%">认证状态</td>
+				<td>$enterprice_certify</td>
+			</tr>
+			<tr>
+				<td>证件图片</td>
+				<td>$licence_img</td>
+			</tr>
+			<tr>
+				<td>证件扫描图</td>
+				<td><input type="file" name="up_licence" id="up_licence"  size="30" class="text2" /><p class="alert_info"><span class="icon_info"></span>图片允许格式为：jpg,gif,png</p></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+			
+		<form action="sadmin.php?module=$module&action=edit" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="2"/>
+		<input type="hidden" name="action" value="$action"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">个人身份认证（其它有效证件）</td></th>
+			<tr>
+				<td width="15%">认证状态</td>
+				<td>$personal_certify</td>
+			</tr>
+			<tr>
+				<td>证件图片</td>
+				<td>$id_card_img</td>
+			</tr>
+			<tr>
+				<td>证件扫描图</td>
+				<td><input type="file" name="up_id_card" id="up_id_card"  size="30" class="text2" /><p class="alert_info"><span class="icon_info"></span>图片允许格式为：jpg,gif,png</p></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+		
+<script type="text/javascript">
+$(function(){
+    $("input[@name=pay_id]:first").attr("checked",true);
+	
+	var xb_lock=false;
+	$("input[@rel=xb_pay]").click(function(){
+	    if(xb_lock) return;
+		if(!confirm("确认提交申请？")) return;
+	    var advance=$("input[@name=advance]:first").attr("checked")?1:0;
+		var pay_pass=$("input[@name=pay_pass]").val();
+		var pay_id=$("input[@name=pay_id][@checked]").val();
+		var xb_money=$("input[@name=xb_money]").val();
+		var msg="";
+		xb_money=parseFloat(xb_money);
+		if(isNaN(xb_money) || xb_money<=0) msg+="请输入正确的消保金额\\n";
+		
+		xb_lock=true;
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=edit&step=3",
+			type:"POST",
+			dataType:"json",
+			data:{
+			    advance:advance,
+				pay_pass:pay_pass,
+				pay_id:pay_id,
+				xb_money:xb_money
+			},
+			cache:false,
+			success:function(json){
+			    if(json.succ!="1")
+				{
+				    alert(json.err);
+					return;
+				}
+				$("td[@rel=pay_form]").html(json.code_form);
+				$("td[@rel=pay_form]").parent().show();
+			},
+			complete:function(){
+			    xb_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<th colspan="2" class="red fcl fd">申请消保 <span class="fn gray">消保认证是指商铺缴纳一定数额的消费者保障金，用于交易纠纷时先行赔付给买家</span></th>
+				
+			</tr>
+			<tr>
+				<td width="15%">消保信息</td>
+				<td>您当前消保账户余额为<b class="red">$shop_file[xb_money]</b>，如果不足以支持退货，请及时充值</td>
+			</tr>
+			<tr>
+				<td>申请费用</td>
+				<td>您此次充值金额为：<input type="text" name="xb_money" class="text" value="$mm_member_money" /> 元 （友情提示：每次充值金额不低于{$mm_member_money_txt}）</td>
+			</tr>
+			<tr>
+			    <td>支付方式</td>
+				<td>
+				    <input type="checkbox" name="advance" checked value="1" class="vmid"/> 使用预付款支付，您当前账户预付款余额：<b class="red">{$mm_price_sign}{$mvm_member[member_money]}</b>
+                    <p>不足部分使用其它方式支付 &nbsp;&nbsp;支付密码：<input name="pay_pass" type="password" class="text vmid" /> 还没设置支付密码？<a class="red" href="account.php?action=profile">现在就去设置。</a></p>			
+<!--
+EOT;
+foreach($payment_list as $val){
+print <<<EOT
+-->					<p><input type="radio" name="pay_id" value="$val[id]" /> $val[name] $val[pay_desc]</p>
+<!--
+EOT;
+} print <<<EOT
+-->				</td>
+			</tr>
+			<tr rel="pay_form" style="display:none;">
+			    <td>点击付款</td>
+				<td rel="pay_form"></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="button" rel="xb_pay" class="mem_button" value="" /></p>
+	</div>	
+<!--
+EOT;
+?>-->

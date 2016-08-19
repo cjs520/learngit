@@ -1,0 +1,72 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<div class="left_quan">
+	<div class="h_oflow border">
+    	<div class="location"><span class="loca_icon"></span><a href="./">首页</a> >> <a href="life.php">生活圈</a> >> $topic[t_name]</div>
+        <div class="posting">
+            <div class="mb10">
+                <span class="gray fr">0浏览/0论</span>
+                <h3 class="f14 fd">$topic[t_name]</h3>
+                <p class="gray mt6">标签：$topic[tags]</p>
+            </div>
+            <dl class="h_oflow post_content">
+            	<dt><img src="images/noimages/noface.jpg" width="50" height="50" /></dt>
+            	<dd>
+                	<p class="h_oflow mb8"><span class="fr">楼主</span><span class="fr gray pad8">2014-1-1</span><a href="" class="blue fd">$m_check_id</a></p>
+                    <p class="h_oflow gray">圈子(0)&nbsp;&nbsp;好友(0)&nbsp;&nbsp;话题(0)&nbsp;&nbsp;评论(0)</p>
+                </dd>
+            </dl>
+            <div class="post_content_zhu">$topic[content]</div>
+            <p class="coupon_page">
+                <a class="up" dir="next" rel="free_coupon" href="#"></a>
+                <a class="next" dir="prev" rel="free_coupon" href="#"></a>
+            </p>            
+            <div class="clear"></div>
+        </div>   
+    </div>
+	<div class="mt10 h_oflow border">
+    	<div class="location">发表评论</div>
+        <div class="h_oflow posting">    
+			<input name="" type="text" class="text2 text_3" value=""/>     
+            <div class="clear"></div>
+        	<textarea name="" class="textarea text_2" style="height:200px"></textarea>
+            <div class="mt10"><input name="" type="button" class="fl fd f14 green_but mr5" value="发布"/></div>
+        </div>   
+    </div>
+</div>
+<div class="right_quan">
+	<div class="h_oflow quan_zhu">
+    	<dl class="h_oflow">
+    		<dt class="fl"><img src="images/noimages/noface.jpg" /></dt>
+    		<dd class="fr">
+            	<p>圈主：<a class="fd blue" rel="friend" m_uid="$comm[m_uid]">$m_check_id</a></p>
+                <p><span class="fr">圈子(0)</span><span>好友(0)</span></p>
+                <p><span class="fr">话题(0)</span><span>评论(0)</span></p>
+                <p>爱好：<span>无</span></p>
+            </dd>
+    	</dl>  
+        <p class="f12">
+            标签：<span>无</span><br />
+            宣言：无   
+        </p>
+        <p class="mt10 mb10"><a rel="friend" m_uid="$comm[m_uid]" href="#" class="f14 fn green_but m_auto">加为好友</a></p>
+    </div>
+    <h3 class="mt10 titlec"><span>最新话题</span><a href="life_list.php" target="_blank" class="red">更多>></a></h3>
+    <ul class="quan_news">
+<!--
+EOT;
+foreach (get_new_topic() as $val){
+print <<<EOT
+-->
+    	<li><a href="$val[url]" target="_blank">$val[t_name]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </ul><!-- 热门话题 -->
+</div>
+<!--
+EOT;
+?>-->	

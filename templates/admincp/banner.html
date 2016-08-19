@@ -1,0 +1,193 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+var pattern=/^\d+$/;
+$(function(){
+    $(".pd").click(function(e){    //输出顺序单元格点击的时候
+	    var jqThis=$(this);
+		if(jqThis.children("input").size()<=0)
+		{
+		    var oldv=jqThis.text();
+		    jqThis.empty();
+		    jqThis.append("<input type=\"text\" style=\"width=100px;\" value=\""+oldv+"\">");
+			jqThis.cInput=jqThis.children("input");
+			jqThis.cInput.get(0).focus();
+			jqThis.cInput.get(0).select();
+			//为这个input绑定事件
+			jqThis.cInput.one("blur",function(){
+			    var v=jqThis.cInput.get(0).getAttribute("value");
+				jqThis.empty();
+				jqThis.append(document.createTextNode(v));
+				if(v==oldv) return;    //前后的值相同就不会回传了
+				var uid=jqThis.parent().attr("uid");
+				//发送到服务器去
+				$.get("admincp.php?module=banner&action=ajax&uid="+uid+"&field=banner_point&v="+encodeURI(v));
+			});
+		}
+	});//end pd click
+	
+	$(".td1").click(function(e){    //链接地址单元格点击的时候
+	    var jqThis=$(this);
+		var jqA=jqThis.children("a");
+		var jqSpan=jqA.children("span");
+		if(jqThis.children("input").size()<=0)
+		{
+		    var oldv=jqA.text();
+		    jqThis.empty();
+		    jqThis.append("<input type=\"text\" style=\"width=100px;\" value=\""+oldv+"\">");
+			jqThis.cInput=jqThis.children("input");
+			jqThis.cInput.get(0).focus();
+			jqThis.cInput.get(0).select();
+			//为这个input绑定事件
+			jqThis.cInput.one("blur",function(){
+			    var v=jqThis.cInput.get(0).getAttribute("value");
+				jqThis.empty();
+				jqA.text(v);
+				jqA.append(jqSpan);
+				jqThis.append(jqA);
+				if(v==oldv) return;    //前后的值相同就不会回传了
+				var id=jqThis.parent().attr("uid");
+				//发送到服务器去
+				$.get("admincp.php?module=banner&action=ajax&uid="+id+"&field=banner_subject&v="+encodeURI(v));
+			});
+		}
+	});//end td1 click
+	
+	$(".wd").click(function(e){    //宽度单元格点击的时候
+	    var jqThis=$(this);
+		if(jqThis.children("input").size()<=0)
+		{
+		    var oldv=jqThis.text();
+		    jqThis.empty();
+		    jqThis.append("<input type=\"text\" style=\"width=50px;\" value=\""+oldv+"\">");
+			jqThis.cInput=jqThis.children("input");
+			jqThis.cInput.get(0).focus();
+			jqThis.cInput.get(0).select();
+			//为这个input绑定事件
+			jqThis.cInput.one("blur",function(){
+			    var v=jqThis.cInput.get(0).getAttribute("value");
+				if(!pattern.test(v)) v=oldv
+				jqThis.empty();
+				jqThis.append(document.createTextNode(v));
+				if(v==oldv) return;    //前后的值相同就不会回传了
+				var uid=jqThis.parent().attr("uid");
+				//发送到服务器去
+				$.get("admincp.php?module=banner&action=ajax&uid="+uid+"&field=banner_width&v="+v);
+			});
+		}
+	});//end wd click
+	
+	$(".hd").click(function(e){    //高度单元格点击的时候
+	    var jqThis=$(this);
+		if(jqThis.children("input").size()<=0)
+		{
+		    var oldv=jqThis.text();
+		    jqThis.empty();
+		    jqThis.append("<input type=\"text\" style=\"width=50px;\" value=\""+oldv+"\">");
+			jqThis.cInput=jqThis.children("input");
+			jqThis.cInput.get(0).focus();
+			jqThis.cInput.get(0).select();
+			//为这个input绑定事件
+			jqThis.cInput.one("blur",function(){
+			    var v=jqThis.cInput.get(0).getAttribute("value");
+				if(!pattern.test(v)) v=oldv
+				jqThis.empty();
+				jqThis.append(document.createTextNode(v));
+				if(v==oldv) return;    //前后的值相同就不会回传了
+				var uid=jqThis.parent().attr("uid");
+				//发送到服务器去
+				$.get("admincp.php?module=banner&action=ajax&uid="+uid+"&field=banner_height&v="+v);
+			});
+		}
+	});//end wd click
+	
+	$(".bt").click(function(e){    //广告类型单元格点击的时候
+	    var jqThis=$(this);
+		if(jqThis.children("select").size()<=0)
+		{
+		    var oldv=jqThis.text();
+			var oldNumV=$.trim(oldv)=="Flash广告"?1:0;
+		    jqThis.empty();
+			var appendHtml="";
+			if($.trim(oldv)=="Flash广告")
+			    appendHtml="<select style=\"width:80px;\"><option value=\"1\" selected>Flash广告</option><option value=\"0\">图片广告</option></select>";
+			else
+			    appendHtml="<select style=\"width:80px;\"><option value=\"1\">Flash广告</option><option value=\"0\" selected>图片广告</option></select>";
+		    jqThis.append(appendHtml);
+			jqThis.cSelect=jqThis.children("select");
+			jqThis.cSelect.get(0).focus();
+			//为这个select绑定事件
+			jqThis.cSelect.one("blur",function(){
+			    var v=jqThis.cSelect.get(0).value;
+				var textV=parseInt(v)==1?"Flash广告":"图片广告";
+				jqThis.empty();
+				jqThis.append(document.createTextNode(textV));
+				if(v==oldNumV) return;    //前后的值相同就不会回传了
+				var uid=jqThis.parent().attr("uid");
+				//发送到服务器去
+				$.get("admincp.php?module=banner&action=ajax&uid="+uid+"&field=banner_class&v="+v);
+			});
+		}
+	});//end bt click
+	
+	$("#chkall").click(function(e){
+	    var b=$(this).attr("checked");
+		$("input[@rel=del_chk]").attr("checked",b);
+	});
+	
+	$("#delall").click(function(e){
+	    return confirm("确认全部删除？");
+	});
+});
+</script>
+<div id="right">
+<form action="admincp.php?module=$module" method="post">
+    <input type="hidden" name="step" value="1" />
+	<input type="hidden" name="action" value="all_delete" />
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">图片广告</td>
+			<td class="tright"><a href="admincp.php?module=$module&action=add" class="but1">添加广告</a></td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="6%"><label for="chkall"><input type="checkbox" id="chkall" /></label></th>
+			<th width="13%">广告名</th>
+			<th width="14%">广告位置</th>
+			<th width="*">宽</th>
+			<th width="*">高</th>
+			<th width="*">广告类型</th>
+			<th width="13%">开始时间</th>
+            <th width="13%">结束时间</th>
+			<th width="10%">$lang[operation]</th>
+		</tr>
+<!--
+EOT;
+foreach ($ad_rt as $val){
+print <<<EOT
+-->
+		<tr id="r$val[uid]" uid="$val[uid]" $val[color]>
+			<td><input type="checkbox" value="$val[uid]" name="uid_check[]" rel="del_chk" /></td>
+			<td class="td1"><a href="#" >$val[banner_subject]<span style="width:auto;"><!--<script src="$js_url?per=ad&status=$val[banner_point]&num=1&w=$val[banner_width]&h=$val[banner_height]"></script>--><img src="$val[banner_file1]" width="$val[banner_width]" height="$val[banner_height]" /></span></a></td>
+			<td class="pd" style="cursor:pointer;">$val[banner_point]</td>
+			<td class="wd" style="cursor:pointer;">$val[banner_width]</td>
+			<td class="hd" style="cursor:pointer;">$val[banner_height]</td>
+			<td class="bt" style="cursor:pointer;">$val[banner_type]</td>
+			<td>$val[start_date]</td>
+			<td>$val[end_date]</td>
+			<td><a href="$val[edit]">修改</a> | <a href="javascript:;" onclick="remove('$val[uid]','$val[del]');">删除</a></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><b style="float:left;"><input type="submit" id="delall" value="删除所选" class="button1" /></b><span>$page_list</span></div>
+</form>
+</div>
+<!--
+EOT;
+?>-->

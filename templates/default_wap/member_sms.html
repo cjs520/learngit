@@ -1,0 +1,214 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("input[@rel=chk_all]").click(function(e){
+			if(this.checked)
+				$("input[@type=checkbox]").attr("checked",true);
+			else
+				$("input[@type=checkbox]").attr("checked",false);
+		});//end click
+		
+		$("a[@rel=read]").click(function(e){
+			e.preventDefault();
+			var uid=$(this).attr("uid");
+			$.ajax({
+				cache:false,
+				dataType:"json",
+				type:"get",
+				url:"ajax.php?action=readmsg&uid="+uid,
+				success:function(json){
+					if(json.title)
+					{
+						//alert(json.title);
+						$("#sender").html(json.from);
+						$("#receiver").html(json.to);
+						$("#title").html(json.title);
+						$("#content").html(json.content);
+						var o=$("#msg_content");
+						var left=(document.documentElement.clientWidth-o.width())/2+$(document).scrollLeft()-20;
+						var top=(document.documentElement.clientHeight-o.height())/2+$(document).scrollTop();
+						o.appendTo("body");
+						o.css({"width":260+"px","position":"absolute","top":top+"px","left":left+"px"});
+						o.fadeIn(1000);
+						$("#block").css("display","block");
+					}
+					else
+					{
+						alert(json.error);
+					}
+				}
+			});
+		});//end click
+		
+		$("a.close").click(function(e){
+			e.preventDefault();
+			$("#msg_content").fadeOut(1000);
+			$("#block").css("display","none");
+		});//end click
+		
+		$("input.reply").click(function(e){
+			e.preventDefault();
+			var title="RE:"+$("#title").text();
+			var receiver=$("#sender").text();
+			$("input[@name=to]").val(receiver);
+			$("input[@name=title]").val(title);
+			$("textarea[@name=content]").trigger("focus");
+			$("#msg_content").fadeOut(1000);
+			$("#block").css("display","none");
+		});//end click
+		
+		$("a[@rel=mail_friend]").click(function(e){
+			e.preventDefault();
+			$("input[@name=to]").val($(this).attr("mid"));
+		});//end click
+		
+		$("a[@rel=del]").click(function(e){
+	        e.preventDefault();
+		    if(!confirm("确定删除？")) return false;
+		    window.location=$(this).attr("url");
+	    });//end click
+		
+		$("form[@name=msg_list],form[@name=msg_list2],form[@name=msg_list3]").submit(function(){
+		    if(!confirm("确认删除？")) return false;
+			return true;
+		});//end submit
+	});
+	</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="title_rate_list">
+ 			<a href="account.php?action=mysms" id="bay1" $receive_class><span>收信箱</span></a>
+			<a href="account.php?action=mysms&send=send" id="bay2" $send_class><span>发信箱</span></a>
+			<a href="account.php?action=mysms&send=admin" id="bay2" $admin_class><span>通知</span></a>
+		</div>
+<!--
+EOT;
+if($send=='send'){
+print <<<EOT
+-->		<form action="" method="post" name="msg_list">
+		<input type="hidden" name="del" value="del" />
+		<table cellspacing="0" class="table_list" rel="table">
+            <tr>
+				<th>发信箱</th>
+			</tr>
+<!--
+EOT;
+foreach($sms_list as $val){
+print <<<EOT
+-->			<tr>
+				<td>
+                	收件人：$val[to_id]<br />
+                    标题：$val[title]<br />
+                    最后更新：$val[time]<br />
+                	操作：
+					<a href="#" rel="del" url="account.php?action=$action&send=$send&page=$page&del=del&uid=$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>&nbsp;&nbsp;<a href="#" rel="read" uid="$val[uid]" class="tipsy_s view blue" title="查看">查看</a>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		</form>
+<!--
+EOT;
+}else if($send=='admin'){
+print <<<EOT
+-->		<form action="" method="post" name="msg_list2">
+		<input type="hidden" name="del" value="del" />
+		<table cellspacing="0" class="table_list fct" rel="table">
+            <tr>
+ 
+				<th>通知</th>
+			</tr>
+<!--
+EOT;
+foreach($sms_list as $val){
+print <<<EOT
+-->			<tr>
+				<td>
+                    标题：$val[title]<br />
+                    最后更新：$val[time]<br />
+                	操作：
+<!--
+EOT;
+if($mm_adminid==1){
+print <<<EOT
+-->
+					<a href="#" url="account.php?action=$action&send=$send&page=$page&del=del&uid=$val[uid]" rel="del" class="tipsy_s delete blue" title="删除">删除</a>&nbsp;&nbsp;<a href="#" rel="read" uid="$val[uid]" class="tipsy_s view blue" title="查看">查看</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		</form>
+		
+<!--
+EOT;
+}else{
+print <<<EOT
+-->		<form action="" method="post" name="msg_list3">
+		<input type="hidden" name="del" value="del" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<th>收信箱</th>
+			</tr>
+<!--
+EOT;
+foreach($sms_list as $val){
+print <<<EOT
+-->			<tr>
+				<td>
+                	发件人：$val[from_id]<br />
+                    标题：$val[title]<br />
+                    最后更新：$val[time]<br />
+                	操作：
+					<a href="#" rel="del" url="account.php?action=$action&send=$send&page=$page&del=del&uid=$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>&nbsp;&nbsp;<a href="#" rel="read" uid="$val[uid]" class="tipsy_s view blue" title="查看">查看</a>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		</form>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<script type="text/javascript">
+		$(function(){
+			$("a[@rel=del_f]").click(function(e){
+				e.preventDefault();
+				if(!confirm("确定删除？")) return false;
+				var uid=$(this).attr("uid");
+				$.get(
+					"ajax.php?action=del_f&uid="+uid+"&rnd="+Math.random(),
+					function(msg){
+						$("p[@rel=f"+uid+"]").remove();
+					}
+				);//end get
+			});//end click
+		});
+		</script>
+		<div class="clear"></div>
+		
+		<div id="msg_content" class="disn open_window" style="width:260px;"><a class="close"></a>
+    		<table cellspacing="5" class="mem_sms"><tr><td width="60">发件人：</td><td id="sender"></td></tr>
+				<tr><td>收件人：</td><td id="receiver"></td></tr>
+				<tr><td>标&nbsp;&nbsp;&nbsp;题：</td><td id="title"></td></tr>
+				<tr><td valign="top">内&nbsp;&nbsp;&nbsp;容：</td><td id="content"></td></tr>
+			</table>
+		</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

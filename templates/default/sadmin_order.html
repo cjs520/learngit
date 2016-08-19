@@ -1,0 +1,214 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" media="all" href="images/admincp/calendar.css" />
+<script type="text/javascript" src="include/javascript/calendar.js"></script>
+<script language="javascript" src="language/cn/admin/lang.js"></script>
+<script language="javascript" src="include/javascript/date.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("tr[@rel=order_row]").each(function(i){
+	    var status=$(this).attr("status");
+		if(status=="1" || status=="3") return true;
+		$(this).find("input[@rel=delivery_code]").attr("readonly",true);
+		$(this).find("a[@rel=delivery]").hide();
+	});//end each
+	
+	$("a[@rel=delivery]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行发货？")) return;
+		var jq_a=$(this);
+	    var uid=$(this).attr("uid");
+		var v=$("input[@rel=delivery_code][@uid="+uid+"]").val();
+		if(v=="" && !confirm("未填写发货单号，发货后不可更改，确定直接发货？")) return;
+		
+		$.post(
+		    "sadmin.php?module=$module&action=delivery_code&rnd="+Math.random(),
+			"uid="+uid+"&v="+v+"&step=1",
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    jq_a.hide();
+				    $("input[@rel=delivery_code][@uid="+uid+"]").attr("readonly",true);
+				}
+			}
+		);//end post
+	});//end click
+	
+	$("a[@rel=ready]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行备货？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=ready&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+			    if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end get
+	});//end click
+
+
+	$("a[@rel=call_mobile]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行手机短信提醒吗？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=call_mobile&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+			    if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end get
+	});//end click
+	
+	
+	var check_lock=false;
+	$("a[@rel=group_check]").click(function(e){
+	    e.preventDefault();
+		if(check_lock) return;
+		var ordersn=$(this).attr("ordersn");
+		var code=$(this).siblings("input[@rel=order_code]").val();
+		if(!confirm("您确订对订单"+ordersn+"进行验证？")) return;
+		check_lock=true;
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=list&cmd=group_check&step=1",
+			type:"POST",
+			data:{
+			    ordersn:ordersn,
+				code:code
+			},
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+			    if(msg.indexOf("ERR")!=-1) return;
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			},
+			complete:function(){
+			    check_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red">订单列表</div>
+		<div class="newopen" style="width:880px;" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="title_rate_list">
+			<a href="sadmin.php?module=$module&action=$action" class="hover"><span>所有订单</span></a>
+			<a href="sadmin.php?module=$module&action=list&cmd=delay"><span>申请延期收货</span></a>
+			<a href="sadmin.php?module=back_order&action=list"><span>退货通道</span></a>
+			<a href="sadmin.php?module=order&action=list&cmd=group_check"><span>现场订单验证</span></a>
+		</div>		
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th>订单号码</th>
+				<th>订购者</th>
+				<th>商品金额</th>
+				<th>折扣</th>
+				<th>余额</th>
+				<th width="9%">订单状态</th>
+				<th width="9%">下单时间</th>
+				<th>发货单号</th>
+				<th>现场验证</th>
+				<th width="5%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_order as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]" rel="order_row" status="$val[status_code]">
+				<td><a href="$val[url]">$val[ordersn]</a>&nbsp;<a href="$val[url]" class="sprint" title="打印"></a></td>
+				<td class="mem_display">$val[username]</td>
+				<td>$val[goods_amount] + $val[goods_point]积分</td>
+				<td>$val[discount]</td>
+				<td class="red"><b>$val[goods_rest_amount_txt]</b></td>
+				<td>$val[status]$val[call]</td>
+				<td>$val[addtime]</td>
+				<td class="fct">
+<!--
+EOT;
+if($val[status_code]==3 && !($val[mark] & 8) && $val[goods_rest_amount]>0){
+print <<<EOT
+-->
+                    <a href="#" rel="ready" uid="$val[uid]"><span class="vmid finish"></span> 提醒买家已备货</a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->	
+				    <input type="text" class="vmid fl text mr5" rel="delivery_code" uid="$val[uid]" value="$val[delivery_code]" style="width:100px;" />
+					<a href="#" class="tipsy_s vmid delivery" title="请仔细核对发货单号，一旦提交将不可再修改。" rel="delivery" uid="$val[uid]"></a>
+<!--
+EOT;
+} print <<<EOT
+-->	
+				</td>
+				<td>
+<!--
+EOT;
+if($val[status_code]==1 || $val[status_code]==3){
+print <<<EOT
+-->
+				    <input type="text" class="vmid fl text mr5" rel="order_code" value="" style="width:80px;"/>
+					<a href="#" class="tipsy_s vmid verification" ordersn="$val[ordersn]" title="验证成功后即进行分账，请注意操作" rel="group_check" uid="$val[uid]"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+				<td>  
+				    <a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="编辑"></a>
+				</td>
+			</tr>
+					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		
+		<form action="sadmin.php?module=$module&action=$action" method="post">
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="4" class="red fcl">订单详细搜索</td></tr>
+			<tr>
+				<td>订购时间</td>
+				<td colspan="3"><input type="text" name="start_time" value="$start_time" id="start_time" class="text" onclick="return showCalendar('start_time', 'y-m-d');" /> ~ 
+				<input type="text" name="end_time" value="$end_time" id="end_time" class="text" onclick="return showCalendar('end_time', 'y-m-d');" /></td>
+			</tr>
+			<tr>
+				<td width="15%">收 货 人</td>
+				<td width="35%"><input type="text" name="consignee" value="$ps_name" size="30" class="text" /></td>
+				<td width="15%">订 购 人</td>
+				<td><input type="text" name="username" id="username" value="$username" size="30" class="text" /></td>
+			</tr>
+			<tr>
+				<td>订单号码</td>
+				<td><input type="text" name="ordersn" value="$ordersn" size="30" class="text" /></td>
+				<td>交易状态</td>
+				<td>
+				    $order_menu 
+					<input type="checkbox" name="wait_for_ready" $ready_checked value="1" /> 待备货
+				</td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

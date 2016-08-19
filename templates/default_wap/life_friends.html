@@ -1,0 +1,103 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">我的好友</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del_f]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定好友？")) return;
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "ajax.php?action=del_f&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    jq_a.parents("li[@uid="+uid+"]:first").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=invite]").click(function(e){
+	    e.preventDefault();
+		var jq_input=$(this).parents("li:first").find("input:first");
+		jq_input.attr("checked",!jq_input.attr("checked"));
+	});//end click
+	
+	var invite_lock=false;
+	$("a[@rel=invite_f]").click(function(e){
+	    e.preventDefault();
+		if(invite_lock) return;
+		var jq_input=$("input[@name=invite_friend][@checked]");
+		if(jq_input.size()<=0)
+		{
+		    alert("请先择您要邀请的好友");
+			return;
+		}
+		if(jq_input.size()>20)
+		{
+		    alert("一次邀请的好友不能大于20位");
+			return;
+		}
+		
+		invite_lock=true;
+		var arr=[];
+		jq_input.each(function(){
+		    arr.push($(this).val());
+		});
+		$.ajax({
+		    url:"ajax.php?action=life_detail&cmd=invite_friends",
+			type:"POST",
+			dataType:"json",
+			data:{
+			    c_uid:"$comm[uid]",
+				f_uid:arr.join(",")
+			},
+			cache:false,
+			success:function(json){
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				alert(json.info);
+			},
+			complete:function(){
+			    invite_lock=false;
+			}
+		});
+	});//end click
+});
+</script>
+
+<div class="left_quan">
+     
+    <div>
+        <ul class="quan_act1 ">
+<!--
+EOT;
+foreach ($my_friend as $val){
+print <<<EOT
+-->
+            <li uid="$val[uid]">
+			    <a href="#" rel="invite"><img src="$val[member_image]" /></a>
+				<a href="#" class="fct" rel="invite">$val[member_id]</a>
+				<a href="#" rel="del_f" uid="$val[uid]" class="gray_but1" style="display:none;">取消好友</a>
+				<p class="mt8 fct"><input name="invite_friend" type="checkbox" value="$val[member_uid]" /></p>
+			</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul><!-- 我的好友 -->
+        <div class="clear"></div>
+        <p><a href="#" rel="invite_f" class="pink_but">邀请好友</a>
+     
+        
+    </div>
+</div>
+ 
+<!--
+EOT;
+?>-->

@@ -1,0 +1,150 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return false;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=apply_del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+	
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认审核？")) return false;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=apply_check&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    window.location.reload();
+			}
+		);
+	});//end click
+	
+	$("a[@rel=back]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认回退？")) return false;
+		var uid=$(this).attr("uid");
+		var back_reason=$("textarea[@rel=back_reason][@uid="+uid+"]").val();
+		var reason=$
+		$.post(
+		    "admincp.php?module=$module&action=apply_back&uid="+uid+"&rnd="+Math.random(),
+			"back_reason="+back_reason,
+			function(msg){
+			    if($.trim(msg)!="") alert(msg);
+			    window.location.reload();
+			}
+		);
+	});//end click
+});
+</script>
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+<form action="admincp.php?module=$module" method="post">
+    <input type="hidden" name="action" value="del" /> 
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">广告申请管理</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="18%">标题</th>
+			<th width="18%">广告信息</th>
+			<th width="18%">相关图片</th>
+			<th width="18%">其他信息</th>
+			<th width="18%">退回理由</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($ad_list as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td class="td1">$val[title]</td>
+		    <td class="td1">位置：$val[module]->$val[other_param] -> $val[pos]<br />
+<!--
+EOT;
+if($val[wh]){
+print <<<EOT
+-->				长宽：$val[wh]
+<!--
+EOT;
+} print <<<EOT
+-->			</td>
+			<td><img src="$val[pic]" width="160" /></td>
+			<td class="td1">
+<!--
+EOT;
+if($val[ad_type]==0){
+print <<<EOT
+-->
+				商品名称：<a href="$val[url]" target="_blank">{$val[info][goods_name]}</a><br />
+				商品描述：{$val[info][goods_desc]}<br />
+				商品价格：{$val[info][goods_price]}<br />
+				商铺名称：<a href="$val[shop_url]" target="_blank">{$val[info][shop_name]}</a><br />
+<!--
+EOT;
+}else if($val[ad_type]==1){ print <<<EOT
+-->	
+				商铺名称：<a href="$val[shop_url]" target="_blank">{$val[info][shop_name]}</a><br />
+				商铺描述：{$val[info][shop_desc]}<br />
+<!--
+EOT;
+}else{ print <<<EOT
+-->	
+				显示类别：<a href="$val[url]" target="_blank">[{$val[info][show_cat]}]</a><br />
+<!--
+EOT;
+} print <<<EOT
+-->	
+			    申请人：$val[m_id]<br />
+				申请天数：$val[days]天
+			</td>
+			<td><textarea uid="$val[uid]" rel="back_reason" rows="5" cols="20" class="text"></textarea></td>
+			<td>
+<!--
+EOT;
+if($val[approval_date]<=0){
+print <<<EOT
+-->
+			    <a href="#" rel="check" uid="$val[uid]" title="点击审核" class="tipsy_s check"></a>
+<!--
+EOT;
+} print <<<EOT
+-->				
+                <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=view&uid=$val[uid]" title="查看" class="tipsy_s view"></a> 
+				<a href="#" rel="back" uid="$val[uid]" title="退回" class="tipsy_s tui"></a>
+				<a href="#" rel="del" uid="$val[uid]" title="删除" class="tipsy_s delete"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	</table>
+	<div id="page"><span>$page_list</span></div>
+</form>
+	
+	
+</div>
+<!--
+EOT;
+?>-->

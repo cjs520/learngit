@@ -1,0 +1,45 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+.title1 { background:url(bg_main.png) 0 -142px; }
+.title1 span { color:#c00; }
+.artile_list { width:238px; border:1px solid #fea3b7; }
+.artile_list .border { border:none; }
+.title2 { padding:4px 8px; background:url(bg_main.png) 0 -130px; line-height:34px; }
+.title2 span { padding:0 8px; color:#ff3232; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; color:#c00; }
+.zn_search { margin-top:17px; padding:0 7px; color:#c56274; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:0 auto; }
+.top3 { background:url(bg_new.jpg) repeat-x 0 0;  height:42px; overflow:hidden; }
+.top3 .tl,.top3 .tr{ display:block; float:left; width:5px; height:42px; background:url(bg_new.jpg) 0 -50px; }
+.top3 .tr { float:right; background-position:right -50px; }
+.top3 ul { float:left; width:705px; padding-top:10px; }
+.top3 li .navtab { float:left; padding:0 15px; background:url(icon.gif) no-repeat right -32px; padding-top:4px; line-height:28px; color:#c56274; font-weight:bold; }
+.top3 li .self { background:url(nav_bg.png) no-repeat 0 0; color:#ff266c; font-weight:bold; padding:0 0 0 18px; }
+.top3 li .self span { display:block; background:url(nav_bg.png) no-repeat right 0; padding:4px 18px 0 0; }
+.top3 li a:hover { color:#333; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:34px; line-height:32px; margin-top:8px; padding:0 0 0 10px; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:9px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:2px; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#fddae0;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#c56274; }
+.top_cate dt.self { background:#c76373; }
+.top_cate dt.self a { color:#fff; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#c76373; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#fff; }
+.sub_category a:hover { background:#fddae0; color:#c56274; }
+/*-- 左侧 --*/
+.btg { height:15px; background:url(bg_main.png); }
+.left .border { border:none; background:url(bg_main.gif);}
+.left .logo { border:1px solid #C76373; background:#fff; }
+.left .logo h3 { background:#ffebf0; }
+.left .line { height:31px; margin:5px 0; background:url(bg_main.png) -10px -20px; }
+.info { position:relative; }
+.fdjicon { position:absolute; right:0; top:0; width:55px; height:55px; background:url(bg_main.png) 0 -60px; }
+.friendlink .title1 { background:url(bg_main.gif); }
+.friendlink .title1 span { color:#ff266c; }
+.friendlink p a { border:1px solid #C76373; background:#fff; }

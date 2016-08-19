@@ -1,0 +1,81 @@
+<!--<?php print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+	var action="$action";
+	var script_name="$script_name";
+	var jq_a=$("div[@rel=action]>dl>dd>a");
+	var href,target_index=-1;
+	for(var i=0;i<jq_a.size();i++)
+	{
+		href=jq_a.eq(i).attr("href");
+		if(href.indexOf(action)!=-1 && href.indexOf(script_name)!=-1)
+		{
+			target_index=i;
+			break;
+		}
+	}
+	if(target_index>-1) jq_a.eq(target_index).addClass("now1");
+	$("table[@rel=table]").find("tr").hover(
+		function(){
+			$(this).children("td").css("backgroundColor","#cae4ff");
+		},
+		function(){
+			$(this).children("td").css("backgroundColor","white");
+		}
+	);
+	
+	var idx=0;
+	if("$script"=="member") idx=0;
+	else if("$script"=="account") idx=2;
+	
+	$("ul[@rel=member_tab]").children("li:eq("+idx+")").addClass("hover");
+    $("ul[@rel=member_tab]").children("li:eq("+idx+")").children().addClass("white");
+});
+</script>
+	<ul class="member_tab" rel="member_tab">
+		<li><a href="member.php?action=index">我是买家</a></li>
+		<li><a href="sadmin.php?module=index">我是商家</a></li>
+		<li><a href="account.php?action=index">账号管理</a></li>
+        <li><a href="member.php?action=want_supply">我的社交</a></li>
+	</ul>
+
+	<div class="clear"></div>
+	<div class="border_mem mem_left h_oflow" rel="action">
+<!--
+EOT;
+if(in_array($script,array('account'))){
+print <<<EOT
+-->		<dl>
+			<dt><a href="#" class="show">我的账户</a></dt>
+			<dd><a href="account.php?action=index">帐户概览</a></dd>
+			<dd><a href="account.php?action=address">收货地址</a></dd>
+			<dd><a href="account.php?action=point">积分明细</a></dd>
+			<dd><a href="account.php?action=money">资金明细</a></dd>
+			<dd><a href="account.php?action=profile">修改资料</a></dd>
+			<dd><a href="account.php?action=mysms" style="border-bottom:none;">短消息</a></dd>
+		</dl>
+<!--
+EOT;
+}else{
+print <<<EOT
+-->		<dl>
+			<dt><a href="#" class="show">我是买家</a></dt>
+			<dd><a href="$mm_url[cart]" target="_blank">购物车</a></dd>
+			<dd><a href="member.php?action=myfav">我的收藏</a></dd>
+			<dd><a href="member.php?action=order">我的订单</a></dd>
+			<dd><a href="member.php?action=my_back_order">退货通道</a></dd>
+			<dd><a href="member.php?action=pai">我的竞拍</a></dd>
+			<dd><a href="member.php?action=my_lucky">我的幸运抽奖</a></dd>
+			<dd><a href="member.php?action=mycoupon">我的优惠券</a></dd>
+			<dd><a href="member.php?action=scomment">评价商家</a></dd>
+            <dd><a href="member.php?action=order_share">我的分享</a></dd>
+			<dd><a href="member.php?action=user_rate&roll=1">信用管理</a></dd>
+		</dl>
+<!--
+EOT;
+} print <<<EOT
+-->	</div> 
+<!--
+EOT;
+?>-->

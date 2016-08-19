@@ -1,0 +1,90 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del_hot],a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var jq_this=$(this);
+		var uid=$(this).attr("uid");
+		var rel=$(this).attr("rel");
+		$.get(
+		    "admincp.php?module=$module&action="+rel+"&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				jq_this.parent().remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">搜索地区</td>
+			<td class="tright"><a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=add" class="but1">添加搜索地区</a></td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list">
+	    <tr>
+		    <th width="7%">热门地区</th>
+			<td class="fcl">
+<!--
+EOT;
+foreach($arr_hot_area as $key=>$val){
+print <<<EOT
+-->
+			    <span class="mr10"><a href="$val[1]" target="_new">$val[0]</a> <a href="#" rel="del_hot" uid="$key" class="gray">删除</a></span>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+	</table>
+	<div style="width:1px;height:5px;clear:both;"></div>
+	<table cellpadding="0" cellspacing="1" class="list">
+<!--
+EOT;
+for($c=ord('A');$c<=ord('Z');$c++){
+$ch=chr($c);
+print <<<EOT
+-->		
+		<tr>
+			<th width="7%">$ch</th>
+			<td style="float:left; ">
+<!--
+EOT;
+foreach($arr_rtl[$ch] as $val){;
+print <<<EOT
+-->
+			    <span class="mr10"><a href="$val[url]" target="_new">$val[area]</a> <a href="#" rel="del" uid="$val[uid]" class="gray">删除</a></span>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	
+</div>
+<!--
+EOT;
+?>-->

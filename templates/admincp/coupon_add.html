@@ -1,0 +1,72 @@
+<!--<?php
+print <<<EOT
+<!--右边开始-->
+<!--form content-->
+	<form name="mvmmall" action="admincp.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="p_url" value="$p_url" />
+	<input type="hidden" name="step" value="1" />
+	<input type="hidden" name="uid" value="$uid" />
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg mb0">
+		<tr>
+			<th colspan="2">修改优惠券</th>
+		</tr>
+		<tr>
+			<td width="25%">优惠券名称</td>
+			<td><input type="text" name="name" id="name" value="$coupon[name]" class="text2 text_4" /> <span style="color:red;">(必填)</span></td>
+		</tr>
+		<tr>
+			<td>面额</td>
+			<td><input type="text" name="discount" value="$coupon[discount]" class="text text_4" /></td>
+		</tr>
+		<tr>
+			<td>有效期</td>
+			<td>
+			    起始时间：<input type="text" name="start_date" value="$coupon[start_date]" class="text" /> ~ 
+				终止时间：<input type="text" name="end_date" value="$coupon[end_date]" class="text" />
+			</td>
+		</tr>
+		<tr>
+			<td>分发方式</td>
+			<td>
+			    <table cellpadding="0" cellspacing="0">
+				    <tr><td><input type="radio" name="handout_type" value="0" $handout_type_0_checked /> 免费领取</td></tr>
+					<tr>
+						<td>
+							<input type="radio" name="handout_type" value="1" $handout_type_1_checked /> 用积分兑换 
+						    兑换价格：<input type="text" class="text" name="change_point" value="$change_point" /> 积分
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="radio" name="handout_type" value="2" $handout_type_2_checked /> 购物返券 
+						    单笔订单满 <input type="text" class="text" name="rtn_price" value="$rtn_price" /> 元时赠送
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>使用条件</td>
+			<td>单笔定单消费满 <input type="text" class="text" name="price_lbound" value="$coupon[price_lbound]" /> 元时使用</td>
+		</tr>
+		<tr>
+		    <td>优惠券图片</td>
+			<td><img src="$coupon[coupon_img]" /></td>
+		</tr>
+		<tr>
+		    <td>排序</td>
+			<td><input type="text" class="text" name="od" value="$coupon[od]" /></td>
+		</tr>
+		<tr>
+		    <td>注意事项</td>
+			<td style="color:red;">
+			    1、排序数值越大，位置越靠前。<br />
+				2、普通券，排序取值为0~999；主站推广排序值为10000以上。当排序值等于1000时，为拒绝申请；等于10000时，为未审核状态；
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" /></div>
+	</form>
+<!--
+EOT;
+?>-->

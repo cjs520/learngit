@@ -1,0 +1,83 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+var pattern=/^\d+$/;
+$(function(){
+	$(".gd").click(function(e){    //会员折扣单元格点击的时候
+	    var jqThis=$(this);
+		if(jqThis.children("input").size()<=0)
+		{
+		    var oldv=jqThis.text();
+		    jqThis.empty();
+		    jqThis.append("<input type=\"text\" style=\"width=50px;\" value=\""+oldv+"\">");
+			jqThis.cInput=jqThis.children("input");
+			jqThis.cInput.get(0).focus();
+			jqThis.cInput.get(0).select();
+			//为这个input绑定事件
+			jqThis.cInput.one("blur",function(){
+			    var v=jqThis.cInput.get(0).getAttribute("value");
+				if(!pattern.test(v)) v=oldv
+				jqThis.empty();
+				jqThis.append(document.createTextNode(v));
+				if(v==oldv) return;    //前后的值相同就不会回传了
+				var uid=jqThis.parent().attr("uid");
+				//发送到服务器去
+				$.get("admincp.php?module=grade&action=ajax&uid="+uid+"&field=degree&v="+v);
+			});
+		}
+	});//end gd click
+});
+</script>
+<div class="newopen" style="display:none; width:800px;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+  <table class="clst" align="center" cellpadding="0" cellspacing="1">
+    <tr>
+      <td class="tleft">$lang[rating_list]</td>
+      <td class="tright"><a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=add" class="but1">$lang[add_rating]</a></td>
+    </tr>
+  </table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+  <table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>$lang[group_name]</th>
+			<th width="15%">$lang[max_points]</th>
+			<th width="15%">$lang[min_points]</th>
+			<th width="15%">等级类型</th>
+			<th width="15%">$lang[degree]</th>
+			<th width="10%">$lang[operation]</th>
+		</tr>
+<!--
+EOT;
+foreach ($grade_rt as $val){
+print <<<EOT
+-->
+		<tr  id="r$val[group_id]" uid="$val[group_id]">
+			<td>$val[group_name]</td>
+			<td>$val[max_points]</td>
+			<td>$val[min_points]</td>
+			<td>$val[is_admin]</td>
+			<td class="gd" style="cursor:pointer;">$val[degree]</td>
+			<td><a href="#" rel="apply_page" apply_url="$val[edit]" class="tipsy_s modify" title="修改"></a> <a href="$val[del]" class="tipsy_s delete" title="删除"></a></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+
+  </table>
+	<div id="page"><span>$page_list</span></div>	
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

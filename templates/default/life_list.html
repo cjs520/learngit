@@ -1,0 +1,125 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<div class="left_quan">
+	<h3 class="mb10 titlec"><span>$title</span></h3>
+    <div rel="tab_body" n="h1">
+		<ul class="h_oflow sort_bg">
+			<li class="fl sort">
+            	<strong class="pad8">排序方式：</strong>
+				<a href="life_list.php?c_uid=$c_uid&t=new" $new_topic_class>最新话题</a>
+				<a href="life_list.php?c_uid=$c_uid&t=hot" $hot_topic_class>热门话题</a> 
+			</li>
+<!--
+EOT;
+if($is_member){
+print <<<EOT
+-->
+            <li class="fr"><a class="blue_but" href="life_posting.php?action=$comm[uid]">我要发帖</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>
+        <div class="h_oflow quan_hot_xx">
+<!--
+EOT;
+foreach($arr_topic as $val){
+print <<<EOT
+-->
+            <dl>
+                <dt><a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加成为好友"><img src="$val[member_image]" /></a></dt>
+                <dd class="bg_gray">
+                    <h3>
+					    <a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加成为好友" class="fl gray">$val[member_id]：</a>
+					    <a href="$val[detail_url]" target="_blank" class="fl fd">$val[t_name]</a> 
+						<span class="gray pad8">标签：$val[tags]</span>
+						<span class="fr gray">$val[register_date]</span>
+					</h3>
+                    <div class="content">
+					    <p>$val[content] <a href="$val[detail_url]" target="_blank">[全文]</a></p>
+<!--
+EOT;
+if($val[cover]){
+print <<<EOT
+-->
+						<img rel="delay_load" src="images/noimages/loading.gif" max_width="200" path="$val[cover]" align="absmiddle" />
+<!--
+EOT;
+} print <<<EOT
+-->
+					</div>
+                    <p class="gray"><span class="fr">评论：$val[comment_num]</span><a href="$val[detail_url]" target="_blank" class="fr yellow_but">参与评论</a></p>
+                </dd>
+            </dl>
+<!--
+EOT;
+} print <<<EOT
+-->
+			
+        </div><!-- 话题 -->
+        <div class="page">$page_list</div>
+    </div>
+</div>
+<div class="right_quan">
+<!--
+EOT;
+if($comm){
+print <<<EOT
+-->
+	<div class="h_oflow quan_zhu">
+    	<dl class="h_oflow">
+    		<dt class="fl"><img src="$man_image" /></dt>
+    		<dd class="fr">
+            	<p>圈主：<a class="fd blue" rel="friend" m_uid="$comm[m_uid]">$comm[m_id]</a></p>
+                <p><span class="fr">圈子($man_community_num)</span><span>好友($man_friend_num)</span></p>
+                <p><span class="fr">话题($man_topic_num)</span><span>评论($man_comment_num)</span></p>
+                <p>爱好：<span>$comm[c_hobby]</span></p>
+            </dd>
+    	</dl>  
+        <p class="f12">
+            标签：<span>$comm[c_tag]</span><br />
+            宣言：$comm[c_proclaim]       
+        </p>
+        <p class="mt10 mb10"><a rel="friend" m_uid="$comm[m_uid]" href="#" class="f14 fn green_but m_auto">加为好友</a></p>
+    </div>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<h3 class="mt10 titlec"><span>$title2</span></h3>
+    <ul class="quan_act1">
+<!--
+EOT;
+foreach ($new_join as $val){
+print <<<EOT
+-->
+    	<li><a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加为好友"><img src="$val[member_image]" /></a><a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加为好友" class="fct">$val[member_id]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </ul><!-- 最新加入 -->
+    <h3 class="mt10 titlec"><span>热门圈子</span><a href="life_all.php" target="_blank" class="red">更多>></a></h3>
+    <div class="quan_recom">
+<!--
+EOT;
+foreach ($cache->get_cache('get_hot_community') as $val){
+print <<<EOT
+-->
+		<dl>
+        	<dt><a href="$val[detail_url]" target="_blank"><img src="$val[c_logo]" /></a></dt>
+            <dd><p><a href="$val[detail_url]" target="_blank" class="fd f13">$val[c_name]</a></p>
+            	<p class="gray">{$val[member_num]}个成员<br />$val[c_proclaim]</p>
+            </dd>
+        </dl>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </div><!-- 推荐圈子 -->
+</div>
+<!--
+EOT;
+?>-->	

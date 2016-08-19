@@ -1,0 +1,270 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript" src="include/javascript/json.js"></script>
+<script type="text/javascript">
+$(function(){
+    var del_lock=false;
+    $("input[@name=del]").click(function(){
+	    if(del_lock) return;
+	    if(!confirm("确认删除微信菜单？")) return;
+		
+		del_lock=true;
+		$.ajax({
+		    url:"admincp.php?module=$module&action=del",
+			type:"GET",
+			dataType:"json",
+			cache:false,
+			success:function(json){
+			    if(json.errcode=="0")
+				{
+				    alert("删除成功");
+					window.location.reload();
+					return;
+				}
+				else alert(json.errmsg);
+			},
+			complete:function(){
+			    del_lock=false;
+			}
+		});//end ajax
+	});//end click
+	
+	var add_lock=false;
+    $("input[@name=add]").click(function(){
+	    if(add_lock) return;
+		var obj=new Object();
+		obj.button=[];
+	    $("table[@rel=menu1],table[@rel=menu2],table[@rel=menu3]").each(function(){
+			var main_menu_name=$(this).find("td[@rel=main_menu_name]:first").children("input:first").val();
+			var main_menu_url=$(this).find("td[@rel=main_menu_url]:first").children("input:first").val();
+			if(main_menu_name=="") return true;
+			
+			var child_menu=$.hasChildMenu($(this));
+			var btn=new Object();
+		    if(child_menu.length>0)    //有子菜单
+			{
+			    btn.name=main_menu_name;
+				btn.sub_button=[];
+			    for(var i=0;i<child_menu.length;i++)
+				{
+				    var sub_btn={
+					    type:"view",
+						name:child_menu[i][0],
+						url:child_menu[i][1]
+					};
+					btn.sub_button.push(sub_btn);
+				}
+			}
+			else
+			{
+			    if(main_menu_url=="") return true;
+				btn.type="view";
+				btn.name=main_menu_name;
+				btn.url=main_menu_url;
+			}
+			obj.button.push(btn);
+		});
+		
+		if(obj.button.length<=0)
+		{
+		    alert("请至少将一个菜单项填写完整");
+			return;
+		}
+		var json_menu=JSON.stringify(obj);
+		add_lock=true;
+		$.ajax({
+		    url:"admincp.php?module=$module&action=add&step=1",
+			type:"POST",
+			data:{json_menu:json_menu},
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+			},
+			complete:function(){
+			    add_lock=false;
+			}
+		});//end ajax
+	});//end input
+	
+	var refresh_lock=false;
+	$("input[@name=refresh]").click(function(){
+	    if(refresh_lock) return;
+		refresh_lock=true;
+		$.ajax({
+		    url:"admincp.php?module=$module&action=refresh",
+			type:"GET",
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+				if(msg=="刷新成功") window.location.reload();
+			},
+			complete:function(){
+			    refresh_lock=false;
+			}
+		});//end ajax
+	});//end click
+	
+	$.extend({
+	    hasChildMenu:function(jq_table){
+		    var arr_rtl=[];
+			jq_table.find("td[@rel=sub_menu_name]").each(function(i){
+			    var sub_menu_name=$(this).children("input:first").val();
+			    var sub_menu_url=$(this).siblings("td[@rel=sub_menu_url]").children("input:first").val();
+				if(sub_menu_name!="" && sub_menu_url!="") arr_rtl.push([sub_menu_name,sub_menu_url]);
+			});//end each
+			return arr_rtl;
+		},
+		fillMenuData:function(str_menu){
+		    if(str_menu=="") return;
+			var obj_menu=JSON.parse(str_menu);
+			for(var i in obj_menu["menu"]["button"])
+			{
+			    var idx=parseInt(i)+1;
+			    var jq_table=$("table[@rel=menu"+idx+"]");
+				jq_table.find("td[@rel=main_menu_name]:first").children("input").val(obj_menu["menu"]["button"][i]["name"]);
+				
+			    if(obj_menu["menu"]["button"][i]["sub_button"].length<=0)    //没有子菜单
+				{
+					jq_table.find("td[@rel=main_menu_url]:first").children("input").val(obj_menu["menu"]["button"][i]["url"]);
+				}
+				else
+				{
+				    for(var j in obj_menu["menu"]["button"][i]["sub_button"])
+					{
+					    jq_table.find("td[@rel=sub_menu_name]:eq("+j+")").children("input").val(obj_menu["menu"]["button"][i]["sub_button"][j]["name"]);
+						jq_table.find("td[@rel=sub_menu_url]:eq("+j+")").children("input").val(obj_menu["menu"]["button"][i]["sub_button"][j]["url"]);
+					}
+				}
+			}
+		}
+	});
+	$.fillMenuData('$menu');
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1" style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">微信公众平台菜单管理</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+    <table cellpadding="0" cellspacing="1" class="list1" style="border-top:none;">
+		<tr><td>1、如果没有二级菜单，一级菜单可直接设置链接。如有二级菜单，则一级菜单不能填写链接。链接格式：http://www.domain.com</td></tr>
+        <tr><td>2、创建/修改自定义菜单后，由于微信客户端缓存，需要24小时微信客户端才会展现出来。</td></tr>
+        <tr><td>3、一级菜单名称不能超过4个中文字符，二级菜单名称不超过7个中文字符。</td></tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list" rel="menu1">
+    	<tr>
+        	<th colspan="2">一级菜单1</th>
+            <th colspan="2">二级菜单1</th>  
+        </tr>
+		<tr>
+        	<th width="20%">名称</th>
+            <th width="30%">链接</th>
+			<th width="20%">名称</th>
+            <th width="30%">链接</th>
+        </tr>
+	    <tr>
+		    <td rowspan="5" rel="main_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rowspan="5" rel="main_menu_url"><input type="text" class="text" size="50" /></td>
+			<td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list" rel="menu2">
+    	<tr>
+        	<th colspan="2">一级菜单2</th>
+            <th colspan="2">二级菜单2</th>  
+        </tr>
+		<tr>
+        	<th width="20%">名称</th>
+            <th width="30%">链接</th>
+			<th width="20%">名称</th>
+            <th width="30%">链接</th>
+        </tr>
+	    <tr>
+		    <td rowspan="5" rel="main_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rowspan="5" rel="main_menu_url"><input type="text" class="text" size="50" /></td>
+			<td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list" rel="menu3">
+    	<tr>
+        	<th colspan="2">一级菜单3</th>
+            <th colspan="2">二级菜单3</th>  
+        </tr>
+		<tr>
+        	<th width="20%">名称</th>
+            <th width="30%">链接</th>
+			<th width="20%">名称</th>
+            <th width="30%">链接</th>
+        </tr>
+	    <tr>
+		    <td rowspan="5" rel="main_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rowspan="5" rel="main_menu_url"><input type="text" class="text" size="50" /></td>
+			<td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+		<tr>
+		    <td rel="sub_menu_name"><input type="text" class="text" size="20" /></td>
+			<td rel="sub_menu_url"><input type="text" class="text" size="50" /></td>
+		</tr>
+	</table>
+<div id="tfoot">
+    <input type="button" name="add" value="确 定" onclick="" class="button" /> 
+	<input type="button" name="del" value="删 除" class="button" /> 
+	<input type="button" name="refresh" value="刷新凭证" class="button" />
+</div>
+</div>
+<!--
+EOT;
+?>-->

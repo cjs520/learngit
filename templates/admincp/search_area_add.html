@@ -1,0 +1,54 @@
+<!--<?php
+print <<<EOT
+<!--右边开始-->
+<!--form content-->
+<script type="text/javascript">
+$(function(){
+    $("input[@name=type]").click(function(){
+	    if($(this).val()=="0") $("tr[@rel=normal]").hide();
+		else $("tr[@rel=normal]").show();
+	});//end click
+});
+</script>
+	<form action="admincp.php?module=$module&action=$action" method="post">
+	<input type="hidden" name="p_url" value="$p_url" />
+	<input type="hidden" name="step" value="1" />
+	<input type="hidden" name="uid" value="$uid" />
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg mb0">
+		<tr>
+			<th colspan="2">添加或修改搜索地区</th>
+		</tr>
+		<tr>
+			<td width="25%">地区</td>
+			<td>
+			    <select id="province" name="province"></select>
+			    <select id="city" name="city"></select>
+			    <select id="county" name="county"></select>
+			    <script type="text/javascript">
+			    $(function(){
+			        $.init_area(new Array("province","city","county"),new Array("","",""));
+			    });
+			    </script>
+			</td>
+		</tr>
+		<tr>
+		    <td>类型</td>
+			<td>
+			    <input type="radio" name="type" value="0" /> 热门地区 
+				<input type="radio" name="type" value="1" checked /> 常规地区
+			</td>
+		</tr>
+		<tr rel="normal">
+		    <td>分类</td>
+			<td>$sel_cls</td>
+		</tr>
+		<tr rel="normal">
+		    <td>排序</td>
+			<td><input type="text" name="od" value="" class="text" /> (数字越小越靠前)</td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" /></div>
+	</form>
+<!--
+EOT;
+?>-->

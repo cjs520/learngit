@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Mvmmall 后台管理</title>
+<link rel="stylesheet" type="text/css" href="images/admincp/adminmvm.css">
+<script type="text/javascript" src="include/javascript/jquery.js"></script>
+<SCRIPT>
+function sethighlight(n) {
+	var lis = document.getElementsByTagName('dd');
+	for(var i = 0; i < lis.length; i++) {
+		lis[i].className = '';
+	}
+	lis[n].className = 'over';
+}
+
+$(function (){
+	$(".weixin a").hover(function(){
+		$(".weixin p").show();	
+	},
+	function(){
+		$(".weixin p").hide();
+	});
+});
+</SCRIPT>
+</head>
+
+<body>
+<div id="left">
+<?php $key=0; foreach ($one_cat as $val){?>	
+	<div id="<?php echo $val['uid']?>"  style="display: none">
+    <?php $result = $db->query("SELECT * FROM `{$tablepre}admin_menu` WHERE menu_id = $val[uid] AND main_show='1' ORDER BY menu_id,menu_order");
+	while ($rs=$db->fetch_array($result)) { ?>	 
+		<dl>
+			<dt><?php echo $rs['menu_name']?></dt>
+			<?php  $result2 = $db->query("SELECT * FROM `{$tablepre}admin_menu` WHERE menu_id = $rs[uid] AND main_show='1' ORDER BY menu_id,menu_order");
+	              while ($rt=$db->fetch_array($result2)) {?>
+			<dd><a onclick="sethighlight(<?php echo $key?>);" href="<?php echo $rt['menu_url']?>" target="main" ><?php echo $rt['menu_name']?></a></dd>
+	       <?php ++$key; }?>
+		</dl>
+	<?php }	?>
+	</div>
+<?php }?>
+	<dl>
+		<dt>官方技术支持</dt>
+		<dd><a href="http://mvmmall.cn" target="_blank">MvMmall.CN</a></dd>
+		<dd><a href="#">0596--2921706</a></dd>
+		<dd><a href="http://mvmmall.cn/page/certificate.html" target="_blank">软件著作权证书</a></dd>
+		<dd><a href="http://mvmmall.cn/buy.html" target="_blank">系统商业购买</a></dd>
+        <dd><a href="http://www.mvmmall.cn/" target="_blank">国家高新技术企业</a></dd>
+        <dd><a href="http://www.mvmmall.cn/" target="_blank">双软认证企业</a></dd>
+        <dd><a href="http://www.mvmmall.cn/" target="_blank">福建科技型企业</a></dd>  
+		<dd><a href="http://mvmmall.cn/help" target="_blank" style="color:#f00;">MvMmall帮助</a></dd>
+        <dd class="weixin"><a href="#">微信 <img src="images/admincp/weixin.png" align="absmiddle" /></a><p style="display:none;"><img src="images/noimages/nowx.jpg" alt="" width="123" class="border"></p></dd>
+		<dd style="padding:3px 0 4px 5px; line-height:16px;">微博支持 <a href="http://weibo.com/mvmmall" target="_blank"><img src="images/admincp/weibo.png" align="absmiddle" /></a> <a href="http://t.qq.com/angcai" target="_blank"><img src="images/admincp/qq.png" align="absmiddle" /></a> <a href="http://t.163.com/mvmmall" target="_blank"><img src="images/admincp/w163.png" align="absmiddle" /></a></dd>
+	</dl>
+</div>
+</body>
+</html>

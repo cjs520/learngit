@@ -1,0 +1,89 @@
+<!--<?php
+print <<<EOT
+-->
+<script type="text/javascript">
+function add_navi(key)
+{
+	var nav = [];
+<!--
+EOT;
+foreach ($nav_system as $key=>$val){
+print <<<EOT
+-->	
+			nav[$key] = new Array();
+			nav[$key][0] = '$val[0]';
+			nav[$key][1] = '$val[1]';
+<!--
+EOT;
+} print <<<EOT
+-->
+	if (key != '--')
+	{
+		$("#title").val(nav[key][0]);
+		$("#alt").val(nav[key][0]);
+		$("#link").val(nav[key][1]);
+	}
+}
+</script>
+	<!--form content-->
+		<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<input type="hidden" name="p_url" value="$p_url" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">添加导航</th></tr>
+			<tr style="display:none;">
+				<td width="70">系统栏目</td>
+				<td>$menu_sys</td>
+			</tr>
+			<tr style="display:none;">
+				<td>上级栏目</td>
+				<td>$p_menu</td>
+			</tr>
+			<tr>
+				<td width="70">栏目名称</td>
+				<td><input type="text" name="title" id="title" value="$title" class="text text_2" /></td>
+			</tr>
+			<tr>
+				<td>字体样式</td>
+				<td><select name="color" id="color">
+					<option value="" selected>标题颜色</option>
+					$color_select
+				</select>
+				<input name="b" type="checkbox" id="b" value="1" $b_check> 粗体
+				<input name="i" type="checkbox" id="i" value="1" $i_check> 斜体
+				<input name="u" type="checkbox" id="u" value="1" $u_check> 下划线</td>
+			</tr>
+			<tr>
+				<td>图片</td>
+				<td><input type="file" name="nav_img" id="nav_img" value="$nav_img" class="text text_2" style="_width:218px;height:24px\9;" /></td>
+			</tr>
+			<tr>
+				<td>栏目链接</td>
+				<td><input type="text" name="link" id="link" value="$link" class="text2 text_2" /><p class="alert_info"><span class="icon_info"></span>如外部链接，必须加http://</p></td>
+			</tr>
+			<tr>
+				<td>文字说明</td>
+				<td><input type="text" name="alt" id="alt" value="$alt" class="text text_2" /></td>
+			</tr>
+			<tr>
+				<td>目标框架</td>
+				<td><input type="radio" name="target" value="0" $self_check /> 本窗口 <input type="radio" name="target" value="1" $blank_check /> 新窗口</td>
+			</tr>
+			<tr>
+				<td>栏目类型</td>
+				<td><input type="radio" name="pos" value="head" $head_check />  顶部导航
+				<!--<input type="radio" name="pos" value="middle" $middle_check /> 中部导航-->
+				<input type="radio" name="pos" value="foot" $foot_check /> 底部导航
+				<!--<input type="radio" name="pos" value="help" $help_check /> 帮助中心</td>-->
+			</tr>
+			<tr>
+				<td>位置排序</td>
+				<td><input type="text" name="view" id="view" value="$view" class="text text_2" /></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

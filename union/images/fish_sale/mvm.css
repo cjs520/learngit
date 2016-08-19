@@ -1,0 +1,33 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+body { background:url(bg_body.jpg); }
+.wrapper { padding:10px; overflow:hidden; background:url(bg_main.jpg) repeat; }
+.border { background:#fff; }
+.footer_bg { background:#fff; }
+.title1 { height:26px; line-height:28px; border:1px dashed #B46A01; background:#cca978; }
+.title2 { height:53px; padding:27px 20px 0 110px; background:url(title_bg.jpg); }
+.title2 span { padding:0 8px; color:#472401; font-size:14px; line-height:34px; }
+.title2 img { height:34px; }
+.title2 a { float:right; color:#B26900; }
+.zn_search { padding:7px 0; color:#b46a01; }
+.top2_bg { background:#fff; border-bottom:1px solid #f1f1f1; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:10px auto; }
+.top3_bg { height:41px; padding-top:6px; background:url(bg_new.jpg); }
+.top3 { height:34px; }
+.top3 ul { float:left; width:725px; }
+.top3 li .navtab { float:left; height:32px; padding:1px 13px; overflow:hidden; line-height:32px; font-size:14px; color:#b46a01; font-weight:bold; }
+.top3 li .self { float:left; padding:0 12px; border:1px dashed #a58c63; background:#fff; color:#9b8160; font-weight:bold; }
+.top3 li a:hover { padding:0 12px; border:1px dashed #a58c63; background:#fff; color:#9b8160; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:34px; line-height:32px; padding:0 0 0 10px; background:#bc9f77; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:7px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:0; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#c4a883;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#645337; }
+.top_cate dt.self { background:#c9af8c; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#c9af8c; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#645337; }
+.sub_category a:hover { background:#c4a883; color:#645337; }

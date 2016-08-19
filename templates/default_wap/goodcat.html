@@ -1,0 +1,63 @@
+<!--<?php
+require_once template('header');
+print <<<EOT
+-->	<div class="top1">商品分类<a href="#" rel="top_info_a" class="fr top_cate_a">筛选</a></div>
+	<script type="text/javascript">
+    $(function(){
+        $("a[@rel=top_info_a]").click(function(){
+			$("div[@rel=top_sj]").toggle();
+		});
+    });
+    </script> 
+    <div rel="top_sj" class="daren_select">
+        <div> 
+<!--
+EOT;
+$i=0;
+foreach ($cat_parent as $val){
+$i++;
+print <<<EOT
+-->			<a href="#goodcat{$i}">$val[category_name]</a>      
+<!--
+EOT;
+} print <<<EOT
+-->         
+        </div>
+    </div><!--筛选-->
+<div class="wrapper">	
+<!--
+EOT;
+$i=0;
+foreach ($cat_parent as $val){
+$i++;
+print <<<EOT
+-->
+	<div class="h_oflow goodcat"><a name="goodcat{$i}"></a>
+		<h3 uid="$val[uid]"><a href="$val[sub_url]" $val[blank] class="fl f14 fd red">$val[category_name]</a><a href="$val[sub_url]" $val[blank] class="fr gray f12 fn">去$val[category_name]街>></a></h3>       	
+<!--
+EOT;
+foreach ($val[children] as $child){
+print <<<EOT
+-->		<div>
+			<a href="$child[url]" $child[blank] class="fd orange">$child[category_name]</a>    
+<!--
+EOT;
+foreach ($child[children] as $ch){
+print <<<EOT
+-->			<a href="$ch[url]">$ch[category_name]</a><!--
+EOT;
+} print <<<EOT
+-->			
+		</div>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</div>            
+<!--
+EOT;
+} print <<<EOT
+-->	
+<!--
+EOT;
+?>-->

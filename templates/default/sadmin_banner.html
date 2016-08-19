@@ -1,0 +1,76 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除？")) return false;
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=del&uid="+uid+"&ajax=ajax&rnd="+Math.random(),
+				function(msg){
+					$("tr[@uid="+uid+"]").remove();
+					alert("删除成功");
+				}
+			);//end get
+		});//end click
+		
+		$("input[@rel=chkall]").click(function(){
+			$("input[@rel=subchk]").attr("checked",$(this).attr("checked"));
+		});//end click
+		
+		$("form[@name=link_form]").submit(function(){
+			if(!confirm("确认批量删除？")) return false;
+			return true;
+		});//end submit
+	});
+	</script>
+	<div class="mem_right">
+		<div class="member_title fd red"><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=add" class="span_right white mem_add">添加广告</a>图片广告</div>
+		<div class="newopen" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<form name="link_form" action="sadmin.php?module=$module" method="post">
+		<input type="hidden" name="action" value="all_delete" />	
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th class="fcl" width="8%"><input type="checkbox" rel="chkall" /> <input type="submit" class="delete" value="" title="全部删除" />
+</th>
+				<th>广告名</th>
+				<th>广告位置</th>
+				<th>最佳宽/高</th>
+				<th>广告种类</th>
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($ad_rt as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl"><input type="checkbox" name="uid_check[]" rel="subchk" value="$val[uid]" align="absmiddle" /></td>
+				<td class="mem_display"><a href="$val[url]" target="_blank">$val[banner_subject]</a><span rel="tolink" class="mem_hover"><span><img src="$val[logo]" /></span></span></td>
+				<td>$val[banner_point]</td>
+				<td>$val[banner_width]*$val[banner_height]</td>
+				<td>$val[banner_type]</td>
+				<td><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="编辑"></a>&nbsp;<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a></td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		</form>
+	</div>
+	
+<!--
+EOT;
+?>-->

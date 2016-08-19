@@ -1,0 +1,64 @@
+<!--<?php
+require_once template('header');
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("input[@name=od][@value=$od]").attr("checked",true);
+	$("input[@name=range][@value=$range]").attr("checked",true);
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">会员消费排行</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+    <form name="search_form" action="admincp.php?module=$module&action=list" method="POST">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th>会员搜索</th>
+		</tr>
+		<tr>
+			<td>
+			    会员名称 <input type="text" name="m_id" value="$m_id" size="20" class="text" /> &nbsp;
+				排序范围：
+				<input type="radio" name="range" value="all" /> 总排行 
+				<input type="radio" name="range" value="month" /> 本月 
+				<input type="radio" name="range" value="week" /> 本周
+				排序方式：<input type="radio" name="od" value="desc" /> 降序 <input type="radio" name="od" value="asc" /> 升序  
+				<input name="member" type="submit" value="确 定" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+	<table cellpadding="0" cellspacing="1" class="list mt6">
+		<tr>
+			<th width="30%">会员ID</th>
+			<th>累计消费额</th>
+            <th>累计消费数量</th>
+			<th>排名数</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_statistics as $val){
+print <<<EOT
+-->
+		<tr>
+		    <td>$val[m_id]</td>
+			<td>$val[consume]</td>
+            <td>$val[buy_num]</td>
+            <td>$val[rank]</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>  
+	<div id="page"><span>$page_list</span></div>
+
+</div>
+<!--
+EOT;
+?>-->

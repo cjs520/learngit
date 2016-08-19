@@ -1,0 +1,39 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+body { background:url(bg_body.jpg); }
+.footer_bg,.sy_right,.article,.border,.box_out { background:#fff; }
+.title1 { background:#80560f; }
+.title2 { height:34px; padding:8px 15px; background:url(title_bg.jpg); line-height:34px; }
+.title2 span { padding:0 8px; color:#fff; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; }
+.zn_search { color:#fff; }
+.top2_bg { background:#fff; border-bottom:1px solid #f1f1f1; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:10px auto; }
+.top3 { height:34px; border:1px solid #fff; background:url(bg_nav.jpg); }
+.top3 ul { float:left; width:705px; }
+.top3 li .navtab { float:left; height:34px; padding:0 17px; overflow:hidden; background:url(nav_line.png) no-repeat right; line-height:34px; color:#fff; }
+.top3 li .self { float:left; font-weight:bold; color:#f20000; }
+.top3 li a:hover { color:#f20000; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:34px; line-height:32px; padding:0 0 0 10px; background:#ac7a25; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:7px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:0; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#c9a050;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#fff; }
+.top_cate dt.self { background:#d1aa5b; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#d1aa5b; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#fff; }
+.sub_category a:hover { background:#c9a050; color:#fff; }
+/*-- 左侧 --*/
+.left { background:url(bg_left.jpg); }
+.left .border { border:none; background:none; }
+.left .logo { border:1px solid #654618; background:#fff; }
+.btg,.bbg { height:30px; background:url(bg_left1.jpg); }
+.bbg { height:20px; background-position:0 -60px; }
+.friendlink .title1 { padding-left:25px; background:url(title_bg.gif) no-repeat center; }
+/*-- 首页 --*/
+.sypro_list li { margin:10px 6px 8px 11px; }

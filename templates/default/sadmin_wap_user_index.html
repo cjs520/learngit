@@ -1,0 +1,1465 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" href="images/wap_user/public.css" />
+<link rel="stylesheet" type="text/css" href="images/wap_user/mvm.css" />
+<link rel="stylesheet" type="text/css" href="images/wap_user/donghua.css" />
+<div class="mem_right">
+<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("html").css("fontSize","30px");
+	
+	var FOR_SCRIPT="$uid";
+	var PREVIEW_SCRIPT=FOR_SCRIPT;
+	var PREVIEW_PARAM="";
+	var IS_SAVE=true;
+	if(FOR_SCRIPT.substr(0,4)=="page")
+	{
+	    PREVIEW_SCRIPT="page";
+		PREVIEW_PARAM=FOR_SCRIPT.substring(5,FOR_SCRIPT.length);
+	}
+	
+	var html_div_frame='<div rel="block_frame" class="field"><p class="mod" rel="ctrl_bar"><a href="#" rel="prev">上移</a><a href="#" rel="next">下移</a><a href="#" rel="del">删除</a><a href="#" rel="add">添加</a></p></div>';
+	var html_block={
+	    toshop:'<div class="store_in"><h3><span class="s1"></span><span class="s2"></span><span rel="shop_name" class="fl">$shop_file[shop_name]</span><a href="$shop_url" rel="shop_url">进入店铺</a></h3></div>',
+		blank:'<div class="clear_blank"></div>',
+		notice:'<div class="store_notice" rel="notice">公告：请填写内容</div>',
+		line:'<div class="clear_line"><hr /></div>',
+		search:'<div class="store_bar"><a href="#" title="分类" class="fl store_cate"></a><div class="store_search fl"><form method="POST" action="search.php" target="_blank"><input type="text" class="s_input" name="ps_search" placeholder="请输入商品名称" autocomplete="off" /><input type="submit" value="" class="s_but" /></form></div><a href="$mm_mall_url/account.php?action=mysms" title="消息" class="fl store_news"><span rel="sms_num">0</span></a></div>',
+		nav:'<div class="store_nav_text"><ul><li><a href="#" class="fd f14">『文本导航』</a><span></span></li></ul></div>',
+		adpic:'<div class="store_ad"><a href="#"><img src="images/wap_user/wap_sample2.jpg" alt=""></a></div>',
+		adcycle:'<div class="h_oflow store_turn"><ul><li><a href="#" rel="showimg"><img src="images/wap_user/wap_sample2.jpg"></a></li><li><a href="#" rel="showimg"><img src="images/wap_user/wap_sample1.jpg"></a></li><li><a href="#" rel="showimg"><img src="images/wap_user/wap_sample2.jpg"></a></li><li><a href="#" rel="showimg"><img src="images/wap_user/wap_sample1.jpg"></a></li><li><a href="#" rel="showimg"><img src="images/wap_user/wap_sample2.jpg"></a></li></ul></div>',
+		showcase:'<div class="h_oflow store_window"><dl><dt class="fl"><a href="#" rel="showimg"><img src="images/wap_user/wap_sample1.jpg"></a></dt><dd class="fr"><a href="#" rel="showimg"><img src="images/wap_user/wap_sample1.jpg"></a><a href="#" rel="showimg"><img src="images/wap_user/wap_sample1.jpg"></a></dd></dl></div>',
+		goods_2:'<div class="goods_list"><dl class="h_oflow border"><dt class="fl"><a href="#"><img src="images/wap_user/wap_sample1.jpg"></a></dt><dd class="fr"><a href="#" class="name">此处显示商品名字</a><span class="fd orange" rel="price">￥125.89</span><a href="#" class="fr goods_buy">购买</a></dd></dl></div>',
+	    goods_1:'<ul class="h_oflow goods_small"><li rel="g_item"><div class="border"><a href="#"><img src="images/wap_user/wap_sample1.jpg" /></a><a href="#" class="name">此处显示商品名字</a><p class="goods_p_b"><a href="#" class="fr goods_buy">购买</a><span class="fd orange" rel="price">￥125.89</span></p></div></li><li rel="g_item"><div class="border"><a href="#"><img src="images/wap_user/wap_sample1.jpg" /></a><a href="#" class="name">此处显示商品名字</a><p class="goods_p_b"><a href="" class="fr goods_buy">购买</a><span class="fd orange" rel="price">￥125.89</span></p></div></li></ul>',
+		goods:'<ul class="goods_big"><li class="border" rel="g_item"><a href="#"><img src="images/wap_user/wap_sample1.jpg"></a><a href="#" class="name">此处显示商品名字</a><p class="goods_p_b"><a href="#" class="fr goods_buy">购买</a><span class="fd orange" rel="price">￥125.89</span></p></li></ul>',
+		rich:'<div class="rich_text">这里添加富文本信息</div>',
+		picnav:'<ul class="tip_index"><li><a href="#" style="background:url(images/wap_user/wap_sample3.png);background-size:cover;"></a></li></ul>',
+		goodslist:'<ul rel="goodslist" class="h_oflow goods_cate_list"><li><div class="border"><a href="#" class="goods_img"><img src="images/wap_user/wap_sample1.jpg"></a><a class="name" href="#">此处显示商品名字</a><p class="goods_p_b"><a class="fr goods_buy" href="#">购买</a><span rel="price" class="fd orange">商品价格</span></p></div></li></ul>',
+		anim:'<div class="h_oflow" style="height:15.467rem;"></div>'
+	};
+	var html_anim={
+	    cloud:'<a href="#" class="cloud_logo"><img src="images/wap_user/donghua/cloud_logo.png" alt=""></a><img class="cloud_1" src="images/wap_user/donghua/cloud_1.png" alt=""><img class="cloud_2" src="images/wap_user/donghua/cloud_2.png" alt=""><img class="cloud_3" src="images/wap_user/donghua/cloud_3.png" alt="">'
+	};
+	var html_setting_row='<tr rel="setting_row"><td width="80"></td><td class="fcl"></td></tr>';
+	
+	var jq_mobile_frame=$("div[@rel=mobile_frame]");
+	
+	var jq_setting_panel=$("div[@rel=setting_panel]");
+	var jq_pic_panel=$("div[@rel=pic_panel]");
+	var jq_title_row=jq_setting_panel.find("tr[@rel=title]:first");
+	var jq_confirm_btn=jq_setting_panel.find("input[@rel=submit]:first");
+	var jq_preview_panel=$("div[@rel=preview_panel]:first");
+	
+	$("a[@rel=add_block]").click(function(e){
+	    e.preventDefault();
+		var jq_attach_node=$.GetSettingPanelAttachNode();
+		var type=$(this).attr("type");
+		if(!html_block[type]) return;
+		if(type=="adcycle" && $("div[@rel=block_frame][@type="+type+"]").size()>=1)    //only one adcycle block is allowed to exist
+		{
+		    alert("每个页面上只能添加一个轮转广告");
+			return;
+		}
+		var jq_node=$(html_div_frame);
+		jq_node.attr("type",type);
+		jq_node.append(html_block[type]);
+		
+		if(jq_attach_node.attr("rel")=="browser_head" || $(this).parents("div[@rel=setting_panel]").size()<=0) jq_mobile_frame.append(jq_node);
+		else jq_attach_node.after(jq_node);
+		
+		$.UnSelBlock("div[@rel=block_frame]");
+		$.SelBlock(jq_node);
+		$.SetEvents();
+	});//end click
+	
+	var obj_block_event={
+	    browser_head:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			$.SetPanelTitle("页面标题设置");
+			var jq_row=$.CreateSettingRow("页面标题",'<input type="text" name="title" class="text" size="40" value="'+jq_attach_node.find("h1").html()+'" />');
+			jq_title_row.after(jq_row);
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(e){
+				var title=jq_setting_panel.find("input[@name=title]:first").val();
+				if(title=="")
+				{
+				    alert("请填写页面标题");
+					return;
+				}
+				jq_attach_node.find("h1").html(title);
+				$.HintEditSuccess();
+			});//end click
+		},//end browser_head
+	    toshop:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("请选择店铺 无自定义设置项");
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			});//end click
+		},//end toshop
+		blank:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置空白高度");
+			
+			var height=jq_attach_node.height();
+			var jq_row;
+			jq_row=$.CreateSettingRow("高度",'<input type="range" min="5" max="35" name="blank_height" class="text" size="40" value="'+height+'" />');
+			jq_title_row.after(jq_row);
+			jq_setting_panel.find("input[@name=blank_height]:first").change(function(){
+			    jq_attach_node.children("div").css("height",$(this).val()+"px");
+				$.HintEditSuccess();
+			});//end change
+		},//end blank
+		notice:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置公告内容");
+			var jq_row;
+			jq_row=$.CreateSettingRow("公告内容",'<input type="text" name="notice" class="text" size="40" value="'+jq_attach_node.find("div[@rel=notice]:first").html()+'" />');
+			jq_title_row.after(jq_row);
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    jq_attach_node.find("div[@rel=notice]:first").html(jq_setting_panel.find("input[@name=notice]:first").val());
+				$.HintEditSuccess();
+			});//end click
+		},//end notice
+		line:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("辅助线 无自定义设置项");
+		},//end line
+		search:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("商品搜索 无自定义设置项");
+		},//end search
+		nav:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置文本导航");
+			
+			var nav_num=jq_attach_node.find("ul:first").children("li").size();
+			var jq_row;
+			jq_row=$.CreateSettingRow("导航数量",'<input type="range" min="1" max="5" name="nav_num" class="text" size="40" value="'+nav_num+'" />');
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("导航样式",'<input type="radio" name="nav_type" value="store_nav_text" /> 默认样式 <input type="radio" name="nav_type" value="store_nav_text_4" /> 样式二');
+			jq_title_row.nextAll(":last").after(jq_row);
+			jq_setting_panel.find("input[@name=nav_type]").each(function(e){
+			    if(jq_attach_node.children("div:first").hasClass($(this).val())) $(this).attr("checked",true);
+			});//end each
+			
+			jq_setting_panel.find("input[@name=nav_type]").click(function(){
+			    jq_attach_node.children("div:first").removeClass("store_nav_text");
+				jq_attach_node.children("div:first").removeClass("store_nav_text_4");
+				jq_attach_node.children("div:first").addClass($(this).val());
+			});//end click
+			
+			jq_setting_panel.find("input[@name=nav_num]").change(function(){
+			    var nav_num=jq_attach_node.find("ul:first").children("li").size();
+				if(nav_num>$(this).val())
+				{
+				    jq_attach_node.find("ul:first").children("li:gt("+($(this).val()-1)+")").remove();
+				}
+				else if(nav_num<$(this).val())
+				{
+				    for(var i=0;i<$(this).val()-nav_num;i++)
+					{
+					    var jq_nav_node=jq_attach_node.find("ul:first").children("li:first").clone();
+						jq_nav_node.find("a:first").attr("href","#").html("『文本导航』");
+						jq_attach_node.find("ul:first").children("li:last").after(jq_nav_node);
+					}
+				}
+				
+				jq_setting_panel.find("tr[@rel=setting_row]:gt(1)").remove();
+				jq_attach_node.find("ul:first").children("li").each(function(i){
+				    var jq_row;
+			        jq_row=$.CreateSettingRow("导航"+(i+1),'<p class="mb6">导航内容：<input type="text" class="text" rel="nav_title" size="40" value="'+$(this).children("a").html()+'" /></p><p>导航链接：<input type="text" class="text" rel="nav_url" size="40" value="'+$(this).children("a").attr("href")+'" /></p>');
+			        jq_title_row.nextAll(":last").after(jq_row);
+				});//end each
+				
+			});//end change
+			jq_setting_panel.find("input[@name=nav_num]").trigger("change");
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    jq_attach_node.find("ul:first").children("li").each(function(i){
+				    var jq_relative_row=jq_setting_panel.find("tr[@rel=setting_row]").eq(i+2);
+					var nav_title=jq_relative_row.find("input[@rel=nav_title]").val();
+					var nav_url=jq_relative_row.find("input[@rel=nav_url]").val();
+					$(this).children("a").html(nav_title);
+					$(this).children("a").attr("href",nav_url);
+				});//end each
+				$.HintEditSuccess();
+			});//end click
+		},//end nav
+		picnav:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置图片导航");
+			
+			var nav_num=jq_attach_node.find("ul:first").children("li").size();
+			var jq_row;
+			jq_row=$.CreateSettingRow("导航数量",'<input type="range" min="1" max="8" name="nav_num" class="text" size="40" value="'+nav_num+'" />');
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("导航位置选择",'<div rel="nav_pos"></div>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("上传图片",'<img src="images/wap_user/loading.gif" rel="loading" style="display:none;" /><input type="file" name="pic" class="text" size="40" /> <input type="button" rel="upload" value="上传图片" style="display:none;" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("使用相册",'<a href="#" rel="album">使用相册图片</a>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			var jq_nav_pos=jq_setting_panel.find("div[@rel=nav_pos]:first");
+			var jq_upload_file=jq_setting_panel.find("input[@name=pic]");
+			var jq_loading=jq_setting_panel.find("img[@rel=loading]:first");
+			
+			jq_setting_panel.find("input[@name=nav_num]:first").change(function(){
+			    var nav_num=jq_attach_node.find("ul:first").children("li").size();
+				
+				if($(this).val()>=nav_num)
+				{
+				    var jq_tmp=jq_attach_node.find("li:first");
+					for(var i=0;i<$(this).val()-nav_num;i++)
+					{
+					    jq_attach_node.children("ul").append(jq_tmp.clone());
+					}
+					
+					jq_attach_node.find("li").each(function(i){
+					    if(jq_nav_pos.children("a").size()>i) return true;
+				        var jq_a=$(this).find("a:first").clone();
+						jq_a.css({
+						    width:"2.25rem",
+							height:"2.25rem",
+							display:"block"
+						});
+						jq_a.addClass("fl");
+				        jq_nav_pos.append(jq_a);
+						jq_nav_pos.append("<input type='text' class='text vmid tip_index_input' value='"+jq_a.attr("href")+"' />");
+				    });//end each
+					
+					jq_nav_pos.find("a").unbind();
+					jq_nav_pos.find("a").click(function(e){
+					    e.preventDefault();
+						$(this).siblings().removeClass("field_hover");
+					    $(this).addClass("field_hover");
+						var jq_a=$(this);
+						
+						$.SetAlbumEvent(jq_setting_panel.find("a[@rel=album]:first"),jq_a);
+						jq_upload_file.unbind();
+				        jq_upload_file.change(function(){
+				            jq_a.css("backgroundImage","url("+window.URL.createObjectURL(this.files.item(0))+")");
+				            $(this).siblings("input").show();
+				        });//end change
+						
+						$.SetAjaxUploadEvent(
+			                jq_upload_file.siblings("input[@rel=upload]"),
+				            jq_upload_file,
+				            jq_a,
+				            jq_loading
+			            );
+					}).eq(0).trigger("click");//end click
+				}
+				else
+				{
+				    jq_attach_node.find("li:gt("+($(this).val()-1)+")").remove();
+					jq_nav_pos.children("a:gt("+($(this).val()-1)+")").remove();
+					jq_nav_pos.children("input:gt("+($(this).val()-1)+")").remove();
+				}
+			}).trigger("change");//end change
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    var jq_li=jq_attach_node.find("li");
+			    jq_nav_pos.find("a").each(function(i){
+				    $(this).attr("href",$(this).next("input").val());
+					if($(this).css("backgroundImage").indexOf("blob:http")!=-1)
+					{
+					    alert("导航第"+(i+1)+"个位置背景未上传，无法设置");
+						return false;
+					}
+					jq_li.eq(i).children("a").css("backgroundImage",$(this).css("backgroundImage")).attr("href",$(this).attr("href"));
+				});//end each
+				$.HintEditSuccess();
+			});//end click
+		},//end picnav
+		adpic:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置图片广告");
+			
+			var url=jq_attach_node.find("a:first").attr("href");
+			var img_url=jq_attach_node.find("img:first").attr("src");
+			var jq_row;
+			jq_row=$.CreateSettingRow("上传图片",'<img src="'+img_url+'" style="height:50px" class="disb mb6" /><img src="images/wap_user/loading.gif" rel="loading" style="display:none;" /><input type="file" name="pic" class="text" size="40" /> <input type="button" rel="upload" value="上传图片" style="display:none;" />');
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("使用相册",'<a href="#" rel="album">使用相册图片</a>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("广告链接",'<input type="text" name="ad_url" class="text" size="40" value="'+url+'" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			var jq_img=jq_setting_panel.find("input[@name=pic]").siblings("img:first");
+			$.SetAlbumEvent(jq_setting_panel.find("a[@rel=album]:first"),jq_img);
+			
+			jq_setting_panel.find("input[@name=pic]").change(function(){
+			    jq_img.attr("src",window.URL.createObjectURL(this.files.item(0)));
+				$(this).siblings("input").show();
+			});//end change
+			
+			var jq_upload=jq_img.siblings("input[@name=pic]");
+			var jq_loading=jq_img.siblings("img[@rel=loading]");
+			$.SetAjaxUploadEvent(
+			    jq_img.siblings("input[@rel=upload]"),
+				jq_setting_panel.find("input[@name=pic]"),
+				jq_img,
+				jq_loading
+			);
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    var src=jq_img.attr("src");
+				if(src.indexOf("blob")!==0)
+				{
+				    jq_attach_node.find("img:first").attr("src",src);
+				}
+				else
+				{
+				    alert("注意：图片未上传，无法设置");
+				}
+				jq_attach_node.children("div").children("a:first").attr("href",jq_setting_panel.find("input[@name=ad_url]:first").val());
+				$.HintEditSuccess();
+			});//end click
+		},//end adpic
+		showcase:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置橱窗展示");
+			
+			var jq_showcase_a=jq_attach_node.find("a[@rel=showimg]");
+			var html_tmp='';
+			var jq_row;
+			jq_row=$.CreateSettingRow("橱窗位置选择",'');
+			jq_showcase_a.each(function(i){
+			    var jq_tmp=$(this).clone();
+				jq_tmp.find("img").css({width:"70px",height:"70px"});
+				jq_tmp.find("img").addClass("mr8");
+			    jq_row.children("td:last").append(jq_tmp);
+			});//end each
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("上传图片",'<img src="images/wap_user/loading.gif" rel="loading" style="display:none;" /><input type="file" name="pic" class="text" size="40" /> <input type="button" rel="upload" value="上传图片" style="display:none;" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("使用相册",'<a href="#" rel="album">使用相册图片</a>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("广告链接",'<input type="text" name="ad_url" class="text" size="40" value="" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("橱窗样式",'<input type="radio" name="case_type" value="" /> 默认样式 <input type="radio" name="case_type" value="store_window_r" /> 样式二');
+			jq_title_row.nextAll(":last").after(jq_row);
+			if(jq_attach_node.hasClass("store_window_r")) jq_setting_panel.find("input[@name=case_type]:last").attr("checked",true);
+			else jq_setting_panel.find("input[@name=case_type]:first").attr("checked",true);
+			
+			jq_setting_panel.find("input[@name=case_type]").click(function(){
+			    jq_attach_node.removeClass("store_window_r");
+				if($(this).val()!="") jq_attach_node.addClass($(this).val());
+			});//end click
+			
+			var jq_upload_file=jq_setting_panel.find("input[@name=pic]");
+			
+			jq_setting_panel.find("a[@rel=showimg]").click(function(e){
+			    e.preventDefault();
+				var jq_img=$(this).children("img");
+				var jq_loading=jq_setting_panel.find("img[@rel=loading]:first");
+				
+				
+				$(this).siblings().children("img").removeClass("field_hover");
+				jq_img.addClass("field_hover");
+				
+				var url=$(this).attr("href");
+				jq_setting_panel.find("input[@name=ad_url]:first").val(url);
+				$.SetAlbumEvent(jq_setting_panel.find("a[@rel=album]:first"),$(this).children("img"));
+				
+				jq_upload_file.unbind();
+				jq_upload_file.change(function(){
+				    jq_img.attr("src",window.URL.createObjectURL(this.files.item(0)));
+				    $(this).siblings("input").show();
+				});//end change
+				
+				$.SetAjaxUploadEvent(
+			        jq_upload_file.siblings("input[@rel=upload]"),
+				    jq_upload_file,
+				    jq_img,
+				    jq_loading
+			    );
+				
+				var jq_ad_url=jq_setting_panel.find("input[@name=ad_url]:first");
+				jq_ad_url.unbind();
+				jq_ad_url.blur(function(){
+				    jq_img.parent().attr("href",$(this).val());
+				});//end blur
+			});//end click
+			jq_setting_panel.find("a[@rel=showimg]:first").trigger("click");
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    jq_setting_panel.find("a[@rel=showimg]").each(function(i){
+				    jq_showcase_a.eq(i).attr("href",$(this).attr("href"));
+					if($(this).children("img").attr("src").indexOf("blob")!==0)
+					{
+					    jq_showcase_a.eq(i).children("img").attr("src",$(this).children("img").attr("src"));
+					}
+					else
+					{
+					    alert("位置"+(i+1)+"图片未上传");
+					}
+				});//end each
+				$.HintEditSuccess();
+			});//end click
+		},//end showcase
+		adcycle:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置轮转广告");
+			
+			var jq_adcycle_a=jq_attach_node.find("a[@rel=showimg]");
+			var html_tmp='';
+			var jq_row;
+			jq_row=$.CreateSettingRow("轮转位置选择",'');
+			jq_adcycle_a.each(function(i){
+			    var jq_tmp=$(this).clone();
+				jq_tmp.find("img").css({width:"60px",height:"60px"});
+				jq_tmp.find("img").addClass("mr8");
+			    jq_row.children("td:last").append(jq_tmp);
+			});//end each
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("上传图片",'<img src="images/wap_user/loading.gif" rel="loading" style="display:none;" /><input type="file" name="pic" class="text" size="40" /> <input type="button" rel="upload" value="上传图片" style="display:none;" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("使用相册",'<a href="#" rel="album">使用相册图片</a>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("广告链接",'<input type="text" name="ad_url" class="text" size="40" value="" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			var jq_upload_file=jq_setting_panel.find("input[@name=pic]");
+			
+			jq_setting_panel.find("a[@rel=showimg]").click(function(e){
+			    e.preventDefault();
+				var jq_img=$(this).children("img");
+				var jq_loading=jq_setting_panel.find("img[@rel=loading]:first");
+				
+				
+				$(this).siblings().children("img").removeClass("field_hover");
+				jq_img.addClass("field_hover");
+				
+				var url=$(this).attr("href");
+				jq_setting_panel.find("input[@name=ad_url]:first").val(url);
+				$.SetAlbumEvent(jq_setting_panel.find("a[@rel=album]:first"),$(this).children("img"));
+				
+				jq_upload_file.unbind();
+				jq_upload_file.change(function(){
+				    jq_img.attr("src",window.URL.createObjectURL(this.files.item(0)));
+				    $(this).siblings("input").show();
+				});//end change
+				
+				$.SetAjaxUploadEvent(
+			        jq_upload_file.siblings("input[@rel=upload]"),
+				    jq_upload_file,
+				    jq_img,
+				    jq_loading
+			    );
+				
+				var jq_ad_url=jq_setting_panel.find("input[@name=ad_url]:first");
+				jq_ad_url.unbind();
+				jq_ad_url.blur(function(){
+				    jq_img.parent().attr("href",$(this).val());
+				});//end blur
+			});//end click
+			jq_setting_panel.find("a[@rel=showimg]:first").trigger("click");
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    jq_setting_panel.find("a[@rel=showimg]").each(function(i){
+				    jq_adcycle_a.eq(i).attr("href",$(this).attr("href"));
+					if($(this).children("img").attr("src").indexOf("blob")!==0)
+					{
+					    jq_adcycle_a.eq(i).children("img").attr("src",$(this).children("img").attr("src"));
+					}
+					else
+					{
+					    alert("位置"+(i+1)+"图片未上传");
+					}
+				});//end each
+			    $.HintEditSuccess();
+			});//end click
+		},//end adcycle
+		goods:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置商品展示");
+			
+			var g_num=jq_attach_node.find("li[@rel=g_item]").size();
+			var jq_row;
+			jq_row=$.CreateSettingRow("商品位置选择","<div rel='g_pos'></div>");
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("商品数量",'<input type="range" min="1" max="3" name="g_num" class="text" size="40" value="'+g_num+'" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索商品类型",'<input type="radio" name="goods_type" value="0" checked /> 普通商品 <input type="radio" name="goods_type" value="4" /> 促销商品 <input type="radio" name="goods_type" value="5" /> 团购商品 <input type="radio" name="goods_type" value="6" /> 积分汇商品 <input type="radio" name="goods_type" value="7" /> 拍卖商品 <input type="radio" name="goods_type" value="8" /> 展示商品 ');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索关键字",'<input type="text" name="keywords" class="text" placeholder="请输入关键字" size="40" value="" /> <input type="button" rel="search" value="搜索" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索结果",'<div rel="search_rtl"></div>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			var jq_g_pos=jq_setting_panel.find("div[@rel=g_pos]:first");
+			
+			jq_setting_panel.find("input[@name=g_num]").change(function(){
+			    var g_num=jq_attach_node.find("li[@rel=g_item]").size();
+				
+				if($(this).val()>=g_num)
+				{
+				    var jq_tmp=jq_attach_node.find("li[@rel=g_item]:first");
+
+				    for(var i=0;i<$(this).val()-g_num;i++)
+					{
+					    jq_attach_node.children("ul").append(jq_tmp.clone());
+					}
+					
+					jq_attach_node.find("li[@rel=g_item]").each(function(i){
+					    if(jq_g_pos.children("img").size()>i) return true;
+				        var jq_img=$(this).find("img:first").clone();
+					    jq_img.css({width:"60px",height:"60px",cursor:"pointer"});
+					    jq_img.addClass("mr8");
+				        jq_g_pos.append(jq_img);
+				    });//end each
+				}
+				else if($(this).val()<g_num)
+				{
+				    jq_attach_node.find("li[@rel=g_item]:gt("+($(this).val()-1)+")").remove();
+					jq_g_pos.children("img:gt("+($(this).val()-1)+")").remove();
+				}
+				
+				jq_g_pos.children("img").unbind();
+				jq_g_pos.children("img").click(function(){
+				    $(this).siblings().removeClass("field_hover");
+					$(this).addClass("field_hover");
+					if(jq_g_pos.children("img").index(this)==0) jq_setting_panel.find("input[@rel=search]:first").trigger("click");
+				}).eq(0).trigger("click");//end click
+				
+				$.CancelBlockLinkClick();
+			}).trigger("change");//end change
+			
+			jq_setting_panel.find("input[@rel=search]:first").click(function(){
+				var goods_type=jq_setting_panel.find("input[@name=goods_type][@checked]").val();
+				var keywords=jq_setting_panel.find("input[@name=keywords]:first").val();
+				$.ajax({
+				    url:"sadmin.php?module=$module&action=search_goods",
+					type:"POST",
+					dataType:"json",
+					data:{
+					   goods_type:goods_type,
+					   keywords:keywords
+					},
+					success:function(json){
+					    var html="";
+						$.each(json,function(i){
+						    html+="<a class='goods_search' href='#' img='"+this.goods_file1+"' price='"+this.goods_sale_price+"' url='"+this.url+"'>"+this.goods_name+"</a>";
+						});//end each
+						jq_setting_panel.find("div[@rel=search_rtl]:first").html(html);
+						
+						jq_setting_panel.find("div[@rel=search_rtl]:first").children("a").click(function(e){
+						    e.preventDefault();
+							var jq_sel_img=null;
+							jq_g_pos.children("img").each(function(i){
+							    if($(this).hasClass("field_hover"))
+								{
+								    jq_sel_img=$(this);
+								    return false;
+								}
+								return true;
+							});//end each
+							if(jq_sel_img)
+							{
+							    jq_sel_img.attr("src",$(this).attr("img"));
+								jq_sel_img.attr("price",$(this).attr("price"));
+								jq_sel_img.attr("url",$(this).attr("url"));
+								jq_sel_img.attr("goods_name",$(this).html());
+							}
+						});//end click
+					}
+				});//end ajax
+			});//end click
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    var g_item=jq_attach_node.find("li[@rel=g_item]");
+			    jq_g_pos.children("img").each(function(i){
+					g_item.eq(i).find("img:first").attr("src",$(this).attr("src"));
+					g_item.eq(i).find("a").attr("href",$(this).attr("url"));
+					g_item.eq(i).find("a.name").html($(this).attr("goods_name"));
+					g_item.eq(i).find("span[@rel=price]:first").html($(this).attr("price"));
+				});//end each
+			    $.HintEditSuccess();
+			});//end click
+		},//end goods
+		goods_2:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置商品展示");
+			
+			var g_num=jq_attach_node.find("dl").size();
+			var jq_row;
+			jq_row=$.CreateSettingRow("商品位置选择","<div rel='g_pos'></div>");
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("商品数量",'<input type="range" min="1" max="3" name="g_num" class="text" size="40" value="'+g_num+'" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索商品类型",'<input type="radio" name="goods_type" value="0" checked /> 普通商品 <input type="radio" name="goods_type" value="4" /> 促销商品 <input type="radio" name="goods_type" value="5" /> 团购商品 <input type="radio" name="goods_type" value="6" /> 积分汇商品 <input type="radio" name="goods_type" value="7" /> 拍卖商品 <input type="radio" name="goods_type" value="8" /> 展示商品 ');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索关键字",'<input type="text" name="keywords" class="text" placeholder="请输入关键字" size="40" value="" /> <input type="button" rel="search" value="搜索" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索结果",'<div rel="search_rtl"></div>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			var jq_g_pos=jq_setting_panel.find("div[@rel=g_pos]:first");
+			
+			jq_setting_panel.find("input[@name=g_num]").change(function(){
+			    var g_num=jq_attach_node.find("dl").size();
+				
+				if($(this).val()>=g_num)
+				{
+				    var jq_tmp=jq_attach_node.find("dl:first");
+
+				    for(var i=0;i<$(this).val()-g_num;i++)
+					{
+					    jq_attach_node.children("div").append(jq_tmp.clone());
+					}
+					
+					jq_attach_node.find("dl").each(function(i){
+					    if(jq_g_pos.children("img").size()>i) return true;
+				        var jq_img=$(this).find("img:first").clone();
+					    jq_img.css({width:"60px",height:"60px",cursor:"pointer"});
+					    jq_img.addClass("mr8");
+				        jq_g_pos.append(jq_img);
+				    });//end each
+				}
+				else if($(this).val()<g_num)
+				{
+				    jq_attach_node.find("dl:gt("+($(this).val()-1)+")").remove();
+					jq_g_pos.children("img:gt("+($(this).val()-1)+")").remove();
+				}
+				
+				jq_g_pos.children("img").unbind();
+				jq_g_pos.children("img").click(function(){
+				    $(this).siblings().removeClass("field_hover");
+					$(this).addClass("field_hover");
+					if(jq_g_pos.children("img").index(this)==0) jq_setting_panel.find("input[@rel=search]:first").trigger("click");
+				}).eq(0).trigger("click");//end click
+				
+				$.CancelBlockLinkClick();
+			}).trigger("change");//end change
+			
+			jq_setting_panel.find("input[@rel=search]:first").click(function(){
+				var goods_type=jq_setting_panel.find("input[@name=goods_type][@checked]").val();
+				var keywords=jq_setting_panel.find("input[@name=keywords]:first").val();
+				$.ajax({
+				    url:"sadmin.php?module=$module&action=search_goods",
+					type:"POST",
+					dataType:"json",
+					data:{
+					   goods_type:goods_type,
+					   keywords:keywords
+					},
+					success:function(json){
+					    var html="";
+						$.each(json,function(i){
+						    html+="<a class='goods_search' href='#' img='"+this.goods_file1+"' price='"+this.goods_sale_price+"' url='"+this.url+"'>"+this.goods_name+"</a>";
+						});//end each
+						jq_setting_panel.find("div[@rel=search_rtl]:first").html(html);
+						
+						jq_setting_panel.find("div[@rel=search_rtl]:first").children("a").click(function(e){
+						    e.preventDefault();
+							var jq_sel_img=null;
+							jq_g_pos.children("img").each(function(i){
+							    if($(this).hasClass("field_hover"))
+								{
+								    jq_sel_img=$(this);
+								    return false;
+								}
+								return true;
+							});//end each
+							if(jq_sel_img)
+							{
+							    jq_sel_img.attr("src",$(this).attr("img"));
+								jq_sel_img.attr("price",$(this).attr("price"));
+								jq_sel_img.attr("url",$(this).attr("url"));
+								jq_sel_img.attr("goods_name",$(this).html());
+							}
+						});//end click
+					}
+				});//end ajax
+			});//end click
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    var g_item=jq_attach_node.find("dl");
+			    jq_g_pos.children("img").each(function(i){
+					g_item.eq(i).find("img:first").attr("src",$(this).attr("src"));
+					g_item.eq(i).find("a").attr("href",$(this).attr("url"));
+					g_item.eq(i).find("a.name").html($(this).attr("goods_name"));
+					g_item.eq(i).find("span[@rel=price]:first").html($(this).attr("price"));
+				});//end each
+			    $.HintEditSuccess();
+			});//end click
+		},//end goods_2
+		goods_1:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("设置商品展示");
+			
+			var g_num=jq_attach_node.find("li[@rel=g_item]").size();
+			var jq_row;
+			jq_row=$.CreateSettingRow("商品位置选择","<div rel='g_pos'></div>");
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("商品数量",'<input type="range" min="1" max="6" name="g_num" class="text" size="40" value="'+g_num+'" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索商品类型",'<input type="radio" name="goods_type" value="0" checked /> 普通商品 <input type="radio" name="goods_type" value="4" /> 促销商品 <input type="radio" name="goods_type" value="5" /> 团购商品 <input type="radio" name="goods_type" value="6" /> 积分汇商品 <input type="radio" name="goods_type" value="7" /> 拍卖商品 <input type="radio" name="goods_type" value="8" /> 展示商品 ');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索关键字",'<input type="text" name="keywords" class="text" placeholder="请输入关键字" size="40" value="" /> <input type="button" rel="search" value="搜索" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("搜索结果",'<div rel="search_rtl"></div>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			var jq_g_pos=jq_setting_panel.find("div[@rel=g_pos]:first");
+			
+			jq_setting_panel.find("input[@name=g_num]").change(function(){
+			    var g_num=jq_attach_node.find("li[@rel=g_item]").size();
+				
+				if($(this).val()>=g_num)
+				{
+				    var jq_tmp=jq_attach_node.find("li[@rel=g_item]:first");
+
+				    for(var i=0;i<$(this).val()-g_num;i++)
+					{
+					    jq_attach_node.children("ul").append(jq_tmp.clone());
+					}
+					
+					jq_attach_node.find("li[@rel=g_item]").each(function(i){
+					    if(jq_g_pos.children("img").size()>i) return true;
+				        var jq_img=$(this).find("img:first").clone();
+					    jq_img.css({width:"60px",height:"60px",cursor:"pointer"});
+					    jq_img.addClass("mr8");
+				        jq_g_pos.append(jq_img);
+				    });//end each
+				}
+				else if($(this).val()<g_num)
+				{
+				    jq_attach_node.find("li[@rel=g_item]:gt("+($(this).val()-1)+")").remove();
+					jq_g_pos.children("img:gt("+($(this).val()-1)+")").remove();
+				}
+				
+				jq_g_pos.children("img").unbind();
+				jq_g_pos.children("img").click(function(){
+				    $(this).siblings().removeClass("field_hover");
+					$(this).addClass("field_hover");
+					if(jq_g_pos.children("img").index(this)==0) jq_setting_panel.find("input[@rel=search]:first").trigger("click");
+				}).eq(0).trigger("click");//end click
+				
+				$.CancelBlockLinkClick();
+			}).trigger("change");//end change
+			
+			jq_setting_panel.find("input[@rel=search]:first").click(function(){
+				var goods_type=jq_setting_panel.find("input[@name=goods_type][@checked]").val();
+				var keywords=jq_setting_panel.find("input[@name=keywords]:first").val();
+				$.ajax({
+				    url:"sadmin.php?module=$module&action=search_goods",
+					type:"POST",
+					dataType:"json",
+					data:{
+					   goods_type:goods_type,
+					   keywords:keywords
+					},
+					success:function(json){
+					    var html="";
+						$.each(json,function(i){
+						    html+="<a class='goods_search' href='#' img='"+this.goods_file1+"' price='"+this.goods_sale_price+"' url='"+this.url+"'>"+this.goods_name+"</a>";
+						});//end each
+						jq_setting_panel.find("div[@rel=search_rtl]:first").html(html);
+						
+						jq_setting_panel.find("div[@rel=search_rtl]:first").children("a").click(function(e){
+						    e.preventDefault();
+							var jq_sel_img=null;
+							jq_g_pos.children("img").each(function(i){
+							    if($(this).hasClass("field_hover"))
+								{
+								    jq_sel_img=$(this);
+								    return false;
+								}
+								return true;
+							});//end each
+							if(jq_sel_img)
+							{
+							    jq_sel_img.attr("src",$(this).attr("img"));
+								jq_sel_img.attr("price",$(this).attr("price"));
+								jq_sel_img.attr("url",$(this).attr("url"));
+								jq_sel_img.attr("goods_name",$(this).html());
+							}
+						});//end click
+					}
+				});//end ajax
+			});//end click
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    var g_item=jq_attach_node.find("li[@rel=g_item]");
+			    jq_g_pos.children("img").each(function(i){
+					g_item.eq(i).find("img:first").attr("src",$(this).attr("src"));
+					g_item.eq(i).find("a").attr("href",$(this).attr("url"));
+					g_item.eq(i).find("a.name").html($(this).attr("goods_name"));
+					g_item.eq(i).find("span[@rel=price]:first").html($(this).attr("price"));
+				});//end each
+			    $.HintEditSuccess();
+			});//end click
+		},//end goods_1
+		goodslist:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("商品列表设置");
+			
+			var jq_row;
+			jq_row=$.CreateSettingRow("样式选择","<input type='radio' name='list_type' value='goods_cate_list' /> 列表 <input type='radio' name='list_type' value='goods_big' /> 大图 <input type='radio' name='list_type' value='goods_small' /> 小图");
+			jq_title_row.after(jq_row);
+			jq_setting_panel.find("input[@name=list_type]").each(function(){
+			    if(jq_attach_node.children("ul").hasClass($(this).val()))
+				{
+				    $(this).attr("checked","checked");
+					return false;
+				}
+				return true;
+			});//end each
+			
+			jq_row=$.CreateSettingRow("商品类型",'<input type="radio" name="goods_type" value="0" checked /> 普通商品 <input type="radio" name="goods_type" value="4" /> 促销商品 <input type="radio" name="goods_type" value="5" /> 团购商品 <input type="radio" name="goods_type" value="6" /> 积分汇商品 <input type="radio" name="goods_type" value="7" /> 拍卖商品 <input type="radio" name="goods_type" value="8" /> 展示商品 ');
+			jq_title_row.nextAll(":last").after(jq_row);
+			var goods_type=jq_attach_node.children("ul").attr("goods_type");
+			jq_setting_panel.find("input[@name=goods_type][@value="+goods_type+"]").attr("checked","checked");
+			
+			var cat_uid=jq_attach_node.children("ul:first").attr("cat_uid");
+			jq_row=$.CreateSettingRow("分类选择",'$cat_menu');
+			jq_title_row.nextAll(":last").after(jq_row);
+			jq_setting_panel.find("select[@name=cat_uid]").val(cat_uid);
+			
+			jq_setting_panel.find("input[@name=list_type]").click(function(){
+			    var jq_ul=jq_attach_node.children("ul");
+				jq_ul.removeClass("goods_cate_list").removeClass("goods_big").removeClass("goods_small");
+				jq_ul.addClass($(this).val());
+				
+				jq_ul.children("li:gt(2)").remove();
+				while(jq_ul.children().size()<3)
+				{
+				    jq_ul.append(jq_ul.children("li:first").clone());
+				}
+				if($(this).val()=="goods_small")
+				{
+				    jq_ul.append(jq_ul.children("li:first").clone());
+				}
+			}).filter("input[@checked]").trigger("click");//end click
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    var cat_uid=0;
+				var cat_name="";
+				cat_uid=jq_setting_panel.find("select[@name=cat_uid]").val();
+				cat_name=jq_setting_panel.find("select[@name=cat_uid]").children("option[@value="+cat_uid+"]").html().replace(/\-\W/g,'');
+				if(cat_uid<=0)
+				{
+				    alert("请选择商品分类");
+					return;
+				}
+				jq_attach_node.children("ul").attr("cat_uid",cat_uid);
+				jq_attach_node.children("ul").find("a.name").html("分类："+cat_name);
+				jq_attach_node.children("ul").attr("goods_type",jq_setting_panel.find("input[@name=goods_type][@checked]").val());
+			    $.HintEditSuccess();
+			});//end click
+		},//end goodslist
+		rich:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("富文本设置");
+			
+			var jq_row;
+			var cnt=jq_attach_node.children("div").html();
+			jq_row=$.CreateSettingRow("富文本内容",'<textarea name="rich_edit" style="width:100%;height:400px;visibility:hidden;">'+cnt+'</textarea>');
+			jq_title_row.after(jq_row);
+			var editor = KindEditor.create('textarea[name="rich_edit"]', {
+			    uploadJson : 'sadmin.php?module=editor&action=upload',
+			    fileManagerJson : 'sadmin.php?module=editor&action=list_files',
+			    allowFileManager : true,
+			    items:kindecitor_items
+		    });
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    editor.sync();
+				var rich_cnt=jq_setting_panel.find("textarea[@name=rich_edit]").val();
+				rich_cnt=rich_cnt.replace("<strong","<b").replace("</strong>","</b>");
+				jq_attach_node.children("div").html(rich_cnt);
+			    $.HintEditSuccess();
+			});//end click
+		},//end anim
+		anim:function(){
+		    var jq_attach_node=$.GetSettingPanelAttachNode();
+			
+		    jq_title_row.nextAll().remove();
+			jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("动画设置");
+			
+			var jq_row;
+			jq_row=$.CreateSettingRow("样式选择","<input type='radio' name='anim_type' value='cloud' /> 白云朵朵 <input type='radio' name='anim_type' value='hill' /> 高山流水");
+			jq_title_row.after(jq_row);
+			
+			jq_row=$.CreateSettingRow("上传背景",'<img src="images/wap_user/loading.gif" rel="loading" style="display:none;" /><input type="file" name="pic" class="text" size="40" /> <input type="button" rel="upload" value="上传图片" style="display:none;" />');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_row=$.CreateSettingRow("使用相册",'<a href="#" rel="album">使用相册图片</a> <a href="#" rel="default_bg">使用默认背景</a>');
+			jq_title_row.nextAll(":last").after(jq_row);
+			
+			jq_setting_panel.find("input[@name=anim_type]").each(function(){
+			    if(jq_attach_node.children("div:first").hasClass($(this).val()+"_bg"))
+				{
+					$(this).attr("checked",true);
+				    return false;
+				}
+				return true;
+			});//end each
+			if(jq_setting_panel.find("input[@name=anim_type][@checked]").size()<=0)
+			{
+			    jq_setting_panel.find("input[@name=anim_type]:first").attr("checked",true);
+			}
+			
+			jq_setting_panel.find("input[@name=anim_type]").unbind();
+			jq_setting_panel.find("input[@name=anim_type]").click(function(){
+			    jq_setting_panel.find("input[@name=anim_type]").each(function(){
+				    jq_attach_node.children("div:first").removeClass($(this).val()+"_bg");
+				});
+				jq_attach_node.children("div:first").addClass($(this).val()+"_bg");
+				jq_attach_node.children("div:first").empty();
+				
+				if(typeof html_anim[$(this).val()]=="undefined")
+				{
+				    alert("您选择动画还未上线，敬请期待");
+					return;
+				}
+				jq_attach_node.children("div:first").html(html_anim[$(this).val()]);
+				
+			});//end click
+			jq_setting_panel.find("input[@name=anim_type][@checked]").trigger("click");
+			
+			jq_setting_panel.find("a[@rel=default_bg]").unbind();
+			jq_setting_panel.find("a[@rel=default_bg]").click(function(e){
+			    e.preventDefault();
+				jq_attach_node.children("div:first").css({
+				    backgroundImage:""
+				});
+			});//end click
+			
+			$.SetAlbumEvent(jq_setting_panel.find("a[@rel=album]:first"),jq_attach_node.children("div:first"));
+			
+			var jq_upload_file=jq_setting_panel.find("input[@name=pic]");
+			var jq_loading=jq_setting_panel.find("img[@rel=loading]:first");
+			jq_upload_file.change(function(){
+				jq_attach_node.children("div:first").css("backgroundImage","url("+window.URL.createObjectURL(this.files.item(0))+")");
+				$(this).siblings("input").show();
+		    });//end change
+			$.SetAjaxUploadEvent(
+			    jq_upload_file.siblings("input[@rel=upload]"),
+				jq_upload_file,
+				jq_attach_node.children("div:first"),
+				jq_loading
+			 );
+			
+			jq_confirm_btn.unbind();
+			jq_confirm_btn.click(function(){
+			    
+				$.HintEditSuccess();
+			});//end click
+		}//end anim
+	};
+	
+	$.extend({
+	    SelBlock:function(jq_filter){
+		    var jq_sel_node=$(jq_filter).filter("div[@rel=block_frame]").eq(0);
+			jq_sel_node.addClass("field_hover").children("p[@rel=ctrl_bar]").show();
+			IS_SAVE=false;
+			$.ProcSettingPanel(jq_sel_node);
+		},//end SelBlock
+		UnSelBlock:function(jq_filter){
+		    $(jq_filter).filter("div[@rel=block_frame]").removeClass("field_hover").children("p[@rel=ctrl_bar]").hide();
+			jq_setting_panel.hide();
+		},//end UnSelBlock
+		ProcSettingPanel:function(attached_jq_node){
+		    jq_node=$(attached_jq_node).eq(0);
+			if(jq_node.size()<=0) return;
+			var offset=jq_node.offset();
+			jq_setting_panel.css("marginTop",(offset.top-310)+"px");
+			jq_setting_panel.show();
+			jq_setting_panel.data("attached",jq_node);
+			jq_setting_panel.find("span[@rel=success]:first").hide();
+			
+			//create setting panel event
+			var rel=jq_node.attr("rel");
+			var type="";
+			if(rel=="browser_head") type=rel;
+			else type=jq_node.attr("type");
+			if(typeof obj_block_event[type]=="function") obj_block_event[type]();
+		},//end ProcSettingPanel
+		SetEvents:function(){
+		    $("div[@rel=block_frame]").unbind();
+			$("div[@rel=block_frame]").click(function(e){
+			    e.stopPropagation();
+			    $.UnSelBlock("div[@rel=block_frame]");
+		        $.SelBlock(this);
+			});//end click
+			
+			$("div[@rel=browser_head]").unbind();
+			$("div[@rel=browser_head]").click(function(e){
+			    $.UnSelBlock("div[@rel=block_frame]");
+				$.ProcSettingPanel(this);
+			});//end click
+			
+			$.CancelBlockLinkClick();
+			
+			$("div[@rel=block_frame]").children("p[@rel=ctrl_bar]").children("a").unbind();
+			$("div[@rel=block_frame]").children("p[@rel=ctrl_bar]").children("a").click(function(e){
+			    e.preventDefault();
+				e.stopPropagation();
+				var jq_parent=$(this).parent().parent();
+				var cmd=$(this).attr("rel");
+				
+				switch(cmd)
+				{
+				    case "prev":
+					    if($("div[@rel=block_frame]").size()<=1) return;
+						if($("div[@rel=block_frame]").index(jq_parent)<=0) return;
+						jq_parent.prev().eq(0).before(jq_parent);
+					    break;
+				    case "next":
+					    if($("div[@rel=block_frame]").size()<=1) return;
+						if(jq_parent.next("div[@rel=block_frame]").size()<=0) return;
+						jq_parent.next().eq(0).after(jq_parent);
+					    break;
+					case "del":
+					    if(!confirm("确认删除指定模块？")) return;
+					    $.UnSelBlock(jq_parent);
+					    jq_parent.remove();
+					    break;
+					case "add":
+					    jq_title_row.nextAll().remove();
+			            jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html("添加自定义模块");
+			            
+			            var jq_row;
+			            jq_row=$.CreateSettingRow("模块列表",$("ul[@rel=add_block_list]").clone(true).addClass("add_content"));
+			            jq_title_row.after(jq_row);
+					    break;
+				}
+			});//end click
+			
+			$("a[@rel=close_pic_panel]").unbind();
+			$("a[@rel=close_pic_panel]").click(function(e){
+			    e.preventDefault();
+				jq_pic_panel.hide();
+				$("#block").hide();
+			});//end click
+			
+			$("a[@rel=close_preview_panel]").unbind();
+			$("a[@rel=close_preview_panel]").click(function(e){
+			    e.preventDefault();
+				jq_preview_panel.hide();
+				$("#block").hide();
+			});//end click
+			
+			$("a[@rel=save],a[@rel=preview]").unbind();
+			$("a[@rel=save],a[@rel=preview]").click(function(e){
+			    e.preventDefault();
+				if(!confirm("确认进行操作？")) return;
+				var rel=$(this).attr("rel");
+				var save_type=rel=="save"?2:1;
+				var form=new FormData();
+				form.append("script",FOR_SCRIPT);
+				$("div[@rel=browser_head],div[@rel=block_frame]").each(function(i){
+				    if($(this).attr("rel")=="browser_head")
+					{
+					    form.append("arr_fields[]",$(this).find("h1").html());
+					}
+					else
+					{
+					    if($(this).attr("type")=="adcycle")
+						{
+						    var cycle_data="cycle:";
+							var arr_url=[];
+							var arr_img=[];
+							$(this).find("li").each(function(i){
+							    if($(this).children("a").children("img").attr("src").indexOf("default")!=-1) return true;
+							    arr_url.push($(this).children("a").attr("href"));
+								arr_img.push($(this).children("a").children("img").attr("src"));
+							});//end each
+							cycle_data+=arr_url.join("|")+"|||"+arr_img.join("|");
+							form.append("arr_fields[]",cycle_data);
+						}
+						else
+						{
+						    var jq_tmp=$($(this).get(0).outerHTML);
+							jq_tmp.find("p[@rel=ctrl_bar]").remove();
+							jq_tmp.removeClass("field_hover");
+						    form.append("arr_fields[]",jq_tmp.get(0).outerHTML);
+						}
+					}
+				});//end each
+				//提交FormData数据
+				$.ShowBlock();
+				$.AjaxUploadFile(
+				    "sadmin.php?module=$module&action=add&step=1&save_type="+save_type,
+					form,
+					function(o_req){
+					    $("#block").hide();
+					    if(rel=="save")
+						{
+						    alert(o_req.responseText);
+							IS_SAVE=true;
+						}
+						else if(rel=="preview")
+						{
+						    $.ShowBlock();
+							var itop=(document.documentElement.clientHeight-jq_preview_panel.height())/2+$(document).scrollTop();
+			                var ileft=(document.documentElement.clientWidth-jq_preview_panel.width())/2-20+$(document).scrollLeft();
+							jq_preview_panel.css({
+							    top:itop+"px",
+								left:ileft+"px"
+							});
+							jq_preview_panel.show();
+							jq_preview_panel.find("iframe:first").attr("src","{$shop_url}/"+PREVIEW_SCRIPT+".php?force_user_index=1&preview=1&ismobile=ismobile&supid=$page_member_id&action="+PREVIEW_PARAM);
+						}
+						else alert("cmd error");
+					},
+					function(o_req){
+					    $("#block").hide();
+					}
+				);
+			});//end click
+		},//end SetEvents
+		CancelBlockLinkClick:function(){
+		    var jq_ctrl_a=$("div[@rel=block_frame]").children("p[@rel=ctrl_bar]").children("a");
+		    $("div[@rel=block_frame]").find("a").not(jq_ctrl_a).unbind();
+			$("div[@rel=block_frame]").find("a").not(jq_ctrl_a).click(function(e){
+			    e.preventDefault();
+			});//end click
+		},//CancelBlockLinkClick
+		CreateSettingRow:function(title,html){
+		    var jq_row=$(html_setting_row);
+			jq_row.children("td:eq(0)").html(title);
+			jq_row.children("td:eq(1)").html(html);
+			return jq_row;
+		},//end CreateSettingRow
+		SetPanelTitle:function(title){
+		    jq_setting_panel.find("tr[@rel=title]").children(":eq(0)").html(title);
+		},//end SetPanelTitle
+		GetSettingPanelAttachNode:function(){
+		    return jq_setting_panel.data("attached");
+		},//end GetSettingPanelAttachNode
+		ShowPicPanel:function(jq_rel_img){
+		    //var itop=(document.documentElement.clientHeight-jq_pic_panel.height())/2+$(document).scrollTop();
+            var itop=10+$(document).scrollTop();
+			var ileft=(document.documentElement.clientWidth-jq_pic_panel.width())/2-20+$(document).scrollLeft();
+            jq_pic_panel.css({
+                position:"absolute",
+                top:itop+"px",
+                left:ileft+"px"
+            });
+			jq_pic_panel.show();
+			$.ShowBlock();
+			jq_pic_panel.find("p[@rel=img_list]:first").children("a").remove();
+			$.ajax({
+			    url:"sadmin.php?module=$module&action=list_img",
+				type:"GET",
+				dataType:"json",
+				success:function(json){
+				    var html="";
+					$.each(json,function(i){
+					    html+="<a href='#' rel='album_img' url='"+this+"'><img src='"+this+"' /></a>";
+					});//end each
+					jq_pic_panel.find("p[@rel=img_list]:first").html(html);
+					
+					jq_pic_panel.find("p[@rel=img_list]:first").children("a").click(function(e){
+					    e.preventDefault();
+						if(jq_rel_img.size()<=0) return;
+						if(jq_rel_img.get(0).tagName.toLowerCase()=='img') jq_rel_img.attr("src",$(this).attr("url"));
+						else jq_rel_img.css("backgroundImage","url("+$(this).attr("url")+")");
+						
+						jq_pic_panel.hide();
+						$("#block").hide();
+					});//end click
+				}
+			});//end ajax
+		},//ShowPicPanel
+		SetAlbumEvent:function(jq_a,jq_img){
+		    jq_a.data("rel_img",jq_img);
+			jq_a.unbind();
+			jq_a.click(function(e){
+			    e.preventDefault();
+				$.ShowPicPanel($(this).data("rel_img"));
+			});//end click
+		},//end SetAlbumEvent
+		CheckUploadFile:function(jq_input_file){
+		    if(jq_input_file.get(0).files.item(0).size>300*1024)
+			{
+			    return "文件大于300KB，无法上传";
+			}
+			var allow_pic=["jpg","jpeg","png","gif"];
+			var flag=false;
+			for(var i in allow_pic)
+			{
+			    if(jq_input_file.get(0).files.item(0).type.indexOf(allow_pic[i])!=-1)
+				{
+				    flag=true;
+					break;
+				}
+			}
+			return flag?"":"指定的文件格式无法上传";
+		},//end CheckUploadFile
+		AjaxUploadFile:function(url,formData,success,failure){
+		    var oReq = new XMLHttpRequest();
+            oReq.open( "POST", url , true );
+            oReq.onload = function(oEvent) {
+                if (oReq.status == 200)
+				{
+					if(typeof success=="function") success(oReq);
+                }
+				else
+				{
+                    if(typeof failure=="function") failure(oReg);
+                }
+            };
+            oReq.send(formData);
+		},//end AjaxUploadFile
+		SetAjaxUploadEvent:function(jq_upload_btn,jq_upload_file,jq_rel_img,jq_loading){
+		    jq_upload_btn.unbind();
+			jq_upload_btn.click(function(){
+				var rtl=$.CheckUploadFile(jq_upload_file);
+				if(rtl!="")
+				{
+				    alert(rtl);
+					return;
+				}
+				
+				jq_loading.show();
+				var form=new FormData();
+				form.append("pic",jq_upload_file.get(0).files[0]);
+				$.AjaxUploadFile(
+				    "sadmin.php?module=$module&action=upload",
+				    form,
+					function(oReq){
+					    var jq_result=$(oReq.responseText);
+						if(jq_result.children("result").html()=="1")
+						{
+						    alert("上传成功");
+							if(jq_rel_img.get(0).tagName.toLowerCase()=="img") jq_rel_img.attr("src",jq_result.children("path").html());
+							else jq_rel_img.css("backgroundImage","url("+jq_result.children("path").html()+")");
+						}
+						else
+						{
+						    alert("上传失败");
+							if(jq_rel_img.get(0).tagName.toLowerCase()=="img") jq_rel_img.attr("src","images/noimages/noproduct.jpg");
+							else jq_rel_img.css("backgroundImage","url(images/noimages/noproduct.jpg)");
+						}
+						jq_loading.hide();
+						jq_upload_btn.hide();
+					},
+					function(oReq){
+					    alert("fail");
+						jq_loading.hide();
+					}
+				);
+			});//end click
+		},//end SetAjaxUploadEvent
+		HintEditSuccess:function(){
+		    jq_setting_panel.find("span[@rel=success]:first").show();
+			setTimeout(function(){
+			    jq_setting_panel.find("span[@rel=success]:first").fadeOut();
+			},500);
+		},//end HintEditSuccess
+		ShowBlock:function(){
+		    $("#block").css({
+			    height:$(document).height()+"px",
+				width:$(document).width()+"px"
+			}).show();
+		},//end ShowBlock
+		DecodeOriData:function(){
+		    $("div[@rel=block_frame]").prepend('<p class="mod" rel="ctrl_bar"><a href="#" rel="prev">上移</a><a href="#" rel="next">下移</a><a href="#" rel="del">删除</a><a href="#" rel="add">添加</a></p>');
+			
+			$("div[@rel=adcycle_data]").each(function(i){
+			    var cycle_data=$(this).html();
+			    cycle_data=cycle_data.replace("cycle:","");
+			    var arr_tmp=cycle_data.split("|||");
+			    var arr_url=arr_tmp[0].split("|");
+			    var arr_img=arr_tmp[1].split("|");
+			    
+			    
+				var jq_node=$(html_div_frame);
+		        jq_node.attr("type","adcycle");
+		        jq_node.append(html_block["adcycle"]);
+		        jq_node.find("li").each(function(j){
+				    if(arr_url.length<=j) return false;
+					$(this).children("a").attr("href",arr_url[j]);
+					$(this).children("a").children("img").attr("src",arr_img[j]);
+				});//end click
+			    
+				$(this).replaceWith(jq_node);
+			});//end each
+		}//end DecodeCycleData
+	});//end extend
+	
+	$.DecodeOriData();
+	$.SetEvents();
+	
+	window.onbeforeunload = function(){
+        var warning="数据未保存，确认退出?";
+        return IS_SAVE?null:warning;  
+    }
+	
+	if($("div[@rel=block_frame]:first").size()>0)
+	{
+	    $.UnSelBlock("div[@rel=block_frame]");
+		$.SelBlock("div[@rel=block_frame]:first");
+	}
+	else
+	{
+	    $("div[@rel=browser_head]").trigger("click");
+	}
+});
+</script>
+
+
+<div class="member_title fd red">注意：设置完成后，需要在商铺设置中开启"使用WAP自定义页面"一项，自定义页面才会生效！</div>
+
+<div class="side_left">
+	<div class="tel_head"></div>
+	<div class="side_design" rel="mobile_frame">
+        <div rel="browser_head" class="tel_bar"><h1>{$arr_index_data[0][content]}</h1></div>
+    	<div class="wap_top1">
+        	<h2>
+				<img src="$ucfg[mm_wx_shop_logo]" class="fl wap_top1_logo" />
+				&nbsp;&nbsp;$shop_file[shop_name]
+            </h2>  
+            <a href="#" class="fr">关注</a><span class="fr">|</span>
+            <a href="#" class="fr">会员中心</a>
+            <a href="#" class="wap_top1_search fr"></a>
+        </div><!-- 头部logo 关注 --> 
+ 
+     
+<!--
+EOT;
+foreach ($arr_index_data as $key=>$val){
+if($key<=0) continue;
+print <<<EOT
+-->	
+		$val[content]
+<!--
+EOT;
+} print <<<EOT
+-->   
+    </div>
+    <div class="add_content">
+        <h3 class="fct">添加内容</h3>
+        <ul class="h_oflow" rel="add_block_list">
+            <li><a href="#" rel="add_block" type="search">商品搜索</a></li>
+			<li><a href="#" rel="add_block" type="adcycle">轮转广告</a></li>
+			<li><a href="#" rel="add_block" type="notice">公告</a></li>
+			<li><a href="#" rel="add_block" type="picnav">图片导航</a></li>
+			<li><a href="#" rel="add_block" type="nav">文本导航</a></li>
+			<li><a href="#" rel="add_block" type="goodslist">商品列表</a></li>
+            <li><a href="#" rel="add_block" type="goods">商品(样式一)</a></li>
+			<li><a href="#" rel="add_block" type="goods_1">商品(样式二)</a></li>
+			<li><a href="#" rel="add_block" type="goods_2">商品(样式三)</a></li>
+            <li><a href="#" rel="add_block" type="showcase">橱窗</a></li>
+            <li><a href="#" rel="add_block" type="line">辅助线</a></li>
+            <li><a href="#" rel="add_block" type="blank">辅助空白</a></li>
+            <li><a href="#" rel="add_block" type="adpic">图片广告</a></li>
+            <li><a href="#" rel="add_block" type="toshop">进入店铺</a></li>
+			<li><a href="#" rel="add_block" type="rich">富文本</a></li>
+			<li><a href="#" rel="add_block" type="anim">动画</a></li>
+        </ul>        
+    </div><!-- 添加内容 -->
+</div>
+<div class="side_right" rel="setting_panel" style="display:none;">
+	<div class="save_bar"><a href="#" class="save" rel="save">保存</a><a href="#" class="preview" rel="preview">预览</a></div>
+    <div class="arrow"></div>
+    <div class="side_modify">
+        <div>
+            <table cellspacing="0" class="table_list fct">
+                <tr rel="title"><th class="fcl f14 red" colspan="2"></th></tr>
+            </table>
+            <p class="mem_but fcr"><span class="red mr8" style="display:none;" rel="success">编辑成功</span><input class="ok_but" rel="submit" type="button" value="确定"></p>
+        </div>        
+    </div>
+</div>
+<div class="clear"></div>
+<div class="newopen" rel="pic_panel" style="display:none;">
+	<a class="close" rel="close_pic_panel" href="#"></a>
+    <div rel="content">
+    	<p class="store_ad_open" rel="img_list"></p>
+    </div>
+</div>
+
+
+<div class="newopen" rel="preview_panel" style="width:400px; padding-left:0; padding-right:0; display:none;">
+	<a class="close" rel="close_preview_panel" href="#"></a>
+    <div>
+    	<iframe frameborder="0" style="width:100%;height:550px;">test</iframe>
+    </div>
+</div>
+</div>
+<!--
+EOT;
+?>-->

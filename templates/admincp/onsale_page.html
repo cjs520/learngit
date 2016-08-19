@@ -1,0 +1,235 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		var uid=$(this).attr("uid");
+		var data=$(this).attr("data");
+		
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&data="+data+"&rnd="+Math.random(),
+			function(){
+			    window.location.reload();
+			}
+		);//end get
+	});//end click
+	
+	var topic=parseInt("$topic");
+	$("a[@rel=topic]").eq(topic-1).addClass("hover");
+	
+	$("input[@name='topic_use']").click(function(){
+	    var op=$(this).attr("checked")?"add":"del";
+		var topic_use=$(this).val();
+		$.post(
+		    "admincp.php?module=$module&action=add&step=6&rnd="+Math.random(),
+			"topic_use="+topic_use+"&op="+op,
+			function(){}
+		);//end post
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">专题管理</td>
+			<td class="tright"><a href="topics.php" class="but1" target="_blank">前台展示效果</a></td>
+		</tr>
+	</table>
+	
+	<form action="admincp.php?module=$module&action=add" enctype="multipart/form-data" method="post">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="15%">专场场次</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+		    <td>&nbsp;</td>
+			<td class="onsale_a">
+			    <input type="checkbox" name="topic_use" value="1" $topic_use_1 /> <a rel="topic" href="admincp.php?module=$module&action=$action&topic=1">专场一</a> 
+				<input type="checkbox" name="topic_use" value="2" $topic_use_2 /> <a rel="topic" href="admincp.php?module=$module&action=$action&topic=2">专场二</a>  
+				<input type="checkbox" name="topic_use" value="3" $topic_use_3 /> <a rel="topic" href="admincp.php?module=$module&action=$action&topic=3">专场三</a>  
+				<input type="checkbox" name="topic_use" value="4" $topic_use_4 /> <a rel="topic" href="admincp.php?module=$module&action=$action&topic=4">专场四</a>  
+				<input type="checkbox" name="topic_use" value="5" $topic_use_5 /> <a rel="topic" href="admincp.php?module=$module&action=$action&topic=5">专场五</a>  
+			</td>
+		</tr>
+	</table>
+	</form>
+	
+	<form action="admincp.php?module=$module&action=add&topic=$topic" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="step" value="1" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="15%">顶部推广</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+		    <td>当前推广</td>
+			<td>
+<!--
+EOT;
+if($onsale_data['top_ad'][0]){
+print <<<EOT
+-->
+			    <div class="pos">
+					<a href="#" rel="del" class="tipsy_w close2" uid="{$onsale_data['top_ad'][0][uid]}" data="" title="删除单前图片"></a>
+					<img src="{$onsale_data[top_ad][0][data]}" width="800" />
+				</div> 
+				
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+				无
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+		<tr>
+		    <td>顶部推广设置</td>
+			<td>
+			    图片 <input type="file" name="top_ad" class="text" size="25" /> 
+				背景颜色 <input type="text" name="top_ad_color" class="text" size="25" value="{$onsale_data[top_ad_color][0][data]}" />
+			</td>
+		</tr>
+		<tr>
+		    <td>当前顶部推荐</td>
+			<td>
+<!--
+EOT;
+if($onsale_data['top_btn'][0]){
+print <<<EOT
+-->
+			    <div class="pos span_left pad10">
+					<a href="#" rel="del" class="tipsy_w close2" uid="{$onsale_data['top_btn'][0][uid]}" data="" title="删除单前图片"></a>
+					<img src="{$onsale_data[top_btn][0][data]}" width="191" />
+				</div> 
+				
+				<div class="pos span_left pad10">
+					<a href="#" rel="del" class="tipsy_w close2" uid="{$onsale_data['top_btn_hl'][0][uid]}" data="" title="删除单前图片"></a>
+					<img src="{$onsale_data[top_btn_hl][0][data]}" width="191" />
+				</div> 
+				
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+				无
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+		<tr>
+		    <td>顶部按钮设置</td>
+			<td>
+			    图片 <input type="file" name="top_btn" class="text" size="25" /> 
+				图片高亮 <input type="file" name="top_btn_hl" class="text" size="25" /> 
+			</td>
+		</tr>
+		<tr>
+		    <td>&nbsp;</td>
+			<td><input type="submit" value="数据提交" class="button1" /></td>
+		</tr>
+	</table>
+	</form>
+	
+	<form action="admincp.php?module=$module&action=add&topic=$topic" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="step" value="7" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="15%">页面背景</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+		    <td>页面背景颜色</td>
+			<td>
+			    <input type="text" class="text" name="bk_color" value="{$onsale_data[bk_color][0][data]}" /> 
+				<input type="submit" value="颜色设置" class="button1" /> 
+			</td>
+		</tr>
+	</table>
+	</form>
+	
+	<form action="admincp.php?module=$module&action=add&topic=$topic" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="step" value="3" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="15%">楼层使用</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+		    <td>楼层使用</td>
+			<td>
+			    <input type="checkbox" name="level_use[]" value="1" $level_use_1 /> 第一层 
+				<input type="checkbox" name="level_use[]" value="2" $level_use_2 /> 第二层 
+				<input type="checkbox" name="level_use[]" value="3" $level_use_3 /> 第三层 
+				<input type="checkbox" name="level_use[]" value="4" $level_use_4 /> 第四层 
+				<input type="checkbox" name="level_use[]" value="5" $level_use_5 /> 第五层 
+				<input type="checkbox" name="level_use[]" value="6" $level_use_6 /> 第六层 
+				<input type="checkbox" name="level_use[]" value="7" $level_use_7 /> 第七层 
+				<input type="submit" value="设置" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+<!--
+EOT;
+for($i=1;$i<=7;$i++){
+print <<<EOT
+-->
+	<form action="admincp.php?module=$module&action=add&topic=$topic" enctype="multipart/form-data" method="post">
+	<input type="hidden" name="step" value="5" />
+	<input type="hidden" name="level" value="$i" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="15%">楼层 $i</th>
+			<th>&nbsp;</th>
+		</tr>
+		<tr>
+		    <td>当前楼标</td>
+			<td>
+<!--
+EOT;
+if($onsale_data['ceiling'][$i]){
+$onsale_data[ceiling][$i][data]=IMG_URL.$onsale_data[ceiling][$i][data];
+print <<<EOT
+-->			<div class="pos">
+			    <img src="{$onsale_data[ceiling][$i][data]}" width="800" /> 
+				<a href="#" rel="del" uid="{$onsale_data[ceiling][$i][uid]}" data="" class="tipsy_w close2" title="删除单前图片"></a>
+			</div>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+			    无
+<!--
+EOT;
+}print <<<EOT
+-->
+			</td>
+		</tr>
+		<tr>
+		    <td>楼标设置</td>
+			<td>
+			    <input type="file" class="text" size="25" name="ceiling" /> 
+				<input type="submit" value=" 上传图片 " class="button1" />
+			</td>
+		</tr>
+	</table>
+	</form>
+<!--
+EOT;
+} print <<<EOT
+-->	
+</div>
+<!--
+EOT;
+?>-->

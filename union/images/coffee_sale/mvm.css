@@ -1,0 +1,32 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+.title1 { background:url(bg_new.jpg) 0 -80px; }
+.title1 span { color:#fff; }
+.title2 { padding:4px 8px; border:1px dashed #CA3B11; background:#FFF4F2; line-height:34px; }
+.title2 span { padding:0 8px; color:#53190c; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; color:#9a220a; }
+.zn_search { margin-top:3px; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:0 auto; }
+.top3 { height:35px; margin-top:5px; overflow:hidden; background:url(bg_new.jpg) repeat-x 0 5px; }
+.top3 .tl,.top3 .tr{ display:block; float:left; width:5px; height:30px; margin-top:5px; background:url(bg_new.jpg) 0 -40px; }
+.top3 .tr { float:right; background-position:-5px -40px; }
+.top3 ul { float:left; width:705px; } 
+.top3 li .navtab { float:left; padding:0 14px; line-height:30px; color:#fff; font-size:14px; margin-top:5px; }
+.top3 li .navtab:hover { color:#fff; text-decoration:none; }
+.top3 li .self { background:url(nav_bg.jpg) repeat-x; color:#9b0000; font-weight:bold; padding-left:14px; padding-right:0; height:35px; overflow:hidden; margin-top:0; }
+.top3 li .self span { display:block;  background:url(nav_bg.jpg) repeat-x right 0; padding-right:14px; padding-top:5px; line-height:30px; }
+.top3 li .self:hover { color:#000; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:39px; line-height:32px; padding:0 0 0 10px; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:10px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:3px; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#ad3e11;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#fff; }
+.top_cate dt.self { background:#c96b13; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#c96b13; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#fff; }
+.sub_category a:hover { background:#ad3e11; color:#fff; }

@@ -1,0 +1,178 @@
+ <!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var form_lock=false;
+	var form_validate_code="$form_validate_code";
+	var jq_reg_form=$("form[@rel=reg_form]:first");
+	var jq_countdown=jq_reg_form.find("a[@rel=countdown]:first");
+	var h_countdown=0;
+	var t_countdown=0;
+	
+    $("a[@rel=send_code]:first").click(function(e){
+	    e.preventDefault();
+		if(form_lock) return;
+		var jq_a=$(this);
+		var mobile=jq_reg_form.find("input[@name=mobile]:first").val();
+		
+		if(!/^\d{11}$/.test(mobile))
+		{
+		    alert("请填写正确的手机号码");
+			return;
+		}
+		
+		form_lock=true;
+		$(this).hide();
+		
+		$.ajax({
+		    url:"ajax.php?action=wap_sendcode&cmd=reg_code",
+			type:"POST",
+			data:{
+			    form_validate_code:form_validate_code,
+				mobile:mobile
+			},
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("ERR")!=-1) jq_a.show();
+				if(msg.indexOf("OK")!=-1) $.StartCountDown();
+			},
+			complete:function(){
+			    form_lock=false;
+			}
+		});//end ajax
+	});//end click
+	
+	$("input[@rel=reg_next]").click(function(){
+	    if(form_lock) return false;
+	    var mobile=jq_reg_form.find("input[@name=mobile]:first").val();
+		var reg_code=jq_reg_form.find("input[@name=code]:first").val();
+		if(!/^\d{11}$/.test(mobile))
+		{
+		    alert("请填写正确的手机号码");
+			return;
+		}
+		if(reg_code=="")
+		{
+		    alert("请填写注册验证码");
+			return;
+		}
+		
+		$("#block").show();
+		form_lock=true;
+		$.ajax({
+		    url:"register.php?step=1",
+			type:"POST",
+			data:{
+			    form_validate_code:form_validate_code,
+				mobile:mobile,
+				reg_code:reg_code
+			},
+			cache:false,
+			success:function(msg){
+				if(msg.indexOf("OK")!=-1)
+				{
+				    $("div[@rel=reg_first]").hide();
+					$("div[@rel=reg_second]").show();
+				}
+				else
+				{
+				    alert(msg);
+				}
+			},
+			complete:function(){
+			    form_lock=false;
+				$("#block").hide();
+			}
+		});//end ajax
+		
+	});//end click
+	
+	$("input[@rel=reg_submit]").click(function(){
+	    if(form_lock) return;
+		var password=jq_reg_form.find("input[@name=password]:first").val();
+		if(password.length<6)
+		{
+		    alert("会员密码不能小于6个字符");
+			return;
+		}
+		
+		form_lock=true;
+		$("#block").show();
+		$.ajax({
+		    url:"register.php?step=2",
+			type:"POST",
+			data:{
+			    form_validate_code:form_validate_code,
+			    password:password
+			},
+			cache:false,
+			success:function(msg){
+			    if(msg.indexOf("ERR")===0)
+				{
+				    alert(msg);
+					return;
+				}
+			    window.location=msg;
+			},
+			complete:function(){
+			    form_lock=false;
+				$("#block").hide();
+			}
+		});
+	});//end click
+	
+	$("ul.log_list:first").children("li").click(function(){
+	    $(this).children("input:first").trigger("focus");
+	});//end click
+	
+	$.extend({
+	    StartCountDown:function(){
+		    t_countdown=60;
+			jq_countdown.show();
+			
+			h_countdown=setInterval(function(){
+			    t_countdown--;
+				if(t_countdown<=0)
+				{
+				    clearInterval(h_countdown);
+					h_countdown=0;
+					jq_countdown.hide();
+					jq_reg_form.find("a[@rel=send_code]:first").show();
+				}
+			    jq_countdown.html(t_countdown.toString()+"S后重新发送");
+			},1000);
+		}
+	});
+});
+</script>
+<div class="top_wap">注册</div>
+<div class="wrapper_nopad">
+	<div class="logform">
+   	  <form rel="reg_form">
+        <p class="fct log_tip">手机号即为登陆账号，我们将发送验证短信到该号码</p>
+		<div rel="reg_first">
+        <ul class="log_list">
+        	<li>手机号码 <input name="mobile" type="tel" class="text" size="20" /></li>
+            <li>
+			    验证码 <input name="code" maxlength="8" type="text" class="text " size="10" />
+				<a href="#" rel="send_code" class="fr blue f12">发送验证码</a>
+				<a href="#" rel="countdown" class="fr gray f12 pad8" style="display:none;"></a>
+			</li>
+        </ul>
+        <p><input type="button" value="下一步" class="but_green" rel="reg_next" /></p>
+        </div>
+		
+		<div rel="reg_second" style="display:none;">
+        <ul class="mt10 log_list">
+        	<li>请设定密码 <input name="password" placeholder="不小于6个字符" maxlength="15" type="password" class="text" size="20" /></li>   
+        </ul>        
+        <p><input type="button" rel="reg_submit" value="注册" class="but_green" /></p>
+		</div>
+    </form>
+    </div><!-- 会员注册资料结束 -->
+<!--
+EOT;
+?>-->

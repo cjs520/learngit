@@ -1,0 +1,126 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除页面？")) return;
+		
+		var uid=$(this).attr("uid");
+		var jq_a=$(this);
+		$.post(
+		    "admincp.php?module=$module&action=del_page&rnd="+Math.random(),
+			"uid="+uid,
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) jq_a.parents("tr:first").remove();
+			}
+		);
+	});//end click
+	
+	$("#user_page").change(function(){
+	    if($(this).val()=="page")
+		{
+		    $(this).next().show();
+		}
+		else
+		{
+		    $(this).next().hide();
+		}
+	});//end change
+	$("#user_page").trigger("change");
+	
+	var submit_lock=false;
+	$("input[@rel=submit_page]:first").click(function(){
+	    var page_name=$("#user_page").val();
+		var page_param=$(this).siblings("input[@name=page_param]").val();
+		if(page_name=="page" && !/^[a-zA-Z0-9]+$/.test(page_param))
+		{
+		    alert("请填写正确的页面参数");
+			return;
+		}
+		if(page_name!="page") page_param="";
+		
+		submit_lock=true;
+		$.ajax({
+		    url:"admincp.php?module=$module&action=add_page",
+			type:"POST",
+			data:{
+			    page_name:page_name,
+				page_param:page_param
+			},
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			},
+			complete:function(){
+			    submit_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">微店自定义页面管理</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr><th colspan="2">添加自定义页面</th>
+		</tr>
+		<tr>
+			<td width="15%">选择自定义页面</td>
+			<td>
+			    $sel_page
+				<input type="text" class="text" name="page_param" style="width:220px;display:none;" value="" placeholder="自定义页面参数，只能英文或数字组合" /> 
+				<input type="button" rel="submit_page" value="确定" class="button" />
+			</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>页面中文名称</th>
+			<th>页面英文名称|参数</th>
+			<th width="45%">页面网址</th>
+			<th width="10%">操 作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_rtl as $val){
+print <<<EOT
+-->		
+		<tr>
+			<td>$val[1]</td>
+			<td>$val[0]</td>
+			<td><input type="text" class="text" style="width:96%;" value="$val[2]" readonly="readonly" /></td>
+			<td>
+			    <a href="admincp.php?module=$module&action=list&uid=$val[0]" class="tipsy_s modify" title="修改"></a> 
+<!--
+EOT;
+if($val[0]!='index'){
+print <<<EOT
+-->	
+				<a href="#" uid="$val[0]" rel="del" class="tipsy_s delete" title="删除"></a>
+<!--
+EOT;
+} print <<<EOT
+-->	
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	
+	
+</div>
+<!--
+EOT;
+?>-->

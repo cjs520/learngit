@@ -1,0 +1,43 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<div class="mem_right">
+		<div class="member_title fd red"><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=add" class="span_right white mem_add">添加品牌</a>品牌管理</div>
+		<div class="newopen" style="width:700px;" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th class="fcl">品牌名称</th>
+				<th class="fcl">网 址</th>
+				<th class="fcl">品牌描述</th>
+				<th width="8%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($brand_rt as $val){
+print <<<EOT
+-->			<tr uid="$val[id]">
+				<td class="fcl">$val[brandname]</td>
+				<td class="fcl mem_display"><a href="$val[weburl]" target="_blank">$val[weburl]</a><span rel="tolink" class="mem_hover"><span><img src="$val[logo]" /></span></span></td>
+				<td class="fcl">$val[brief]</td>
+				<td><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&uid=$val[id]" class="tipsy_s modify" title="编辑"></a></td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+
+	</div>	
+<!--
+EOT;
+?>-->

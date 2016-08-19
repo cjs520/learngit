@@ -1,0 +1,79 @@
+<!--<?php 
+require_once template('header');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=handout]").click(function(e){
+	    e.preventDefault();
+		var n=$(this).attr("n");
+		var p=$(this).attr("p");
+		var t=$(this).attr("t");
+		var uid=$(this).attr("uid");
+		if(t=="2")
+		{
+		    alert("优惠券\""+n+"\"为满额返还类型，无法直接获取");
+			return;
+		}
+		if(t=="1" && !confirm("优惠券\""+n+"\"需要"+p+"积分进行兑换，确认获取？")) return;
+		
+		$.get(
+		    "ajax.php?action=coupon_change&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("ERR")!=-1 && msg.indexOf("登录")!=-1) window.location="$main_settings[mm_mall_url]/logging.php?action=login";
+			}
+		);//get get
+	});//end click
+});
+</script>
+
+    <div class="location"><p><span class="loca_icon"></span><strong>优惠券</strong></p></div> 
+    <div class="coupon_list">
+        <ul>
+<!--
+EOT;
+foreach($arr_coupon as $val){
+print <<<EOT
+-->
+            <li>
+                <span class="goods_img"><img src="$val[coupon_img]" /></span>
+                <p>
+                	$val[name]<br />
+                    有效期至$val[end_date]<br />
+                    <span class="red fd f14">$val[discount]元券</span><br />
+                    <span class="gray">满{$val[price_lbound]}元可使用</span><br />     
+<!--
+EOT;
+if($val[handout_type]==0){
+print <<<EOT
+-->
+                	<a href="#" class="free" rel="handout" t="$val[handout_type]" n="$val[name]" uid="$val[uid]">免费领取</a>
+<!--
+EOT;
+}else if($val[handout_type]==1){
+print <<<EOT
+-->
+                	<a href="#" class="exchange" rel="handout" t="$val[handout_type]" p="$val[sale_price]" n="$val[name]" uid="$val[uid]">$val[sale_price]积分兑换</a>
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+                	<a href="#" class="giving" rel="handout" t="$val[handout_type]" n="$val[name]">购物满$val[sale_price]元赠送</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</p>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->	
+        </ul>
+    </div> 
+
+<!--
+EOT;
+?>-->

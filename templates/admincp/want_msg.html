@@ -1,0 +1,83 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=tab]:eq($t)").addClass("curtab");
+
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定的留言？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&t=$t&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+	
+	$("#chkall").click(function(){
+	    $("input[@name='uid_check[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">商机留言</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+    <div class="mt6">
+        <a href="admincp.php?module=$module&action=$action&t=0" class="but1" rel="tab">供应留言</a>
+        <a href="admincp.php?module=$module&action=$action&t=1" class="but1" rel="tab">求购留言</a>
+	</div>
+
+	<form action="admincp.php?module=$module&action=del&t=$t" method="post">
+	<table cellpadding="0" cellspacing="1" class="list mt6">
+		<tr>
+			<th width="5%"><input type="checkbox" name="chkall" id="chkall" /></th>
+            <th>发布者</th>
+			<th width="20%">项目名称</th>
+			<th width="25%">留言内容</th>
+			<th>联系方式</th>
+			<th>状态</th>
+			<th>留言时间</th>
+			<th width="10%">操 作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_msg as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td><input name="uid_check[]" type="checkbox" value="$val[uid]" /></td>
+            <td>$val[m_id]</td>
+			<td><a href="$val[url]" target="_blank">$val[goods_name]</a></td>
+			<td>$val[msg]</td>
+			<td>
+			    联系姓名：$val[name]<br />
+				联系电话：$val[tel]<br />
+				联系地址：$val[address]
+			</td>
+			<td>$val[status]</td>
+			<td>$val[register_date]</td>
+			<td>
+				<a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><b style="float:left;"><input name="del" type="submit" id="del" value="删除所选" onclick="return really()"  class="button1" /></b><span>$page_list</span></div>
+</form>	
+</div>
+<!--
+EOT;
+?>-->

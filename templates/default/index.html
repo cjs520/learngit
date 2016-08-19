@@ -1,0 +1,484 @@
+<!--<?php
+require_once template('header_index'); 
+print <<<EOT
+-->	<script type="text/javascript" src="include/javascript/jquery.flashv3.js"></script>
+	<script type="text/javascript" src="include/javascript/jquery.submenu.js"></script>
+	<script type="text/javascript" src="include/javascript/jquery.cookie.js"></script>
+	<script type="text/javascript">
+	$(function(){
+	    $("#popup_close").click(function(){
+		    $("#popup_ad").fadeOut(400);
+		});//end click
+		
+		$("input[@name=ad_check]").click(function(){
+		    $.cookie("mm_popup",$(this).attr("checked")?"1":"0");
+		});//end click
+		
+		$("div[@rel=img_frame]").flashv3("$pics","$links","$title",1200,400,30,1);
+		$("dl.category").DXDSubMenu();
+	});
+	</script>
+	<script type="text/javascript">
+    $(function(){
+        $.fn.extend({
+            MouseOver:function(){			
+                $(this).children("li").mouseover(function(){
+                  $(this).siblings().children("p").hide().siblings("span").removeClass("FB_hover");
+                  $(this).children("p").show().siblings("span").addClass("FB_hover");
+                });
+                $(this).children("li").children("p:first").show().siblings("span").addClass("FB_hover");;	
+             }
+        });
+		$("ul.five_box1").MouseOver();
+        $("ul.five_box2").MouseOver();
+        $("ul.five_box3").MouseOver();
+        $("ul.five_box4").MouseOver();
+        $("ul.five_box5").MouseOver();
+        $("ul.five_box6").MouseOver();
+    });
+    </script>
+<!--
+EOT;
+if($popup && $_COOKIE['mm_popup']!=1){
+print <<<EOT
+--> 
+	<div class="popup_ad" id="popup_ad" style="top:$popup[top]px;left:$popup[left]px;width:$popup[width]px;height:$popup[height]px;"><span id="popup_close" class="close"></span>
+		<h3><span id="ad_title">$popup[subject]</span></h3>
+		<div id="ad_content">$popup[body]</div>
+		<div id="ad_24hour"><input type="checkbox" name="ad_check" />24小时以内不再打开</div>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<div class="flash_ad">
+        <ul class="flash_ad_ul">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->         <a href="#" rel="ad_apply" m="index" p="flash_ad" op="" t="2" class="pu"></a>
+<!--
+EOT;
+} print <<<EOT
+-->			 
+<!--
+EOT;
+foreach($AD->GetAd('flash_ad',2) as $val){
+print <<<EOT
+-->			<li><a href="$val[url]" target="_blank"><img src="$val[pic]" /></a></li>			
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>
+	</div><!--- flash上广告 --->
+<!--
+EOT;
+if($wx_login_qrcode){
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=wx_close]").click(function(e){
+	    e.preventDefault();
+		$("div.weixin_sao:first").hide();
+	});//end click
+});
+</script>
+    <div class="weixin_sao"><span></span><img src="$wx_login_qrcode" alt="微信扫我"><a href="#" rel="wx_close" class="close"></a></div>
+<!--
+EOT;
+} print <<<EOT
+-->
+    <div class="flash_div"><div class="flash" rel="img_frame"></div></div><!-- flash 开始 注: HTML结构不得更改！ -->
+<div class="wrapper">
+	<div class="left_cate">
+		<div class="cate_tree">
+			<dl class="category">
+<!--
+EOT;
+$i=0;
+foreach ($cat_parent as $val){
+$i++;
+print <<<EOT
+-->				<dt uid="$val[uid]">
+				    <a href="$val[sub_url]" $val[blank] class="f14 fd">$val[category_name]</a><span class="cate_arrow"><s></s></span>
+				    <p><!--
+EOT;
+foreach ($val[children] as $child){
+print <<<EOT
+--><a href="$child[url]" $child[blank]>$child[category_name]</a>|<!--
+EOT;
+} print <<<EOT
+--></p>
+				</dt>
+				<dd uid="$val[uid]">
+				<div class="cart_cate">
+<!--
+EOT;
+foreach ($val[children] as $child){
+print <<<EOT
+-->				<ul>
+					<li>
+						<h4><a href="$child[url]" $child[blank] class="f14">$child[category_name]</a></h4>
+						<p>
+<!--
+EOT;
+foreach ($child[children] as $ch){
+print <<<EOT
+-->						<a href="$ch[url]">$ch[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->						</p>
+					</li>
+				</ul>
+<!--
+EOT;
+} print <<<EOT
+-->				</div>
+				<div class="cart_brand"><strong>推荐品牌</strong><ul>
+<!--
+EOT;
+foreach (get_brands_by_cat($val[uid]) as $ch_brand){
+print <<<EOT
+-->	
+				    <li><a href="$ch_brand[url]" target="_blank"><img src="$ch_brand[logo]" alt=""></a><a href="$ch_brand[url]" target="_blank">$ch_brand[brandname]</a></li> 
+<!--
+EOT;
+} print <<<EOT
+-->	
+				</ul></div> 
+                </dd>
+<!--
+EOT;
+} print <<<EOT
+-->			</dl>
+			<div class="sub_category"></div>
+		</div>
+	</div><!--商品分类-->
+    <div class="fr right_index">
+    	<div class="actives border">
+        	<ul>
+<!--
+EOT;
+foreach($AD->GetAd('active1',2) as $val){
+print <<<EOT
+-->				<li><!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				    <a href="#" rel="ad_apply" m="index" p="active1" op="" t="2" class="disn pu"></a>
+<!--
+EOT;
+} print <<<EOT
+--><a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" /></a></li>			
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>	
+    	</div><!--- 活动推荐 --->
+		<div class="right1">
+			<div class="h_oflow notice">
+				<h3 class="titleb"><span>商城公告</span></h3>
+<!--
+EOT;
+foreach(GetBoard('notice',0,7,22) as $v){
+print <<<EOT
+-->				<p><a href="$v[url]" title="$v[board_subject]" target="_blank">$v[board_subject]</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</div>
+		</div><!--- 商城公告 --->
+	</div><!--首页第一模块-->
+<!--
+EOT;
+for($i=0;$i<6;$i++){
+$j=$i+1;
+print <<<EOT
+-->
+	<div class="clear"></div>
+    <div class="floor clearfix h_oflow">	
+		<h3 class="floor_title">
+			<img src="{$index_floor[$i][floor_icon]}" width="200" height="50" />
+			<p> 
+<!--
+EOT;
+foreach($AD->GetAd("floor{$j}_links",2) as $val){
+print <<<EOT
+-->				<a href="$val[url]" target="_blank" title="$val[title]">$val[title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->				<a href="{$index_floor[$i][more_link]}" target="_blank" class="more">去逛街>></a>
+			</p>
+		</h3>
+		<div class="floor_left">    
+            <ul class="five_box five_box{$j}"><!-- 五箱 开始 -->
+<!--
+EOT;
+$b=0;
+foreach($AD->GetAd("floor{$j}_goods",0) as $val){
+$b++;
+print <<<EOT
+-->				<li><span><em>$b</em><a href="$val[goods_link]" title="$val[goods_name]" target="_blank">$val[goods_name]</a></span><p><strong><em class="fl">$val[goods_price]</em>
+
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="index" p="floor{$j}_goods" op="" t="0" class="fr fn gray good_pu">我要曝光></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+</strong><a href="$val[goods_link]" title="$val[goods_name]" target="_blank"><img src="$val[goods_pic]" alt="$val[goods_name]" class="border_img" style="width:162px;height:162px;" /></a></p></li>
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>
+        </div>
+        <div class="floor_right">
+			<ul class="floor_banner">
+<!--
+EOT;
+foreach($AD->GetAd("floor{$j}_banner",2) as $val){
+print <<<EOT
+-->				<li>
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="index" p="floor{$j}_banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->				<a href="$val[url]" title="$val[title]" target="_blank" rel="banner" class="fl"><img src="images/noimages/loading.gif" rel="lazy" path="$val[pic]" alt="$val[title]" style="height:355px;" /></a>
+			</li>
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>
+            <ul class="h_oflow border floor_brand">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="index" p="floor{$j}_brands" op="" t="1" class="pu"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!-- 
+EOT;
+foreach($AD->GetAd("floor{$j}_brands",1) as $val){
+print <<<EOT
+-->        		<li><a href="$val[shop_link]" title="$val[shop_name]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[shop_logo]" style="height:41px;" alt="$val[shop_name]" class="border_img" /></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->			</ul>
+        </div>	
+	</div><!--- 第1到第6楼 --->
+<!--
+EOT;
+} print <<<EOT
+-->
+    <div class="clear0"></div>
+    <div class="floor floor_small fl clearfix h_oflow">	
+		<h3 class="floor_title">
+			<img src="{$index_floor[6][floor_icon]}" width="200" height="50" />
+			<p> 
+<!--
+EOT;
+foreach($AD->GetAd("floor7_links",2) as $val){
+print <<<EOT
+-->				<a href="$val[url]" target="_blank" title="$val[title]">$val[title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->				<a href="{$index_floor[6][more_link]}" target="_blank" class="more">去逛街>></a>
+			</p>
+		</h3>
+        <ul class="fl floor_shop1">
+<!--
+EOT;
+foreach($AD->GetAd('floor7_ad1',2) as $val){
+print <<<EOT
+-->			<li>
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="index" p="floor7_ad1" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->             <a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+                <a href="$val[url]" target="_blank" rel="banner" class="name">$val[title]</a>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>  	
+	</div><!--- 第7楼 --->
+    <div class="floor floor_small fr clearfix h_oflow">	
+		<h3 class="floor_title">
+			<img src="{$index_floor[7][floor_icon]}" width="200" height="50" />
+			<p> 
+<!--
+EOT;
+foreach($AD->GetAd("floor8_links",2) as $val){
+print <<<EOT
+-->				<a href="$val[url]" target="_blank" title="$val[title]">$val[title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->				<a href="{$index_floor[7][more_link]}" target="_blank" class="more">去逛街>></a>
+			</p>
+		</h3>
+        <ul class="fl floor_shop1">
+<!--
+EOT;
+foreach($AD->GetAd('floor8_ad1',2) as $val){
+print <<<EOT
+-->			<li>
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="index" p="floor8_ad1" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->             <a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+                <a href="$val[url]" target="_blank" class="name">$val[title]</a>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>
+	</div><!--- 第8楼 --->
+    <div class="clear0"></div>
+    <div class="floor floor_small fl clearfix h_oflow">	
+		<h3 class="floor_title">
+			<img src="{$index_floor[8][floor_icon]}" width="200" height="50" />
+			<p> 
+<!--
+EOT;
+foreach($AD->GetAd("floor9_links",2) as $val){
+print <<<EOT
+-->				<a href="$val[url]" target="_blank" title="$val[title]">$val[title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->				<a href="{$index_floor[8][more_link]}" target="_blank" class="more">去逛街>></a>
+			</p>
+		</h3>
+        <dl class="floor_shop3">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="index" p="floor9_ad1" op="" t="2" class="pu"></a>
+<!--
+EOT;
+} print <<<EOT
+-->	
+<!--
+EOT;
+$i=0;
+foreach($AD->GetAd('floor9_ad1',2) as $val){
+print <<<EOT
+--><!--
+EOT;
+if($i==0){
+$i++;
+print <<<EOT
+-->			<dt><a href="$val[url]" title="$val[title]" target="_blank"><img src="$val[pic]" alt="$val[title]" width="320" height="230" /></a></dt>
+			<dd>
+            	<ul>    
+<!--
+EOT;
+continue;
+} print <<<EOT
+-->					<li><a href="$val[url]" title="$val[title]" target="_blank"><img src="$val[pic]" alt="$val[title]"/></a><a href="$val[url]" title="$val[title]" target="_blank" class="name">$val[title]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->            	</ul>
+            </dd>
+		</dl>    
+	</div><!--- 第9楼 --->
+    <div class="floor floor_small fr clearfix h_oflow">	
+		<h3 class="floor_title">
+			<img src="{$index_floor[9][floor_icon]}" width="200" height="50" />
+			<p> 
+<!--
+EOT;
+foreach($AD->GetAd("floor10_links",2) as $val){
+print <<<EOT
+-->				<a href="$val[url]" target="_blank" title="$val[title]">$val[title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->				<a href="{$index_floor[9][more_link]}" target="_blank" class="more">去逛街>></a>
+			</p>
+		</h3>
+        <dl class="floor_shop4">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->				<a href="#" rel="ad_apply" m="index" p="floor10_ad1" op="" t="2" class="pu"></a>
+<!--
+EOT;
+} print <<<EOT
+-->	
+<!--
+EOT;
+$i=0;
+foreach($AD->GetAd('floor10_ad1',2) as $val){
+print <<<EOT
+--><!--
+EOT;
+if($i==0){
+$i++;
+print <<<EOT
+-->			<dt><a href="$val[url]" title="$val[title]" target="_blank"><img src="$val[pic]" alt="$val[title]" width="180" height="230" /></a></dt>
+			<dd>
+            	<ul>    
+<!--
+EOT;
+continue;
+} print <<<EOT
+-->					<li><a href="$val[url]" title="$val[title]" target="_blank"><img src="$val[pic]" alt="$val[title]"/></a><p class="fct"><a href="$val[url]" title="$val[title]" target="_blank">$val[title]</a></p></li>
+<!--
+EOT;
+} print <<<EOT
+-->            	</ul>
+            </dd>
+		</dl>
+	</div><!--- 第10楼 --->
+	<div class="clear"></div>
+	<div class="friendlink border h_oflow">
+    	<h3 class="titlea"><span>$lang[friend_links]</span></h3>
+        <div><!--
+EOT;
+foreach ($friend_links as $val){
+if($val[logo]!=""){
+print <<<EOT
+--><a href="$val[url]" title="$val[note]" target="_blank"><img src="$val[logo]" alt="$val[note]"/></a><!--
+EOT;
+}else{
+print <<<EOT
+--><a href="$val[url]" title="$val[note]" target="_blank">$val[title]</a><!--
+EOT;
+} }print <<<EOT
+-->		</div>
+	</div><!-- 友情链接 -->
+<!--
+EOT;
+?>-->	

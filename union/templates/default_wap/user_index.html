@@ -1,0 +1,215 @@
+<!--<?php print<<<EOT
+--><!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+<title>{$arr_index_data[0][content]}</title>
+<!--
+EOT;
+if($is_wx && $phone_type!='iphone'){
+print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" href="images/default_wap/wx_css.php?v=$MVMMALL_WAPVERSION" />
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" href="images/default_wap/public.css?v=$MVMMALL_WAPVERSION" />
+<link rel="stylesheet" type="text/css" href="$imgpath/mvm.css?v=$MVMMALL_WAPVERSION" />
+<!--
+EOT;
+} print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.js"></script>
+<script type="text/javascript" src="include/javascript/mvm.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("html").css("fontSize",(document.documentElement.clientWidth*0.1)+"px");
+	$(window).resize(function(){
+	     $("html").css("fontSize",(document.documentElement.clientWidth*0.1)+"px");
+	});
+	if(window.top!=window)
+	{
+	    $("html").css("fontSize","39px");
+	}
+	
+	$.extend({
+	    DoInit:function(){
+		    var arr_cat_uid=[];
+			var arr_goods_type=[];
+			$("ul[@rel=goodslist]").each(function(){
+			    var cat_uid=parseInt($(this).attr("cat_uid"));
+				var goods_type=$(this).attr("goods_type");
+				if(isNaN(cat_uid) || cat_uid<=0) $(this).remove();
+				arr_cat_uid.push(cat_uid);
+				arr_goods_type.push(goods_type);
+			});//end each
+			
+			$.ajax({
+			    url:"ajax.php?action=user_index_goodslist",
+				type:"POST",
+				dataType:"json",
+				data:{
+				    cat_uid:arr_cat_uid.join(","),
+					goods_type:arr_goods_type.join(",")
+				},
+				cache:false,
+				success:function(json){
+				    $("ul[@rel=goodslist]").each(function(i){
+					    var cat_uid=parseInt($(this).attr("cat_uid"));
+				        var goods_type=$(this).attr("goods_type");
+						if(json[cat_uid][goods_type].length<=0) $(this).remove();
+						var total=0;
+						for(var i in json[cat_uid][goods_type])
+						{
+						    if($(this).children("li").size()<=i) break;
+							total++;
+							var jq_li=$(this).children("li").eq(i);
+							jq_li.find("a.name").html(json[cat_uid][goods_type][i]["goods_name"]);
+							jq_li.find("a").attr("href",json[cat_uid][goods_type][i]["url"]);
+							jq_li.find("span[@rel=price]").html(json[cat_uid][goods_type][i]["goods_sale_price"]);
+							jq_li.find("img").attr("src",json[cat_uid][goods_type][i]["goods_file1"]);
+						}
+						$(this).children("li:gt("+(total-1)+")").remove();
+					});//end each
+				}
+			});//end ajax
+			
+			if($("span[@rel=sms_num]").size()>0)
+			{
+			    $.get(
+				    "ajax.php?action=user_index_sms_num&cmd=unread&rnd="+Math.random(),
+					function(msg){
+					    $("span[@rel=sms_num]").html(msg.toString());
+					}
+				);//end get
+			}
+		}
+	});
+	$.DoInit();
+});
+</script>
+<link rel="stylesheet" type="text/css" href="images/wap_user/mvm.css?v=$MVMMALL_WAPVERSION" />
+<link rel="stylesheet" type="text/css" href="images/wap_user/donghua.css?v=$MVMMALL_WAPVERSION" />
+<style>
+body { background:#f1f1f1; }
+</style>
+</head>
+<body><a name="top"></a>
+<div class="wrapper" style="width:10rem; padding:0; overflow:hidden;">
+<script language="javascript" src="include/javascript/jquery.flashv3.js"></script>
+<script type="text/javascript">
+$(function (){
+	$("div[@rel=adcycle_data]").each(function(i){
+	    var d=$(this).html();
+		d=d.replace("cycle:","");
+		var arr_tmp=d.split("|||");
+		var jq_cycle=$('<div class="tel_flash_div"><a rel="banner"><div class="tel_flash" rel="frame"></div></a></div>');
+		$(this).replaceWith(jq_cycle);
+		
+		var arr_img=arr_tmp[1].split("|");
+		var arr_link=arr_tmp[0].split("|");
+		if(arr_img.length!=arr_link.length)
+		{
+		    alert("轮转数据不一致，无法加载");
+			return;
+		}
+		arr_tmp[0]="";
+		arr_tmp[1]="";
+		for(var i in arr_img)
+		{
+		    if(arr_img[i].indexOf("wap_user")!=-1) continue;
+			arr_tmp[0]+=arr_link[i]+"|";
+			arr_tmp[1]+=arr_img[i]+"|";
+		}
+		arr_tmp[0]=arr_tmp[0].substr(0,arr_tmp[0].length-1);
+		arr_tmp[1]=arr_tmp[1].substr(0,arr_tmp[1].length-1);
+		
+		$("div[@rel=frame]").flashv3(arr_tmp[1].replace(/union\//g,""),arr_tmp[0],arr_tmp[0],735,"3.833rem",30,2);
+		
+		return false;
+	});//end each
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("div[@type=search]").find("a:first").click(function(e){
+	    e.preventDefault();
+        $("div[@rel=top_cate]:first").show();
+		$("#block").show();
+    });//end click
+});
+</script> 
+    <div rel="top_cate" class="top_cate"><a href="" class="close"></a>
+<!--
+EOT;
+foreach ($cat_parent as $val){
+print <<<EOT
+-->		<dl>
+			<dt class="fd f13"><a href="$val[url]" $val[blank]>$val[category_name]</a></dt> 
+<!--
+EOT;
+foreach ($val[children] as $child){
+print <<<EOT
+-->			<dd><span></span><a href="$child[url]" $child[blank]>$child[category_name]</a></dd><!--
+EOT;
+} print <<<EOT
+-->			
+		</dl>
+<!--
+EOT;
+}
+print <<<EOT
+-->	</div><!-- 头部分类 -->
+    <div class="wap_top1">
+        <h2>
+<!--
+EOT;
+if($mm_wx_shop_logo){
+print <<<EOT
+-->			<img src="$mm_wx_shop_logo" class="fl wap_top1_logo" />
+<!--
+EOT;
+} print <<<EOT
+-->			$shop_file[shop_name]
+        </h2>
+<!--
+EOT;
+if($mm_wx_news_url){
+print <<<EOT
+-->	
+		<a href="$mm_wx_news_url" class="fr">关注</a><span class="fr">|</span>
+<!--
+EOT;
+} print <<<EOT
+-->
+    	<a href="$_URL[0]/member.php?action=index" class="fr">会员中心</a>
+    	<a href="#" class="wap_top1_search fr"></a>
+    </div><!-- 头部logo 关注 -->
+	<div class="side_design" rel="mobile_frame">
+<!--
+EOT;
+foreach ($arr_index_data as $key=>$val){
+if($key<=0) continue;
+print <<<EOT
+-->	
+		$val[content]
+<!--
+EOT;
+} print <<<EOT
+-->   
+    </div>
+    <div class="fct foot_jishu" rel="footer">
+        微商盟<br />
+        wesomall.com<br />
+        微商盟商城提供技术支持<br>
+        <p class="fct mt10">$mm_footer_code</p> 
+    </div>
+</div>
+<div id="block"></div>
+</body>
+</html>
+<!--
+EOT;
+?>-->

@@ -1,0 +1,55 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除？")) return false;
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=article_del&uid="+uid+"&ajax=ajax&rnd="+Math.random(),
+				function(msg){
+					$("tr[@uid="+uid+"]").remove();
+					alert("删除成功");
+				}
+			);//end get
+		});//end click
+	});
+	</script>
+	
+	<div class="mem_right">
+		<div class="member_title fd red"><a href="sadmin.php?module=$module&action=article_add&ps_name=$board[board_name_code]" class="span_right white mem_add">添加资讯</a>$board[board_title] 资讯管理</div>
+		
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th>文章标题</th>
+				<th>作者</th>
+				<th>点击量</th>
+				<th>发布时间</th>
+				<th width="10%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_article as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td><a href="$val[url]" target="_blank">$val[board_subject]</a></td>
+				<td>$val[author]</td>
+				<td>$val[board_hit]</td>
+				<td>$val[register_date]</td>
+				<td>
+				    <a href="sadmin.php?module=$module&action=article_edit&uid=$val[uid]" class="modify" title="编辑"></a>&nbsp;
+					<a href="#" rel="del" uid="$val[uid]" class="delete" title="删除"></a>
+				</td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div>	
+<!--
+EOT;
+?>-->

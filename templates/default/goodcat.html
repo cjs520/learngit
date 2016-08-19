@@ -1,0 +1,62 @@
+<!--<?php
+require_once template('header');
+print <<<EOT
+-->
+	<ul class="title_brandtab">
+		<li class="hover"><a href="#">全部</a></li> 
+<!--
+EOT;
+$i=0;
+foreach ($cat_parent as $val){
+$i++;
+print <<<EOT
+-->		<li><a href="#goodcat{$i}">$val[category_name]</a></li>        
+<!--
+EOT;
+} print <<<EOT
+-->	</ul>
+	<div class="clear"></div>		
+<!--
+EOT;
+$i=0;
+foreach ($cat_parent as $val){
+$i++;
+print <<<EOT
+-->
+	<div class="h_oflow goodcat"><a name="goodcat{$i}"></a>
+		<h3 uid="$val[uid]"><!--
+EOT;
+if($val[category_file1]<>''){
+print <<<EOT
+--><img src="$val[category_file1]" width="36" height="36" alt="$val[category_name]" /><!--
+EOT;
+} print <<<EOT
+--><a href="$val[sub_url]" $val[blank] class="fl f18 fd">$val[category_name]</a><a href="$val[sub_url]" $val[blank] class="fr red f12 fn">去$val[category_name]街>></a></h3>       	
+<!--
+EOT;
+foreach ($val[children] as $child){
+print <<<EOT
+-->		<dl>
+			<dt><a href="$child[url]" $child[blank]>$child[category_name]</a></dt>
+            <dd uid="$val[uid]">
+<!--
+EOT;
+foreach ($child[children] as $ch){
+print <<<EOT
+--><a href="$ch[url]"><span>$ch[category_name]</span></a><!--
+EOT;
+} print <<<EOT
+-->			</dd>
+		</dl>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</div>            
+<!--
+EOT;
+} print <<<EOT
+-->	
+<!--
+EOT;
+?>-->

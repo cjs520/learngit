@@ -1,0 +1,109 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=approval]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认审核延迟申请？")) return;
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=delay&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    jq_a.parent().siblings("td[@rel=status]").html("已审核");
+					jq_a.hide();
+				}
+			}
+		);//end get
+	});//end click
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red">申请延期收货</div>
+		<div class="newopen" style="width:880px;" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="title_rate_list">
+			<a href="sadmin.php?module=$module&action=list"><span>所有订单</span></a>
+			<a href="sadmin.php?module=$module&action=list&cmd=delay" class="hover"><span>申请延期收货</span></a>
+			<a href="sadmin.php?module=back_order&action=list"><span>退货通道</span></a>
+			<a href="sadmin.php?module=order&action=list&cmd=group_check"><span>现场订单验证</span></a>
+		</div>		
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th>订单号码</th>
+				<th>订购者</th>
+				<th>金额</th>
+				<th>下单时间</th>
+				<th>延迟信息</th>
+				<th>状态</th>
+				<th width="8%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_order as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]" rel="order_row" status="$val[status_code]">
+				<td><a href="#" rel="apply_page" apply_url="$val[url]">$val[ordersn]</a></td>
+				<td class="mem_display">$val[username]</td>
+				<td>
+				    $val[goods_amount] + $val[goods_point]积分<br />
+					运费：$val[sh_price]<br />
+					折扣：$val[discount]
+				</td>
+				<td>$val[addtime]</td>
+				<td width="20%" style="text-align:left;">
+				    $val[day]天<br />
+					理由：$val[reason]
+				</td>
+				<td rel="status">$val[status]</td>
+				<td>
+<!--
+EOT;
+if($val[approval_date]<10){
+print <<<EOT
+-->
+				    <a href="#" rel="approval" uid="$val[uid]" class="tipsy_s check" title="审核"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		
+		<form action="sadmin.php?module=$module&action=$action&cmd=$cmd" method="post">
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl">订单详细搜索</td></tr>
+			<tr>
+				<td width="15%">订单号码</td>
+				<td>
+				    <input type="text" name="ordersn" value="$ordersn" size="30" class="text" /> 
+					<input type="submit" class="mem_button" value="" />
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

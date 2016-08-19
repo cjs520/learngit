@@ -1,0 +1,113 @@
+<!--<?php
+print <<< EOT
+<!--右边开始-->
+
+<!--form content-->
+	<table cellpadding="0" cellspacing="1" class="list1" style="margin-bottom:0; border-bottom:0;">
+		<tr><th><span class="orange" style="float:right;">订单号: $order_info[ordersn]</span>订单详情</th></tr>
+	</table>
+	<div style="width:868px; height:475px; padding:5px; overflow-y:auto; overflow-x:hidden; border:solid 1px #888; border-top:none;">
+	<form action="admincp.php?module=$module&action=$action" method="post">
+	<input type="hidden" name="p_url" value="$p_url" />
+	<table cellpadding="0" cellspacing="1" class="list list_bg" id="goods_list" style="width:850px;">
+		<tr>
+			<th width="30%">商品名称</th>
+			<th>属性</th>
+			<th width="12%">单价</th>
+			<th width="12%">余款单价</th>
+			<th width="12%">销售积分</th>
+			<th width="12%">购买数量</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+		  	<td class="td1"><a href="$val[url]" target="_blank">$val[goods_name]<span style="width:auto;"><img src="$val[goods_file1]" /></span></a></td>
+			<td class="td1">$val[goods_attr]</td>
+			<td>$val[buy_price]</td>
+			<td>$val[rest_price]</td>
+			<td>$val[buy_point]积分</td>
+			<td>$val[buy_number]</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+		<tbody id="new_goods"></tbody>			
+		<tr>
+			<td colspan="6">
+			    商品总数: <span class="red">$total_goods_num</span> &nbsp; 商品总价: <span>$order_info[goods_amount]</span> + 运费: <span>$order_info[sh_price]</span> - 折扣金额：$order_info[discount] = 订单总金额：<span class="red">$order_info[order_amount]</span>
+			    <b style="display:none;">(还有余款$order_info[goods_rest_amount]未支付)</b>
+			</td>
+		</tr>
+	</table>
+	</form>
+	<div id="order_goods"></div>	
+	<form name="order" action="admincp.php?module=$module&action=$action" method="post">
+	<input type="hidden" name="p_url" value="$p_url" />
+	<input type="hidden" name="setp" value="1"/>
+	<input type="hidden" name="uid" value="$order_info[uid]"/>		
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg" style="margin-top:10px; width:850px;">
+		<tr>
+			<th colspan="4">收货人信息</th>
+		</tr>
+		<tr>
+			<td width="12%">发货单号</td>
+			<td width="38%"><input type="text" name="order_row[delivery_code]" value="$order_info[delivery_code]" class="text text_3" /></td>
+			<td width="12%">收货人姓名</td>
+			<td width="38%"><input type="text" name="order_row[consignee]" value="$order_info[consignee]" class="text text_3" /></td>
+		</tr>
+		<tr>
+			<td>收货人手机</td>
+			<td><input type="text" name="order_row[mobile]" value="$order_info[mobile]" class="text text_3" /></td>
+			<td>收货地址</td>
+			<td><input type="text" name="order_row[address]" value="$order_info[address]" class="text text_3" /></td>
+		</tr>
+		<tr>
+			<td>配送方式</td>
+			<td>$sel_ship</td>
+		  	<td>运费</td>
+		  	<td><input type="text" name="order_row[sh_price]" value="$sh_price" class="text text_3" /></td>
+	  	</tr>
+		<tr>
+		    <td>发票票头</td>
+			<td><input type="text" name="order_row[invoice]" value="$order_info[invoice]" class="text text_3" /></td>
+			<td>买家</td>
+			<td>$order_info[username]</td>
+		</tr>
+		<tr>
+			<td>邮政编码</td>
+			<td><input type="text" name="order_row[zipcode]" value="$order_info[zipcode]" class="text text_3" /></td>
+			<td>客户留言</td>
+			<td><textarea name="order_row[remark]" rows="3" class="text text_3">$order_info[remark]</textarea></td>
+		</tr>
+		
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg" style="width:850px;">
+		<tr>
+			<th colspan="4">订单信息</th>
+		</tr>
+		<tr>
+			<td width="12%">订单状态</td>
+		  	<td width="38%">$order_menu</td>
+			<td width="12%">折扣金额</td>
+			<td width="38%"><input type="text" name="order_row[discount]" value="$discount" class="text text_3" /></td>
+		</tr>
+		<tr>
+			<td>管理员笔记</td>
+			<td colspan="3"><textarea name="order_row[admin_memo]" rows="4" style="width:86%;" class="text">$order_info[admin_memo]</textarea></td>
+		</tr>
+	</table>
+	<div id="tfoot">
+	  	<input type="submit" name="Submit" value="确定" class="button" onclick="" />
+	  	<input type="reset" name="reset" value="重置" class="button" />
+	</div>
+  	</form>	
+	</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

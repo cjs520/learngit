@@ -1,0 +1,29 @@
+<!--<?php
+require_once template('header');
+print <<<EOT
+-->
+	<div class="location"><p><span class="loca_icon"></span><strong>$page_title</strong>(共有 <span class="red fd">$total_count</span> 个商品)</p></div>
+	<div class="pro_list"><!-- 新品抢先开始 -->
+		<ul> 
+<!--
+EOT;
+$k=0;
+foreach($arr_goods as $val){
+$class=$k++%2==0?'span_left':'span_right';
+print <<<EOT
+-->
+			<li class="$class">
+				<a href="$val[url]" class="goods_img"><img src="$val[goods_file1]" alt="$val[goods_name]" /></a>
+                <p class="name">$val[addoption]<a href="$val[url]" title="$v[goods_name]">$val[goods_name]</a></p>
+                <p><span class="span_right gray">($val[goods_hit]人关注)</span></p> 
+            </li>         
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>
+    </div><!-- 新品抢先结束 -->
+    <div class="page">$page_list</div>
+<!--
+EOT;
+?>-->

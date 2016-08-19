@@ -1,0 +1,94 @@
+﻿<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+function PrintPage()
+{
+    if(confirm("确定打印吗?"))
+	{
+	    window.print();
+	}
+}
+</script>
+	<table cellpadding="0" cellspacing="1" class="list1" style="margin-bottom:0; border-bottom:0;">
+		<tr><th><span class="orange" style="float:right;">订单号: $order_info[ordersn]</span>订单详情</th></tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list list_bg" id="goods_list">
+		<tr>
+			<th width="30%">商品名称</th>
+			<th>属性</th>
+			<th width="12%">价格</th>
+			<th width="12%">销售积分</th>
+			<th width="12%">购买数量</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+		  	<td class="td1"><a href="$val[url]" target="_blank">$val[goods_name]<span style="width:auto;"><img src="$val[goods_file1]" /></span></a></td>
+			<td class="td1">$val[goods_attr]</td>
+			<td>$val[buy_price]</td>
+			<td>$val[buy_point]积分</td>
+			<td>$val[buy_number]</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->				
+		<tr><td colspan="5"> 商品总数: <span class="red">$total_goods_num</span> &nbsp; 商品总价: <span>$order_info[goods_amount]</span> + 运费: <span>$order_info[sh_price]</span> - 折扣金额：$order_info[discount] = 订单总金额：<span class="red">$order_info[order_amount]</span></td>
+		</tr>
+		<tr><td colspan="5" style="text-align:right; padding-right:10px;"><a href="#" onclick="PrintPage();return false;" class="but1">打印</a></td></tr>
+	</table>
+		
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg" style="margin-top:10px;">
+		<tr><th colspan="4">收货人信息</th></tr>
+		<tr>
+			<td width="12%">姓名</td>
+			<td width="38%">$order_info[consignee]</td>
+			<td>手机</td>
+			<td>$order_info[mobile]</td>
+		</tr>
+		<tr>
+			<td>收货地址</td>
+			<td>$order_info[address]</td>
+			<td>邮政编码</td>
+			<td>$order_info[zipcode]</td>
+		</tr>
+		<tr>
+			<td>发票票头</td>
+			<td class="orange">$order_info[invoice]</td>
+			<td>客户留言</td>
+			<td>$order_info[remark]</td>
+		</tr>
+		<tr>
+			<td>管理员笔记</td>
+			<td>$order_info[admin_memo]</td>
+			<td>发货单号</td>
+			<td>$order_info[delivery_code]</td>
+		</tr>
+	</table>	
+	
+	
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg">
+		<tr><th colspan="4">订单信息</th></tr>
+		<tr>
+			<td width="12%">订单状态</td>
+			<td width="38%">{$m_order_array[$order_info[status]]}</td>
+			<td width="12%">支付方式</td>
+			<td width="38%">$order_info[pay_name]</td>
+			
+		</tr>
+		<tr>
+			<td>配送方式</td>
+			<td>$order_info[sh_name]</td>
+			<td>运费</td>
+			<td>$order_info[sh_price]</td>
+		</tr>
+	</table>
+<!-- end -->
+<!--
+EOT;
+?>-->

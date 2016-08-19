@@ -1,0 +1,45 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">商城资讯</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+    $("dl[@rel=news_block]").each(function(){
+	    var jq_a=$(this).children("dd").children("a");
+		if(jq_a.size()<=0)
+		{
+		    $(this).children("dt").remove();
+			return;
+		}
+		$(this).children("dt:first").find("a").attr("href",jq_a.eq(0).attr("href"));
+		$(this).children("dt:first").find("img").attr("src",jq_a.eq(0).attr("cover"));
+	});//end each
+});
+</script>
+	<div class="border h_oflow news_nav">
+<!--
+EOT;
+foreach ($b_cat as $key=>$val){
+print <<<EOT
+-->		<a href="board.php?action=$key" code="$key">$val[board_title]</a>
+<!--
+EOT;
+} print <<<EOT
+-->	</div>   
+	<div class="mt10 newtop_list"> 
+		<h3 class="f13 mb4">最新资讯</h3>
+		<ul>
+<!--
+EOT;
+foreach (GetBoard('',0,20,'22') as $val){
+print <<<EOT
+-->			<li><a href="$val[url]" title="$val[board_subject]">$val[board_subject]</a>&nbsp;&nbsp;<span class="gray f11">$val[register_date]</span></li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>
+	</div>
+<!--
+EOT;
+?>-->

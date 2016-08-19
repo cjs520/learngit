@@ -1,0 +1,153 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+<script type="text/javascript">
+var editor1;
+KindEditor.ready(function(K) {
+    editor1 = K.create('textarea[name="mod"]', {
+	    uploadJson : 'sadmin.php?module=editor&action=upload',
+		fileManagerJson : 'sadmin.php?module=editor&action=list_files',
+		allowFileManager : true,
+		items:kindecitor_items
+	});
+});
+$(function(){
+    var code_lock=false;
+	$("a[@rel=get_default_custom_code]").click(function(e){
+	    e.preventDefault();
+		if(code_lock) return;
+		code_lock=true;
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=get_default_custom_code",
+			type:"GET",
+			cache:true,
+			success:function(msg){
+			    editor1.html(msg);
+			},
+			complete:function(){
+			    code_lock=false;
+			}
+		});
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("input[@rel=search]").click(function(){
+		var search_txt=$("input[@rel=search_txt]").val();
+		if(search_txt=="")
+		{
+		    alert("请输入关键字");
+			return;
+		}
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=search_goods",
+			type:"POST",
+			dataType:"json",
+			cache:false,
+			data:{search_txt:search_txt},
+			success:function(json){
+				var html="";
+				$.each(json,function(i){
+				    html+="<option value='"+this.uid+"'>"+this.goods_name+"</option>   ";
+				});//end each
+				$("#sel_src").html(html);
+			}
+		});//end ajax
+	});//end click
+	
+	$("input[@rel=g_add]").click(function(){
+	    if($("#sel_dst").children().size()>=5)
+		{
+		    alert("关联商品最多只能5个");
+			return;
+		}
+	    var jq_opt=$("#sel_src").children("option[@selected]");
+		if(jq_opt.size()<=0) return;
+		jq_opt.each(function(i){
+			$("#sel_dst").append(this);
+		});//end each
+	});//end click
+	
+	$("input[@rel=g_remove]").click(function(){
+	    if($("#sel_dst").children().size()<=0) return;
+		
+		var jq_opt=$("#sel_dst").children("option[@selected]");
+		jq_opt.each(function(i){
+			$("#sel_src").append(this);
+		});//end each
+	});//end click
+	
+	$("form[@name=floor_form]").submit(function(){
+	    var str_g_uid="";
+		var arr_g_uid=[];
+		$("#sel_dst").children("option").each(function(i){
+		    if($.inArray($(this).val(),arr_g_uid)!=-1) return true;
+		    arr_g_uid.push($(this).val());
+		});//end each
+		if(arr_g_uid.length>0) str_g_uid=arr_g_uid.join(",");
+		$(this).find("input[@name=goods_uid]:eq(0)").val(str_g_uid);
+		
+		return true;
+	});//end submit
+});
+</script>
+	<div class="mem_right">
+		<form name="floor_form" action="sadmin.php?module=$module&action=edit" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" name="action" value="$action" />
+		<input type="hidden" name="goods_uid" value="" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">形象展示</th></tr>
+			<tr>
+				<td width="18%">
+				    自定义模块<br />
+					<a href="#" class="fd red" rel="get_default_custom_code">点击获取默认代码 >>> </a>
+				</td>
+				<td><textarea name="mod" style="width:755px;height:400px;visibility:hidden;">$mod_img[content]</textarea></td>
+			</tr>
+			<tr>
+			    <td>推荐商品</td>
+				<td>
+				    <input type="text" class="text" rel="search_txt" style="width:200px;" /> 
+					<input type="button" rel="search" value="搜索" /> 
+					（搜不到商品？请提供更精确的关键字）
+				</td>
+			</tr>
+			<tr>
+			    <td colspan="2">
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<th width="40%">可选商品</th>
+				<th>操作</th>
+				<th width="40%">关联商品</th>
+			</tr>
+			<tr>
+				<td><select id="sel_src" size="15" class="textarea" multiple="multiple"></select></td>
+				<td class="fct mem_pbut"><input type="button" rel="g_add" class="button" value="添加" /><br />
+				<input type="button" rel="g_remove" class="button" value="删除" /><br />
+				<td><select id="sel_dst" size="15" class="textarea" multiple="multiple">
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->					<option value="$val[uid]">$val[goods_name]</option>   
+<!--
+EOT;
+}print <<<EOT
+-->				</select></td>
+			</tr>
+		</table>  
+                </td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>
+	
+<!--
+EOT;
+?>-->

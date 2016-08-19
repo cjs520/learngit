@@ -1,0 +1,75 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除链接？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&per=ajax&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">友情链接管理</td>
+			<td class="tright"><a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=add" class="but1">添加链接</a></td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<form name="links" action="admincp.php?module=$module" method="post">
+	<input type="hidden" name="action" value="del" />	
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="5%"><input type="checkbox" name="chkall" id="chkall" value="" onclick="checkall(this.form)" /></th>
+			<th width="25%">网站名称</th>
+			<th width="26%">链接网址</th>
+			<th width="26%">链接说明</th>
+			<th width="8%">显示顺序</th>
+			<th width="10%">操 作</th>
+		</tr>
+<!--
+EOT;
+foreach ($links_rt as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[id]">
+			<td><input name="uid_check[]" type="checkbox" value="$val[id]" /></td>
+			<td class="td1">$val[name]</td>
+			<td class="td1"><a href="$val[url]" target="_blank">$val[url]<span style="width:auto;">$val[logo]</span></a></td>
+			<td class="td1">$val[note]</td>
+			<td>$val[displayorder]</td>
+			<td>
+			    <a href="#" rel="apply_page" apply_url="$val[edit]" class="tipsy_s modify" title="修改"></a> 
+				<a href="#" uid="$val[id]" rel="del" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><b style="float:left;"><input name="del" type="submit" id="del" value="删除所选" onclick="return really()"  class="button1" /></b><span>$page_list</span></div>
+</form>	
+</div>
+<!--
+EOT;
+?>-->

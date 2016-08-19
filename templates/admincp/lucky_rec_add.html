@@ -1,0 +1,54 @@
+<!--<?php
+print <<<EOT
+<!--右边开始-->
+<!--form content-->
+	<form action="admincp.php?module=$module&action=$action" method="post">
+	<input type="hidden" name="p_url" value="$p_url" />
+	<input type="hidden" name="step" value="1" />
+	<input type="hidden" name="uid" value="$uid" />
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg mb0">
+		<tr>
+			<th colspan="2">修改获奖信息</th>
+		</tr>
+		<tr>
+			<td width="25%">获奖单号</td>
+			<td>$lucky_rec[ordersn]</td>
+		</tr>
+		<tr>
+			<td>奖项/奖品</td>
+			<td>$lucky_goods[lucky_name] / <a href="$lucky_goods[url]" target="_blank">$lucky_goods[goods_name]</a></td>
+		</tr>
+		<tr>
+			<td>获奖时间</td>
+			<td>$lucky_rec[reg_date]</td>
+		</tr>
+		<tr>
+			<td>是否发货</td>
+			<td>$lucky_rec[is_send]</td>
+		</tr>
+		<tr>
+			<td>获奖会员</td>
+			<td>$lucky_rec[m_id]</td>
+		</tr>
+		<tr>
+		    <td>会员真实姓名</td>
+			<td><input type="text" class="text" style="width:250px;" name="name" value="$lucky_rec[name]" /></td>
+		</tr>
+		<tr>
+		    <td>联系电话</td>
+			<td><input type="text" class="text" style="width:250px;" name="tel" value="$lucky_rec[tel]" /></td>
+		</tr>
+		<tr>
+		    <td>收货地址</td>
+			<td><input type="text" class="text" style="width:250px;" name="address" value="$lucky_rec[address]" /></td>
+		</tr>
+		<tr>
+		    <td>备注信息</td>
+			<td><textarea class="text" name="memo" cols="60" style="height:60px;">$lucky_rec[memo]</textarea></td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="$lang[submit]" class="button" /></div>
+	</form>
+<!--
+EOT;
+?>-->

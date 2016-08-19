@@ -1,0 +1,142 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var brand_uid="$brand_uid";
+	var cat_uid="$cat_uid";
+	if(brand_uid!="0")
+	{
+	    $("a[@rel=brand]").removeClass("hover");
+		$("a[@rel=brand][@uid="+brand_uid+"]").addClass("hover");
+	}
+	
+	if(cat_uid!="0")
+	{
+	    $("a[@rel=cat]").removeClass("hover");
+		$("a[@rel=cat][@uid="+cat_uid+"]").addClass("hover");
+	}
+	
+	var od_cls="$ac"=="ASC"?"up1":"down1";
+	$("a[@rel=order][@f=$od]").addClass(od_cls);
+	
+	var status=parseInt("$status");
+	$("a[@rel=status]").eq(status).addClass("now");
+});
+</script>
+<script type="text/javascript" src="include/javascript/jquery.countdown.js"></script>
+<!--
+EOT;
+foreach($AD->GetAd('banner',2) as $val){
+print <<<EOT
+-->	<div class="mb10" style="position:relative;">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="miaosha" p="banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+--><!--banner-->
+    <table width="100%" border="0" class="attrs">
+        <tr class="attrs_cate">
+            <th>品牌</th>
+            <td><div class="toggle_div"><a href="" rel="tip_open" class="tip_open"></a>
+                <a class="hover" rel="brand" href="miaosha.php?cat_uid=$cat_uid">全部</a>
+<!--
+EOT;
+foreach($arr_brand as $val){
+print <<<EOT
+-->
+                <a rel="brand" uid="$val[brand_uid]" href="miaosha.php?cat_uid=$cat_uid&brand_uid=$val[brand_uid]">$val[brand_name]<span>$val[cnt]</span></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </div></td>
+        </tr>
+        <tr class="attrs_cate">
+            <th>分类</th>
+            <td>
+                <a rel="cat" class="hover" href="miaosha.php?action=$action&brand_uid=$brand_uid">全部</a>
+<!--
+EOT;
+foreach($arr_cat as $val){
+print <<<EOT
+-->
+                <a rel="cat" uid="$val[cat_uid]" href="miaosha.php?action=$action&cat_uid=$val[cat_uid]&brand_uid=$brand_uid">$val[cat_name]<span>$val[cnt]</span></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </td>
+        </tr>
+        <tr class="attr_filter">
+            <td colspan="2"><ul>
+                <li class="sort">
+                    <a rel="order" f="start_date" href="miaosha.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&status=$status&od=start_date&ac=$ac&change=change">开始时间</a>
+                    <a rel="order" f="end_date" href="miaosha.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&status=$status&od=end_date&ac=$ac&change=change">结束时间</a> 
+					<a rel="order" f="goods_sale_price" href="miaosha.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&status=$status&od=goods_sale_price&ac=$ac&change=change">价格</a>
+					<a rel="order" f="goods_hit" href="miaosha.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&status=$status&od=goods_hit&ac=$ac&change=change">人气</a> 
+                </li>
+				<li class="type">
+				    <a rel="status" href="miaosha.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&od=start_date&ac=$ac&status=0" title="进行中">进行中</a>
+                    <a rel="status" href="miaosha.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&od=start_date&ac=$ac&status=1" title="未开始">未开始</a>
+                    <a rel="status" href="miaosha.php?action=$action&brand_uid=$brand_uid&cat_uid=$cat_uid&od=start_date&ac=$ac&status=2" title="已结束">已结束</a>
+                </li>
+            </ul></td>
+        </tr>
+    </table>
+	<div class="box_out border mt8 goods_list"><!-- 秒杀列表开始 -->
+        <ul>
+<!--
+EOT;
+foreach ($arr_onsale as $val){
+print <<<EOT
+-->
+            <li class="border"><div>
+<!--
+EOT;
+if($val[sold_out]){
+print <<<EOT
+-->
+			    <p class="fct" rel="sale" key="$val[uid]"><a href="$val[shop_url]" target="_blank" class="red" style="font-weight:bold;">逛逛该商铺</a></p>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+                <p class="fct" rel="sale" key="$val[uid]">剩余：<span rel="day"></span>天<span rel="hour"></span>小时<span rel="minute"></span>分<span rel="second"></span>秒</p>
+				<script type="text/javascript">
+			    $(function(){
+				    $("p[@rel=sale][@key={$val[uid]}]").count_down("$val[left_time]");
+			    });
+			    </script>
+<!--
+EOT;
+} print <<<EOT
+-->
+                <a href="$val[url]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[goods_file1]" class="disb" width="213" height="213"/></a>
+                <p class="name">$val[addoption]<a href="$val[url]" target="_blank" class="fd f14">$val[goods_name]</a></p>
+                <p><span class="fl"><span class="red">$val[goods_hit]</span>人正在抢</span><span class="fr">还剩<span class="red">$val[goods_stock]</span>件</span></p>　
+                <p>抢购价：<span class="f20 fd red"><em class="price_em">$mm_price_sign</em>$val[sale_price]</span></p>
+                <p>商城价：<span class="mline">$val[goods_market_price]</span></p>
+                <a class="goods_but but_qiang $val[btn_cls]" href="$val[url]" target="_blank">立即抢</a>
+                <span class="$val[sold_out]"></span>
+            </div></li>
+            
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>
+    </div><!-- 秒杀列表结束 -->
+    <div class="page">此类共<span>$total_count</span>个活动 $page_list</div>		
+<!--
+EOT;
+?>-->

@@ -1,0 +1,59 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+    <script type="text/javascript">
+	$(function(){
+	    var cat="$cat_id";
+		if(cat=="") cat=0;
+	    $("li[@rel=cat_tab]").removeClass("hover").filter("[@cat="+cat+"]").addClass("hover");
+	});
+	</script>
+<!--
+EOT;
+foreach($AD->GetAd('banner',2,'list') as $val){
+print <<<EOT
+-->	<div class="mb10" style="position:relative;">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="brand" p="banner" op="list" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+--><!--banner-->
+    <!-- 品牌列表开始 -->
+    <ul class="title_brandtab">
+        <li class="hover" rel="cat_tab" cat="0"><a href="$brand_url">全部</a></li>
+<!--
+EOT;
+foreach ($cat_parent as $val){
+$val['brand_url']=$rewrite==1?"brand-list-$val[uid].html":"brand.php?action=list&cat_id=$val[uid]";
+print <<<EOT
+-->		<li cat="$val[uid]" rel="cat_tab"><a href="$val[brand_url]">$val[category_name]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->	</ul>
+    <div class="box_out">
+        <div class="h_oflow box_in brandtab_content" id="con_brandtab_1">
+<!--
+EOT;
+foreach ($brand as $val){
+print <<<EOT
+-->			<p class="border fct"><a href="$val[url]" title="$val[title]"><img src="images/noimages/loading.gif" rel="lazy" path="$val[logo]" width="135" height="60" /></a><a href="$val[url]" title="$val[title]" class="name">$val[brandname]</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->		</div>	
+        <div class="page">此类共<span>$total_count</span>个记录 $page_list</div>
+    </div>    
+<!--
+EOT;
+?>-->

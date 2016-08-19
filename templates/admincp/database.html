@@ -1,0 +1,52 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("input[@name=chkall]").click(function(){
+	    $("input[@name='tables[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+});
+</script>
+<div id="right">
+	<form method="post" name="myform" action="">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">$lang[database_backup]</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="20%"><input type="checkbox" name="chkall" id="chkall"  checked="checked" />$lang[all_anti]</th>
+			<th width="25%">$lang[database_table]</th>
+			<th width="25%">$lang[records_few]</th>
+			<th width="20%">$lang[size] [$lang[total] $totalsize M]</th>
+		</tr>
+<!--
+EOT;
+if(is_array($bktables)){
+foreach($bktables as $k => $tablename){
+print <<<EOT
+-->		
+		<tr>
+			<td><input type="checkbox" name="tables[]" value="$tablename" checked="checked" /></td>
+			<td>$tablename</td>
+			<td>$bkresults[$k]</td>
+			<td>$size[$k]</td>
+		</tr>
+<!--
+EOT;
+}} print <<<EOT
+-->	
+	</table>	
+	<div id="page">$lang[backup_set] <b class="red">$lang[each_size]：<input type="text" name="sizelimit" id="sizelimit" value="2048" size="3"> 
+	KB</b> 
+	  <input type="submit" name="dosubmit" value="$lang[backup_db]" class="button2" /></div>	
+	</form>
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

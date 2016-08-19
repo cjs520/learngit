@@ -1,0 +1,57 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定删除指定优惠券？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="member_title fd red">我的优惠券</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th width="20%">优惠券</th>
+				<th>商铺</th>
+				<th>有效期</th>
+				<th>金额</th>
+				<th>使用条件</th>
+				<th>获取时间</th>
+				<th width="8%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_coupon as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td>$val[name]</td>
+				<td><a href="$val[shop_url]" target="_blank">$val[shop_name]</a></td>
+				<td>$val[start_date] 开始<br />$val[end_date] 结束</td>
+				<td>$val[discount]</td>
+				<td>$val[condition]</td>
+				<td>$val[register_date]</td>
+				<td><a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a></td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

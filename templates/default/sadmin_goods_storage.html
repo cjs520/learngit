@@ -1,0 +1,80 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("input[@rel=chkall]").click(function(){
+	    $("input[@name='uid_check[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+	
+	$("a[@rel=add],a[@rel=add_sel]").click(function(e){
+	    e.preventDefault();
+		var uid;
+		if($(this).attr("rel")=="add") uid=$(this).attr("uid");
+		else
+		{
+		    var tmp=[];
+			$("input[@name='uid_check[]'][@checked]").each(function(i){
+			    tmp.push($(this).val());
+			});
+			uid=tmp.join(",");
+		}
+		if($.trim(uid)=="")
+		{
+		    alert("请选择入库商品");
+			return false;
+		}
+		
+		$.get(
+		    "sadmin.php?module=$module&action=add&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+			}
+		);//end get
+	});//end click
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red">商品库列表</div>	
+		<form action="sadmin.php?module=$module&action=list" method="post">
+			<p class="mem_newsea"><span class="span_left">搜索关键字:</span> <input type="text" name="ps_subject" value="$ps_subject_txt" class="text" style="width:170px;" /> <input type="submit" value="确定" class="sea_button" /></p>
+			<p class="alert_error"><span class="icon_error"></span>上架是指从商品库中挑选商品发布至自己的商铺。每上架一件商品，需消耗<strong class="red">{$mm_storage_point}</strong>积分</p>
+		</form>
+		<div class="clear"></div>
+		<form name="goods_form" action="sadmin.php?module=$module" method="post">
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th width="8%" class="fcl"><input type="checkbox" rel="chkall" /></th>
+				<th width="30%" class="fcl">商品名称</th>
+				<th>品牌</th>
+				<th>价格</th>
+				<th>分类</th>
+				<th width="11%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_goods as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl"><input type="checkbox" name="uid_check[]" value="$val[uid]"  /></td>
+				<td class="fcl"><img src="$val[goods_file1]" width="80" height="80" class="span_left" />&nbsp;$val[goods_name]</td>
+				<td>$val[goods_brand]</td>
+				<td class="orange">$val[goods_sale_price] 元</td>
+				<td>$val[goods_category]</td>
+				<td>
+					<a class="blue" href="$val[goods_url]" target="_blank">查看</a>
+				    <a class="blue" rel="add" uid="$val[uid]">上架</a>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page"><a href="#" rel="add_sel" class="new_button">选中上架</a>$page_list</div>
+		</form>
+	</div>	
+<!--
+EOT;
+?>-->

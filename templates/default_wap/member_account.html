@@ -1,0 +1,72 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->	<div class="mem_right border_mem mem_acc h_oflow"><!-- 账号管理首页 -->
+		<table cellspacing="0" class="table_list">
+			<tr>
+				<th colspan="2" class="fcl"><h3 class="acc_title f14">欢迎 $m_check_id</h3></th>
+			</tr>
+            <tr>
+            	<td><a href="member.php?action=user_rate&supid=$m_check_uid">商家信用：<strong class="orange">$seller_credit</strong></a></td>
+                <td><a href="member.php?action=user_rate&supid=$m_check_uid">买家信用：<strong class="orange">$buyer_credit</strong></a></td>
+            </tr>
+            <tr>
+            	<td>商铺认证：<span class="orange">$member_check</span></td>
+                <td><span class="span_left">商铺等级：$shop_level&nbsp;</span><a class="shop_dj4"></a> </td>
+            </tr>
+            <tr>
+            	<td>图片空间：{$shop_config[pic_space]}M</td>
+                <td>可上传商品数量：{$shop_config[goods_num]}个</td> 
+            </tr>
+            <tr>
+            	<td>可使用模板：{$shop_config[tpl_num]}个</td>
+                <td>可添加页面数量：{$shop_config[page_num]}个</td>
+            </tr>
+            <tr>
+            	<td>积分：<strong class="red">$mvm_member[member_point]</strong></td>
+                <td>账户余额：<strong class="red">$mvm_member[member_money]</strong>元</td>
+            </tr>
+        </table>
+<!--
+EOT;
+if($mvm_member[isSupplier]>0){
+print <<<EOT
+-->		
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list">
+			<tr>
+				<th class="fcl red">商家提醒区</th>
+			</tr>
+            <tr>
+                <td  class="fd">销售记录：</td>
+            </tr> 
+            <tr>
+                <td>未付款的订单有<span class="orange">($shop_order_1)</span>个，等待发货的订单有<span class="orange">($shop_order_3)</span>个</td>
+            </tr>
+        </table>
+<!--
+EOT;
+} print <<<EOT
+-->		<div class="clear"></div>
+		<table cellspacing="0" class="table_list">
+			<tr>
+				<th class="fcl red">买家提醒区</th>
+			</tr>
+            <tr>
+            	<td class="fd">买到的商品：</td>
+            </tr> 
+            <tr>
+            	<td>在最近30天内，您一共买了<span class="orange">($order_in_three_month)</span>个商品，请到 <a href="member.php?action=order" class="blue" title="已买商品">已买商品</a> 查看。</td>
+            </tr> 
+            <tr>
+            	<td class="fd">给商家的评价：</td>
+            </tr>
+            <tr>
+            	<td>您有<span class="orange">($order_comment)</span>笔交易尚在信用评价期内，请尽快到已买到的商品中给 <a href="member.php?action=scomment" class="blue" title="商家评价">商家评价</a></td>
+            </tr> 
+        </table>
+	</div>
+<!--
+EOT;
+?>-->

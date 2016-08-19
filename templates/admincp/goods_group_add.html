@@ -1,0 +1,572 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("form[@name=goods_form]").submit(function() {
+        var msg="";
+        if($('#goods_name').val() == '') msg += '请输入，商品名称！\\n';
+		if($("form[@name=goods_form]").data("edit_attr")==1) msg+="属性库存未更新\\n";
+        if (msg!="")
+        {
+            alert(msg);
+            return false;
+	    }
+		
+		$.ClearEmptyAttrInput();
+		//serialize attr_val
+	    var attr_val="";
+		$("input[@rel=sale_attr_title]").each(function(i){
+		    attr_val+=$(this).val()+"|";
+			$(this).parent().siblings("td").find("input[@rel=sale_attr_value]").each(function(i){
+			    var img=$(this).siblings("a[@rel=sale_attr_pic]").attr("bk");
+				if(typeof(img)=="undefined") img="";
+				var v=$(this).val().replace(/\(|\)|\||"|'|:/g,"")+"("+img+")";
+				attr_val+=v+"|";
+			});//end click
+			attr_val+="|";
+		});//end each
+		attr_val=attr_val.substr(0,attr_val.lastIndexOf("||"));
+		$("form[@name=goods_form]").children("input[@name=attr_val]").remove();
+		$("form[@name=goods_form]").append("<input type='hidden' name='attr_val' value='"+attr_val+"' />");
+		   
+		//serialize attr_stock
+		var attr_store="";
+		$("table[@rel=attr_stock]").find("tr").each(function(i){
+		    $(this).children("td").each(function(j){
+			    if($(this).children("input").size()>0)
+				{
+				    var num=parseInt($(this).children("input").val());
+					if(isNaN(num)) num=0;
+				    attr_store+=num+"|";
+				}
+				else attr_store+=$(this).html()+"|";
+			});//end each
+			attr_store+="|"
+		});//end each
+		attr_store=attr_store.substr(0,attr_store.lastIndexOf("||"));
+		$("form[@name=goods_form]").children("input[@name=attr_store]").remove();
+		$("form[@name=goods_form]").append("<input type='hidden' name='attr_store' value='"+attr_store+"' />");
+		
+        return true;
+    });//end submit
+
+});
+</script>
+<script type="text/javascript">
+$(function(){	
+	var arr_brand=[];
+	$("#goods_brand").children("option").each(function(i){
+		if(i==0) return true;
+		arr_brand.push([$(this).attr("value"),$(this).html()]);
+	});//end each
+		
+	$("input[@rel=search_brand]").click(function(e){
+		var brand_name=$("input[@name=search_brand]").val();
+		$("#goods_brand").empty();
+		$("#goods_brand").append("<option value='0'>--</option>");
+		for(var i in arr_brand)
+		{
+		    if(arr_brand[i][1].indexOf(brand_name)<0) continue;
+			$("#goods_brand").append("<option value='"+arr_brand[i][0]+"'>"+arr_brand[i][1]+"</option>");
+		}
+		if($("#goods_brand").children().size()>1) $("#goods_brand").children().eq(1).attr("selected",true);
+	});//end click
+	
+	$("a[@rel=del_gallery]").click(function(e){
+		e.preventDefault();
+		var uid=$(this).parent().attr("uid");
+		$.get(
+			"admincp.php?module=$module&action=delimg&uid="+uid+"&rnd="+Math.random(),
+			function(){
+				$("div[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("input[@name=type]").click(function(){
+		$("input[@name=type]").not(this).attr("checked",false);
+	});//end click
+});
+</script>
+<script type="text/javascript">
+function filter_att_callback(cat_id)
+{
+	if(cat_id<=0) return;
+	$.ajax({
+		url:"admincp.php?module=$module&action=get_att_list&cid="+cat_id,
+		type:"GET",
+		cache:true,
+		dataType:"json",
+		success:function(json){
+		   var html="";
+		   $("td[@rel=att_list]").empty();
+		   for(var key in json)
+		   {
+		       html="";
+		       html+='<div class="attr_goods">';
+			   html+='<span>'+key+'</span>';
+			   html+='<select name="filter_attr['+key+']">';
+			   for(var i in json[key])
+			   {
+			       html+='<option value="'+json[key][i]+'">'+json[key][i]+'</option>';
+			   }
+			   html+='</select>';
+			   html+='</div>';
+			   $("td[@rel=att_list]").append(html);
+		   }
+		}
+	});//end ajax
+}//end function
+</script>
+
+<script type="text/javascript">
+$(function(){
+	$.extend({
+	    SaleAttrValueAddEvent:function(){
+		    $("a[@rel=sale_attr_value_add]").unbind("click");
+			$("a[@rel=sale_attr_value_add]").click(function(e){
+			    e.preventDefault();
+				$(this).before('<p><input type="text" rel="sale_attr_value" class="text" size="8" /><a href="#" class="up" rel="sale_attr_pic"></a></p>');
+				$("form[@name=goods_form]").data("edit_attr",1);
+				$.PicPanelEvent();
+			});//end click
+			
+			$("input[@rel=sale_attr_value],input[@rel=sale_attr_title]").unbind("keydown");
+			$("input[@rel=sale_attr_value],input[@rel=sale_attr_title]").keydown(function(e){
+				$("form[@name=goods_form]").data("edit_attr",1);
+			});//end keydown
+		},//end SaleAttrValueAddEvents
+		PicPanelEvent:function(){
+		    $("a[@rel=sale_attr_pic]").unbind("click");
+			$("a[@rel=sale_attr_pic]").click(function(e){
+			    e.preventDefault();
+				$("a[@rel=sale_attr_pic]").attr("selected","");
+				$(this).attr("selected","selected");
+				var offset=$(this).offset();
+				$("div[@rel=attr_pic_panel]").css("left",(offset.left-290)+"px");
+				$("div[@rel=attr_pic_panel]").css("top",(offset.top+24)+"px");
+				$("div[@rel=attr_pic_panel]").show();
+			});//end click
+		},//end PicPanelEvent
+		InitPanel:function(){
+		    $("div[@rel=attr_pic_panel]").find("a[@rel=attr_pic_tab]").click(function(e){
+			    e.preventDefault();
+				var jq_this=$(this);
+			    $(this).siblings("a").attr("selected","").removeClass("hover");
+				$(this).attr("selected","seleted").addClass("hover");
+				switch($(this).data("loading"))
+				{
+				    case "loading":
+					    $("div[@rel=attr_pic_panel]").children("p").html("<span>图片加载中，请稍等...</span>");
+					    break;
+					case "loaded":
+					    var json=$(this).data("data");
+						$("div[@rel=attr_pic_panel]").children("p").empty();
+						for(var i in json)
+						{
+							$("div[@rel=attr_pic_panel]").children("p").append("<a><img src='"+json[i]+"' /></a>");
+						}
+						$.PanelPicEvent();
+					    break;
+					default:
+					    $("div[@rel=attr_pic_panel]").children("p").html("<span>图片加载中，请稍等...</span>");
+						$(this).data("loading","loading");
+						$.ajax({
+						    url:"admincp.php?module=$module&action=get_att_pic",
+							type:"POST",
+							dataType:"json",
+							cache:true,
+							data:"att_cat="+$(this).html(),
+							success:function(json){
+							    jq_this.data("data",json);
+								$("div[@rel=attr_pic_panel]").children("p").empty();
+								for(var i in json)
+								{
+								    $("div[@rel=attr_pic_panel]").children("p").append("<a><img src='"+json[i]+"' /></a>");
+								}
+								$.PanelPicEvent();
+							},
+							complete:function(){
+							    jq_this.data("loading","loaded");
+							}
+						});
+					    break;
+				}
+			});//end click
+				
+			$("div[@rel=attr_pic_panel]").find("a[@rel=clear_attr_pic]").click(function(e){
+			    e.preventDefault();
+				$("a[@rel=sale_attr_pic][@selected=selected]").css({
+				    backgroundPosition:"-180px 0",
+					backgroundImage:"url(images/default/icon.gif)"
+				});
+				$("a[@rel=sale_attr_pic][@selected=selected]").attr("bk","");
+			});//end click
+				
+				
+		    $("div[@rel=attr_pic_panel]").find("a[@rel=attr_pic_tab]").eq(0).trigger("click");
+		},//end InitPanel
+		PanelPicEvent:function(){
+		    $("div[@rel=attr_pic_panel]").children("p").children("a").unbind("click");
+			$("div[@rel=attr_pic_panel]").children("p").children("a").click(function(e){
+			    e.preventDefault();
+				var img_path=$(this).children("img").attr("src");
+				$("a[@rel=sale_attr_pic][@selected=selected]").css({
+				    backgroundImage:"url("+img_path+")",
+					backgroundPosition:"0 0"
+				});
+				$("a[@rel=sale_attr_pic][@selected=selected]").attr("bk",img_path);
+				$("div[@rel=attr_pic_panel]").hide();
+			});//end click
+		},//end PanelPicEvent
+		ClearEmptyAttrInput:function(){
+			$("input[@rel=sale_attr_value]").each(function(i){
+			    if($.trim($(this).val())=="") $(this).parent().remove();
+				else $(this).val($(this).val().replace(/\(|\)|\||"|'|:/g,""));
+			});//end each
+			$("input[@rel=sale_attr_title]").each(function(i){
+			    if($.trim($(this).val())=="") $(this).parent().parent().remove();
+				if($(this).parent().siblings("td").find("input[@rel=sale_attr_value]").size()<=0) $(this).parent().parent().remove();
+			});//end each
+		},//end ClearEmptyAttrInput
+		Rearray:function(arr_src,arr_dst){
+		    if(arr_src.length<=0) return arr_dst;
+			if(arr_dst<=0)
+			{
+			    var arr_tmp=arr_src.shift();
+				for(var i in arr_tmp) arr_dst.push([arr_tmp[i]]);
+			}
+			else
+			{
+			    var arr_tmp=arr_src.shift();
+				var arr_rtl=[];
+				while(arr_dst.length>0)
+				{
+				    var arr_tmp2=arr_dst.shift();
+					for(var j in arr_tmp)
+					{
+					    arr_rtl.push(arr_tmp2.concat(arr_tmp[j]))
+					}
+				}
+				arr_dst=arr_rtl;
+			}
+			return $.Rearray(arr_src,arr_dst);
+		},//end Rearray
+		BuildAttrStock:function(){
+		    var arr_rtl=[];
+			$("input[@rel=sale_attr_title]").each(function(i){
+			    var arr_tmp=[];
+				var key=$(this).val();
+				$(this).parent().siblings("td").find("input[@rel=sale_attr_value]").each(function(i){
+				    var v=key+":"+$(this).val();
+					arr_tmp.push(v);
+				});//end each
+				arr_rtl.push(arr_tmp);
+			});//end each
+			
+			var arr_rearray=$.Rearray(arr_rtl,[]);
+			var html="";
+			$("table[@rel=attr_stock]").empty();
+			for(var i in arr_rearray)
+			{
+			    html+="<tr>";
+				for(var j in arr_rearray[i])
+				{
+				    html+="<td>"+arr_rearray[i][j]+"</td>";
+				}
+				html+='<td>加价：<input type="text" class="text" size="8"/></td>';
+				html+='<td>库存：<input type="text" class="text" size="8"/></td>';
+				html+="</tr>";
+			}
+			if(html=="") return;
+			$("table[@rel=attr_stock]").append(html);
+		}//end BuildAttrStock
+	});//end extend
+		
+    $("a[@rel=sale_attr_add]").click(function(e){
+		e.preventDefault();
+		var html="<tr>";
+		html+='<td width="189">属性类型 <input type="text" class="text" rel="sale_attr_title" size="13"/></td>';
+		html+='<td><dl class="attr_add"><dt>属性值</dt><dd>';
+		html+='<p><input type="text" class="text" rel="sale_attr_value" size="8" /><a href="#" class="up" rel="sale_attr_pic"></a></p><a href="#" class="red fl" rel="sale_attr_value_add">[添加]</a></dd>';
+		html+='</dl></td>';
+		html+="</tr>";
+		$("tr[@rel=sale_attr_confirm]").before(html);
+		$("form[@name=goods_form]").data("edit_attr",1);
+		
+		$.SaleAttrValueAddEvent();
+		$.PicPanelEvent();
+	});//end click
+		
+	$("a[@rel=close_attr_panel]").click(function(e){
+	    e.preventDefault();
+		$("div[@rel=attr_pic_panel]").hide();
+	});//end click
+		
+	$("input[@rel=confirm_attr]").click(function(){
+	    $.ClearEmptyAttrInput();
+		$.BuildAttrStock();
+		$("form[@name=goods_form]").data("edit_attr",0);
+	});//end click
+	
+	$.SaleAttrValueAddEvent();
+	$.PicPanelEvent();
+	$.InitPanel();
+});
+</script>
+
+<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+<div id="right">
+	<form name="goods_form" action="admincp.php?module=$module&action=edit" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="setp" id="step" value="1"/>
+	<input type="hidden" name="uid" id="uid" value="$uid"/>
+	<input type="hidden" name="prev_url" value="$_GET[prev_url]" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th colspan="4">基本信息</th>
+		</tr>
+		<tr>
+			<td width="12%">分类选择</td>
+			<td>
+			    <span rel="goods_category"></span>
+				<script type="text/javascript">
+				$(function(){
+				    $("span[@rel=goods_category]").GoodsCategory("$product[goods_category]",filter_att_callback);
+				});
+				</script>
+			</td>
+			<td width="12%">商品编号</td>
+			<td><input type="text" name="goods_code" id="goods_code" value="$goods_code" maxlength="25" class="text text_1" /></td>
+		</tr>
+		<tr>
+		    <td>筛选属性</td>
+			<td colspan="3" rel="att_list" style="padding:0">$filter_html</td>
+		</tr>
+	</table>
+	
+	<!--商品信息 -->	
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th colspan="4">商品信息</th>
+		</tr>
+		<tr>
+			<td width="12%">商品名称</td>
+			<td><input type="text" name="goods_name" id="goods_name" value="$goods_name" maxlength="255" class="text text_1" / ></td>
+		    <td width="12%">总库存</td>
+			<td><input type="text" name="goods_stock" value="$goods_stock" maxlength="10" class="text2 text_1" /></td>
+		</tr>
+		<tr>
+			<td>商品关键字</td>
+			<td><textarea name="goods_key" rows="3" class="text text_1">$goods_key</textarea></td>
+			<td>商品描述</td>
+			<td><textarea name="goods_advance" rows="3" class="text text_1">$goods_advance</textarea></td>
+		</tr>
+		<tr>
+			<td>进货价</td>
+			<td><input type="text" name="goods_cost" value="$goods_cost" maxlength="15" class="text text_1" /> 元</td>
+			<td>市场价</td>
+			<td><input type="text" name="goods_market_price" value="$goods_market_price" maxlength="15" class="text text_1" /> 元</td>
+		</tr>
+		<tr>
+			<td>团购价</td>
+			<td>
+			    <input type="text" name="goods_sale_price" value="$goods_sale_price" maxlength="15" class="text text_1" /> 元
+			</td>
+			<td>商品展示</td>
+			<td>
+			    <input type="checkbox" name="goods_status[]" value="1" $hot_checked /> 热门 
+				<input type="checkbox" name="goods_status[]" value="2" $best_checked /> 推荐 
+				<input type="checkbox" name="goods_status[]" value="4" $free_delivery_checked /> 免邮
+			</td>
+		</tr>
+		<tr>
+			<td>商品重量</td>
+			<td><input type="text" name="goods_kg" id="goods_kg" value="$goods_kg" maxlength="15" class="text text_1" /> 克</td>
+			<td>商品品牌</td>
+			<td>
+				<input type="text2" class="text2 text_1" name="search_brand" /> <input type="button" rel="search_brand" value="搜索" class="button3" />
+			    $brand_menu
+			</td>
+		</tr>
+		<tr>
+			<td>商品详细大图</td>
+			<td><input type="file" name="goods_file2" class="text text_1" /><p class="alert_info2 text_11"><span class="icon_info"></span>支持jpg,gif,png格式的图片</p></td>
+			<td>商品缩图</td>
+			<td><input type="file" name="goods_file1" class="text text_1" /><p class="alert_info2"><span class="icon_info"></span>支持jpg,gif,png格式的图片，不上传由程序自动缩略生成</p></td>
+		</tr>
+		<tr>
+		    <td>促销起止时间</td>
+			<td colspan="3">
+			    <input type="text" class="text" name="start_date" id="start_time" value="$start_date" onclick="return showCalendar('start_time', 'y-m-d');" /> ~ 
+				<input type="text" class="text" name="end_date" id="end_time" value="$end_date" onclick="return showCalendar('end_time', 'y-m-d');" />
+			</td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+		    <th colspan="2" class="fcl">
+			    销售属性  <a href="#" class="red" rel="sale_attr_add">[添加]</a> 
+				<font color="blue">（注意：属性值选完图片后，文字也必须填写。空白属性将被视为放弃。）</font>
+			</th>
+		</tr>
+<!--
+EOT;
+foreach($arr_attr_val as $key=>$val){
+print <<<EOT
+-->
+		<tr>
+		    <td width="18%" class="vtop">属性类型 <input type="text" class="text" rel="sale_attr_title" value="$key" size="13"/></td>
+			<td>
+			    <dl class="attr_add">
+				    <dt>属性值</dt>
+					<dd>
+<!--
+EOT;
+foreach($val as $v){
+$css_bk=$v[1]?"style='background-image:url($v[1]);background-position:0 0;'":'';
+print <<<EOT
+-->
+						<p><input type="text" class="text" rel="sale_attr_value" value="$v[0]" size="8" /><a href="#" class="up" $css_bk bk="$v[1]" rel="sale_attr_pic"></a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+						<a class="red fl" href="#" rel="sale_attr_value_add">[添加]</a>
+					</dd>
+				</dl>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<tr rel="sale_attr_confirm">
+			<td colspan="2">
+				<input type="button" rel="confirm_attr" value=" ↓ 变更属性库存设置 ↓ " /> 
+				<font color="red">（属性修改后点击此按钮，重新设置对应的库存）</font>
+                <div class="attr_add_pic" rel="attr_pic_panel">
+	                <h4>
+<!--
+EOT;
+foreach($attr_category as $val){
+print <<<EOT
+-->
+						<a href="#" rel="attr_pic_tab">$val</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+						<a class="delete" rel="close_attr_panel"></a><a class="fn" href="#" rel="clear_attr_pic">清除</a>
+					</h4>
+                    <p></p>
+                </div>
+			</td>
+		</tr>
+		<tr>
+		    <td>库存设置</td>
+			<td>
+                <table cellspacing="0" class="stock" rel="attr_stock">
+<!--
+EOT;
+foreach($arr_attr_store as $val){
+$size=sizeof($val);
+print <<<EOT
+-->
+				<tr>
+<!--
+EOT;
+foreach($val as $k=>$v){
+print <<<EOT
+-->
+<!--
+EOT;
+if($k==$size-1){
+print <<<EOT
+-->
+					<td>库存：<input type="text" class="text" size="8" value="$v" /></td>
+<!--
+EOT;
+}else if($k==$size-2){
+print <<<EOT
+-->
+					<td>加价：<input type="text" class="text" size="8" value="$v" /></td>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+					<td>$v</td>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+} print <<<EOT
+-->
+				</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</table>
+            </td>
+		</tr>
+	</table>
+	
+	<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+	<script type="text/javascript">
+	KindEditor.ready(function(K) {
+		var editor1 = K.create('textarea[name="goods_main"]', {
+			uploadJson : 'admincp.php?module=editor&action=upload',
+			fileManagerJson : 'admincp.php?module=editor&action=list_files',
+			allowFileManager : true,
+			items:kindecitor_items
+		});
+	});
+	</script>
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="12%">详细信息</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>商品说明</td>
+			<td><textarea name="goods_main" style="width:100%;height:400px;visibility:hidden;">$goods_main</textarea></td>
+		</tr>
+	</table>
+	
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="12%">商品相册</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td>相册图片</td>
+			<td>
+<!--
+EOT;
+foreach ($photo as $val){
+print <<<EOT
+-->	
+			<div uid="$val[imgid]" style="float:left;text-align:center;border:1px solid #DADADA;margin:4px;padding:2px;">
+			    <a href="#" rel="del_gallery"> [-]</a><br />
+			    <a href="$val[thumb]" target="_new"><img src="$val[thumb]" width="100" height="100" border="0" /></a>
+			</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+	</table>
+
+	<div id="tfoot"><input type="submit" name="Submit" value="确 定" class="button" onclick="" /> <input type="reset" name="reset" value="重 置" class="button" /></div>
+	</form>
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

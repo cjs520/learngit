@@ -1,0 +1,32 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+body { background:url(bg_body.gif) repeat-y center; }
+.border { background:#fff; }
+.footer_bg { background:#fff; }
+.title1 { background:#4ed28e; }
+.title2 { height:52px; padding:10px 10px 0 110px; background:url(title_bg.gif); line-height:34px; }
+.title2 span { padding:0 8px; color:#fff; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; color:#fff; }
+.zn_search { padding:11px 7px 0 0; color:#fff; }
+.zn_search .s_but { background:url(s_but.png); }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:0 auto; }
+.top3 { height:42px; padding:3px 0 17px; background:url(title_bg.gif) repeat-x; }
+.top3 ul { float:left; width:725px; }
+.top3 li .navtab { float:left; height:42px; padding:0 14px; overflow:hidden; line-height:42px; font-size:14px; color:#fff; }
+.top3 li .self { float:left; background:#38af6f; font-weight:bold; }
+.top3 li a:hover { color:#060; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:42px; line-height:42px; padding:0 0 0 10px; }
+.top3 .allcat span { display:block; position:absolute; left:98px; top:13px; background:url(cate_bg.png) no-repeat; width:100px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:5px; top:5px; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#56cf8c;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#fff; }
+.top_cate dt.self { background:#a6eec9; }
+.top_cate dt.self a { color:#fff; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#a6eec9; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#fff; }
+.sub_category a:hover { background:#fff; color:#0081ba; }

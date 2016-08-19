@@ -1,0 +1,161 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认审核优惠券？")) return;
+		var uid=$(this).attr("uid");
+		$.post(
+		    "admincp.php?module=$module&action=check&rnd="+Math.random(),
+			"uid="+uid+"&is_check=1",
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end post
+	});//end click
+	
+	$("a[@rel=reject]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认拒绝优惠券？")) return;
+		var uid=$(this).attr("uid");
+		var info=$(this).siblings("input[@rel=reject]").val();
+		if(info=="")
+		{
+		    alert("请填写拒绝的理由");
+			return;
+		}
+		
+		$.post(
+		    "admincp.php?module=$module&action=check&rnd="+Math.random(),
+			"uid="+uid+"&is_check=0&info="+info,
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end post
+	});//end click
+	
+	$("input[@rel=chk_all]").click(function(){
+	    $("input[@name='uids[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+	
+	$("form[@name=coupon_form]").submit(function(){
+	    if(!confirm("确认进行审核？")) return false;
+		if($("input[@name='uids[]'][@checked]").size()<=0)
+		{
+		    alert("请选择需要审核的优惠券");
+			return false;
+		}
+		return true;
+	});//end click
+});
+</script>
+
+
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">优惠券管理</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<form name="search_form" action="admincp.php?module=$module&action=list" method="POST">
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th>优惠券筛选</th>
+		</tr>
+		<tr>
+			<td>
+			    状态： $sel_status 
+				<input name="member" type="submit" value="确 定" class="button" />
+			</td>
+		</tr>
+	</table>
+	</form>
+	
+	<form name="coupon_form" action="admincp.php?module=$module&action=bat_check" method="post">
+	<input type="hidden" name="step" value="1" />
+	<input type="hidden" name="p_url" value="$prev_url" />
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+		    <th width="5%"><input type="checkbox" rel="chk_all" /></th>
+			<th>优惠券名称</th>
+			<th>起始时间</th>
+			<th>终止时间</th>
+			<th>面额</th>
+			<th>所属商铺</th>
+            <th>分发数量</th>
+			<th>状态</th>
+			<th>操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_coupon as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+		    <td><input type="checkbox" name="uids[]" value="$val[uid]" /></td>
+			<td>$val[name]</td>
+			<td>$val[start_date]</td>
+			<td>$val[end_date]</td>
+			<td>$val[discount]</td>
+			<td>$val[shop_name]</td>
+            <td>$val[member_num]</td>
+			<td>
+			    $val[status]
+			</td>
+			<td>
+			    <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="修改"></a> 
+				<a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+<!--
+EOT;
+if($val[od]==10000){
+print <<<EOT
+-->
+				<a href="#" rel="check" uid="$val[uid]" class="tipsy_s check" title="审核"></a>
+				<a href="#" rel="reject" uid="$val[uid]" class="tipsy_s che" title="拒绝"></a>
+				拒绝理由：<input type="text" class="text" rel="reject" uid="$val[uid]" style="width:100px;" />
+<!--
+EOT;
+} print <<<EOT
+-->  
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><b style="float:left;"><input type="submit" value="点击审核" /></b><span>$page_list</span></div>
+    </form>	
+</div>
+<!--
+EOT;
+?>-->

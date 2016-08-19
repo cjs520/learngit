@@ -1,0 +1,187 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">供应信息</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+    var comment_lock=false;
+    $("input[@rel=comment_submit]").click(function(){
+	    if(comment_lock) return;
+		var jq_form=$(this).parents("form:first");
+		var msg="";
+		if("$m_check_id"=="") msg+="您还未登录，请先登录\\n";
+		if(jq_form.find("input[@name=name]").val()=="") msg+="请填写您的联系姓名\\n";
+		if(jq_form.find("input[@name=tel]").val()=="") msg+="请填写您的联系方式\\n";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		comment_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=supply_buy&cmd=supply_msg",
+			type:"POST",
+			dataType:"json",
+			data:jq_form.serialize(),
+			cache:false,
+			success:function(json){
+			    jq_form.find("img[@rel=code]").trigger("click");
+				
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				alert(json.info);
+				jq_form.find("input[@type=text],textarea").val("");
+			},
+			complete:function(){
+			    comment_lock=false;
+			}
+		});
+	});//end click
+});
+</script>
+    <div class="member_title fd red">
+        <form action="infor_supply_more.php" method="post">
+            快速查找：
+            <input type="text" name="search_txt" class="text" size="18" />
+            <input type="submit" class="sea_button" value="确定" />
+        </form>
+    </div> 
+    <table width="100%" border="0" class="attrs">
+        <tr class="attr_filter">
+            <td colspan="2">
+            <ul>
+            	<li class="tag"><a class="f14 fd blue" href="infor_supply.php">供应信息</a><a href="infor_buy.php">求购信息</a></li>
+            </ul></td>
+        </tr>
+        <tr class="attrs_cate">
+		    <th>行业分类</th>
+			<td><div class="toggle_div"><a href="" rel="tip_open" class="tip_open"></a>
+<!--
+EOT;
+foreach ($cat_parent as $cat_val){
+print <<<EOT
+-->				<a href="infor_supply_more.php?cat_uid=$cat_val[uid]">$cat_val[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</div></td>
+		</tr>
+    </table>      
+	<div class="bus_div">
+        <div class="pro_list">
+            <table>	
+                <tr uid="$val[uid]">
+                    <td width="120"><a href="$val[url]" target="_blank" class="goods_img"><img src="$supply[pic]" class="border" width="100" /></a></td>
+                    <td>
+                        <p class="red">$supply[goods_name]</p>
+                        目标价：$supply[price]<br />
+                        数量：$supply[num] 件
+                    </td>
+                </tr>
+            </table>
+        </div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<td>状态：$supply[status]</td>
+                <td>分类：$cat[category_name]</td>
+            </tr>
+            <tr>
+                <td>发布时间：$supply[register_date]</td>
+                <td>会员ID：会员ID</td>
+            </tr>
+            <tr>
+                <td colspan="2">所在地：$supply[province] $supply[city] $supply[county]</td>
+            </tr>
+            <tr>
+                <td colspan="2">联系电话：$supply[tel]</td>
+            </tr>
+            <tr>
+				<td colspan="2">在线联系：
+<!--
+EOT;
+if($supply[qq]){
+print <<<EOT
+-->
+					<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$supply[qq]&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:$supply[qq]:52" alt="点击这里给我发消息" title="点击这里给我发消息" class="vmid"/></a> 
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($supply[ww]){
+print <<<EOT
+-->
+					<a target="_blank" href="http://www.taobao.com/webww/ww.php?ver=3&touid=$supply[ww]&siteid=cntaobao&status=2&charset=utf-8" ><img border="0" src="http://amos.im.alisoft.com/online.aw?v=2&uid=$supply[ww]&site=cntaobao&s=2&charset=utf-8" alt="点击这里给我发消息" class="vmid" /></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+            </tr>
+            <tr>
+				<td colspan="2">简介：<span class="gray">$supply[intro]</span></td>
+            </tr>
+            <tr>
+				<th class="fcl red" colspan="2">详细要求</th>
+			</tr>
+            <tr>
+				<td colspan="2" class="align">$supply[detail]</td>
+            </tr>
+		</table>
+        <div class="clear"></div>
+        <form name="msg_form">
+        <input type="hidden" name="uid" value="$supply[uid]" />
+        <table width="100%" class="table_list">
+            <tr>
+                <th class="fcl red" colspan="2">我要留言</th>
+            </tr>
+            <tr>
+                <td width="60">联系姓名：</td>
+                <td><input name="name" type="text" class="text"/></td>
+            </tr> 
+            <tr>
+                <td>联系方式：</td>
+                <td><input name="tel" type="text" class="text"/></td>
+            </tr>
+            <tr>
+                <td>联系地址：</td>
+                <td><input name="address" type="text" class="text"/></td>
+            </tr>           
+            <tr>
+                <td>留言内容：</td>
+                <td><textarea name="msg" rows="6" cols="" class="textarea"></textarea></td>
+            </tr>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+-->   
+            <tr>
+                <td>验证码</td>
+                <td>
+                    <input name="code" type="text" class="text_yzm" size="20" maxlength="8" /> 
+                    <img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:32px; margin-left:5px;" alt="验证码" />
+                </td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+            <tr>
+                <td></td>
+                <td><input rel="comment_submit" type="button" class="orange_but" value="提交"/></td>
+            </tr>
+        </table>
+        </form>  
+    </div>
+<!--
+EOT;
+?>-->	

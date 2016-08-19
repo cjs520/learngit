@@ -1,0 +1,99 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除？")) return false;
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=del&uid="+uid+"&ajax=ajax&rnd="+Math.random(),
+				function(msg){
+					$("tr[@uid="+uid+"]").remove();
+					alert("删除成功");
+				}
+			);//end get
+		});//end click
+		
+		$("form[@name=board_form]").submit(function(){
+			var board_code=$("#board_code").val();
+			var board_name=$("#board_name").val();
+			var msg="";
+			if(!(/^[a-zA-Z0-9]+$/.test(board_code))) msg+="资讯系统编码必须由字母或数字组成\\n";
+			if($.trim(board_name)=="") msg+="请输入资讯系统标题\\n";
+			
+			if(msg!="")
+			{
+				alert(msg);
+				return false;
+			}
+			return true;
+		});//end submit
+	});
+	</script>
+	<div class="newopen" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+	<div class="mem_right">
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="member_title fd red">资讯系统</div>
+		<form name="board_form" action="sadmin.php?module=board&action=add" method="post">
+		<input type="hidden" name="step" id="step" value="1" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="fcl red">资讯系统添加</th></tr>
+			<tr>
+				<td width="18%">资讯系统编码</td>
+				<td><input type="text" name="board_code" id="board_code" size="40" class="text2" /><p class="alert_error"><span class="icon_error"></span>必须用英文</p></td>
+			</tr>
+			<tr>
+				<td>资讯系统标题</td>
+				<td><input type="text" name="board_name" id="board_name" size="40" class="text2" /><p class="alert_info"><span class="icon_info"></span>前台显示的资讯系统名称</p></td>
+			</tr>
+			<tr>
+				<td>排序</td>
+				<td><input type="text" name="od" size="40" class="text2" /></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>        
+        
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th class="fcl" width="30%">资讯系统名称（英文）</th>
+				<th>资讯系统标题</th>
+				<th>排序</th>
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($board_rt as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl"><a href="$val[link]" target="_blank">$val[board_name_code]</a></td>
+				<td>$val[board_title]</td>
+				<td>$val[od]</td>
+				<td>
+				    <a href="sadmin.php?module=$module&action=article_list&ps_name=$val[board_name_code]" class="tipsy_s nsq" title="管理"></a>
+				    <a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="编辑"></a>
+					<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+				</td>
+			</tr>
+					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+
+	</div>	
+<!--
+EOT;
+?>-->

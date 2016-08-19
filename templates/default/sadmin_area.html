@@ -1,0 +1,57 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=del]").click(function(e){
+			e.preventDefault();
+			if(!confirm("确定删除？")) return false;
+			var uid=$(this).attr("uid");
+			$.get(
+				"sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+				function(msg){
+					$("tr[@uid="+uid+"]").remove();
+				}
+			);//end get
+		});//end click
+	});
+	</script>
+	<div class="mem_right">
+		<div class="member_title fd red"><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=add&ship_uid=$uid" class="span_right white mem_add">添加区域</a>[$ship[name]]区域设置</div>
+		<div class="newopen" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr class="fn">
+				<th class="fcl">填加配送区域</th>
+				<th width="55%">所辖地区</th>
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($area as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td class="fcl">$val[area_name]</td>
+				<td>$val[region]</td>
+				<td>
+				    <a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=edit&ship_uid=$val[ship_uid]&uid=$val[uid]" class="modify" title="修改"></a>&nbsp;
+					<a href="#" rel="del" uid="$val[uid]" class="delete" title="删除"></a>
+				</td>
+			</tr>					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+	</div>	
+<!--
+EOT;
+?>-->

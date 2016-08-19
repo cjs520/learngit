@@ -1,0 +1,49 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+	<div class="mem_right">
+		<div class="member_title fd red">广告申请</div>
+		<div class="newopen" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th class="fcl" width="20%">广告标题</th>
+				<th>广告信息</th>
+				<th>示例图片</th>
+				<th>相关信息</th>
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($apply_list as $val){
+print <<<EOT
+-->			<tr uid="$val[id]">
+				<td class="fcl">$val[title]</td>
+				<td class="fcl">位置：$val[module] -> $val[pos] <br />长宽：$val[wh]</td>
+				<td><img src="$val[pic]" width="180" /></td>
+				<td>
+					申请积分：$val[price]分/天<br />
+					当前申请人数：$val[apply_num]人<br />
+					您还需等待$val[days]天
+				</td>
+				<td><a href="#" rel="apply_page" apply_url="sadmin.php?module=$module&action=add&uid=$val[uid]">申请</a></td>
+			</tr>
+					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+	</div>
+<!--
+EOT;
+?>-->

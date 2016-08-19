@@ -1,0 +1,88 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+--> 
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=order_num]").each(function(i){
+	    if($(this).attr("num")=="0")
+		{
+		    $(this).removeClass("blue");
+			$(this).addClass("gray");
+		}
+	});//end each
+});
+</script>
+	<div class="mem_right"><!-- 会员中心首页 开始 -->
+		<p class="member_title">
+		    <span class="mem_new"></span>&nbsp;消息提醒：<a href="account.php?action=mysms">您有(<strong class="orange">$sms_new</strong>)条新消息</a>
+<!--
+EOT;
+if($broadcast){
+print <<<EOT
+-->			<a href="account.php?action=mysms&send=admin" class="red">[有新通知]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</p>
+		<table cellspacing="0" class="table_list">          <tr>
+            <td colspan="2"><img src="$mvm_member[member_image]" width="80" height="80" class="fl" /><h3 class="fl fd f12 pad8">$m_check_id<span class="orange fn">($member_level)</span></h3></td>
+          </tr>          
+          <tr>
+            <td>商家信用：<strong class="orange">$seller_credit</strong></td>
+            <td>买家信用：<strong class="orange">$buyer_credit</strong></td>
+          </tr>
+          <tr>
+            <td>当的积分：<span class="orange">$mvm_member[member_point]</span></td>
+            <td><a href="account.php?action=profile" class="new_button blue">设置支付密码</a></td>
+          </tr>     
+<!--
+EOT;
+if(!$mvm_member[member_email]){
+print <<<EOT
+-->
+          <tr>
+            <td colspan="2">您还没有设置自己的邮箱，现在马上添加 <a href="account.php?action=profile" class="new_button blue">添加邮箱</a></td>
+          </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </table>
+        <div class="clear"></div>
+        <table cellspacing="0" class="table_list">
+          <tr>
+            <th colspan="2" class="fcl red">交易管理</th>
+          </tr>
+          <tr>
+            <td><a href="member.php?action=order&status=1" class="blue" rel="order_num" num="$order_status_1">等待您付款<span class="orange">($order_status_1)</span></a></td>
+            <td><a href="member.php?action=order&status=3" class="blue" rel="order_num" num="$order_status_3">等待商家发货<span class="orange">($order_status_3)</span></a></td>
+          </tr>
+          <tr>
+            <td><a href="member.php?action=order&status=4" class="blue" rel="order_num" num="$order_status_4">等待确认收货<span class="orange">($order_status_4)</span></a></td>
+            <td><a href="member.php?action=scomment" class="blue" rel="order_num" num="$order_comment">等待您评价<span class="orange">($order_comment)</span></a></td>
+          </tr>
+          <tr>
+            <td colspan="2"><a href="member.php?action=order" class="blue" rel="order_num" num="$order_in_three_month">三个月买入<span class="orange">($order_in_three_month)</span></a></td>
+          </tr>
+          <tr>
+            <th colspan="2" class="fcl red">账户管理</th>
+          </tr>
+          <tr>
+            <td><a href="account.php?action=index">基本信息</a></td>
+            <td><a href="account.php?action=money">资金明细</a></td>
+          </tr>
+          <tr>
+            <td><a href="account.php?action=point">积分明细</a></td>
+            <td><a href="account.php?action=mysms">短消息</a></td>
+          </tr>
+          <tr>
+            <td colspan="2"><a href="account.php?action=address">收货地址管理</a></td>
+          </tr>
+        </table>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

@@ -1,0 +1,141 @@
+<!--<?php
+$mm_client_qq1 && $mm_client_qq1="<a target='_blank' href='http://wpa.qq.com/msgrd?v=3&uin=$mm_client_qq1&site=qq&menu=yes'><img src='http://wpa.qq.com/pa?p=2:$mm_client_qq1:52' align='absmiddle' alt='' title=''></a> ";
+$mm_client_qq2 && $mm_client_qq2="<a target='_blank' href='http://wpa.qq.com/msgrd?v=3&uin=$mm_client_qq2&site=qq&menu=yes'><img src='http://wpa.qq.com/pa?p=2:$mm_client_qq2:52' align='absmiddle' alt='' title=''></a> ";
+$mmlist_ggz1=banner("list_ggz1",1,230,-1);
+$mmlist_ggz2=banner("list_ggz2",1,230,-1);
+$mmlist_ggz3=banner("list_ggz3",1,230,-1);
+$mmlist_ggz4=banner("list_ggz4",1,230,-1);
+print <<<EOT
+-->	<!-- Begin Left -->
+	<div class="left">
+		<div class="border h_oflow info"><!--店面信息-->
+			<div class="h_oflow border mb8 logo"><a href="./"><img src="$shop_file[up_logo]" /><h3 class="fct f14">$shop_file[shop_name]</h3></a></div>
+			<p>认证等级：{$m_shop_level[$shop_file[shop_level]]}</p>
+			<p class="p1"><span class="span_left">商铺认证：</span>
+<!--
+EOT;
+if($shop_file[certified_type] & 1){
+print <<<EOT
+--><a href="$mm_url[certification]" target="_blank" class="cert0" title="已实名认证"></a>&nbsp;<!--
+EOT;
+}else{
+print <<<EOT
+--><a href="$mm_url[certification]" target="_blank" class="uncert0" title="未实名认证"></a>&nbsp;<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($shop_file[certified_type] & 2){
+print <<<EOT
+--><a href="$mm_url[certification]" target="_blank" class="cert1" title="已实体认证"></a>&nbsp;<!--
+EOT;
+}else{
+print <<<EOT
+--><a href="$mm_url[certification]" target="_blank" class="uncert1" title="未实体认证"></a>&nbsp;
+<!--
+EOT;
+} print <<<EOT
+-->			</p>
+			<p>创店时间：$shop_file[approval_date]</p>
+			<p>联系电话：$mm_tel</p>
+			<p>在线咨询：$mm_client_qq1 $mm_client_qq2 $mm_client_ww_code</p>	
+		</div>
+<!--
+EOT;
+if($mmlist_ggz1){
+print <<<EOT
+-->		<div class="mt10">$mmlist_ggz1</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="mt10 border info1">
+        	<h3 class="fct f14">无线商铺二维码扫描</h3>
+        	<p><img src="$shop_qr_code" /></p>
+			<p>主营项目：$shop_file[run_product]</p>
+			<p>所在区域：$shop_file[province] $shop_file[city] $shop_file[county]</p>
+			<p>详细地址：$shop_file[shop_address]</p>
+            <p class="h_oflow">
+            	<a target="_blank" href="$_URL[0]/account.php?action=mysms&to=$shop_file[m_id]" class="info_xin">发站内信</a>
+            	<a target="_blank" href="http://www.jiathis.com/share/?uid=905655" class="jiathis addthis_button info_share">分享</a>
+                <a href="#" class="info_fav" rel="fav" t="0" uid="$page_member_id" module="" gt="">收藏</a>
+                <script type="text/javascript" src=" http://v1.jiathis.com/code/jia.js?uid=905655" charset="utf-8"></script>
+            </p>    
+		</div>
+<!--
+EOT;
+if($mmlist_ggz2){
+print <<<EOT
+-->		<div class="mt10">$mmlist_ggz2</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($mmlist_ggz3){
+print <<<EOT
+-->		<div class="mt10">$mmlist_ggz3</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($mmlist_ggz4){
+print <<<EOT
+-->		<div class="mt10">$mmlist_ggz4</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="mt10">
+			<div rel="map" class="map" $map_style>
+			    <div rel="map_cnt" style="width:230px;height:230px;"></div>
+			</div>
+		</div><!-- 地图 -->	
+		<script language="javascript" src="include/javascript/jquery.map.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			$.extend({
+				ShowMap:function(){
+					var lng="$shop_file[lng]",lat="$shop_file[lat]";
+					if(lng=="0" || lat=="0") $("div.map").html("还没有申请地图");
+					else $("div.map").Map(new LTPoint(lng,lat),2);
+				}
+			});//end extend
+			$.ShowMap();
+		});
+		</script>
+<!--
+EOT;
+if($friend_links){
+print <<<EOT
+-->		<div class="clear"></div>
+		<div class="friendlink">
+    		<h3 class="title1"><span>友情链接</span></h3>
+        	<p class="border h_oflow"><!--
+EOT;
+foreach ($friend_links as $val){
+if($val[logo]!=""){
+print <<<EOT
+-->				<a href="$val[url]" title="$val[note]" target="_blank"><img src="$val[logo]" /></a>
+<!--
+EOT;
+}else{ 
+print <<<EOT
+-->		   		<a href="$val[url]" title="$val[note]" target="_blank">$val[name]</a>
+<!--
+EOT;
+} }print <<<EOT
+-->			</p>
+		</div><!-- 友情链接 -->
+<!--
+EOT;
+} print <<<EOT
+-->
+	</div><!-- End Left -->
+<!--
+EOT;
+?>-->

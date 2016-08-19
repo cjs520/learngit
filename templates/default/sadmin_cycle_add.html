@@ -1,0 +1,32 @@
+<!--<?php 
+print <<<EOT
+-->
+<!--form content-->
+<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+<input type="hidden" name="p_url" value="$p_url" />
+<input type="hidden" name="step" value="1" />
+<input type="hidden" name="uid" value="$uid" />
+<table cellspacing="0" class="table_list" rel="table">
+	<tr><th colspan="2" class="red fcl fd">修改轮转广告</th></tr>
+	<tr>
+		<td width="70">标题</td>
+		<td><input type="text" name="title" value="$cycle[title]" size="40" class="text2" /></td>
+	</tr>
+	<tr>
+		<td>链接地址</td>
+		<td><input type="text" name="link" value="$cycle[link]" size="40" class="text" /></td>
+	</tr>
+	<tr>
+		<td>显示顺序</td>
+		<td><input type="text" name="cat_tag" value="$cycle[cat_tag]" size="40" class="text" /></td>
+	</tr>
+	<tr>
+		<td>轮转图片</td>
+		<td><input type="file" name="gallery" size="40" class="border" /></td>
+	</tr>
+</table>
+<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+</form>
+<!--
+EOT;
+?>-->

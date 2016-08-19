@@ -1,0 +1,71 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=tab]:eq($t)").addClass("hover");
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定留言？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&t=$t&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+				alert(msg);
+			}
+		);
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="member_title fd red">我给别人的留言</div>
+        <div class="title_rate_list">
+        	<a href="member.php?action=$action&t=0" rel="tab"><span>供应留言</span></a>
+            <a href="member.php?action=$action&t=1" rel="tab"><span>求购留言</span></a>
+        </div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+                <th>留言详情</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_msg as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td class="fcl">
+					留言名称：<a href="$val[url]" target="_blank">$val[goods_name]</a><br />
+                    留言内容：<span class="gray">$val[msg]</span><br />
+                    发布者：$val[publisher]<br />
+                    联系姓名：$val[name]<br />
+					联系方式：$val[tel]<br />
+					联系地址：$val[address]<br />
+                    留言时间：$val[register_date]<br />
+                	状态：$val[status]<br />
+                    操作：     
+<!--
+EOT;
+if($val[approval_date]<10){
+print <<<EOT
+-->
+				    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

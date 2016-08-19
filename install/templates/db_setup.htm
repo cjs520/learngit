@@ -1,0 +1,25 @@
+<?php require_once('./templates/header.htm');?>
+<style type="text/css">
+<!--
+li { float:left; width:400px; margin-bottom:5px; }
+-->
+</style>
+<div class="box">
+  	<h3>:: MvMmall多用户商城系统 - 系统安装</h3>
+	<div class="box2 box3">
+		<h4>系统安装</h4>
+		<div class="section">
+			<ul class="inspect-list">
+				<?php creat_table($content);?>  
+			</ul>
+		</div>
+	</div>
+	<div class="continue">
+		<?php if($db_setup==1){?>
+			<p><a class="f_right red" href="index.php?action=adminsetup"><img src="images/manageset.jpg" /></a></p>
+		<?php }else{?>
+			<p class="f_right red">系统安装失败，请联系仔细检查您的mysql版本，和php版本，以及运行环境。</p>
+		<?php }?>
+	</div>
+</div>
+<?php require_once('./templates/footer.htm');?>

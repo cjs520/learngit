@@ -1,0 +1,21 @@
+<!--<?php
+require_once template('header'); 
+require_once template('left');
+print <<<EOT
+-->	<div class="right">
+		<div class="location"><p><span class="loca_icon"></span>资质证书</p></div>	
+		<div class="cert_pic box">
+<!--
+EOT;
+foreach ($certi as $val){
+print <<<EOT
+-->				<a href="$val[b_img]" target="_blank"><img src="$val[s_img]" class="border"/></a>
+<!--
+EOT;
+} print <<<EOT
+-->			<div class="page">$page_list</div>
+		</div>
+	</div>
+<!--
+EOT;
+?>-->

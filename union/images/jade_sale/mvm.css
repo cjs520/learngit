@@ -1,0 +1,36 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+body { background:#C4DBAD url(bg_body.jpg) 0 8px repeat-x; }
+.wrapper { margin-top:7px; }
+.footer_bg { border-top:2px solid #234723; background:#fff; }
+.border { background:#fff; }
+.title1 { background:#224c1c; }
+.title2 { padding:4px 8px; border:1px solid #386731; background:#ededc7; line-height:34px; }
+.title2 span { padding:0 8px; color:#030; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; }
+.zn_search { color:#c7c7c7; padding:14px 7px 0; }
+.top2_bg { background:#fff; border-bottom:1px solid #f1f1f1; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; height:160px; margin:8px auto 0; overflow:hidden; }
+.top3 { height:50px; background:url(bg_nav.jpg)}
+.top3 ul { float:left; width:705px; margin-top:7px; }
+.top3 li .navtab { float:left; height:34px; padding:0 17px; overflow:hidden; line-height:34px; color:#fff; }
+.top3 li .self { float:left; font-weight:bold; color:#ff6; }
+.top3 li a:hover { color:#ff6; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:50px; line-height:32px; padding:0 0 0 10px; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:15px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:7px; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#386731;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#bde7b7; }
+.top_cate dt.self { background:#4e7d47; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#4e7d47; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#bde7b7; }
+.sub_category a:hover { background:#386731; color:#fff; }
+/*-- 左侧 --*/
+.left .info { padding-bottom:70px; border:1px solid #386731; background:#ededc7 url(bg_left.jpg) no-repeat bottom; }
+.left .info1 { padding-bottom:80px; border:1px solid #386731; background:#ededc7 url(bg_left1.jpg) no-repeat bottom; }
+.artile_list .border { background:#ededc7; }

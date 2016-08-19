@@ -1,0 +1,131 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+$mm_client_qq1 && $mm_client_qq1="<a target='_blank' href='http://wpa.qq.com/msgrd?v=3&uin=$mm_client_qq1&site=qq&menu=yes'><img src='http://wpa.qq.com/pa?p=2:$mm_client_qq1:45' alt='' title='' align='absmiddle'></a> ";
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("form[@name=money_apply]").submit(function(){
+	    var msg="";
+		var money=$(this).find("input[@name=money]").val();
+		money=parseFloat(money);
+		if(isNaN(money) || money<=0) msg+="请填一个大于0的数字\\n";
+		if($("input[@name=member_name]").val()=="") msg+="请填写开户名\\n";
+		if($("input[@name=account]").val()=="") msg+="请填写开户账号\\n";
+		if($("input[@name=type][@checked]").val()=="1" && $("input[@name=bank]").val()=="") msg+="请填写您的开户行\\n"; 
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		
+		return confirm("确认提现申请？");
+	});//end submit
+});
+</script>
+	<div class="mem_right txsq">
+	    <div class="member_title fd red">提现申请</div>
+	    <form name="money_apply" action="sadmin.php?module=$module&action=add" method="post">
+		<input type="hidden" name="step" value="1" />
+		<p class="dot_icon">提现是指把您商城账户中的余额提取到您私人的支付宝或银行卡中</p>
+		<p class="dot_icon">提现需向第三方交付手续费，每次提现需代第三方收取<span class="blue f14">{$mm_withdraw_rate}%</span>的手续费</p>
+		<p class="dot_icon">提现金额不能低于$mm_withdraw_lbound</p>
+		<table cellspacing="2" class="table_list" rel="table">
+			<tr>
+				<td class="fcr f14" width="130">您的商城账号：</td>
+				<td>$m_check_id</td>
+			</tr>
+			<tr>
+			    <td class="fcr f14">账户类型：</td>
+				<td>
+<!--
+EOT;
+if($member_account[type]==0){
+print <<<EOT
+-->
+				    <input type="radio" name="type" value="0" checked /> 支付宝 
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+					<input type="radio" name="type" value="1" checked /> 银行卡 
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+			<tr>
+				<td class="fcr f14" width="130">开户名：</td>
+				<td><input type="text" readonly="readonly" class="text" name="member_name" value="$member_account[member_name]" /></td>
+			</tr>
+			<tr>
+				<td class="fcr f14" width="130">您的提现账号：</td>
+				<td><input type="text" readonly="readonly" class="text" name="account" value="$member_account[account]" /></td>
+			</tr>
+<!--
+EOT;
+if($member_account[type]==1){
+print <<<EOT
+-->
+			<tr>
+				<td class="fcr f14" width="130">开户行：</td>
+				<td><input type="text" readonly="readonly" class="text" name="bank" value="$member_account[bank]" /></td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+			<tr>
+				<td class="fcr f14" valign="top">您的提现金额：</td>
+				<td>
+				    <p><input type="text" class="text" size="15" name="money" /> 元 </p>
+					<p class="gray">您当前可用资金账户金额：<span class="orange">$mvm_member[member_money]</span> 冻结金额：$mvm_member[member_money_freeze]</p>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><input type="submit" class="mem_button" value="&nbsp;" /></td>
+			</tr>
+		</table>
+		<p style="margin-top:10px; padding-left:4px;"><span class="orange">※温馨提醒：</span>请检查填写的账号类别及账号，确认是提现至您本人相应的账户中 <span class="gray">(如遇到问题，可咨询客服<span class="orange">$mm_ceo_phone</span> $mm_client_qq1)</span></p>
+	    </form>
+	</div>
+	<div class="mem_right" style="margin-top:15px;">
+		<div class="member_title fd red">提现记录</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th class="fcl">提现金额</th>
+				<th>实收金额</th>
+				<th>流水号</th>
+				<th>提现时间</th>
+				<th width="25%">账户信息</th>
+				<th>状态</th>
+			</tr>
+<!--
+EOT;
+foreach ($money_apply as $val){
+print <<<EOT
+-->			<tr>
+				<td class="fcl mem_display">$val[money]</td>
+				<td>$val[real_money]</td>
+				<td>$val[sn]</td>
+				<td>$val[reg_time]</td>
+				<td class="fcl">
+				    收款类型：$val[type]<br />
+					账号：$val[account]<br />
+					
+				</td>
+				<td>$val[status]</td>
+			</tr>
+					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div>
+<!--
+EOT;
+?>-->

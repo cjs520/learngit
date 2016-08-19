@@ -1,0 +1,108 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("input[@rel=od]").blur(function(){
+	    var uid=$(this).attr("uid");
+		var v=$(this).val();
+		$.get(
+		    "admincp.php?module=$module&action=ajax&uid="+uid+"&od="+v,
+			function(msg){}
+		);//end get
+	});//end blur
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确定删除？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("form[@name=board_form]").submit(function(){
+	    var msg="";
+		if($("input[@name=board_code]").val()=="") msg+="请输入：资讯系统编码\\n";
+		if($("input[@name=board_name]").val()=="") msg+="请输入：资讯系统标题\\n";
+		if(msg!="")
+		{
+		    alert(msg)
+			return false;
+		}
+		return true;
+	});//end submit
+});
+</script>
+	<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<form name="board_form" action="admincp.php?module=board&action=add" method="post" >
+	<input type="hidden" name="step" value="1"/><a name="badd"></a>
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr><th colspan="2">添加资讯系统</th>
+		</tr>
+		<tr>
+			<td width="25%">资讯系统编码</td>
+			<td>
+			    <input type="text" onkeyup="value=value.replace(/[\W]/g,'') " name="board_code" value="$board_code" size="30" maxLength="20" class="text2" />
+				<p class="alert_warning text_4"><span class="icon_waring"></span>资讯系统编码必须为英文输入</p>
+			</td>
+		</tr>
+		<tr>
+			<td>资讯系统标题</td>
+			<td>
+			    <input type="text" name="board_name" value="$board_name" size="30" class="text2" />
+				<p class="alert_info text_4"><span class="icon_info"></span>填写资讯系统标题,标题为前台显示资讯系统名称</p>
+			</td>
+		</tr>	
+		<tr>
+			<td></td>
+			<td><input type="submit" name="Submit" value="确定" class="button" onclick="" /></td>
+		</tr>
+	</table>
+	</form>
+	<table cellpadding="0" cellspacing="1" class="list" style="margin-top:5px;">
+		<tr>
+			<th>资讯系统编码</th>
+			<th>资讯系统标题</th>
+			<th>排序</th>
+			<th width="15%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($board_rt as $val){
+print <<<EOT
+-->
+		<tr uid="$val[uid]">
+			<td class="td1"><a href="board.php?action=$val[board_name_code]" target="_blank" class="tipsy_w views" title="管理资讯">$val[board_name_code]</a></td>
+			<td class="td1">$val[board_title]</td>
+			<td><input type="text" class="text" rel="od" uid="$val[uid]" size="5" value="$val[od]" /></td>
+			<td>
+            	<a href="admincp.php?module=$module&action=article_list&ps_name=$val[board_name_code]" class="tipsy_s nsq" title="资讯管理"></a>
+                <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="修改"></a>
+                <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+            </td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+</div>
+<!--
+EOT;
+?>-->

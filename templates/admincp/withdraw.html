@@ -1,0 +1,126 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=check],a[@rel=back]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认"+($(this).attr("rel")=="check"?"审核":"驳回")+"申请？")) return false;
+		var status=$(this).attr("rel")=="check"?1:2;
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "admincp.php?module=$module&action=edit&uid="+uid+"&status="+status+"&rnd="+Math.random(),
+			function(msg){
+			    if(msg.indexOf("OK")==-1)
+				{
+				    alert(msg);
+					return false;
+				}
+				jq_a.siblings().remove();
+				var arr_info=msg.split("|||");
+				jq_a.replaceWith(status==1?"":"$arr_status[2]");
+				if(arr_info[1] && arr_info[1]!="") $("tr[@uid="+uid+"]").find("td[@rel=op]").append(arr_info[1]);
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=manual_check]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认手工转账成功？")) return false;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=check&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    if(msg!="OK")
+				{
+				    alert(msg);
+					return false;
+				}
+				alert("审核成功");
+				window.location.reload();
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">商铺提现申请</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>商铺名称</th>
+			<th>商铺管理员</th>
+			<th>账户信息</th>
+			<th>提现金额</th>
+			<th>实收金额</th>
+			<th>提现时间</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($money_apply as $val){
+print <<<EOT
+-->
+		<tr uid="$val[uid]">
+			<td><a href="$val[shop_url]" target="_blank">$val[shop_name]</a></td>
+			<td>$val[shop_m_id]</td>
+			<td>
+<!--
+EOT;
+if($val[type]==0){
+print <<<EOT
+-->
+				支付宝：$val[account]<br />
+				提现人：$val[member_name]
+<!--
+EOT;
+}else if($val[type]==1){
+print <<<EOT
+-->
+				银行账号：$val[account]<br />
+				开户行：$val[bank]<br />
+				开户人：$val[member_name]
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+			<td>$val[money]</td>
+			<td>$val[real_money]</td>
+			<td>$val[reg_time]</td>
+			<td rel="op">
+<!--
+EOT;
+if($val[status]==0){
+print <<<EOT
+-->
+			    $val[check_link] <a href="#" uid="$val[uid]" rel="back" class="tipsy_s tui" title="驳回"></a>
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+			    $val[status_text]
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+</div>
+<!--
+EOT;
+?>-->

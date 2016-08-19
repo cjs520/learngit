@@ -1,0 +1,170 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" media="all" href="images/admincp/calendar.css" />
+<script type="text/javascript" src="include/javascript/calendar.js"></script>
+<script language="javascript" src="language/cn/admin/lang.js"></script>
+<script language="javascript" src="include/javascript/date.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("tr[@rel=order_row]").each(function(i){
+	    var status=$(this).attr("status");
+		if(status=="1" || status=="3") return true;
+		$(this).find("input[@rel=delivery_code]").attr("readonly",true);
+		$(this).find("a[@rel=delivery]").hide();
+	});//end each
+	
+	$("a[@rel=delivery]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行发货？")) return;
+		var jq_a=$(this);
+	    var uid=$(this).attr("uid");
+		var v=$("input[@rel=delivery_code][@uid="+uid+"]").val();
+		if(v=="" && !confirm("未填写发货单号，发货后不可更改，确定直接发货？")) return;
+		
+		$.post(
+		    "sadmin.php?module=$module&action=delivery_code&rnd="+Math.random(),
+			"uid="+uid+"&v="+v+"&step=1",
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    jq_a.hide();
+				    $("input[@rel=delivery_code][@uid="+uid+"]").attr("readonly",true);
+				}
+			}
+		);//end post
+	});//end click
+	
+	$("a[@rel=ready]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行备货？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=ready&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    alert("备货成功");
+			    window.location.reload();
+			}
+		);//end get
+	});//end click
+
+
+	$("a[@rel=call_mobile]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行手机短信提醒吗？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=call_mobile&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+			    if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end get
+	});//end click
+	
+	var check_lock=false;
+	$("a[@rel=group_check]").click(function(e){
+	    e.preventDefault();
+		if(check_lock) return;
+		var ordersn=$(this).attr("ordersn");
+		var code=$(this).siblings("input[@rel=order_code]").val();
+		if(!confirm("您确订对订单"+ordersn+"进行验证？")) return;
+		check_lock=true;
+		$.ajax({
+		    url:"sadmin.php?module=$module&action=list&cmd=group_check&step=1",
+			type:"POST",
+			data:{
+			    ordersn:ordersn,
+				code:code
+			},
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+			    if(msg.indexOf("ERR")!=-1) return;
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			},
+			complete:function(){
+			    check_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red">订单列表</div>
+		<div class="newopen" style="width:880px;" p_url="$prev_url"><a class="close" rel="close_apply"></a><div rel="content"></div></div>	
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->		<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="title_rate_list">
+			<a href="sadmin.php?module=$module&action=$action" class="hover"><span>所有订单</span></a>
+			<a href="sadmin.php?module=$module&action=list&cmd=delay"><span>申请延期收货</span></a>
+			<a href="sadmin.php?module=back_order&action=list"><span>退货通道</span></a>
+			<a href="sadmin.php?module=order&action=list&cmd=group_check"><span>现场订单验证</span></a>
+		</div>		
+		<table cellspacing="0" class="table_list" rel="table">	 
+<!--
+EOT;
+foreach ($arr_order as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]" rel="order_row" status="$val[status_code]">
+				<th class="fcl"><span class="fr">状态：$val[status]</span>订单号码：<a href="$val[url]">$val[ordersn]</a></th>
+			</tr>
+            <tr>
+				<td>
+                	订购者：$val[username]<br />
+                    下单时间：$val[addtime]<br />
+                	商品金额：$val[goods_amount] + $val[goods_point]积分<br />
+                    运费：$val[sh_price]&nbsp;&nbsp;折扣：$val[discount]&nbsp;&nbsp;余额：<strong class="red">$val[goods_rest_amount_txt]</strong>$val[call]<br />
+<!--
+EOT;
+if($val[status_code]==3 && !($val[mark] & 8) && $val[goods_rest_amount]>0){
+print <<<EOT
+-->
+                    <a href="#" rel="ready" uid="$val[uid]"><span class="vmid finish"></span> 提醒买家已备货</a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->	
+				    <input type="text" class="vmid text mr5" style="width:180px" rel="delivery_code" uid="$val[uid]" value="$val[delivery_code]" />
+					<a href="#" class="tipsy_s vmid delivery" title="请仔细核对发货单号，一旦提交将不可再修改。" rel="delivery" uid="$val[uid]">发货</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+<div class="clear"></div>
+<!--
+EOT;
+if($val[status_code]==1 || $val[status_code]==3){
+print <<<EOT
+-->
+				    <input type="text" class="vmid text mr5" style="width:180px" rel="order_code" value=""/>
+					<a href="#" class="tipsy_s vmid verification" ordersn="$val[ordersn]" title="验证成功后即进行分账，请注意操作" rel="group_check" uid="$val[uid]">验证</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+                </td>
+			</tr>		
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+		
+		
+	</div>
+<!--
+EOT;
+?>-->

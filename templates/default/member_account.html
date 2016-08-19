@@ -1,0 +1,60 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->	<div class="mem_right border_mem mem_acc h_oflow"><!-- 账号管理首页 -->
+		<h3 class="acc_title f14">欢迎 $m_check_id</h3>
+        <p>
+		    <a href="member.php?action=user_rate&supid=$m_check_uid">商家信用：<strong class="orange">$seller_credit</strong> &nbsp; 
+			买家信用：<strong class="orange">$buyer_credit</strong></a>
+		</p>
+		<p>商铺认证状态：<span class="orange">$member_check</span></p>
+        <p class="mem_display"><span class="span_left">商铺等级：$shop_level&nbsp;</span><a class="shop_dj4"></a> 
+			<span rel="tolink" class="mem_hover"><span>
+				可上传商品数量：{$shop_config[goods_num]}个<br />
+				图片空间：{$shop_config[pic_space]}M<br />
+				可使用模板：{$shop_config[tpl_num]}个<br />
+				可添加页面数量：{$shop_config[page_num]}个
+			</span></span>
+		</p>
+		<div class="clear"></div>
+		<p>
+		    <span class="span_left">积分：<strong class="red f16">$mvm_member[member_point]</strong></span> 
+			<a href="account.php?action=point" class="new_button">积分购买</a>
+		</p>
+		<div class="clear"></div>
+		<p>账户余额：<strong class="red mem_zhye">$mvm_member[member_money]</strong> 元 <a href="account.php?action=money" class="new_button">充值</a>
+<!--
+EOT;
+if($mvm_member[isSupplier]>0){
+print <<<EOT
+-->			<a href="sadmin.php?module=withdraw&action=list" class="new_button">提现</a>
+<!--
+EOT;
+} print <<<EOT
+--></p>
+
+<!--
+EOT;
+if($mvm_member[isSupplier]>0){
+print <<<EOT
+-->		
+		<div class="clear"></div>
+			
+		<h3 class="acc_title f14">商家提醒区</h3>
+		<h4 class="f12">销售记录：</h4>
+		<p>未付款的订单有<span class="orange">($shop_order_1)</span>个，等待发货的订单有<span class="orange">($shop_order_3)</span>个</p>
+<!--
+EOT;
+} print <<<EOT
+-->		
+		
+		<h3 class="acc_title f14">买家提醒区</h3>
+		<h4 class="f12">买到的商品：</h4>
+		<p>在最近30天内，您一共买了<span class="orange">($order_in_three_month)</span>个商品，请到 <a href="member.php?action=order" class="blue" title="已买商品">已买商品</a> 查看。</p>
+		<h4 class="f12">给商家的评价：</h4>
+		<p>您有<span class="orange">($order_comment)</span>笔交易尚在信用评价期内，请尽快到已买到的商品中给 <a href="member.php?action=scomment" class="blue" title="商家评价">商家评价</a></p>
+	</div>
+<!--
+EOT;
+?>-->

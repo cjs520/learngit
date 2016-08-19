@@ -1,0 +1,73 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("input[@name=submit]").click(function(e){
+			var msg="";
+			if($("input[@name=lng]").val()=="0" || $("input[@name=lng]").val()=="") msg+="经度为0\\n";
+			if($("input[@name=lat]").val()=="0" || $("input[@name=lat]").val()=="") msg+="纬度为0\\n";
+			if(msg!="")
+			{
+				alert(msg);
+				return false;
+			}
+			if($("input[@name=map_title]").val()=="") $("input[@name=map_title]").val("无标题");
+			if($("input[@name=map_tip]").val()=="") $("input[@name=map_tip]").val("无内容");
+			return true;
+		});//end click
+	});
+	</script>
+	<div class="mem_right">
+		<div class="member_title fd red">商铺地图</div>
+		<div id="map" class="mem_border" style="width:952px;height:300px;"></div>
+		<div class="clear"></div>
+		<form action="" method="post">
+		<input type="hidden" name="action" value="$action" />
+		<input type="hidden" name="step" value="1" />
+		<input type="hidden" name="lng" value="$lng" />
+		<input type="hidden" name="lat" value="$lat" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr>
+				<td width="18%">商铺地图简介</td>
+				<td>商铺地图是运营商家明确标注营业场所详细地址的工具，可将自营实体商铺与当地实体商圈或中心主城区等进行详细标识，彰显运营商家实力。<br />另一方面，也方便买家更详尽了解商家各方面信息，增强信任感，消除网购疑虑。</td>
+			</tr>
+			<tr>
+				<td>请选择地区</td>
+				<td><script language="javascript" src="include/javascript/jquery.city.js"></script>
+				<select id="province" name="province"></select>
+				<select id="city" name="city"></select>
+				<select id="county" name="county" style="display:none;"></select>
+				<script type="text/javascript">
+				$(function(){
+					$.init_area(new Array("province","city","county"),new Array("$province","$city","$county"));
+				});
+				</script></td>
+			</tr>
+			<tr>
+                <td>标题</td>
+				<td><input type="text" name="map_title" size="40" class="text" value="$map_title" /></td>
+			</tr>
+			<tr>
+				<td>地址</td>
+				<td><input type="text" name="map_tip" size="40" class="text" value="$map_tip" /></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="button" rel="view" value="" class="yl_button" />&nbsp;<input type="submit" class="mem_button" value="" /></p>
+		</form>
+              
+		<script language="javascript" src="include/javascript/jquery.map_baidu.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			var lng="$lng",lat="$lat";
+			var map_title="$map_title",map_tip="$map_tip";
+			if(lng=="0" && lat=="0") $("#map").Map("$city"==""?"$province":"$city",5,map_title,map_tip,true);
+			else $("#map").Map(new LTPoint(lng,lat),2,map_title,map_tip,true);
+		});
+		</script>
+	</div>
+	
+<!--
+EOT;
+?>-->

@@ -1,0 +1,56 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<!--
+EOT;
+foreach($AD->GetAd('banner',2,'','life') as $val){
+print <<<EOT
+-->	<div class="mb10" style="position:relative;">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="life" p="banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+--><!--banner-->
+<h3 class="mt10 titlec"><span>全部圈子</span><p><!--
+EOT;
+foreach ($cat_parent as $val){
+print <<<EOT
+--><a href="life_all.php?cat_uid=$val[uid]">$val[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+--></p></h3>
+<div class="all_quan" >
+	<ul style="height:auto;">
+<!--
+EOT;
+foreach ($arr_community as $val){
+print <<<EOT
+-->
+		<li class="border">
+            <a href="$val[detail_url]" target="_blank"><img src="$val[c_logo]" /></a>
+            <a href="$val[detail_url]" target="_blank" class="f14 name">$val[c_name]</a>
+            <p><span class="fl gray">成员($val[member_num]) 话题($val[topic_num])</span><a href="$val[join_url]" target="_blank" class="fr green">申请加入</a></p>
+        </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</ul>
+	<div class="page">$page_list</div>
+</div><!-- 全部圈子 -->
+
+
+<!--
+EOT;
+?>-->	

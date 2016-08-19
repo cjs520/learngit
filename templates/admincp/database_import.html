@@ -1,0 +1,58 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">$lang[db_recovery]</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="35%">$lang[filename]</th>
+			<th width="10%">$lang[filesize]</th>
+			<th width="22%">$lang[maketime]</th>
+			<th width="10%">$lang[vol]</th>
+			<th width="18%">$lang[operation]</th>
+		</tr>
+<!--
+EOT;
+if(is_array($infos)){
+foreach($infos as $id => $info){
+$id++;
+print <<<EOT
+-->			
+		<tr bgcolor="$info[bgcolor]">
+			<td>$info[filename]</td>
+			<td>$info[filesize] M </td>
+			<td>$info[maketime]</td>
+			<td>$info[number]</td>
+			<td><a href="?module=database&action=import&pre=$info[pre]&dosubmit=1" class="tipsy_s add" title="$lang[import]"></a> <a href="?module=database&action=delete&filenames=$info[filename]" class="tipsy_s delete" title="删除"></a> <a href="?module=database&action=down&filename=$info[filename]" class="tipsy_s ndown" title="$lang[download]"></a></td>
+		</tr>
+<!--
+EOT;
+}} print <<<EOT
+-->			
+		<tr>
+			<td colspan="6">$lang[tips]</td>
+		</tr>
+	</table>	
+	
+	<table cellpadding="0" cellspacing="1" class="list" style="margin-top:20px;">
+		<tr><th>$lang[upload_db]</th></tr>
+		<tr>
+			<td><form name="upload" method="post" action="?module=database&action=uploadsql" enctype="multipart/form-data">
+			    $lang[upload_sql]:
+			    <input type="file" name="uploadfile" id="uploadfile" size="25" />
+			<input type="hidden" name="max_file_size" value="4096000" />
+			<input type="submit" name="dosubmit" value="$lang[upload]" class="button" />
+  			</form></td>
+		</tr>
+	</table>
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

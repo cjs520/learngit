@@ -1,0 +1,63 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<style>
+body,html { height:100%; }
+</style>
+<div class="h_oflow wrapper" style="width:10rem; padding:0; background:#F4B102;">
+    <div class="h_oflow qian_big">
+<!--
+EOT;
+if(!$m_check_id){
+print <<<EOT
+-->
+        <a href="$mm_url[login]" class="qian_no">未签到</a>
+<!--
+EOT;
+}else if(!$is_sign){
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var sign_lock=false;
+    $("a[@rel=member_sign]").click(function(e){
+	    e.preventDefault();
+		if(sign_lock) return;
+		
+		var jq_this=$(this);
+		sign_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=member_sign&rnd="+Math.random(),
+			type:"GET",
+			cache:false,
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    jq_this.unbind();
+				    jq_this.replaceWith('<span class="qian_yes">已签到</span>');
+				}
+			},
+			complete:function(){
+			    sign_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+        <a href="#" rel="member_sign" class="qian_no">未签到</a>
+<!--
+EOT;
+}else if($is_sign){
+print <<<EOT
+-->
+	    <span class="qian_yes">已签到</span>
+<!--
+EOT;
+} print <<<EOT
+-->
+    </div>
+<!--
+EOT;
+?>-->	

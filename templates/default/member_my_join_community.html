@@ -1,0 +1,82 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=tab]:eq($t)").addClass("hover");
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认要删除（退出）指定生活圈？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="member_title fd red">我加入的生活圈</div>
+        <div class="title_rate_list">
+        	<a href="member.php?action=$action&t=0" rel="tab"><span>已审核</span></a>
+            <a href="member.php?action=$action&t=1" rel="tab"><span>未审核</span></a>
+			<a href="member.php?action=$action&t=2" rel="tab"><span>已拒绝</span></a>
+        </div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th width="32%">生活圈</th>
+				<th>分类</th>
+				<th>爱好</th>
+				<th>加入时间</th>
+<!--
+EOT;
+if($t==2){
+print <<<EOT
+-->
+				<th>拒绝原因</th>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<th width="10%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_community as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td class="fcl"><img src="$val[c_logo]" width="150" class="fl"/><span class="sptm">$val[c_name]</span></td>
+				<td>$val[category_name]</td>
+				<td>$val[c_hobby]</td>
+				<td>$val[register_date]</td>
+<!--
+EOT;
+if($t==2){
+print <<<EOT
+-->
+				<td>$val[back_reason]</td>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<td>
+                    <a href="$val[view_url]" target="_blank" class="tipsy_s view" title="去逛逛"></a>
+                    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+				</td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

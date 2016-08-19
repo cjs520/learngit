@@ -1,0 +1,63 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		var path=$(this).attr("path");
+		var jq_a=$(this);
+		$.post(
+		    "admincp.php?module=$module&action=del&rnd="+Math.random(),
+			"path="+path,
+			function(msg){
+			    alert("删除成功");
+				jq_a.parents("tr").remove();
+			}
+		);//end post
+	});//end click
+	
+	$("#chkall").click(function(){
+	    $("input[@name='path[]']").attr("checked",$(this).attr("checked"));
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">图片管理</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	
+	<form action="admincp.php?module=$module&action=delete" method="post">
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+		    <th width="5%"><label for="chkall"><input type="checkbox" id="chkall" /></label></th>
+			<th width="40%">图片</th>
+			<th>图片路径</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach($imgs as $key=>$val){
+print <<<EOT
+-->			
+		<tr>
+		    <td><input type="checkbox" value="$val" name="path[]" /></td>
+		    <td><a href="$val" target="_blank"><img src="$val" width="150" /></a></td>
+			<td class="td1">$val</td>
+			<td><a href="#" rel="del" path="$val" class="tipsy_s delete" title="删除"></a></td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div style="margin-top:6px;"><input type="submit" value="删除选定" class="button1" style="float:left;" /></div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

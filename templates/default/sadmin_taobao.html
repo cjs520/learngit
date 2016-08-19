@@ -1,0 +1,46 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<div class="mem_right">
+		<form action="" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<input type="hidden" name="action" value="$action"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd"><a href="sadmin.php?module=$module&action=add" class="span_right white mem_add">淘宝导入</a>淘宝导出</th></tr>
+			<tr>
+				<td width="18%">分类选择</td>
+				<td>$cat_menu</td>
+			</tr>
+			<tr>
+				<td>商品栏目ID</td>
+				<td><input type="text" name="baobei_id" id="baobei_id" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>平邮价格</td>
+				<td><input type="text" name="post_price" id="post_price" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>快递价格</td>
+				<td><input type="text" name="express_price" id="express_price" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>EMS价格</td>
+				<td><input type="text" name="ems_price" id="ems_price" size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>所在地</td>
+				<td><script src="include/javascript/initcity.js"></script>
+				<select onchange="initcity();" id="province" name="province">
+				<script>creatprovince();</script>
+				</select>
+				<select id="city" name="city"><script>initcity();</script></select></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>
+<!--
+EOT;
+?>-->

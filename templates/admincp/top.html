@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv=content-type content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="images/admincp/adminmvm.css">
+<script type="text/javascript" src="include/javascript/jquery.js"></script>
+<script type="text/javascript">
+var menus = [<?php echo $top_arr?>];
+
+function togglemenu(id)
+{
+    if(!parent.menu) return false;
+	for(k in menus)
+	{
+	    var o=parent.menu.document.getElementById(menus[k]);
+		if(o) o.style.display = menus[k] == id ? '' : 'none';
+		if(o && menus[k] == id)
+		{
+		    var jq_a=$(o).find("a:first");
+		    if(jq_a.size()>0) parent.main.location=jq_a.attr("href");
+		}
+	}
+}
+
+function sethighlight(n) {
+	var lis = document.getElementsByTagName('li');
+	for(var i = 0; i < lis.length; i++) {
+		lis[i].className = '';
+	}
+	lis[n].className = 'menu_selected';
+}
+
+</script>
+</head>
+<body>
+<div id="header">
+	<h1></h1>
+	<div id="header_control">
+		<a href="logging.php?action=logout" target="_parent" >[退出]</a> | 
+		<a href="./" target="_blank">[打开主页]</a> | 
+		<a href="admincp.php?module=cache&action=edit" target="main">[更新缓存]</a> | 
+		<a href="admincp.php?module=cache&action=edit&del_privete=1" onclick="return confirm('确定更新商铺缓存?');"  target="main">[更新商铺缓存]</a>
+	</div>     
+	<div id="header_menu">
+     	<ul>
+     		<?php foreach ($rs_cat as $key=>$val){?>
+      	 	<li><span><a onclick="sethighlight(<?php echo $key?>); togglemenu('<?php echo $val['uid']?>'); return false;" href="#"><?php echo $val['menu_name']?></a></span> </li>
+  			<?php }?>
+     	</ul>    
+ 	</div>
+</div>
+</body>
+</html>

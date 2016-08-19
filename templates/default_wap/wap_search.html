@@ -1,0 +1,33 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">搜索</div>
+<div class="wrapper">	
+	<h3 class="topsearth_tab_h3">商品</h3>
+    <div class="topsearth_tab">
+        <form method="post" name="search_goods" action="search.php" class="border">
+            <input type="submit" class="searchtop_button" value="" />
+            <input type="text" class="searchtop_input" name="ps_search" id="search_gn" value="请输入商品名称" onfocus="if(this.value=='请输入商品名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+            <p class="searchtop_radio"><input type="radio" name="sellshow" value="1" checked />销售型 <input type="radio" name="sellshow" value="2" />展示型</p> 
+        </form>
+        <div class="search_jg" rel="search_span" style="display:none;" id="goods_search_span" url="ajax.php?action=search_hint&ctrl=g&sellshow=1"></div>
+    </div>
+    <h3 class="topsearth_tab_h3">商铺</h3>	
+    <div class="topsearth_tab">
+        <form method="post" action="sort.php" class="border">
+            <input type="submit" class="searchtop_button" value="" />
+            <input type="text" class="searchtop_input" name="shop_name" id="search_shop" value="请输入商铺名称" onfocus="if(this.value=='请输入商铺名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+            <div class="search_jg" rel="search_span" style="display:none;" id="shop_search_span" url="ajax.php?action=search_hint&ctrl=shop"></div>
+        </form>
+    </div>
+    <h3 class="topsearth_tab_h3">资讯</h3>
+    <div class="topsearth_tab">
+        <form method="post" action="board.php" class="border">
+            <input type="submit" class="searchtop_button" value="" />
+            <input type="text" class="searchtop_input" name="ps_search" id="search_article" value="请输入资讯名称" onfocus="if(this.value=='请输入资讯名称'){this.value=''};this.style.cssText='color:#000'" autocomplete="off" />
+        </form>
+        <div class="search_jg" rel="search_span" style="display:none;" id="article_search_span" url="ajax.php?action=search_hint&ctrl=article"></div>
+    </div>	
+<!--
+EOT;
+?>-->	

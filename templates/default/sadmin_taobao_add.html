@@ -1,0 +1,72 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+		$("p[@rel=tolink]").siblings("a").hover(
+			function(e){
+				$(this).siblings("p[@rel=tolink]").css("position","absolute").fadeIn(200);
+			},
+			function(e){
+				$(this).siblings("p[@rel=tolink]").fadeOut(200);
+			}
+		);//end hover
+	});
+	</script>
+	<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+	<div class="mem_right">
+		<form action="" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="action" value="$action"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd"><a href="sadmin.php?module=$module&action=list" class="span_right white mem_add">淘宝导出</a>淘宝导入</th></tr>
+			<tr>
+				<td>主站分类</td>
+				<td>
+				    <span rel="goods_category"></span>
+				    <script type="text/javascript">
+				    $(function(){
+				        $("span[@rel=goods_category]").GoodsCategory("$goods_category");
+				    });
+				    </script>
+				</td>
+			</tr>
+			<tr>
+				<td>商铺分类</td>
+				<td>$cat_menu</td>
+			</tr>
+			<tr>
+				<td>商品品牌</td>
+				<td>$brand_menu</td>
+			</tr>
+			<tr>
+				<td>商品图标</td>
+				<td>
+				<div class="span_left mem_display"><input type="checkbox" name="goods_status[]" value="1" class="chech_box" /> 热门&nbsp;</div><div class="span_left mem_display"><input type="checkbox" name="goods_status[]" value="2" class="chech_box" /> 推荐&nbsp;</div><div class="span_left mem_display"><input type="checkbox" name="goods_status[]" value="4" class="chech_box" /> 免邮&nbsp;</div>
+				</td>
+			</tr>
+			<tr>
+				<td>淘宝CSV</td>
+				<td><input type="file" name="csv_file" size="40" class="text2" /><p class="alert_warning"><span class="icon_waring"></span>请确认CSV文件是否为ANSI编码类型</p></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+			
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">图片批量上传</th></tr>
+			<tr>
+				<td width="18%">图片上传</td>
+				<td><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="400" height="50">
+					<param name="movie" value="taobao_upload.swf?sid=$sessionID" />
+					<param name="quality" value="high" />
+					<embed src="taobao_upload.swf?sid=$sessionID" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="400" height="50"></embed>
+				</object></td>
+			</tr>
+		</table>
+	</div>	
+<!--
+EOT;
+?>-->

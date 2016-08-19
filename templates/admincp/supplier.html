@@ -1,0 +1,168 @@
+<!--<?php
+require_once template('header'); 
+print <<< EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(e){
+    var deling=false;
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定商铺？")) return false;
+		if(deling)
+		{
+		    alert("商铺删除中，请稍候");
+			return false;
+		}
+		deling=true;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				deling=false;
+				if(msg.indexOf("OK")!=-1) $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=close]").click(function(e){
+	    var jq_a=$(this);
+	    var uid=$(this).attr("uid");
+		
+	    $.get(
+		    "admincp.php?module=$module&action=close_supplier&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    if(parseInt(msg)>10) jq_a.html("开启");
+				else jq_a.html("<b style='color:red;'>关闭</b>");
+			}
+		);
+	});//end click
+});
+</script>
+<div id="right">
+	<div class="newopen" style="display:none; width:880px; height:530px; overflowhidden;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<!-- 商铺搜索 -->		
+	<form action="admincp.php?module=$module" method="post" name="search_form">
+	<input type="hidden" name="action" value="list"/>
+	<input type="hidden" name="amode" value="detail_search"/>
+	<table class="clst" align="center" cellpadding="0" cellspacing="1" style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">商铺搜索</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list1" style="border-top:none;">
+		<tr>
+			<td width="15%">商铺等级</td>
+			<td width="35%">
+			    <input type="radio" name="shop_level" value="-1" checked /> 全部 &nbsp;
+			    <input type="radio" name="shop_level" value="0" /> 普通 &nbsp;
+				<input type="radio" name="shop_level" value="1" /> 扶植 &nbsp;
+				<input type="radio" name="shop_level" value="2" /> 标准 &nbsp;
+				<input type="radio" name="shop_level" value="3" /> 拓展 &nbsp;
+				<input type="radio" name="shop_level" value="4" /> 旗舰
+			</td>
+			<td width="15%">会员ID</td>
+			<td width="35%"><input type="text" name="ps_member" size="35" maxLength="100" value="$ps_member" class="text" /></td>
+		</tr>
+		<tr>
+			<td>开店时间</td>
+			<td>
+			<input type="text" name="start_time" size="14" value="$start_time" id="start_time" class="text" onclick="return showCalendar('start_time', 'y-m-d');" /> ~
+			<input type="text" name="end_time" size="14" value="$end_time" id="end_time" class="text" onclick="return showCalendar('end_time', 'y-m-d');" />
+			</td>
+			<td>商铺名称</td>
+			<td><input type="text" name="shop_name" id="shop_name" size="35" maxLength="100" value="$shop_name" class="text" /></td>
+		</tr>
+		<tr>
+			<td>所属区域</td>
+			<td><script src="include/javascript/initcity.js"></script>
+			<select id="province" name="province"></select>
+			<select id="city" name="city"></select>
+			<select id="county" name="county"></select>
+			<script language="javascript" src="include/javascript/jquery.city.js"></script>
+			<script type="text/javascript">
+			$(function(){
+			    $.init_area(new Array("province","city","county"),new Array("$province","$city","$county"));
+			});
+			</script>
+			</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td align="center" colspan="4"><input name="member" type="submit" value="搜索商铺" class="button1" /></td>
+		</tr>
+	</table>
+	</form>
+	
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>会员ID（会员姓名）</th>
+			<th>商铺名称</th>
+			<th width="10%">状态</th>
+			<th width="10%">商铺类型</th>
+			<th width="10%">商铺分类</th>
+			<th width="10%">商铺等级</th>
+			<th width="8%">商铺状态</th>
+			<th width="12%">操作</th>
+		</tr>
+
+<!--
+EOT;
+foreach ($member_rt as $val){
+print <<<EOT
+-->
+		<tr uid="$val[m_uid]">
+			<td class="td1">$val[m_id]( $val[member_name] )</td>
+			<td class="td1"><a href="$val[url]" target="_blank" class="tipsy_w views" title="经营产品：$val[run_product]">$val[shop_name]</a></td>
+			<td>$val[tag]</td>
+			<td>$val[sellshow]</td>
+			<td>$val[supplier_cat]</td>
+			<td>$val[shop_level_name]</td>
+			<td>
+			    <a href="#" rel="close" uid="$val[m_uid]">
+<!--
+EOT;
+if($val[approval_date]<10){
+print <<<EOT
+-->
+				<b style="color:red;">关闭</b>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+				开启
+<!--
+EOT;
+} print <<<EOT
+-->
+				</a>
+			</td>
+			<td>
+				<a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=edit&uid=$val[m_uid]" class="tipsy_s modify" title="修改"></a>
+				<a href="#" uid="$val[m_uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+				<a href="admincp.php?module=rcm_ad&action=add&ad_type=1&shop_id=$val[m_uid]" class="tipsy_s nbest" title="推荐"></a>
+				<a href="admincp.php?module=man_shop&action=list&uid=$val[m_uid]" target="_blank" class="tipsy_s nmanege" title="管理"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+	<div id="page"><span>$page_list</span></div>
+</div>
+<!-- end -->
+<!--
+EOT;
+?>-->

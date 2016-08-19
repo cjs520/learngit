@@ -1,0 +1,216 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+	<script type="text/javascript">
+	$(function(){
+		$("a[@rel=preview]").click(function(e){
+			e.preventDefault();
+			
+			var img_path=$(this).attr("v");
+			
+			$("div[@rel=show_preview]").children("img").attr("src",img_path);
+			var o=$("div[@rel=show_preview]");
+			var itop=(document.documentElement.clientHeight-o.height())/2+$(window).scrollTop();
+			var ileft=(document.documentElement.clientWidth-o.width())/2+$(window).scrollLeft();
+			o.css({
+				position:"absolute",
+				top:itop+"px",
+				left:ileft+"px"
+			}).fadeIn(1000);
+			$("#block").css("display","block");
+		});//end click
+		$("span[@rel=preview_close]").click(function(e){
+			e.preventDefault();
+			$("div[@rel=show_preview]").fadeOut(1000);
+			$("#block").css("display","none");
+		});//end click
+	});
+	</script>
+	<script type="text/javascript">
+	$(function(){
+	    $("a[@rel=buy_tpl]").click(function(e){
+		    e.preventDefault();
+			if(!confirm("确定购买模板？")) return false;
+			var v=$(this).attr("v");
+			var price=$(this).attr("price");
+			price=parseFloat(price);
+			var n=$(this).attr("n");
+			
+			if(price>0)
+			{
+			    var o=$("div[@rel=pay_win]");
+				o.find("div[@rel=form]").empty();
+				o.find("span[@rel=tpl]").html(n);
+				o.find("span[@rel=price]").html(price+"元");
+				o.find("input[@rel=pay_tpl]").attr("v",v);
+				
+			    var itop=(document.documentElement.clientHeight-o.height())/2+$(window).scrollTop();
+			    var ileft=(document.documentElement.clientWidth-o.width())/2+$(window).scrollLeft();
+			    o.css({
+				    position:"absolute",
+				    top:itop+"px",
+				    left:ileft+"px"
+			    }).fadeIn(1000);
+			    $("#block").css("display","block");
+				
+				o.find("input[@rel=pay_tpl]").unbind();
+				o.find("input[@rel=pay_tpl]").bind("click",function(e){
+				    var v=$(this).attr("v");
+
+					var pay_id=o.find("input[@name=pay_id][@checked]").val();
+					var advance=o.find("input[@name=advance]").attr("checked")?1:0;
+					var pay_pass=o.find("input[@name=pay_pass]").val();
+					$.post(
+			            "sadmin.php?module=$module&action=buy_tpl&rnd="+Math.random(),
+				        "v="+v+"&pay_id="+pay_id+"&advance="+advance+"&pay_pass="+pay_pass,
+				        function(msg){
+				            if(msg.indexOf("OK")!=-1)
+					        {
+					            alert(msg);
+						        window.location.reload();
+					        }
+					        else if(msg.indexOf("ERR")!=-1) alert(msg);
+					        else
+							{
+							    o.find("div[@rel=form]").html(msg);
+							}
+				        }
+			        );//end post
+				});//end bind click
+			}
+			else
+			{
+			    $.post(
+			        "sadmin.php?module=$module&action=buy_tpl&rnd="+Math.random(),
+				    "v="+v,
+				    function(msg){
+				        if(msg.indexOf("OK")!=-1)
+					    {
+					        alert(msg);
+						    window.location.reload();
+					    }
+					    else if(msg.indexOf("ERR")!=-1) alert(msg);
+					    else alert("unknow error");
+				    }
+			    );//end post
+			}
+			
+		});//end click
+		
+		$("a[@rel=import_tpl]").click(function(e){
+		    e.preventDefault();
+			if(!confirm("确定更换当前模板？")) return false;
+			var v=$(this).attr("v");
+			$.post(
+			    "sadmin.php?module=$module&action=import_tpl&rnd="+Math.random(),
+				"v="+v,
+				function(msg){
+				    if(msg.indexOf("OK")!=-1)
+					{
+					    alert(msg);
+						window.location.reload();
+					}
+					else if(msg.indexOf("ERROR")!=-1) alert(msg);
+					else lert("未知错误");
+				}
+			);//end post
+		});//end click
+		
+		$("span[@rel=pay_win_close]").click(function(e){
+			e.preventDefault();
+			$("div[@rel=pay_win]").fadeOut(1000);
+			$("#block").css("display","none");
+		});//end click
+		
+		$("input[@name=pay_id]:first").attr("checked",true);
+	});
+	</script>
+	<div class="mem_right">
+	    <div rel="show_preview" class="disn open_window open_window1">
+			<span rel="preview_close" class="close"></span>
+			<img src="" style="clear:both;" />
+		</div>
+		
+		<div rel="pay_win" class="disn open_window" style="height:auto;">
+			<span rel="pay_win_close" class="close"></span>
+			<div rel="info">
+			    <h3 class="f14">您当前购买的模板是：<span rel="tpl" class="orange"></span></h3>
+				<p>模板价格：<span rel="price" class="orange fd f14"></span></p>
+				<p>支付方式：<br />
+				   <input type="checkbox" name="advance" checked value="1" /> 
+				   使用预付款支付，不足部分使用其他支付方式 
+				   您当前预付款余额为：$mvm_member[member_money] 
+				   支付密码：<input type="password" class="text" name="pay_pass" />
+<!--
+EOT;
+foreach($payment_list as $val){
+print <<<EOT
+-->					<input type="radio" name="pay_id" value="$val[id]" /> $val[name]  &nbsp;&nbsp;
+<!--
+EOT;
+} print <<<EOT
+-->				</p>
+				<p class="fct mt6"><input type="button" rel="pay_tpl" value="立即支付" class="new_button" /></p>
+			</div>
+			<div rel="form"></div>
+		</div>
+		
+		
+		<div class="mem_tpl border h_oflow">
+			<h3><span>已购模板</span></h3>
+			<ul>
+<!--
+EOT;
+foreach($arr_tpl_use as $key=>$val){
+print <<<EOT
+-->
+				<li>
+					<p class="m_img"><img src="$val[s_img]" /><a href="#" v="$val[b_img]" rel="preview">预览</a></p>
+					<p class="name">$val[tpl_name]</p>
+<!--
+EOT;
+if($val[tpl_code]==$ucfg[mm_skin_name]){
+print <<<EOT
+-->
+					<p class="orange fd">当前模板</p>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+					<p><a href="#" rel="import_tpl" v="$val[tpl_code]" class="ljdr"></a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</ul>
+			<div class="clear"></div>
+			<h3><span>选购模板</span></h3>
+			<ul>
+<!--
+EOT;
+foreach($arr_unbuy_tpl as $key=>$val){
+print <<<EOT
+-->
+				<li>
+					<p class="m_img"><img src="$val[s_img]" /><a href="#" rel="preview" v="$val[b_img]">预览</a></p>
+					<p class="name">$val[tpl_name]</p>
+					<p class="orange">$val[fprice]</p>
+					<p><a href="#" rel="buy_tpl" v="$val[tpl_code]" n="$val[tpl_name]" price="$val[price]" class="ljgm"></a></p>
+				</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</ul>
+		</div>
+	</div>	
+<!--
+EOT;
+?>-->

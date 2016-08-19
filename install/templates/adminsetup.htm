@@ -1,0 +1,33 @@
+<?php require_once('./templates/header.htm');?>
+<div class="box">
+  	<h3>:: MvMmall多用户商城系统  - 管理员帐号设置</h3>
+    <form method="post" action="" name="adminsetup" onSubmit="return chkreg();">
+     <input name="setup" type="hidden" value="1">
+  	<div class="content">
+		<p>为了管理MvMmall多用户商城系统的设置，您需要一个管理员帐号.请选择管理员名字、密码，以及电子邮件地址，该地址用于重置密码时发送邮件。输入信息并仔细检查后，选择<strong>保存管理设置</strong>。</p>
+		<div class="box2 box3">
+			<h4>管理员信息</h4>
+			<table>
+				<tr>
+					<th width="500">管理员用户名<p class="gray">输入MvMmall多用户商城系统管理员帐号的用户名</p></th>
+					<td><input type="text" class="inp" id="regname" name="regname" tabindex="1" onBlur="chkname();" /> <span id="div_regname"></span></td>
+				</tr>
+				<tr>
+					<th>管理员密码<p class="gray">输入MvMmall多用户商城系统管理员帐号的密码</p></th>
+					<td><input type="password" class="inp" id="regpwd" name="regpwd" tabindex="2" onBlur="chkpassword();"/> <span id="div_pwd"></span></td>
+				</tr>
+				<tr>
+					<th>确认管理员密码<p class="gray">确认MvMmall多用户商城系统管理员帐号的密码</p></th>
+					<td><input type="password" class="inp" id="aginpwd" name="aginpwd" tabindex="3" onBlur="comfirmpassword()"/> <span id="div_aginpwd"></span></td>
+				</tr>
+				<tr>
+					<th>管理员电子邮件<p class="gray">输入MvMmall多用户商城系统管理员帐号的电子邮件地址</p></th>
+					<td><input type="text" class="inp" id="email" name="email" tabindex="4" onBlur="checke_mail();" /> <span id="div_email"></span></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="continue"><input type="submit" name="submit" class="f_right button button1" tabindex="20" value="保存设置" /></div>
+	</form>
+</div>
+<?php require_once('./templates/footer.htm');?>

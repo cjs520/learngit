@@ -1,0 +1,45 @@
+<?php require_once('./templates/header.htm');?>
+<div class="box">
+  	<h3>::  MvMmall多用户商城系统  - 系统安装</h3>  
+    <form method="post" action="" name="f">
+    <input name="setup" type="hidden" value="1">
+  	<div class="content">
+		<p>检查您的数据库设置情况，请在相应栏目仔细输入配置内容，点击<strong>保存数据库设置</strong>以继续。</p>
+		<div class="box2 box3">
+			<h4>数据库信息</h4>
+			<table>
+				<tr>
+					<th width="580">数据库类型 <p class="gray">选择使用的数据库类型</p></th>
+					<td> <select id="db_type" name="db_type" tabindex="1"><option value="mysql">MySQL</option></select></td>
+				</tr>
+				<tr>
+					<th>商铺标识符 (数据表前缀) <p class="gray">您希望使用的数据库表前缀是什么？例如：mvm_  如果不要表前缀，就留空。</p></th>
+					<td><input type="text" id="db_prefix" class="inp" name="db_prefix" tabindex="2" value="mvm_" size="18" /></td>
+				</tr>
+				<tr>
+					<th>数据库主机 <p class="gray">数据库的主机是什么？数据库主机的格式可以是主机名字，例如 'db.myserver.com'，<br />或者是IP地址，例如 '192.168.0.1'</p></th>
+					<td><input type="text" id="db_host" class="inp" name="db_host" tabindex="3" value="localhost" size="18" /></td>
+				</tr>
+				<tr>
+					<th>数据库用户名 <p class="gray">用于连接数据库的用户名是什么？例如 'root'。</p></th>
+					<td><input type="text" id="db_username" class="inp" name="db_username" tabindex="4" value="root" size="18" /></td>
+				</tr>
+				<tr>
+					<th>数据库密码 <p class="gray">用于连接数据库的密码</p></th>
+					<td><input type="password" id="db_pass" class="inp" name="db_pass" tabindex="5" /></td>
+				</tr>
+				<tr>
+					<th>数据库名 <p class="gray">您的数据库名是什么？例如'mvm'或'my_mvm'</p></th>
+					<td><input type="text" id="db_name" name="db_name" class="inp" tabindex="6"  size="18" /></td>
+				</tr>
+				<tr>
+					<th>是否导入演示数据 <p class="gray">导入演示数据后，请下载图片数据解压覆盖，您就可以看到网站的整体效果。管理员 admin 密码 000000</p></th>
+					<td><a href="http://mvmmall.cn/download.php" target="_blank" style="color:red; padding-left:6px;" id="checkshow">演示数据图片下载</a></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="continue"><input type="submit" name="submit" class="f_right button button1" tabindex="15" value="系统安装" /></div>
+	</form>
+</div>
+<?php require_once('./templates/footer.htm');?>

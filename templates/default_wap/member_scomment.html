@@ -1,0 +1,31 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->	
+	<div class="mem_right"><!-- 会员订单列表开始 -->
+		<div class="member_title fd red">评价管理</div>
+        <table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th>订单号</th>
+				<th>购买商铺</th>
+			    <th width="30%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($comment_list as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+				<td><a href="member.php?action=order&ordernum=$val[ordersn]" target="_blank">$val[ordersn]</a></th>
+				<td><a href="$val[shop_url]" target="_blank">$val[shop_name]</a></td>
+				<td><a href="member.php?action=scomment&allow_uid=$val[uid]" class="button">评价</a></td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员订单列表结束 -->
+<!--
+EOT;
+?>-->

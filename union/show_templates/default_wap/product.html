@@ -1,0 +1,262 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.jqzoom.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("#jqzoom").jqueryzoom({
+        xzoom: 300,
+	    yzoom: 300,
+	    offset: 0,
+	    position: "right", 
+	    preload:1,
+	    lens:1
+	});//end jqueryzoom
+	
+	$("a[@rel=gallery]").hover(
+	    function(e){
+		    var img_small=$(this).attr("img_small");
+			var img_big=$(this).attr("img_big");
+			$("#jqzoom").children("img").attr("src",img_small).attr("jqimg",img_big);
+		},
+		function(e){}
+	);//end hover
+	
+	$.get(
+	    "ajax.php?action=get_gcontent&uid=$product[uid]",
+		function(msg){
+		    $("div[@rel=goods_main]").html(msg);
+		}
+	);//end get
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $.extend({
+	    LoadConsult:function(jq_list){
+		    if(jq_list.data("loaded")=="loaded") return;
+			jq_list.data("loaded","loaded");
+			
+			$.get(
+			    "ajax.php?action=gcomment&step=read&g_uid=$product[uid]&mod=$script",
+				function(msg){
+				    jq_list.html(msg);
+				}
+			);//end get
+		}
+	});//end extend
+
+    $("a[@rel=tab_title]").hover(
+	    function(e){
+		    $("a[@rel=tab_title]").removeClass("hover");
+			$(this).addClass("hover");
+		    var idx=$("a[@rel=tab_title]").index(this);
+			var jq_tab_body=$("div[@rel=tab_body][@n=product]");
+			jq_tab_body.hide();
+			jq_tab_body.eq(idx).show();
+			if(idx==1) $.LoadConsult(jq_tab_body.children("ul[@rel=consult]:first"));
+		},
+		function(e){}
+	);//end hover
+	
+	$("div[@rel=gcomment]").children("input[@rel=gcomment_submit]").click(function(){
+	    var jq_form=$("div[@rel=gcomment]");
+	    var comment_body=jq_form.children("textarea[@name=comment_body]").val();
+		var code=jq_form.children("input[@name=code]").val();
+		var msg="";
+		comment_body=$.trim(comment_body);
+		if(comment_body=="") msg+="请填写咨询内容\\n";
+		if(comment_body.length>150) msg+="您的咨询内容过于冗长，请精简后再提交\\n";
+		if(jq_form.data("loading")=="loading") msg+="您的提交过于频繁，请稍候...\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		jq_form.data("loading","loading");
+		$.post(
+		    "ajax.php?action=gcomment&step=write&g_uid=$product[uid]&type=$product[type]&mod=$script",
+			{comment_body:comment_body,code:code},
+			function(msg){
+			    jq_form.data("loading","");
+			    
+				if(msg.indexOf("ERR")==-1)
+				{
+				    jq_form.children("textarea[@name=comment_body]").val("");
+					jq_form.children("input[@name=code]").val("");
+					jq_form.find("img[@rel=code]").trigger("click");
+					
+					var jq_ul=$("ul[@rel=consult]");
+					jq_ul.children("li[@rel=first_row]").remove();
+					jq_ul.prepend(msg);
+					jq_ul.children("li:first").slideDown("slow");
+				}
+				else alert(msg);
+			}
+		);//end post
+	});//end click
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=property]").each(function(){
+	    if($(this).attr("img")!="")
+		{
+			$(this).html("<img src='$main_settings[mm_mall_url]/"+$(this).attr("img")+"' /><i></i>");
+		}
+	});//end each
+	
+	$("a[@rel=property]").click(function(e){
+	    e.preventDefault();
+	});//end click
+	
+    $("a[@rel=property_show]").click(function(){
+	     $("div[@rel=property_frame]").toggle();
+	});
+});
+</script>
+
+<script type="text/javascript">
+$(function(){
+	$("a[@rel=friend]").click(function(e){
+		e.preventDefault();
+		var mid=$(this).attr("mid");
+		var my_id="$m_check_id";
+		if(my_id=="")
+		{
+			alert("$lang[frenlogin]");
+			return false;
+		}
+		if(mid=="") alert("$lang[frenunknown]");
+		else if(mid==my_id) alert("$lang[frenself]");
+		else
+		{
+			$.post(
+				"ajax.php?action=add_friend&mid="+encodeURI(mid)+"&rnd="+Math.random(),
+				function(msg){
+					alert(msg);
+				}
+			);
+		}
+	});
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    $.get(
+	    "ajax.php?action=get_gcontent&uid=$product[uid]",
+		function(msg){
+		    $("div[@rel=goods_main]").html(msg);
+		}
+	);//end get
+});
+</script>
+<script type="text/javascript">
+$(function(){
+    var ask_order_lock=false;
+	$("input[@rel=ask_submit]").click(function(e){
+	    if(ask_order_lock) return;
+	    var msg="";
+        if($.trim($("input[@name=aname]").val())=="") msg+="请填写联系人姓名\\n";
+	    if($.trim($("input[@name=amobile]").val())=="" && $.trim($("input[@name=atel]").val())=="") msg+="请填写联系手机或电话\\n";
+	    if($.trim($("input[@name=aemail]").val())=="") msg+="请填写email\\n";
+	    if($.trim($("input[@name=aaddress]").val())=="") msg+="请填写联系地址\\n";
+	    if($.trim($("textarea[@name=amsg]").val())=="") msg+="请填写留言内容\\n";
+	    if(msg!="")
+	    {
+		    alert(msg);
+		    return false;
+	    }
+		
+		ask_order_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=ask_order",
+			type:"POST",
+			data:$("div[@rel=post_ask_order]").find("form[@name=aform]:first").serialize(),
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    $("div[@rel=post_ask_order]").find("input,textarea").not("input[@name=step]").val("");
+				    $("a[@rel=close]").trigger("click");
+				}
+			},
+			complete:function(){
+			    ask_order_lock=false;
+			}
+		});//end ajax
+	});//end click
+	
+	$("#ask_order").click(function(e){
+		e.preventDefault();
+		var pao = $("div[@rel=post_ask_order]");
+		var itop=(document.documentElement.clientHeight-pao.height())/2+$(document).scrollTop();
+		var ileft=(document.documentElement.clientWidth-pao.width())/2+$(document).scrollLeft();
+		pao.css({position:"absolute","left":'',"top":itop}).fadeIn(1000);
+		$("#block").css("display","block");
+	});//end click
+	
+	$("a[@rel=close]").click(function(){
+		$("div[@rel=post_ask_order]").fadeOut(1000);	
+		$("#block").css("display","none")										
+	});//end click
+});
+</script>
+    <div class="ask_order" rel="post_ask_order"><a class="close" rel="close" title="$lang[close]"></a>
+		<form method="post" name="aform">
+			<input type="hidden" name="step" value="1" />
+            <p class="f13 fd orange mb8">请详细填写以确保及时收到询价结果</p>
+            <table>
+				<tr><th width="60">联系人：</th><td><input type="text" name="aname" class="text" /></td></tr>
+                <tr><th>联系电话：</th><td><input type="text" name="atel" class="text" /></td></tr>
+                <tr><th>联系手机：</th><td><input type="text" name="amobile" class="text" /></td></tr>
+                <tr><th>E-mail：</th><td><input type="text" name="aemail" class="text" /></td></tr>
+                <tr><th>地址：</th><td><input type="text" name="aaddress" class="text" /></td></tr>
+                <tr><th>公司名称：</th><td><input type="text" name="ainvoice" class="text" /></td></tr>
+                <tr><th>留言：</th><td><textarea name="amsg" class="text" rows="3" cols="" style="height:50px;"></textarea></td></tr>
+                <tr><th></th><td><input type="button" class="pro_ask" rel="ask_submit" value="确定" /></td></tr>
+			</table>   
+        </form>
+	</div>
+		<div class="jqzoom"><img src="{$arr_gallery[0][0]}" jqimg="{$arr_gallery[0][1]}" width="100%" /></div>
+	<div class="box_product">  
+        <h3 class="product_title">$product[goods_name]</h3>
+        <div class="attr_basic" style="border-bottom:none;">
+            公司名称：$product[company]<br />
+            电话：$product[tel]<br />
+            网址：<a href="$product[goods_url]" target="_blank">$product[goods_url]</a><br />
+            地址：$product[address]<br />
+            联系人：$product[contact]                 
+        </div> 
+        <div class="property_div">
+            <div class="product_button"><a href="#" id="ask_order" class="pro_ask">商品询单</a></div>	
+        </div>
+        <div class="share_fav_bar">
+            <a href="#" class="fav_goods" rel="fav" t="1" uid="$product[uid]" module="$script" gt="$goods_table">收藏本商品<span>({$favorite_num})</span></a> 
+            <a href="#" class="fav_shop" rel="fav" t="0" uid="$page_member_id" module="" gt="">收藏本商铺<span></span></a> 
+        </div>
+		<div class="clear"></div>
+		<ul id="nav" class="product_tab">
+			<li><a rel="tab_title" class="hover">商品详细</a></li>
+		</ul>	
+		<div rel="tab_body" n="product" class="product_con border h_oflow">
+        	<ul class="h_oflow mb10 pro_attr">
+<!--
+EOT;
+foreach($product[filter_attr] as $key=>$val){
+print <<<EOT
+-->
+            	<li>{$key}: {$val}</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </ul>
+			<div rel="goods_main">商品内容加载中...</div>
+		</div><!-- 商品详细 -->
+    </div>
+<!--
+EOT;
+?>-->

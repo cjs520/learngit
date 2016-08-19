@@ -1,0 +1,61 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->	
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=edit]").click(function(e){
+	    e.preventDefault();
+		var uid=$(this).attr("uid");
+		var discount=$("input[@rel=discount][@uid="+uid+"]").val();
+		
+		$.post(
+		    "sadmin.php?module=$module&action=edit&rnd="+Math.random(),
+			"uid="+uid+"&discount="+discount,
+			function(msg){
+			    alert(msg);
+			}
+		);//end post
+	});//end click
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		var uid=$(this).attr("uid");
+		$.get(
+		    "sadmin.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				$("input[@rel=discount][@uid="+uid+"]").val("");
+			}
+		);//end get
+	});//end click
+});
+</script>
+	<div class="mem_right">
+		<div class="member_title fd red">等级折扣设置</div>
+        <p class="mb10 alert_info"><span class="icon_info"></span></p>
+		<table cellspacing="0" class="table_list" rel="table">   
+			<tr class="fcl red">
+				<th>请在折扣比例栏设置0-1的小数，当您发布商品时勾选"会员折扣"复选框，各级会员的购买价格将按照相应的折扣进行计费，不设置则按原价购买。</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_grade as $val){
+print <<<EOT
+-->			<tr>
+                <td>会员等级：<span class="red fd">$val[group_name]</span>&nbsp;&nbsp;&nbsp;等级高低：$val[degree]</td>
+			</tr>
+            <tr>
+                <td>
+					折扣比例：<input type="text" class="text" rel="discount" uid="$val[group_id]" value="$val[discount]" style="width:140px" />&nbsp;&nbsp;<a href="#" rel="edit" uid="$val[group_id]" class="tipsy_s deter blue" title="确定">确定</a>&nbsp;&nbsp;<a href="#" rel="del" uid="$val[group_id]" class="tipsy_s delete blue" title="删除">删除</a>
+                </td> 
+			</tr>    					
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+	</div>	
+<!--
+EOT;
+?>-->

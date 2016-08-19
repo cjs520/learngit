@@ -1,0 +1,84 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+    <script type="text/javascript">
+	$(function(){
+	    $("a[@rel=add_certi]").click(function(e){
+		    e.preventDefault();
+			var o=$("tr[@rel=certi]:first").clone();
+			o.find("a[@rel=add_certi],a[@rel=minus_certi]").remove();
+			$("tr[@rel=certi]:last").after(o);
+		});//end click
+		$("a[@rel=minus_certi]").click(function(e){
+		    e.preventDefault();
+			if($("tr[@rel=certi]").size()<=1) return;
+			$("tr[@rel=certi]:last").remove();
+		});//end click
+		$("a[@rel=del_certi]").click(function(e){
+		    e.preventDefault();
+			var uid=$(this).attr("uid");
+			$.get(
+			    "sadmin.php?module=$module&action=del_certi&uid="+uid+"&rnd="+Math.random(),
+				function(msg){
+				    $("p[@uid="+uid+"]").remove();
+				}
+			);//end get
+		});//end click
+	});
+	</script>
+	<div class="mem_right">
+		<form action="" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="action" value="$action"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">形象展示</th></tr>
+			<tr>
+				<td width="18%">形象网址</td>
+				<td><a href="$url" target="_blank">$url</a></td>
+			</tr>
+			<tr>
+				<td>视频代码</td>
+				<td><textarea name="video_code" class="textarea" rows="3" style="padding:3px; width:98%;">$video_code</textarea></td>
+			</tr>
+			<tr>
+			    <td>当前形象</td>
+				<td><img src="$promote_pic" /></td>
+			</tr>
+			<tr>
+				<td>商家形象图</td>
+				<td><input type="file" name="promote_pic"  size="40" class="text" /></td>
+			</tr>
+			<tr>
+				<td>黄页公告</td>
+				<td><textarea name="supplier_notice" class="textarea" rows="3" style="padding:3px; width:98%;">$supplier_notice</textarea></td>
+			</tr>
+		</table>
+		<div class="clear"></div>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="fcl red fd">企业证书</th></tr>
+			<tr>
+				<td colspan="2" class="mem_zs">
+<!--
+EOT;
+foreach($certi_img as $val){
+print <<<EOT
+-->						<p uid="$val[uid]"><a href="$val[b_img]" target="_blank"><img src="$val[s_img]" class="border" /></a><br /><a href="#" rel="del_certi" uid="$val[uid]" class="delete" title="删除"></a></p>
+<!--
+EOT;
+} print <<<EOT
+-->				</td>
+			</tr>
+			<tr rel="certi">
+				<td width="18%">证书 <a href="#" rel="add_certi" class="orange">[添加]</a> <a href="#" rel="minus_certi" class="orange">[减少]</a></td>
+				<td><input type="file" name="certi[]" size="40" class="text" /></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+	</div>
+	
+<!--
+EOT;
+?>-->

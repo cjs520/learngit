@@ -1,0 +1,50 @@
+<!--<?php
+print <<<EOT
+--><html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Language" content="zh-cn"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=5" />
+<style type="text/css">
+table,tr,td,body,h1,h3,h4,div,p { margin:0; padding:0; font-size:12px; }
+table { width:90%; height:100%; margin:0 auto; font-family:"Times New Roman", Times, serif; text-align:center; background: #fff; color: #666; }
+a { color:#333; text-decoration:none; }
+img { border:0; }
+h3 {  margin:10px auto 0 auto; background:#cecece; color:#fff; line-height:25px; }
+h4 { padding: 15px 0; color:#c00; font-weight:normal; }
+</style>
+<title>$lang[title_msg]</title>
+</head>
+<body>
+<table><tr><td>
+	<h1><a href="$mm_mall_url"><img src="$mm_logo" /></a></h1>
+	<h3>$lang[title_msg]</h3>
+	<h4>$str</h4>
+	<p>
+<!--
+EOT;
+if($url==""){print <<<EOT
+-->		<a href="#" onClick="javascript:history.go(-1);return false;" />$lang[go_admin]</a>
+        <script type="text/javascript">
+		setTimeout("history.back();",1000);
+		</script>
+<!--
+EOT;
+}else {
+print <<<EOT
+-->		^-^ <a href="$url">$lang[click_admin]</a>  !!! 
+        <script type="text/javascript">
+		setTimeout(function(){
+		    window.location="$url";
+		},$count_down);
+		</script>
+<!--
+EOT;
+}print <<<EOT
+-->	</p>
+</td></tr></table>
+</body>
+</html>
+<!--
+EOT;
+?>-->

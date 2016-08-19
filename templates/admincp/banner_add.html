@@ -1,0 +1,177 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script language="javascript">
+$(function(){
+$('input[@name=banner_class]').get($banner_class).checked = true;
+$("#ad_select").change(function(e){
+$("#banner_subject").attr("value", $("select[@name=ad_select] option[@selected]").text());
+$("#banner_point").attr("value",$("#ad_select").val());
+var value=$("#ad_select").val();
+switch (value) 
+{
+   case 'top_logo' :
+   {
+       $('#banner_width').attr('value','233');
+       $('#banner_height').attr('value','80');
+       break;
+   }
+      case 'index_banner1' :
+   {
+       $('#banner_width').attr('value','990');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+      case 'index_banner2' :
+   {
+       $('#banner_width').attr('value','990');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+      case 'index_banner3' :
+   {
+       $('#banner_width').attr('value','990');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+      case 'focus1' :
+   {
+       $('#banner_width').attr('value','175');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+      case 'focus2' :
+   {
+       $('#banner_width').attr('value','175');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+      case 'focus3' :
+   {
+       $('#banner_width').attr('value','175');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+      case 'focus4' :
+   {
+       $('#banner_width').attr('value','175');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+      case 'regad' :
+   {
+       $('#banner_width').attr('value','990');
+       $('#banner_height').attr('value','100');
+       break;
+   }
+      case 'loginad' :
+   {
+       $('#banner_width').attr('value','490');
+       $('#banner_height').attr('value','175');
+       break;
+   }
+     case 'invrzad' :
+   {
+       $('#banner_width').attr('value','990');
+       $('#banner_height').attr('value','155');
+       break;
+   }
+     case 'list_member' :
+   {
+       $('#banner_width').attr('value','190');
+       $('#banner_height').attr('value','90');
+       break;
+   }
+     case 'list_member1' :
+   {
+       $('#banner_width').attr('value','200');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+     case 'list_member2' :
+   {
+       $('#banner_width').attr('value','200');
+       $('#banner_height').attr('value','60');
+       break;
+   }
+   default :
+       {
+       $('#banner_width').attr('value','235');
+       $('#banner_height').attr('value','128');
+      }
+} 
+});
+});
+</script>
+<div id="right">
+	<form name="mvmmall" action="" method="post" enctype="multipart/form-data" onsubmit = "return brand();">
+    <input type="hidden" name="action" id="action" value="$action"/>
+	<input type="hidden" name="setp" id="setp" value="1"/>
+	<input type="hidden" name="uid" id="uid"value="$uid"/>
+	<input type="hidden" name="page" value="$page" />
+	<input type="hidden" name="banner_file1_text" id="banner_file1_text" value="$banner_file1"/>
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="4%">ID</th>
+			<th width="20%">广告添加</th>
+			<th>$lang[operation]</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>广告名</td>
+			<td><input type="text" name="banner_subject" id="banner_subject" value="$banner_subject" size="30" maxlength="20" class="text" /></td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>广告位置</td>
+			<td><input type="text" name="banner_point" id="banner_point" value="$banner_point" size="30" maxlength="255" class="text" />$ad_menu</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>广告大小</td>
+			<td><input type="text" name="banner_width" id="banner_width" value="$banner_width" size="6" maxlength="10" class="text" /> <span class="cpsm">X</span>
+			<input type="text" name="banner_height" id="banner_height" value="$banner_height" size="6" maxlength="10" class="text" /> <span class="cpsm">←宽度px * 高度px。</span></td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>广告种类</td>
+			<td><input type="radio" name="banner_class" value="0"/>图片广告 <input type="radio" name="banner_class" value="1" />FLASH广告</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>广告文件</td>
+			<td><input type="file" name="banner_file1" id="banner_file1"  size="30" class="text" /></td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>广告URL<br /><span class="cpsm">广告链接指向，如用外部链接，请填写完整，必须包含http://</span></td>
+			<td><input type="text" name="banner_url" id="banner_url" size="30" maxlength="255" value="$banner_url" class="text"/></td>
+		</tr>
+		<tr>
+			<td>7</td>
+			<td>广告目标</td>
+			<td>$target_menu</td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td>广告开始时间</td>
+			<td> <input type="text" name="start_date" size="30" value="$start_date" id="start_date" class="text" /><input type="reset" value="..." onclick="return showCalendar('start_date', 'y-m-d');" class="inp" /></td>
+		</tr>
+			<tr>
+			<td>9</td>
+			<td>广告结束时间</td>
+			<td><input type="text" name="end_date" size="30" value="$end_date" id="end_date" class="text" /><input type="reset" value="..." onclick="return showCalendar('end_date', 'y-m-d');" class="inp" /></td>
+		</tr>
+		<tr>
+			<td>10</td>
+			<td>广告笔记</td>
+			<td><textarea name="banner_body" id="banner_body" rows="5" cols="35" class="text">$banner_body</textarea></td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" onclick="" /> <input type="reset" name="reset" value="重置" class="button" /></div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

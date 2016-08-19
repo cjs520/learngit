@@ -1,0 +1,30 @@
+<!--<?php 
+print <<<EOT
+-->
+<!--form content-->
+<div style="height:340px; overflow-y:auto; overflow-x:hidden;">
+	<table cellspacing="0" class="table_list" rel="table">
+		<tr>
+			<th>会员</th>
+			<th>出价</th>
+			<th>出价时间</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_join as $val){
+print <<<EOT
+-->		
+		<tr>
+		    <td>$val[m_id]</td>
+			<td>$val[price]</td>
+			<td>$val[register_date]</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</table>
+</div>
+<!--
+EOT;
+?>-->

@@ -1,0 +1,120 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认进行删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+				alert("删除成功");
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		var rel=$(this).attr("rel");
+		if(!confirm("确认发货？")) return false;
+		
+		var jq_this=$(this);
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=check&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+				alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end get
+	});//end click
+	
+
+});
+</script>
+<div class="newopen" style="display:none; width:880px;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip">$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+<div id="right">
+    <form action="admincp.php?module=$module&action=$action" method="post" name="search_form">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1" style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">获奖名单管理</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="1" class="list1" style="border-top:none;">
+		<tr>
+			<td width="15%">获奖单号</td>
+			<td>
+				<input type="text" class="text" name="ordersn" value="$ordersn" /> 
+				<input type="submit" value="点击查询" />
+			</td>
+		</tr>
+	</table>
+	</form>
+	
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="18%">获奖单号</th>
+			<th width="15%">奖品</th>
+			<th>获然时间</th>
+			<th>是否发货</th>
+			<th>获奖者</th>
+			<th width="20%">获奖者信息</th>
+			<th width="10%">操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_lucky_rec as $val){
+print <<<EOT
+-->			
+		<tr uid="$val[uid]">
+		    <td class="td1">$val[ordersn]<br /><a href="admincp.php?module=$module&action=$action&lucky_uid=$val[lucky_uid]">$val[lucky_name]</a></td>
+			<td>$val[goods_name]</td>
+			<td>$val[reg_date]</td>
+			<td>$val[is_send]</td>
+			<td>$val[m_id]</td>
+			<td class="td1">
+			    姓名：$val[name]<br />
+				地址：$val[address]<br />
+				联系电话：$val[tel]<br />
+				备注：$val[memo]
+			</td>
+			<td>
+<!--
+EOT;
+if($val[approval_date]==0 && $val[lucky_g_uid]>0){
+print <<<EOT
+-->		
+				<a href="#" rel="check" uid="$val[uid]" class="tipsy_s ship" title="发货"></a> 
+<!--
+EOT;
+} print <<<EOT
+-->
+			    <a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=edit&uid=$val[uid]" class="tipsy_s modify" title="查看"></a> 
+				<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		
+	</table>
+	<div id="page"><span>$page_list</span></div>
+
+</div>
+<!--
+EOT;
+?>-->

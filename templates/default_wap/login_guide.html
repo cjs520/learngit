@@ -1,0 +1,218 @@
+<!--<?php print<<<EOT
+--><!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+<title>{$arr_index_data[0][content]}</title>
+<!--
+EOT;
+if($is_wx && $phone_type!='iphone'){
+print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" href="images/default_wap/wx_css.php?v=$MVMMALL_WAPVERSION" />
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+<link rel="stylesheet" type="text/css" href="images/default_wap/public.css?v=$MVMMALL_WAPVERSION" />
+<link rel="stylesheet" type="text/css" href="$imgpath/mvm.css?v=$MVMMALL_WAPVERSION" />
+<!--
+EOT;
+} print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.js"></script>
+<script type="text/javascript" src="include/javascript/jquery.lazyload.js"></script>
+<script type="text/javascript" src="include/javascript/mvm.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("img[@rel=lazy]").lazyload();
+    $("html").css("fontSize",(document.documentElement.clientWidth*0.1)+"px");
+	$("html").css("fontSize",(document.documentElement.clientWidth*0.1)+"px");
+	$(window).resize(function(){
+	     $("html").css("fontSize",(document.documentElement.clientWidth*0.1)+"px");
+	});
+	if(window.top!=window)
+	{
+	    $("html").css("fontSize","39px");
+	}
+	
+	$.extend({
+	    DoInit:function(){
+		    var arr_cat_uid=[];
+			var arr_goods_type=[];
+			$("ul[@rel=goodslist]").each(function(){
+			    var cat_uid=parseInt($(this).attr("cat_uid"));
+				var goods_type=$(this).attr("goods_type");
+				if(isNaN(cat_uid) || cat_uid<=0) $(this).remove();
+				arr_cat_uid.push(cat_uid);
+				arr_goods_type.push(goods_type);
+			});//end each
+			
+			$.ajax({
+			    url:"ajax.php?action=user_index_goodslist",
+				type:"POST",
+				dataType:"json",
+				data:{
+				    cat_uid:arr_cat_uid.join(","),
+					goods_type:arr_goods_type.join(",")
+				},
+				cache:false,
+				success:function(json){
+				    $("ul[@rel=goodslist]").each(function(i){
+					    var cat_uid=parseInt($(this).attr("cat_uid"));
+				        var goods_type=$(this).attr("goods_type");
+						if(json[cat_uid][goods_type].length<=0) $(this).remove();
+						var total=0;
+						for(var i in json[cat_uid][goods_type])
+						{
+						    if($(this).children("li").size()<=i) break;
+							total++;
+							var jq_li=$(this).children("li").eq(i);
+							jq_li.find("a.name").html(json[cat_uid][goods_type][i]["goods_name"]);
+							jq_li.find("a").attr("href",json[cat_uid][goods_type][i]["url"]);
+							jq_li.find("span[@rel=price]").html(json[cat_uid][goods_type][i]["goods_sale_price"]);
+							jq_li.find("img").attr("src",json[cat_uid][goods_type][i]["goods_file1"]);
+						}
+						$(this).children("li:gt("+(total-1)+")").remove();
+					});//end each
+				}
+			});//end ajax
+			
+			if($("span[@rel=sms_num]").size()>0)
+			{
+			    $.get(
+				    "ajax.php?action=user_index_sms_num&cmd=unread&rnd="+Math.random(),
+					function(msg){
+					    $("span[@rel=sms_num]").html(msg.toString());
+					}
+				);//end get
+			}
+		}
+	});
+	$.DoInit();
+});
+</script>
+<link rel="stylesheet" type="text/css" href="images/wap_user/mvm.css?v=$MVMMALL_WAPVERSION" />
+</head>
+<body>
+<div class="wrapper" style="width:10rem; padding:0; overflow:hidden;">
+<style>
+/*-- 登陆引导页 --*/
+.wap_login_bar { position:fixed; bottom:0; }
+.wap_login,.wap_register { display:block; float:left; width:4.5rem; height:45px; margin:0.25rem; border-radius:5px; background:#0385d0; color:#fff; line-height:45px; text-align:center; text-decoration:none; font-size:16px; font-weight:bold; }
+.wap_register { background:#4dc805; }
+.guide_div { margin:0.35rem 0 0; }
+.guide_div h3 { text-align:center; font-size:18px; font-weight:bold; line-height:40px; }
+.guide_div h4 { text-align:center; font-size:14px; font-weight:normal; color:#7f7f7f; }
+.guide_turn  { width:45px; overflow:hidden; margin:0 auto; }
+.guide_turn span { display:block; float:left; width:7px; height:7px; margin:0 4px; overflow:hidden;  border-radius:50%; background:#e0e0e0; }
+.guide_turn span.hover { background:#9a9a9a; }
+.guide_flash { position:relative; width:10rem; height:10rem; margin:0.3rem 0; overflow:hidden; border:solid #000; border-width:1px 0; }
+
+.guide_1 { position:absolute; bottom:1.3rem; left:2.25rem; width:5.5rem; }
+.guide_2 { position:absolute; top:2.5rem; left:2.1rem; width:1rem; 
+-moz-animation: star_move2 2s 1 linear;
+}
+@-moz-keyframes star_move2 {
+0% { filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0; }
+100% {filter: Alpha(Opacity=100); -moz-opacity:1; Opacity:1; }
+}
+/*--------------------------------------------------------------------------------------------------*/
+.guide_3 { position:absolute; top:1.5rem; left:3.2rem; width:1.2rem; filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0;
+-moz-animation: star_move3 2s 1 3s linear forwards;
+}
+@-moz-keyframes star_move3 {
+0% { filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0; }
+100% {filter: Alpha(Opacity=100); -moz-opacity:1; Opacity:1; }
+}
+/*--------------------------------------------------------------------------------------------------*/
+.guide_4 { position:absolute; top:2.25rem; left:5.4rem; width:0.8rem; filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0;
+-moz-animation: star_move4 2s 1 4s linear forwards;
+}
+@-moz-keyframes star_move4 {
+0% { filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0; }
+100% {filter: Alpha(Opacity=100); -moz-opacity:1; Opacity:1; }
+}
+/*--------------------------------------------------------------------------------------------------*/
+.guide_5 { position:absolute; top:1.2rem; left:6.5rem; width:1.3rem; filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0; 
+-moz-animation: star_move5 2s 1 5s linear forwards;
+}
+@-moz-keyframes star_move5 {
+0% { filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0; }
+100% {filter: Alpha(Opacity=100); -moz-opacity:1; Opacity:1; }
+}
+/*--------------------------------------------------------------------------------------------------*/
+.guide_6 { position:absolute; top:3rem; left:7.2rem; width:1.1rem; filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0;
+-moz-animation: star_move6 2s 1 6s linear forwards;
+}
+@-moz-keyframes star_move6 {
+0% { filter: Alpha(Opacity=0); -moz-opacity:0; Opacity:0; }
+100% {filter: Alpha(Opacity=100); -moz-opacity:1; Opacity:1; }
+}
+</style> 
+<div class="guide_div">
+    <h3>微商盟，免费的掌上商城</h3>
+    <h4>wesomall随时随地管理，无处不在成交</h4>
+	<div class="guide_flash">
+        <img class="guide_1" src="images/wap_user/donghua/guide_1.png" alt="">
+        <img class="guide_2" src="images/wap_user/donghua/guide_2.png" alt="">
+        <img class="guide_3" src="images/wap_user/donghua/guide_3.png" alt="">
+        <img class="guide_4" src="images/wap_user/donghua/guide_4.png" alt="">
+        <img class="guide_5" src="images/wap_user/donghua/guide_5.png" alt="">
+        <img class="guide_6" src="images/wap_user/donghua/guide_6.png" alt="">
+    </div>	
+    <p class="guide_turn"><span class="hover"></span><span></span><span></span></p>
+</div>
+
+
+<div class="guide_div" style="display:none;">
+    <h3>拍照即可上架商品</h3>
+    <h4>手机拍照，设置价格即可开卖</h4>
+	<div class="guide_flash">
+    sss
+    
+    
+    
+    
+    
+    
+    
+    </div>	
+    <p class="guide_turn"><span></span class="hover"><span></span><span></span></p>
+</div>
+<div class="guide_div" style="display:none;">
+    <h3>发送给你的粉丝们</h3>
+    <h4>在微信、朋友圈、微博、QQ空间上出售</h4>
+	<div class="guide_flash">
+    sss
+    
+    
+    
+    
+    
+    
+    
+    </div>	
+    <p class="guide_turn"><span></span><span></span><span class="hover"></span></p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="wap_login_bar"><a href="#" class="wap_login">登陆</a><a href="" class="wap_register">免费注册</a></div>
+
+</div>
+<div id="block"></div>
+</body>
+</html>
+<!--
+EOT;
+?>-->

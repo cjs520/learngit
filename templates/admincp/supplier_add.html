@@ -1,0 +1,222 @@
+<!--<?php
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("form[@rel=mvm_member]").submit(function(){
+	    var msg="";
+		if($("input[@name=login_id]").val()=="") msg+="请填写用户ID\\n";
+		if($.inArray($("input[@name=isSupplier][@checked]").val(),["2","3"])!=-1  && $.inArray($("input[@name='certified_type[]'][@checked]").val(),["1","2"])==-1)
+		    msg+="请选择认证类型\\n";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+});
+</script>
+<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+
+<!--form content-->
+	<form rel="mvm_member" action="admincp.php?module=$module&action=$action" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="p_url" value="$p_url" />
+	<input type="hidden" name="uid" value="$uid"/>
+	<input type="hidden" name="setp" value="1"/>
+	<table cellpadding="0" cellspacing="1" class="list1" style="margin-bottom:0; border-bottom:0;">
+		<tr><th>添加或修改商铺信息</th></tr>
+	</table>
+	<div style="width:878px; height:455px;overflow-y:auto; overflow-x:hidden; border:solid 1px #888; border-top:none;">
+	<table cellpadding="0" cellspacing="1" class="list1 list_bg mb0" style="border:none;">
+		<tr>
+		    <td colspan="4" class="red">商家基本资料</td>
+		</tr>
+		<tr>
+			<td width="15%">会员ID</td>
+			<td width="35%">$member_id</td>
+			<td width="15%">会员姓名</td>
+			<td width="35%"><input type="text" name="name" maxlength="20" class="text text_3" value="$member_name" /></td>
+		</tr>
+		
+		<tr>
+			<td>登录密码</td>
+			<td>
+				<input type="text" name="pass" maxlength="20" class="text text_3"  />
+				<p class="alert_warning2 text_33"><span class="icon_waring"></span>不填写则原密码保留</p>
+			</td>
+			<td>支付密码</td>
+			<td>
+				<input type="password" name="pay_pass" maxlength="20" class="text text_3" />
+				<p class="alert_warning2 text_33"><span class="icon_waring"></span>不填写则原密码保留</p>
+			</td>
+		</tr>
+		<tr>
+			<td>生日</td>
+			<td>
+			    <input type="text" name="birth_yy" style="width:64px;" maxlength="4" class="text" value="$birth_yy" /> 年
+			    <input type="text" name="birth_mm" style="width:44px;" maxlength="2" class="text" value="$birth_mm" /> 月 
+				<input type="text" name="birth_dd" style="width:44px;" maxlength="2" class="text" value="$birth_dd" /> 日
+			</td>
+			<td>性别</td>
+			<td><input type="radio" name="sex" value="1" $member_sex_y /> 先生 <input type="radio" name="sex" value="0" $member_sex_n/> 女士</td>
+		</tr>
+		<tr>
+			<td>固话</td>
+			<td><input type="text" name="tel1" id="tel1" maxlength="20" class="text text_3" value="$member_tel1" /></td>
+			<td>手机</td>
+			<td><input type="text" name="tel2" id="tel2" maxlength="20" class="text text_3"  value="$member_tel2" /></td>
+		</tr>
+		<tr>
+			<td>所在区域</td>
+			<td>
+			<select id="province" name="province"></select>
+			<select id="city" name="city"></select>
+			<select id="county" name="county"></select>
+			<script type="text/javascript">
+			$(function(){
+			    $.init_area(new Array("province","city","county"),new Array("$member_shop[province]","$member_shop[city]","$member_shop[county]"));
+			});
+			</script></td>
+			<td>街道地址</td>
+			<td><input type="text" name="address1" class="text text_3" value="$member_shop[shop_address]" /></td>
+		</tr>
+		<tr>
+			<td>邮编</td>
+			<td><input type="text" name="zip1" maxlength="10" class="text text_3" value="$member_zip" /></td>
+		    <td>淘宝旺旺</td>
+			<td><input type="text" name="taobao" maxlength="40" class="text text_3" value="$taobao" /></td>
+		</tr>
+		<tr>
+			<td>qq</td>
+			<td><input type="text" name="qq" maxlength="12" class="text text_3" value="$qq" /></td>
+			<td>会员等级</td>
+			<td>$grade_select</td>
+		</tr>
+		<tr>
+			<td>积分</td>
+			<td>
+			当前积分: <span style="color:#f00;">$member_point</span><br />
+			+/- 积分: <input type="text" name="new_point" class="text" style="width:143px;" />
+			<p class="alert_info2 text_33"><span class="icon_info"></span>填负数可扣除会员积分</p>
+			</td>
+			<td>预付款</td>
+			<td>
+			当前预付款: <span style="color:#f00;">$member_money</span><br />
+			+/- 预付款: <input type="text" name="new_money" class="text" style="width:131px;" />
+			<p class="alert_info2 text_33"><span class="icon_info"></span>填负数可扣除会员预付款</p>
+			<p>冻结金额：$member_money_freeze 元</p>
+			</td>
+		</tr>
+		<tr>
+			<td>会员头像</td>
+			<td>
+			    当前头像：<img src="$member_image" width="79" /><br />
+			    <input type="file" name="member_file" class="text text_3" value="$member_file" />
+			</td>
+			<td>EMAIL</td>
+		    <td><input type="text" name="email" class="text text_3" value="$member_email" /></td>
+		</tr>
+		
+		<tr>
+		    <td colspan="4" class="red">商铺资料</b></td>
+		</tr>
+	    <tr>
+			<td>商铺名称</td>
+			<td><input type="text" class="text text_3" name="shop_name" value="$member_shop[shop_name]" /></td>
+			<td>商铺分类</td>
+			<td>
+			    <span rel="goods_category"></span>
+				<script type="text/javascript">
+				$(function(){
+				    $("span[@rel=goods_category]").GoodsCategory("$member_shop[supplier_cat]",null);
+				});
+				</script>
+			</td>
+		</tr>
+		<tr>
+			<td>二级域名</td>
+			<td>http://<input type="text" name="homepage" size="8"  class="text" value="$member_shop[member_homepage]" />$_URL[2]/</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+		    <td>主营项目</td>
+			<td><textarea name="run_product"  rows="2" class="text text_3">$member_shop[run_product]</textarea></td>
+			<td>商铺描述</td>
+			<td><textarea name="intro" rows="2" class="text text_3">$member_shop[shop_intro]</textarea></td>
+		</tr>
+		<tr>
+		    <td>商铺logo</td>
+			<td><input type="file" class="text text_3" name="up_logo" /></td>
+			<td>商铺类型</td>
+			<td>$shop_level</td>
+		</tr>
+		<tr>
+			<td rowspan="2">认证审核</td>
+			<td rowspan="2">
+			    <input type="radio" name="isSupplier" value="0" $sup0_checked>普通会员<br />
+				<input type="radio" name="isSupplier" value="1" $sup1_checked>未认证商铺<br />
+				<input type="radio" name="isSupplier" value="2" $sup2_checked>已认证商铺 
+				<input type="checkbox" name="certified_type[]" value="1" $cer1_checked />个人认证 
+				<input type="checkbox" name="certified_type[]" value="2" $cer2_checked />实体认证 
+				<input type="checkbox" name="certified_type[]" value="4" $cer3_checked />消保<br />
+				<input type="radio" name="isSupplier" value="3" $sup3_checked>已审核商铺<br />
+			</td>
+		    <td>相关证件</td>
+			<td>
+			    <p>$id_card</p>
+				<p>$licence</p>
+				<p>$logo</p>
+			</td>
+		</tr>
+		<tr>
+		    <td>过期时间</td>
+			<td><input type="text" class="text text_3" name="shop_expire" value="$member_shop[shop_expire]" /></td>
+		</tr>
+        <tr>
+		    <td>商铺资料重新生成</td>
+			<td colspan="3">
+			    <span class="span_left"><input type="radio" name="is_recreate" value="1" />是 
+				<input type="radio" name="is_recreate" value="0" checked />否</span>
+				<p class="alert_warning"><span class="icon_waring"></span>请谨慎操作此选项，选择“是”将清空商铺所有个性化设置，恢复至商铺开通时默认状态</p>
+			</td>
+		</tr>
+		<tr>
+		    <td>提现账号</td>
+			<td colspan="3">
+			    <input type="radio" name="account_type" value="0" $account_type_0_checked /> 支付宝 
+				<input type="radio" name="account_type" value="1" $account_type_1_checked /> 银行账号 
+			</td>
+		</tr>
+		<tr>
+		    <td>账号信息</td>
+			<td colspan="3" style="padding:5px;">
+			    <table border="1" bordercolor="#ffffff" style="border-collapse:collapse;">
+					<tr>
+						<td>支付宝账号</td>
+						<td><input type="text" size="17" class="text" name="taobao_account" value="$member_account[taobao_account]" /></td>
+						<td>支付宝姓名</td>
+						<td><input type="text" size="17" class="text" name="taobao_name" value="$member_account[taobao_name]" /></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>银行账号</td>
+						<td><input type="text" size="17" class="text" name="bank_account" value="$member_account[bank_account]" /></td>
+						<td>开户行</td>
+						<td><input type="text" size="17" class="text" name="bank" value="$member_account[bank]" /></td>
+						<td>开户名</td>
+						<td><input type="text" size="17" class="text" name="bank_name" value="$member_account[bank_name]" /></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	</div>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" onclick="" /> <input type="reset" name="reset" value="重置" class="button" /></div>
+	</form>
+<!--
+EOT;
+?>-->

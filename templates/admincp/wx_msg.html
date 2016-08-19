@@ -1,0 +1,127 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定的微信留言？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+	
+	var reply_lock=false;
+	$("a[@rel=wx_reply]").click(function(e){
+	    e.preventDefault();
+		if(reply_lock) return;
+		
+		var uid=$(this).attr("uid");
+		var reply=$("textarea[@rel=reply][@uid="+uid+"]").val();
+		reply=$.trim(reply);
+		if(!reply || reply=="")
+		{
+		    alert("请输入回复内容");
+			return;
+		}
+		
+		reply_lock=true;
+		$.ajax({
+		    url:"admincp.php?module=$module&action=edit",
+			type:"POST",
+			cache:false,
+			data:{
+			    uid:uid,
+				reply:reply
+			},
+			success:function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1) window.location.reload();
+			},
+			complete:function(){
+			    reply_lock=false;
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">微信客服咨询管理</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th width="8%">会员</th>
+			<th width="40%">留言内容</th>
+			<th>回复内容</th>
+			<th>回复时间</th>
+			<th width="10%">操 作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_msg as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]" style="height:1%;">
+			<td>$val[m_id]</td>
+			<td class="td1">$val[content]<br />留言时间：$val[register_date]</td>
+			<td class="td1" style="height:1%;vertical-align:top;">
+			    <textarea class="text aaa" rel="reply" uid="$val[uid]" style="width:100%; height:96%;">$val[reply]</textarea><br />
+			</td>
+			<td>
+			    $val[reply_date] $val[reply_m_id]<br />
+<!--
+EOT;
+if($val[reply_expire]){
+print <<<EOT
+-->	
+				(回复已过期)
+<!--
+EOT;
+} print <<<EOT
+-->
+			</td>
+			<td>
+<!--
+EOT;
+if(!$val[reply_expire] && !$val[reply]){
+print <<<EOT
+-->
+			    <a href="#" rel="wx_reply" uid="$val[uid]" class="tipsy_s wx_reply" title="回复"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+	
+</div>
+<!--
+EOT;
+?>-->

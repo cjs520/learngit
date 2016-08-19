@@ -1,0 +1,114 @@
+<!--<?php
+require_once template('header'); 
+require_once template('sadmin_left'); 
+print <<<EOT
+-->
+<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+<script type="text/javascript">
+$(function(){
+    $("form[@rel=apply_form]").submit(function(){
+	    var msg="";
+		if($("form[@rel=apply_form]").find("input[@name=shop_name]").val()=="") msg+="请填写您的商铺名称\\n";
+		if($("form[@rel=apply_form]").find("input[@name=run_product]").val()=="") msg+="请填写您的主营项目\\n";
+		if($("form[@rel=apply_form]").find("input[@name=address]").val()=="") msg+="请填写您的商铺详细地址\\n";
+		
+		if(msg!="")
+		{
+		    alert(msg);
+			return false;
+		}
+		return true;
+	});//end submit
+	
+	$("ul[@rel=standby]").find("a").click(function(e){
+	    e.preventDefault();
+		$("textarea[@name=msg]").val($("textarea[@name=msg]").val()+$(this).html()+"\\n");
+	});//end click
+});
+</script>
+	<div class="mem_right">
+	<div class="member_title fd red">我要托管</div>
+	
+	<form rel="apply_form" method="post" action="sadmin.php?module=$module&action=add" enctype="multipart/form-data">
+	<input type="hidden" name="step" value="1" />
+	<table cellspacing="0" class="table_list" rel="table">
+    	<tr>
+        	<td width="18%">申请条件：</td>
+        	<td>已开通网上商铺的商家! </td>
+        </tr>
+    	<tr>
+        	<td>商铺名称：</td>
+            <td><input name="shop_name" type="text" class="fl text" size="40" /><p class="alert_info"><span class="icon_info"></span>15个汉字内 例如：迈维软件有限公司</p></td>
+        </tr>
+    	<tr>
+        	<td>商铺类型：</td>
+            <td>
+				<span style="float:left; width:225px;"><select name="sellshow"><option value="1">销售型商铺</option><option value="2">展示型商铺</option></select></span>
+				所属分类：<span rel="goods_category"></span>
+				<script type="text/javascript">
+			    $(function(){
+				    $("span[@rel=goods_category]").GoodsCategory("$product[goods_category]");
+				});
+				</script>
+			</td>
+        </tr>
+    	<tr>
+        	<td>主营项目：</td>
+            <td><input name="run_product" type="text" class="fl text" size="40" /><p class="alert_info"><span class="icon_info"></span>例如：男女服饰，男女皮鞋</p></td>
+        </tr>
+    	<tr>
+        	<td>详细地址：</td>
+            <td><input name="address" type="text" class="fl text" size="40" /><p class="alert_info"><span class="icon_info"></span>请填写具体街道，例如：南昌路88号</p></td>
+        </tr>
+		<tr>
+        	<td>联系人：</td>
+            <td><input name="name" type="text" class="text" size="40" /></td>
+        </tr>
+    	<tr>
+        	<td>联系电话：</td>
+            <td><input name="tel" type="text" class="text" size="40" /></td>
+        </tr>
+    	<tr>
+        	<td>联系QQ：</td>
+            <td><input name="qq" type="text" class="text" size="40" /></td>
+        </tr>
+     
+        <tr>
+        	<td>商铺logo：</td>
+            <td>
+			    <input name="logo_tip" type="text" class="fl text gray"onblur="this.style.color='#ccc';if(this.value=='')this.value='店标文字';" onfocus="this.style.color='#333';if(this.value=='店标文字')this.value='';" value="店标文字" />
+				<input name="up_logo" class="fl text" size="25" type="file" /><p class="fl alert_info" ><span class="icon_info"></span>图片最佳尺寸：<span class="orange">130*60</span>px，格式JPG或GIF，大小<span class="orange">150K</span>以内</p>
+			</td>
+        </tr>
+        <tr>
+        	<td>商铺banner：</td>
+            <td>
+			    <input name="banner_tip" type="text" class="fl text gray" onblur="this.style.color='#ccc';if(this.value=='')this.value='商铺横幅文字';" onfocus="this.style.color='#333';if(this.value=='商铺横幅文字')this.value='';" value="商铺横幅文字" /> 
+				<input name="banner" class="fl text" size="25" type="file" /><p class="fl alert_info"><span class="icon_info"></span>图片最佳尺寸：<span class="orange">972*125</span>px，格式JPG或GIF，大小<span class="orange">500K</span>以内</p>
+			</td>
+        </tr>
+        <tr>
+        	<td>商铺描述：</td>
+            <td><textarea name="shop_desc" class="textarea gray" rows="2" style="width:434px;"></textarea></td>
+        </tr>
+        <tr>
+            <td>给该项目留言：</td>
+        	<td class="iwantg_mes"><textarea name="msg" class="fl border"></textarea>
+			<div class="iwantg_con border">
+				<h4 class="f12">请您填写留言或选择下列快捷留言</h4>
+				<ul rel="standby">
+					<li><a href="#">正想开网店托管，希望贵方能尽快联系我！</a></li>
+					<li><a href="#">我的商铺怎样才能显示在贵方平台显著位置？</a></li>
+					<li><a href="#">我的商品如何与贵方平台联合营销推广？</a></li>
+				</ul>
+			</div></td>
+        </tr>
+        <tr><td colspan="2"><p class="orange">请一定填写您的真实信息，以便我们的工作人员能及时联系到您！<br />非常商城会对您所留的个人信息进行保密，请放心填写！</p></td></tr>
+	</table>
+    <p class="mem_but fcr"><input type="submit" value="" class="mem_button" /></p>
+	</form>
+		
+	</div>	
+<!--
+EOT;
+?>-->

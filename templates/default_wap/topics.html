@@ -1,0 +1,80 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">专题活动</div>
+<div class="h_oflow topic_top" style="background-color:{$onsale_data[top_ad_color][0][data]};">
+	<div style="background-color:{$onsale_data[top_ad_color][0][data]};">
+        <p class="mb10 mt10">
+<!--
+EOT;
+foreach($arr_topics as $val){
+print <<<EOT
+-->
+<!--
+EOT;
+if($topic==$val){
+print <<<EOT
+-->
+			<a href="topics.php?topic=$val"><img src="{$onsale_data[top_btn_hl][0][data]}" ></a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+			<a href="topics.php?topic=$val"><img src="{$arr_top_btn[$val]}" ></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+} print <<<EOT
+-->
+        </p>
+    </div>
+</div><!-- 头部 -->
+<div class="wrapper" style=" background:{$onsale_data[bk_color][0][data]};">
+<div class="h_oflow topic">
+<!--
+EOT;
+foreach($arr_level_in_use as $val){
+print <<<EOT
+-->
+	<h3 class="fct" style="background:url({$onsale_data[ceiling][$val][data]}) no-repeat center; height:52px;"></h3>
+    <div class="h_oflow">
+		<ul>
+<!--
+EOT;
+$i=0;
+foreach($AD->GetAd("floor{$val}",0,"topic{$topic}") as $ad_val){
+$class=$i++%2==0?'fl':'fr';
+print <<<EOT
+-->     	<li class="$class">
+        		<p class="goodimg"><!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+--><a href="#" rel="ad_apply" m="topics" p="floor{$val}" op="topic{$topic}" t="0" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+--><a rel="banner" href="$ad_val[goods_link]" title="$ad_val[goods_name]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$ad_val[goods_pic]" alt="$ad_val[goods_name]" /></a></p>
+				<p class="name"><a href="$ad_val[goods_link]" title="$ad_val[goods_name]" target="_blank">$ad_val[goods_name]</a></p>
+            	<p class="price f18 fd red">$ad_val[goods_price]</p>
+            	<p class="buy"><a href="$ad_val[goods_link]" target="_blank" class="white">立即购买</a></p>
+        	</li>
+<!--
+EOT;
+} print <<<EOT
+-->	
+		</ul>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+    
+ 
+</div>
+<!--
+EOT;
+?>-->

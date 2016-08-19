@@ -1,0 +1,125 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<script type="text/javascript">
+$(function(){
+    $("input[@rel=test_memcache]").click(function(){
+	    var memcache_server=$("input[@name=memcache_server]").val();
+		var memcache_port=$("input[@name=memcache_port]").val();
+		var memcache_ext=$("input[@name=memcache_ext][@checked]").val();
+		$.get(
+		    "admincp.php?module=$module&action=test_memcache&memcache_server="+memcache_server+"&memcache_port="+memcache_port+"&memcache_ext="+memcache_ext+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+			}
+		);//end get
+	});//end click
+	
+	$("input[@rel=test_redis]").click(function(){
+	    var redis_server=$("input[@name=redis_server]").val();
+		var redis_port=$("input[@name=redis_port]").val();
+		var redis_db=$("input[@name=redis_db]").val();
+		$.get(
+		    "admincp.php?module=$module&action=test_redis&redis_server="+redis_server+"&redis_port="+redis_port+"&redis_db="+redis_db+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+    <table class="clst" align="center" cellpadding="0" cellspacing="1" style="margin-bottom:0;">
+		<tr>
+			<td class="tleft">缓存设置</td>
+			<td class="tright">&nbsp;</td>
+		</tr>
+	</table>
+	
+	<form action="admincp.php?module=$module&action=add" method="post">
+	<input type="hidden" name="step" value="1"/>
+	<table cellpadding="0" cellspacing="1" class="list1" style="margin-top:5px;">
+		<tr>
+			<th width="15%">说明</th>
+		    <th>设置项</th>
+	    </tr>
+		<tr>
+		    <td>缓存类型</td>
+			<td>
+			    <input type="radio" name="cache_type" value="file" $cache_type_file_checked /> 文件缓存 
+				<input type="radio" name="cache_type" value="memcache" $cache_type_memcache_checked /> Memcache 
+				<input type="radio" name="cache_type" value="redis" $cache_type_redis_checked /> Redis
+			</td>
+		</tr>
+		<tr>
+		    <th colspan="2">Memcache配置</th>
+		</tr>
+		<tr>
+		    <td>服务器IP</td>
+			<td><input type="text" size="30"  class="text" name="memcache_server" value="$cache_settings[memcache_server]" /></td>
+		</tr>
+		<tr>
+		    <td>服务器端口</td>
+			<td><input type="text" size="30"  class="text" name="memcache_port" value="$cache_settings[memcache_port]" /></td>
+		</tr>
+		<tr>
+		    <td>缀存前缀</td>
+			<td>
+			    <input type="text" size="30"  class="text" name="memcache_pre" value="$cache_settings[memcache_pre]" /> 
+				<b>重要：如果同一台服务器上安装了多个商城，则所有缓存需要使用前缀来区分</b>
+			</td>
+		</tr>
+		<tr>
+		    <td>使用扩展类型</td>
+			<td>
+			    <input type="radio" name="memcache_ext" value="Memcache" $memcache_ext_memcache_checked /> Memcache 
+				<input type="radio" name="memcache_ext" value="Memcached" $memcache_ext_memcached_checked /> Memcached
+			</td>
+		</tr>
+		<tr>
+		    <td>状态测试</td>
+			<td>
+			    <input type="button" rel="test_memcache" value="点击测试Memcache使用状态" /><br />
+				<b>注意：点击“确定”之前，请先测试服务器状态，确保内存服务以及扩展安装正确；否则将导致整个商城无法访问</b>
+			</td>
+		</tr>
+		<tr>
+		    <th colspan="2">Redis配置</th>
+		</tr>
+		<tr>
+		    <td>服务器IP</td>
+			<td><input type="text" size="30"  class="text" name="redis_server" value="$cache_settings[redis_server]" /></td>
+		</tr>
+		<tr>
+		    <td>服务器端口</td>
+			<td><input type="text" size="30"  class="text" name="redis_port" value="$cache_settings[redis_port]" /></td>
+		</tr>
+		<tr>
+		    <td>数据库编号</td>
+			<td><input type="text" size="30"  class="text" name="redis_db" value="$cache_settings[redis_db]" /></td>
+		</tr>
+		<tr>
+		    <td>缀存前缀</td>
+			<td>
+			    <input type="text" size="30"  class="text" name="redis_pre" value="$cache_settings[redis_pre]" /> 
+				<b>重要：如果同一台服务器上安装了多个商城，则所有缓存需要使用[数据库编号]和[前缀]来区分</b>
+			</td>
+		</tr>
+		<tr>
+		    <td>状态测试</td>
+			<td>
+			    <input type="button" rel="test_redis" value="点击测试Redis使用状态" /><br />
+				<b>注意：点击“确定”之前，请先测试服务器状态，确保内存服务以及扩展安装正确；否则将导致整个商城无法访问</b>
+			</td>
+		</tr>
+	</table>
+	
+	<div id="tfoot">
+	    <input type="submit" name="Submit" value="确 定" class="button" /> 
+	</div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

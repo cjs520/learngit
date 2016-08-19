@@ -1,0 +1,136 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("span[@rel=close_info]").click(function(e){
+		e.preventDefault();
+		$("div[@rel=info]").fadeOut(1000);
+		$("#block").css("display","none");
+	});//end click
+	
+	$("a[@rel=edit]").click(function(e){
+	    e.preventDefault();
+		var o=$("div[@rel=info]");
+		var itop=(document.documentElement.clientHeight-o.height())/2+$(document).scrollTop();
+		var ileft=(document.documentElement.clientWidth-o.width())/2+$(document).scrollLeft();
+		o.css({
+			width:500+"px",
+			position:"absolute",
+			top:itop+"px",
+			left:ileft+"px"
+		}).fadeIn(1000);
+		
+		var uid=$(this).attr("uid");
+		var name=$("span[@rel=name][@uid="+uid+"]").html();
+		var tel=$("span[@rel=tel][@uid="+uid+"]").html();
+		var address=$("span[@rel=address][@uid="+uid+"]").html();
+		var memo=$("span[@rel=memo][@uid="+uid+"]").html();
+		o.find("input[@rel=uid]").val(uid);
+		o.find("input[@rel=name]").val(name);
+		o.find("input[@rel=tel]").val(tel);
+		o.find("input[@rel=address]").val(address);
+		o.find("textarea[@rel=memo]").val(memo);
+		
+		$("#block").css("display","block");
+		$("div[@rel=info]").find("div[@rel=info_content]").html(msg);
+	});//end click
+	
+	$("input[@rel=info_submit]").click(function(){
+	    $.post(
+		    "member.php?action=$action&rnd="+Math.random(),
+			$("form[@rel=info_form]").serialize(),
+			function(msg){
+			    alert(msg);
+			    if(msg.indexOf("OK")!=-1) window.location.reload();
+			}
+		);//end post
+	});//end click
+});
+</script>
+
+	<div rel="info" class="display open_window" style="width:500px;">
+		<span class="close" rel="close_info"></span>
+        <div rel="info_content">
+		<form rel="info_form">
+        <table cellspacing="0" class="table_list" rel="table">
+		    <input type="hidden" rel="uid" name="uid" />
+			<input type="hidden" name="step" value="1" />
+			<tr><th colspan="2" class="fcl red">抽奖记录</th></tr>
+			<tr>
+				<td>联系人</td>
+				<td><input type="text" class="text" rel="name" name="name" size="40"/></td>
+			</tr>
+            <tr>
+				<td>联系方式</td>
+				<td><input type="text" class="text" rel="tel" name="tel" size="40"/></td>
+			</tr>
+            <tr>
+				<td>收货地址</td>
+				<td><input type="text" class="text" rel="address" name="address" size="40" /></td>
+			</tr>
+            <tr>
+				<td>备注</td>
+				<td><textarea class="text" rel="memo" name="memo" cols="40" style="height:50px; "></textarea></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td><input type="button" rel="info_submit" value="点击提交" /></td>
+			</tr>
+		</table>
+		</form>
+		</div>
+	</div>
+
+    <div class="mem_right">
+		<div class="member_title fd red">我的幸运抽奖</div>
+
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th class="fcl">活动名称</th>
+				<th width="18%">流水号</th>
+				<th width="13%">奖品</th>
+				<th>收货信息</th>
+				<th width="8%">状态</th>
+				<th width="8%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach ($arr_lucky_rec as $val){
+print <<<EOT
+-->			<tr>
+				<td class="fcl">$val[lucky_name]</td>
+				<td>$val[ordersn]</td>
+				<td><a href="$val[goods_url]" $val[target]>$val[goods_name]</a></td>
+				<td class="fcl">
+				    收货人：<span rel="name" uid="$val[uid]">$val[name]</span><br />
+					联系方式：<span rel="tel" uid="$val[uid]">$val[tel]</span><br />
+					收货地址：<span rel="address" uid="$val[uid]">$val[address]</span><br />
+					备注：<span rel="memo" uid="$val[uid]">$val[memo]</span><br />
+				</td>
+				<td>$val[status]</td>
+				<td>
+<!--
+EOT;
+if($val[lucky_g_uid]>0){
+print <<<EOT
+-->	
+				    <a href="#" uid="$val[uid]" rel="edit" class="button" title="编辑">编辑</a>
+<!--
+EOT;
+} print <<<EOT
+-->		
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+
+	</div>
+<!--
+EOT;
+?>-->

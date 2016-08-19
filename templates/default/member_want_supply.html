@@ -1,0 +1,108 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+	    if(!confirm("确认删除指定供应？")) return;
+		var uid=$(this).attr("uid");
+		
+		$.get(
+		    "member.php?action=$action&cmd=del&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=finish]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认结束指定供应信息？")) return;
+		
+		var jq_a=$(this);
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&cmd=finish&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    alert(msg);
+				if(msg.indexOf("OK")!=-1)
+				{
+				    jq_a.parent().siblings("td[@rel=status]").html("已结束");
+					jq_a.remove();
+				}
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right">
+
+		<div class="member_title fd red"><a href="member.php?action=$action&cmd=add" class="span_right white mem_add">添加供应</a>我要供应</div>
+		
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th width="30%">商品名称</th>
+				<th>分类名称</th>
+				<th>单价</th>
+				<th>数量</th>
+				<th>状态</th>
+				<th>留言数量</th>
+				<th width="12%">操作</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_want_supply as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td class="fcl"><img src="$val[pic]" width="80" class="fl"/><span class="sptm">$val[goods_name]</span></td>
+				<td>$val[goods_category]</td>
+				<td>$val[price]</td>
+				<td>$val[num]</td>
+				<td rel="status">
+<!--
+EOT;
+if($val[approval_date]<0){
+print <<<EOT
+-->		
+				    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s" title="理由：$val[back_reason]">$val[status]</a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+					$val[status]
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+				<td>$val[msg_num]</td>
+				<td>
+				    <a href="infor_supply_detail.php?action=$val[uid]" target="_blank" class="tipsy_s view" title="查看"></a>
+				    <a href="member.php?action=$action&cmd=edit&uid=$val[uid]&p_url=$p_url" class="tipsy_s modify" title="修改"></a>
+<!--
+EOT;
+if($val[approval_date]>10){
+print <<<EOT
+-->	
+                    <a href="#" rel="finish" uid="$val[uid]" class="tipsy_s finish" title="结束"></a>
+<!--
+EOT;
+} print <<<EOT
+-->
+					<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+				</td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

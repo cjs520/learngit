@@ -1,0 +1,106 @@
+<!--<?php 
+print <<<EOT
+-->
+<!--form content-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=all_sel]").click(function(e){
+	    e.preventDefault();
+		if($(this).data("sel")=="sel")
+		{
+		    $("input[@name='rank[]']").attr("checked",false);
+			$(this).css("fontWeight","normal");
+		    $(this).data("sel","");
+		}
+		else
+		{
+		    $("input[@name='rank[]']").attr("checked",true);
+			$(this).css("fontWeight","bold");
+		    $(this).data("sel","sel");
+		}
+	});//end click
+	
+	$("a[@rel=reverse_sel]").click(function(e){
+	    e.preventDefault();
+		$("input[@name='rank[]']").each(function(i){
+		    $(this).attr("checked",!$(this).attr("checked"));
+		});//end each
+	});//end click
+	
+	$("input[@rel=check_m_id]").click(function(){
+	    var m_id=$("input[@name=m_id]").val();
+		if(m_id=="")
+		{
+		    alert("会员ID未填写，无法检测");
+			return;
+		}
+		
+		$.post(
+		    "sadmin.php?module=$module&action=check_member&rnd="+Math.random(),
+			"m_id="+m_id,
+			function(msg){
+			    alert(msg);
+			}
+		);//end post
+	});//end click
+	
+	var rank_list="$manager[rank_list]";
+	var arr_rank_list=rank_list.split(",");
+	$("input[@name='rank[]']").each(function(i){
+		if($.inArray($(this).val(),arr_rank_list)!=-1) $(this).attr("checked",true);
+	});//end each
+});
+</script>
+
+<form action="sadmin.php?module=$module&action=$action&level=$level" enctype="multipart/form-data" method="post">
+<input type="hidden" name="p_url" value="$p_url" />
+<input type="hidden" name="step" value="1" />
+<table cellspacing="0" class="table_list" rel="table">
+	<tr><th colspan="2" class="red fcl fd">商铺管理授权</th></tr>
+	<tr>
+		<td width="70">管理级别</td>
+		<td>{$arr_level_name[$level]}</td>
+	</tr>
+	<tr>
+		<td>指定会员ID</td>
+		<td>
+			<input type="text" name="m_id" value="$manager[m_id]" size="40" class="text" /> 
+			<input type="button" rel="check_m_id" value="检测会员ID" />
+		</td>
+	</tr>
+	<tr>
+		<td>
+		    权限设置<br />
+			<a href="#" rel="all_sel">全选</a> / <a href="#" rel="reverse_sel">反选</a>
+		</td>
+		<td>
+<!--
+EOT;
+foreach($sadmin_rank_list as $key=>$val){
+print <<<EOT
+-->
+			<dl class="sadmin_rank">
+				<dt>$key</dt>
+				<dd> 
+<!--
+EOT;
+foreach($val as $k=>$v){
+print <<<EOT
+-->					<span><input type="checkbox" name="rank[]" value="$k" /> $v </span>
+<!--
+EOT;
+} print <<<EOT
+-->				</dd>
+			</dl>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</td>
+	</tr>
+</table>
+<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+</form>
+<!--
+EOT;
+?>-->

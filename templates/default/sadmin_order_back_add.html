@@ -1,0 +1,139 @@
+<!--<?php
+print <<<EOT
+-->	
+<!--form content-->	
+
+	
+		<div class="member_title fd red" style="margin-bottom:0;">退货申请</div>
+		<div style="width:868px; height:475px; padding:8px 5px; overflow-y:auto; overflow-x:hidden; border:solid 1px #fc9; border-top:none;">
+		<table cellspacing="0" class="table_list fct" rel="table" style="width:850px;">
+			<tr>
+				<th class="fcl" width="30%">商品名称</th>
+				<th width="38%">属性</th>
+				<th>客户单价</th>
+				<th>销售积分</th>
+				<th>数量</th>
+			</tr>
+			<tr>
+				<td class="fcl">
+				    <img src="$product[goods_file1]" width="100" />
+					$product[goods_name]
+				</td>
+				<td>$order_goods[goods_attr]</td>
+				<td>$order_goods[buy_price]</td>
+				<td>$order_goods[buy_point]积分</td>
+				<td>$order_goods[buy_number]</td>
+			</tr>
+
+		</table>
+		
+		<div class="clear"></div>		
+		<table cellspacing="0" class="table_list" rel="table" style="width:850px;">
+			<tr><th colspan="4" class="fcl red">退货信息</th></tr>
+			<tr>
+				<td width="15%">退货原因</td>
+				<td width="35%">{$order_back[info1][reason]}</td>
+				<td width="15%">退货金额</td>
+				<td width="35%">{$order_back[info1][money]}</td>
+			</tr>
+			<tr>
+				<td>图片</td>
+				<td><a href="{$order_back[info1][img]}" target="_blank"><img src="{$order_back[info1][img]}" width="100" /></a></td>
+				<td>退货说明</td>
+				<td>{$order_back[info1][memo]}</td>
+			</tr>
+			<tr>
+				<td>物流公司</td>
+				<td>{$order_back[info2][company]}</td>
+				<td>发货单号</td>
+				<td>{$order_back[info2][delivery_code]}</td>
+			</tr>
+			<tr>
+				<td>发货凭证</td>
+				<td><a href="{$order_back[info2][img]}" target="_blank"><img src="{$order_back[info2][img]}" width="100" /></a></td>
+				<td>退货收件</td>
+				<td>
+				    地址：$order_back[back_address]<br />
+					收件人：$order_back[consignee]
+				</td>
+			</tr>
+			<tr>
+			    <td>当前状态</td>
+				<td>
+				    <b class="red">$order_back[status_txt]</b>
+<!--
+EOT;
+if($order_back[status]==-1){ print <<<EOT
+-->
+					&nbsp;&nbsp;&nbsp;&nbsp;<b>拒绝理由：$order_back[reject]</b>
+<!--
+EOT;
+} print <<<EOT
+-->
+				</td>
+			</tr>
+		</table>
+		
+<!--
+EOT;
+if($order_back[status]==1 || $order_back[status]==3){ print <<<EOT
+-->	
+        <div class="clear"></div>
+		<script type="text/javascript">
+		$(function(){
+		    $("form[@name=order_back]").submit(function(){
+			    var msg="";
+				var reject=$(this).find("input[@name=reject]").val();
+				var back_address=$(this).find("input[@name=back_address]").val();
+				var consignee=$(this).find("input[@name=consignee]").val();
+				if($(this).find("input[@name=approval][@checked]").size()<=0) msg+="请选择您的卖家意见\\n";
+				if($(this).find("input[@name=approval][@checked]").val()=="-1" && reject=="") msg+="请填写您的拒绝理由\\n";
+				if($(this).find("input[@name=approval][@checked]").val()=="1")
+				{
+				    if(back_address=="") msg+="请填写您的退货地址\\n";
+					if(consignee=="") msg+="请填写收件人姓名\\n";
+				}
+				
+				if(msg!="")
+				{
+				    alert(msg);
+					return false;
+				}
+				return true;
+			});//end submite
+		});
+		</script>
+		<form name="order_back" action="sadmin.php?module=$module&action=$action" method="post">
+		<input type="hidden" name="p_url" value="$p_url" />
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$order_back[uid]"/>
+		<table cellspacing="0" class="table_list" rel="table" style="width:850px;">
+			<tr><th colspan="4" class="fcl red">卖家意见</th></tr>
+			<tr>
+				<td width="15%">是否同意</td>
+				<td colspan="3">
+				    <input type="radio" name="approval" value="1" checked /> 同意 
+					<input type="radio" name="approval" value="-1" /> 拒绝 
+				</td>
+			</tr>
+			<tr>
+			    <td>退货地址</td>
+				<td><input type="text" class="text" size="30" name="back_address" value="$order_back[back_address]" /></td>
+				<td>收件人</td>
+				<td><input type="text" class="text" size="30" name="consignee" value="$order_back[consignee]" /></td>
+			</tr>
+			<tr>
+			    <td>拒绝理由</td>
+				<td colspan="3"><input type="text" class="text" size="50" name="reject" /></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</div>
+<!--
+EOT;
+?>-->

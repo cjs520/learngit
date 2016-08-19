@@ -1,0 +1,150 @@
+<!--<?php
+require_once template('header'); 
+require_once template('member_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=tab][@roll=$roll]").addClass("hover");
+	
+});
+</script>
+	<div class="mem_right"><!-- 信用评价 开始 -->
+		<div class="member_title fd red"><a href="page.php?action=credit" class="fn mem_page">会员信用体系成长规则</a>评价管理</div>
+<!--
+EOT;
+if($member[isSupplier]>1){
+print <<<EOT
+-->
+		<h3 class="h_oflow mb6 f12"><span class="span_right fn">好评率：<span class="orange">{$seller_good_rate}%</span></span><strong class="span_left">商家信用：</strong><a href="#" class="tipsy_w $good_comment" title="{$member_statistics[comment_data][seller][good][total]}"></a></h3>
+         <table cellspacing="0" class="table_list fct" rel="table">
+         	<tr>
+				<th></th>
+				<th>最近1周</th>
+				<th>最近1月</th>
+				<th>最近6月</th>
+				<th>总计</th>
+			</tr>
+			<tr>
+				<td><span class="rate_good"></span>好评</td>
+				<td>{$member_statistics[comment_data][seller][good][week]}</td>
+				<td>{$member_statistics[comment_data][seller][good][month]}</td>
+				<td>{$member_statistics[comment_data][seller][good][half_year]}</td>
+				<td class="blue">{$member_statistics[comment_data][seller][good][total]}</td>
+			</tr>
+			<tr>
+				<td><span class="rate_soso"></span>中评</td>
+				<td>{$member_statistics[comment_data][seller][normal][week]}</td>
+				<td>{$member_statistics[comment_data][seller][normal][month]}</td>
+				<td>{$member_statistics[comment_data][seller][normal][half_year]}</td>
+				<td class="blue">{$member_statistics[comment_data][seller][normal][total]}</td>
+			</tr>
+			<tr>
+				<td><span class="rate_bad"></span>差评</td>
+				<td>{$member_statistics[comment_data][seller][bad][week]}</td>
+				<td>{$member_statistics[comment_data][seller][bad][month]}</td>
+				<td>{$member_statistics[comment_data][seller][bad][half_year]}</td>
+				<td class="blue">{$member_statistics[comment_data][seller][bad][total]}</td>
+			</tr>
+			<tr>
+				<td>总计</td>
+				<td class="blue">$week_comment</td>
+				<td class="blue">$month_comment</td>
+				<td class="blue">$half_year_comment</td>
+				<td class="blue">$total_comment</td>
+			</tr>
+		</table>
+<!--
+EOT;
+} print <<<EOT
+-->
+		<div class="clear0"></div>
+		<h3 class="h_oflow mb6 f12"><span class="span_right fn">好评率：<span class="orange">{$buy_good_rate}%</span></span><strong class="span_left">买家信用：</strong><a href="#" class="tipsy_w $good_comment_buy" title="{$member_statistics[comment_data][buyer][good][total]}"></a></h3>	       
+         <table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th></th>
+				<th>最近1周</th>
+				<th>最近1月</th>
+				<th>最近6月</th>
+				<th>总计</th>
+			</tr>
+			<tr>
+				<td><span class="rate_good"></span>好评</td>
+				<td>{$member_statistics[comment_data][buyer][good][week]}</td>
+				<td>{$member_statistics[comment_data][buyer][good][month]}</td>
+				<td>{$member_statistics[comment_data][buyer][good][half_year]}</td>
+				<td class="blue">{$member_statistics[comment_data][buyer][good][total]}</td>
+			</tr>
+			<tr>
+				<td><span class="rate_soso"></span>中评</td>
+				<td>{$member_statistics[comment_data][buyer][normal][week]}</td>
+				<td>{$member_statistics[comment_data][buyer][normal][month]}</td>
+				<td>{$member_statistics[comment_data][buyer][normal][half_year]}</td>
+				<td class="blue">{$member_statistics[comment_data][buyer][normal][total]}</td>
+			</tr>
+			<tr>
+				<td><span class="rate_bad"></span>差评</td>
+				<td>{$member_statistics[comment_data][buyer][bad][week]}</td>
+				<td>{$member_statistics[comment_data][buyer][bad][month]}</td>
+				<td>{$member_statistics[comment_data][buyer][bad][half_year]}</td>
+				<td class="blue">{$member_statistics[comment_data][buyer][bad][total]}</td>
+			</tr>
+			<tr>
+				<td>总计</td>
+				<td class="blue">$week_comment_buy</td>
+				<td class="blue">$month_comment_buy</td>
+				<td class="blue">$half_year_comment_buy</td>
+				<td class="blue">$total_comment_buy</td>
+			</tr>
+		</table>
+		
+       	<div class="clear"></div>
+		<div class="title_rate_list">
+		    <a href="member.php?action=user_rate&supid=$supid&roll=1" roll="1" rel="tab"><span>来自商家的评价</span></a>
+			<a href="member.php?action=user_rate&supid=$supid&roll=0" roll="0" rel="tab"><span>来自买家的评价</span></a>
+		</div>		
+		
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr class="fcl">
+			    <th width="10%">评价等级</th>
+				<th>评价内容</th>
+				<th width="15%">评价人</th>
+<!--
+EOT;
+if($roll==0){
+print <<<EOT
+-->
+				<th width="15%">相关商品</th>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</tr>
+<!--
+EOT;
+foreach($comment_list as $val){
+print <<<EOT
+-->			<tr>
+				<td>$val[level]</td>
+				<td>$val[comment]</td>
+				<td>$val[from_id]</td>
+<!--
+EOT;
+if($roll==0){
+print <<<EOT
+-->
+				<td><a href="$val[goods_url]" target="_blank">$val[goods_name]</a></td>
+<!--
+EOT;
+} print <<<EOT
+-->
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 信用评价 结束 -->
+<!--
+EOT;
+?>-->

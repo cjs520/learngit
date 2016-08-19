@@ -1,0 +1,50 @@
+<!--<?php print <<<EOT
+-->
+	<script type="text/javascript">
+    $(function(){	
+		//弹出框
+        $("a[@rel=top_info_a]").click(
+            function(){
+                $("div[@rel=top_sj]").toggle();
+            }
+        );
+    });
+    </script>
+    <div class="top1"><a href="#" rel="top_info_a" class="fr top_cate_a">我是商家</a><a class="fl" href="$mm_url[logout]">[退出]</a></div>
+    
+    <div rel="top_sj" class="top1_toggle">
+		<dl>
+			<dt>商铺设置</dt>
+            <dd><a href="sadmin.php?module=settings&action=list&type=msg_set">客服设置</a></dd>
+            <dd><a href="sadmin.php?module=settings&action=list&type=sms_set">短信设置</a></dd>
+            <dd><a href="sadmin.php?module=wx_msg&action=list">微信客服</a></dd>
+            <dt>商品管理</dt>
+            <dd><a href="sadmin.php?module=goods&action=list">商品列表</a></dd>
+            <dd><a href="sadmin.php?module=groupgd&action=list">团购商品</a></dd>
+            <dd><a href="sadmin.php?module=salegd&action=list">限时秒杀</a></dd>
+            <dd><a href="sadmin.php?module=auction&action=list">拍卖商品</a></dd>
+            <dd><a href="sadmin.php?module=changegd&action=list">积分汇专区</a></dd>
+            <dt>交易管理</dt>
+            <dd><a href="sadmin.php?module=order&action=list">所有订单</a></dd>
+			<dd><a href="sadmin.php?module=$module&action=list&cmd=delay">申请延期收货</a></dd>
+			<dd><a href="sadmin.php?module=back_order&action=list">退货通道</a></dd>
+			<dd><a href="sadmin.php?module=order&action=list&cmd=group_check">现场订单验证</a></dd>
+            <dt>会员管理</dt>
+			<dd><a href="sadmin.php?module=grade&action=list">等级列表</a></dd>
+            <dd><a href="sadmin.php?module=category&action=list">分类管理</a></dd>
+		    <dd><a href=""></a></dd>	
+		</dl>
+	</div><!--- 我的社交 --->	
+<div class="wrapper">
+    <table cellspacing="0" class="table_list fct table_list_nav" rel="member_tab">
+        <tr>
+        	<td><a href="member.php?action=index">我是买家</a></td>
+            <td class="table_list_nav_hover"><a href="sadmin.php?module=index">我是商家</a></td>
+            <td><a href="account.php?action=index">账号管理</a></td>
+            <td><a href="member.php?action=want_supply">我的社交</a></td> 
+        </tr>
+    </table>
+    <div class="clear"></div>
+<!--
+EOT;
+?>-->

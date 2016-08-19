@@ -1,0 +1,146 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=tab]:eq($t)").addClass("hover");
+	$("a[@rel=comm][@uid=$c_uid]").addClass("hover");
+	
+	$("a[@rel=check]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认审核指定话题？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=2&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定话题？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+	
+	$("a[@rel=back]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认驳回指定话题的申请？")) return;
+		var uid=$(this).attr("uid");
+		var back_reason=$(this).siblings("input[@name=back_reason]").val();
+		if(back_reason=="")
+		{
+		    alert("请填写您的驳回理由");
+			return;
+		}
+		$.post(
+		    "member.php?action=$action&step=3&uid="+uid+"&rnd="+Math.random(),
+			"back_reason="+back_reason,
+			function(msg){
+			    if(msg.indexOf("ERR")!=-1)
+				{
+				    alert(msg);
+					return;
+				}
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="member_title fd red">生活圈话题管理</div>
+        <div class="title_rate_list">
+        	<a href="member.php?action=$action&c_uid=$c_uid&t=0" rel="tab"><span>已审核</span></a>
+            <a href="member.php?action=$action&c_uid=$c_uid&t=1" rel="tab"><span>未审核</span></a>
+			<a href="member.php?action=$action&c_uid=$c_uid&t=2" rel="tab"><span>已拒绝</span></a>
+        </div>
+		<div class="mb10 my_hover">我的生活圈：
+<!--
+EOT;
+foreach($arr_comm as $val){
+print <<<EOT
+-->	
+		<a href="member.php?action=$action&c_uid=$val[uid]&t=$t" uid="$val[uid]" rel="comm">$val[c_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</div>
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th width="20%">话题</th>
+				<th>标签</th>
+				<th>会员ID</th>
+				<th>发布时间</th>
+				<th>点击量</th>
+<!--
+EOT;
+if($t==2){
+print <<<EOT
+-->
+				<th width="20%">拒绝原因</th>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<th>操作</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_member as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td class="fcl"><a href="$val[url]" target="_blank">$val[t_name]</a></td>
+				<td>$val[tags]</td>
+				<td>$val[member_id]</td>
+				<td>$val[register_date]</td>
+				<td>$val[hits]</td>
+<!--
+EOT;
+if($t==2){
+print <<<EOT
+-->
+				<td>$val[back_reason]</td>
+<!--
+EOT;
+} print <<<EOT
+-->
+				<td>
+				    <a href="member.php?action=$action&step=4&uid=$val[uid]&p_url=$p_url" class="tipsy_s modify" title="修改"></a>
+				    <a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete" title="删除"></a>
+<!--
+EOT;
+if($t==1){
+print <<<EOT
+-->
+				    <a href="#" rel="check" uid="$val[uid]" class="tipsy_s deter" title="审核"></a>
+					<a href="#" rel="back" uid="$val[uid]" class="tipsy_s resend" title="驳回"></a>
+					驳回理由：<input type="text" class="text" name="back_reason" />
+<!--
+EOT;
+} print <<<EOT
+-->
+				    
+
+				</td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

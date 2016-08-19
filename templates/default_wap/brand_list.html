@@ -1,0 +1,55 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">商城品牌<a href="#" rel="top_info_a" class="fr top_cate_a">筛选</a></div>
+	<script type="text/javascript">
+    $(function(){
+        $("a[@rel=top_info_a]").click(
+            function(){
+                $("div[@rel=top_sj]").toggle();
+            }
+        );
+    });
+    </script> 
+    <div rel="top_sj" class="daren_select">
+        <div> 
+			<a rel="cat_tab" cat="0" href="$brand_url">全部</a>
+<!--
+EOT;
+foreach ($cat_parent as $val){
+$val['brand_url']=$rewrite==1?"brand-list-$val[uid].html":"brand.php?action=list&cat_id=$val[uid]";
+print <<<EOT
+-->			<a cat="$val[uid]" rel="cat_tab"href="$val[brand_url]">$val[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->        
+        </div>
+    </div><!--筛选-->  
+<div class="wrapper">
+    <script type="text/javascript">
+	$(function(){
+	    var cat="$cat_id";
+		if(cat=="") cat=0;
+	    $("a[@rel=cat_tab]").removeClass("hover").filter("[@cat="+cat+"]").addClass("hover");
+	});
+	</script>    
+    <!-- 品牌列表开始 -->
+    <div class="box_out">
+        <div class="h_oflow box_in brandtab_content" id="con_brandtab_1">
+<!--
+EOT;
+$i=0;
+foreach ($brand as $val){
+$class=$i++%2==0?'fl':'fr';
+print <<<EOT
+-->			<p class="$class border fct"><a href="$val[url]" title="$val[title]"><img src="$val[logo]"/></a><a href="$val[url]" title="$val[title]" class="name">$val[brandname]</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->		</div>	
+        <div class="page">此类共<span>$total_count</span>个记录 $page_list</div>
+    </div>    
+<!--
+EOT;
+?>-->

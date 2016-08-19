@@ -1,0 +1,65 @@
+<!--<?php
+print <<<EOT
+-->
+<!--form content-->	
+	<script type="text/javascript">
+	$(function(){
+		$("input[@rel=add_region]").click(function(){
+			var region_id=$("#country").val();
+			if($("#province").val()) region_id=$("#province").val();
+			if($("#city").val()) region_id=$("#city").val();
+			
+			if($("td[@rel=region_list]").children("input[@value="+region_id+"]").size()>0) return;
+			$("td[@rel=region_list]").append("<input type='checkbox' name='region[]' value='" + region_id + "' checked='true' /> " + region_id + "&nbsp;&nbsp;");
+		});
+	});
+	</script>
+		<form action="sadmin.php?module=$module&action=$action" method="post">
+		<input type="hidden" name="p_url" value="$p_url" />
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="ship_uid" value="$ship_uid"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">添加配送区域</th></tr>
+			<tr>
+				<td width="130">配送区域</td>
+				<td><input type="text"  name="area_name" id="area_name" value="$area[area_name]" size="40" class="text" /></td>
+			</tr>
+<!--
+EOT;
+foreach ($fields as $val){
+print <<<EOT
+-->			<tr>
+				<td>$val[label]</td>
+				<td><input type="text" name="$val[name]" id="$val[name]" value="$val[value]" size="40" class="text" /></td>
+			</tr>
+<!--
+EOT;
+} print <<<EOT
+-->			<tr>
+				<td>所辖地区</td>
+				<td rel="region_list"><!--
+EOT;
+foreach ($area['region'] as $val){
+print <<<EOT
+--><input type="checkbox" name="region[]" id="region[]" value="$val" checked="true" />$val<!--
+EOT;
+} print <<<EOT
+--></td>
+			</tr>
+			<tr>
+				<td>地区选择</td>
+				<td><script src="include/javascript/initcity.js"></script>
+				<select id="country" name="country" size="10"><option value="全国" selected>全国</option></select>
+				<select onchange="initcity();" id="province" name="province" size="10">
+					<script type="text/javascript">creatprovince();</script>
+				</select>
+				<select id="city" name="city" size="10"><option value="">选择城市</option></select>
+				<input type="button" value="添 加" class="button" rel="add_region" /></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

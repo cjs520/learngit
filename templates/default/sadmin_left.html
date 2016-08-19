@@ -1,0 +1,157 @@
+<!--<?php print <<<EOT
+-->	<script type="text/javascript">
+	$(function(){
+	    //根据权重判断选择哪个菜单
+		var script_name="$script";
+		var arr_param="$script_param".split("|");
+		if($.inArray("area",arr_param)!=-1) arr_param.push("shipping");
+		
+		if(arr_param!="index")
+		{
+		    var index=0;
+		    var weight=0;
+		    var jq_a_menu=$("div[@rel=menu_url]").find("a[@rel=menu_url]");
+		    jq_a_menu.each(function(i){
+			    var url=$(this).attr("href");
+			    var w=0,i;
+			    if(script_name!="" && url.indexOf(script_name)!=-1) w+=10;    //脚本名权重最高
+				if("$module"!="" && url.indexOf("module=$module")!=-1) w+=4;    //模块名权重第二
+			    for(var i in arr_param)
+			    {
+			        if(arr_param[i]=="") continue;
+				    if(url.indexOf(arr_param[i])!=-1) w++;
+			    }
+			    if(w>weight)
+			    {
+			        index=jq_a_menu.index(this);
+				    weight=w;
+			    }
+		    });//end each
+		    var jq_sel_a=jq_a_menu.eq(index);
+		    jq_sel_a.addClass("now1");
+		    var jqp=jq_sel_a.parent();
+		    var uid=jqp.attr("uid");
+		    $("div[@rel=menu_url]").find("dt[@uid="+uid+"]").attr("open","open");
+		    jqp.show();
+		}
+		
+		$("a[@rel=first_title]").click(function(e){
+			e.preventDefault();
+			var jqp=$(this).parent();
+			var jq_first_a=jqp.siblings("dd").find("a[@rel=menu_url]:first");
+			var url;
+			if(jq_first_a.size()>0)
+			{
+			    url=jq_first_a.attr("href");
+				window.location=url;
+			}
+		});//end click
+		
+		$("table[@rel=table]").find("tr").hover(
+		    function(){
+			    $(this).children("td").css("backgroundColor","#cae4ff");
+			},
+			function(){
+			    $(this).children("td").css("backgroundColor","white");
+			}
+		);//end hover
+		
+		$("div[@rel=menu_url]").children("dl").each(function(i){
+		    if(i==0) return true;
+		    if($(this).find("a[@rel=menu_url]:first").size()<=0) $(this).hide();
+		});//end each
+		
+		var idx=1;
+		$("ul[@rel=member_tab]").children("li:eq("+idx+")").addClass("hover");
+		$("ul[@rel=member_tab]").children("li:eq("+idx+")").children().addClass("white");
+	});
+	</script>
+<script type="text/javascript">
+$(function(){
+    var switch_load_lock=false;
+    $("a[@rel=switch]").click(function(e){
+	    e.preventDefault();
+		if(switch_load_lock) return;
+		
+		var jq_ul=$("ul[@rel=switch]:first");
+		if(jq_ul.data("loaded")=="loaded")
+		{
+		    jq_ul.slideDown();
+		}
+		else
+		{
+		    switch_load_lock=true;
+		    $.ajax({
+			    url:"ajax.php?action=switch_manager",
+				type:"GET",
+				dataType:"json",
+				cache:false,
+				success:function(json){
+				    if(json.err!="")
+					{
+					    alert(json.err);
+						return;
+					}
+					jq_ul.empty();
+					$.each(json.shop_list,function(i){
+					    jq_ul.append("<li><a href='"+this[2]+"'>"+this[0]+"</a><span>("+this[1]+")</span></li>");
+					});//end each
+					jq_ul.slideDown();
+				},
+				complete:function(){
+				    switch_load_lock=false;
+					jq_ul.data("loaded","loaded");
+				}
+			});//end ajax
+		}
+	});//end click
+	$("ul[@rel=switch]:first").hover(
+	    function(e){},
+		function(e){
+		    $(this).hide();
+		}
+	);//end hover
+});
+</script>
+	<ul class="member_tab f12 fd" rel="member_tab">
+		<li><a href="member.php?action=index">我是买家</a></li>
+		<li><a href="sadmin.php?module=index">我是商家</a></li>
+		<li><a href="account.php?action=index">账号管理</a></li>
+        <li><a href="member.php?action=want_supply">我的社交</a></li>
+        <li class="right">您当前身份: <span class="orange fd">$shop_file[shop_name] {$shop_manager_level}</span><a title="切换管理店铺" rel="switch" class="switch"></a>
+            <ul rel="switch" class="border shop_admin" style="display:none;"></ul>
+        </li>   
+	</ul>
+	<div class="clear"></div>
+	<div class="border_mem mem_left h_oflow" rel="menu_url">
+		<dl><dt uid="0"><a href="sadmin.php?module=cache&action=clear">更新缓存</a></dt></dl> 
+<!--
+EOT;
+foreach($admin_menu as $key=>$val){
+print <<<EOT
+-->		<dl>
+			<dt uid="$val[uid]"><a href="#" rel="first_title">$val[menu_name]</a></dt>
+			<dd uid="$val[uid]" class="disn"><!--
+EOT;
+foreach($val[children] as $key1=>$val1){
+print <<<EOT
+--><a href="#" style="display:none;">$val1[menu_name]</a><!--
+EOT;
+foreach($val1[children] as $key2=>$val2){
+print <<<EOT
+--><a href="$val2[menu_url]" rel="menu_url">$val2[menu_name]</a><!--
+EOT;
+} print <<<EOT
+--><!--
+EOT;
+} print <<<EOT
+--></dd>
+		</dl>
+<!--
+EOT;
+} print <<<EOT
+-->
+	</div>
+<!--
+EOT;
+?>-->

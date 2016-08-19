@@ -1,0 +1,73 @@
+<!--<?php
+print <<<EOT
+-->
+<!--form content-->
+	<script type="text/javascript">
+	$(function(){
+		main_name=new Array($main_name);
+		main_uid=new Array($main_uid);
+		main_pid=new Array($main_pid);
+		$("select[@rel=act]").change(function(e){
+			var index=$("select[@rel=act]").index(this);
+			$("select[@rel=act]:gt("+index+")").empty().append("<option value='0'>----</option>");
+			if(parseInt($(this).val())==0) return;
+			for(i=0;i<main_name.length;i++)
+			{
+				if(main_pid[i]==$(this).val())
+				{
+					$("select[@rel=act]:eq("+(index+1)+")").append("<option value="+main_uid[i]+">"+main_name[i]+"</option>");
+				}
+			}
+		});
+	});
+	</script>
+	<script type="text/javascript" src="include/javascript/jquery.category.js"></script>
+	
+		<form action="sadmin.php?module=$module&action=$action" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="step" value="1"/>
+		<input type="hidden" name="uid" value="$uid"/>
+		<input type="hidden" name="p_url" value="$p_url" />
+		<table cellspacing="0" class="table_list" rel="table">
+			<tr><th colspan="2" class="red fcl fd">添加品牌</th></tr>
+			<tr>
+				<td width="70">品牌名称</td>
+				<td><input type="text" name="brandname" id="brandname" value="$brandname" class="text2 text_3" /> <p class="alert_info"><span class="icon_info"></span>请填写所经营商品品牌</p></td>
+			</tr>
+			<tr>
+				<td>网 址</td>
+				<td><input type="text" name="weburl" id="weburl" value="$weburl" class="text2 text_3" /> <p class="alert_info"><span class="icon_info"></span>请填写所经营品牌官方网址</p></td>
+			</tr>
+			<tr>
+				<td>所属分类</td>
+				<td>
+				    <p style="float:left;  "><span rel="goods_category"></span>
+				    <script type="text/javascript">
+				    $(function(){
+					    $("span[@rel=goods_category]").GoodsCategory("$category_id");
+				    });
+				    </script></p>
+				    <p class="alert_info"><span class="icon_info"></span>请正确选择您经营品牌的分类,否则官方审核不通过!</p>
+				</td>
+			</tr>
+			<tr>
+				<td>显示顺序</td>
+				<td><input type="text" name="train" id="train" value="$train" class="text text_3" /></td>
+			</tr>
+			<tr>
+				<td>Logo</td>
+				<td><input type="file" name="logo_file" id="logo_file" class="text2 text_3" /> <p class="alert_warning"><span class="icon_waring"></span>请上传所经营品牌logo，尺寸要求：130*60px</p></td>
+			</tr>
+			<tr>
+				<td>关键字</td>
+				<td><textarea name="keywords" id="keywords" rows="2" class="textarea text_3">$keywords</textarea></td>
+			</tr>
+			<tr>
+				<td>品牌描述</td>
+				<td><textarea name="brief" rows="5" class="textarea span_left text_3">$brief</textarea><p class="alert_info"><span class="icon_info"></span>请与官网品牌描述保持一致，非个人商铺信息</p></td>
+			</tr>
+		</table>
+		<p class="mem_but fcr"><input type="submit" class="mem_button" value="" /></p>
+		</form>
+<!--
+EOT;
+?>-->

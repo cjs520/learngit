@@ -1,0 +1,14 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">商城资讯</div>
+<div class="wrapper">
+	<div class="location"><span class="loca_icon"></span><a href="board.php?action=$action">{$b_cat[$action][board_title]}</a> >> $article[board_subject]</div>
+	<h3 class="board_title">$article[board_subject]</h3>
+    <div class="board_info gray mt10"><span class="fr">作者：$article[author]</span>点击数：$article[board_hit]</div>
+    <div class="board_content">$article[board_body]</div>
+    <p class="mb8">上一篇文章：<a class="red" href="{$sibling_art[prev][link]}">{$sibling_art[prev][art_name]}</a></p>
+    <p>下一篇文章：<a class="red" href="{$sibling_art[next][link]}">{$sibling_art[next][art_name]}</a></p>   
+<!--
+EOT;
+?>-->

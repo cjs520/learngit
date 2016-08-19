@@ -1,0 +1,21 @@
+<!--<?php
+require_once template('header'); 
+require_once template('left');
+print <<<EOT
+-->	<div class="right"><!-- 文章开始 -->
+		<div class="location"><p><span class="loca_icon"></span><a href="board_more.php?action=$board[board_name_code]" class="fd">$board[board_title]</a> &gt;&gt; $article[board_subject]</p>
+		</div>
+		<div class="article h_oflow">
+			<h3 class="art_title">$article[board_subject]</h3>
+			<table width="100%" cellspacing="0" class="art_info"><tr>
+				<td class="fcl" width="33%">阅读人数: $article[board_hit]</td>
+				<td class="fct" width="33%">作者: $article[author]</td>
+				<td class="fcr">发布时间: $article[register_date]</td>
+			</tr></table>
+			<div class="art_content">$article[board_body]</div>
+			<div class="art_next"><span>上一篇文章: <a href="{$sibling_art[prev][link]}">{$sibling_art[prev][art_name]}</a></span><span>下一篇文章: <a href="{$sibling_art[next][link]}">{$sibling_art[next][art_name]}</a></span></div>
+		</div>
+	</div><!-- 文章结束 -->
+<!--
+EOT;
+?>-->

@@ -1,0 +1,29 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+.title1 { height:27px; border:1px solid #ddd; border-bottom:none; background:url(bg_new.jpg) 0 -80px; line-height:25px; }
+.title1 span { color:#000; }
+.title2 { padding:4px 8px; border:1px solid #ddd; border-bottom:2px solid #c80002; background:#f4f4f4; line-height:34px; }
+.title2 span { padding:0 8px; color:#c80002; font-size:14px; }
+.title2 img { height:34px; }
+.title2 a { float:right; }
+.zn_search { margin-top:2px; padding:7px 0; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:0 auto; }
+.top3_bg { background:url(bg_new.jpg); }
+.top3 { height:37px; }
+.top3 ul { float:left; width:725px; }
+.top3 li .navtab { float:left; padding:0 14px; line-height:37px; color:#fff; font-size:14px; text-align:center; }
+.top3 li .self span { padding:3px 9px; background:#fff;font-weight:bold; color:#c00; }
+.top3 li a:hover { color:#f60; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:38px; line-height:38px; padding:0 0 0 10px; background:url(cate_bg.png) 0 -60px; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:13px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:7px; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:226px; border:2px solid #9a0403; border-top:none; background:#FFF6ED; }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#000; }
+.top_cate dt.self { background:#f3e4d5; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#f3e4d5; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#000; }
+.sub_category a:hover { background:#FFF6ED; color:#000; }

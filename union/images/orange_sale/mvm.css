@@ -1,0 +1,28 @@
+/*-------------------- 针对不同模板独立定义的样式 -----------------------*/
+.title1 { background:#ED7507; }
+.title2 { position:relative; height:34px; border-bottom:2px solid #ddd; line-height:34px; }
+.title2 span { display:block; float:left; position:absolute; padding:0 8px; border-bottom:2px solid #eb6e00; color:#eb6e00; font-size:14px; }
+.title2 img { position:absolute; height:34px; border-bottom:2px solid #eb6e00; }
+.title2 a { float:right; }
+.zn_search { margin-top:2px; }
+.top2 { display:none; }
+/*-- 头部第三块开始 --*/
+.new_header { width:1200px; margin:0 auto; }
+.top3_bg { background:url(bg_new.jpg); }
+.top3 { height:39px; }
+.top3 ul { float:left; width:705px; }
+.top3 li .navtab { float:left; height:39px; padding:0 14px; overflow:hidden; line-height:39px; font-size:14px; color:#fff; }
+.top3 li .self { float:left;  background:url(bg_new.jpg) 0 -40px; font-weight:bold; color:#fff; }
+.top3 li a:hover { background:url(bg_new.jpg) 0 -40px; color:#fff; text-decoration:none; }
+.top3 .allcat { position:relative; float:left; width:220px; height:39px; line-height:32px; padding:0 0 0 10px; background:url(bg_new.jpg) 0 -80px; }
+.top3 .allcat span { display:block; position:absolute; left:10px; top:10px; background:url(cate_bg.png) no-repeat; width:120px; height:17px; text-indent:-1000em; }
+.top3 .allcat i { display:block; position:absolute; right:10px; top:3px; background:url(cate_bg.png) no-repeat -99px -25px; width:20px; height:30px; }
+.top3 .allcat i.on { background-position:-74px -25px; }
+.top_cate { display:none; z-index:99; position:absolute; width:230px; background:#c42716;  }
+.top_cate a:hover { text-decoration:none; }
+.top_cate dt a { display:block; padding:0 13px; overflow:hidden; line-height:30px; color:#fff; }
+.top_cate dt.self { background:#ed674e; }
+.top_cate dd { display:none; }
+.sub_category { display:none; background:#ed674e; width:170px; z-index:1; }
+.sub_category a { display:block; padding:0 10px 0 25px; line-height:30px; color:#fff; }
+.sub_category a:hover { background:#c42716; color:#fff; }

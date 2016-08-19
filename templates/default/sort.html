@@ -1,0 +1,150 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    var sellshow=parseInt("$sellshow");
+	if(sellshow==0) $("a[@rel=sellshow]").eq(0).addClass("now");
+	else if(sellshow==1) $("a[@rel=sellshow]").eq(1).addClass("now");
+	else if(sellshow==2) $("a[@rel=sellshow]").eq(2).addClass("now");
+	
+	var shop_cat=parseInt("$shop_cat");
+	if(shop_cat>0)
+	{
+	    $("a[@rel=sup_cat]").removeClass("hover").filter("[@cat_id="+shop_cat+"]").addClass("hover");
+	}
+	
+});
+</script>
+	<div class="border border_bn province">
+        <ul class="pro_tag">
+            <li><a href="province.php">按地区</a></li>
+            <li><a href="map.php">按地图</a></li>
+            <li class="hover"><a href="sort.php">按分类</a></li>
+        </ul>   
+    </div>
+    <div class="mt10 border border_bn h_oflow">
+     	<p class="location"><span class="loca_icon"></span>$navigation<span class="span_right">为你找到相关的<strong class="red">$total_count</strong>家商铺</span></p>
+	</div>
+    
+	<table width="100%" border="0" class="attrs">
+        <tr class="attrs_cate">
+            <th>商铺分类</th>
+            <td>
+                <a class="hover" href="$shop_url" rel="sup_cat">全部</a>
+<!--
+EOT;
+foreach($cat_parent as $val){
+print <<<EOT
+-->
+				<a href="sort.php?shop_cat=$val[uid]&province_s=$province_s&city_s=$city_s&county_s=$county_s" rel="sup_cat" cat_id="$val[uid]">$val[category_name]</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+            </td>
+        </tr>
+        <tr class="attr_filter">
+            <td colspan="2"><ul>
+                <li class="sort">
+                    <a href="sort.php?shop_cat=$shop_cat&province_s=$province_s&city_s=$city_s&county_s=$county_s&shop_name=$shop_name&sellshow=$sellshow&o=act" title="按商铺等级排序" class="$spdj_class">商铺等级</a>
+                    <a href="sort.php?shop_cat=$shop_cat&province_s=$province_s&city_s=$city_s&county_s=$county_s&shop_name=$shop_name&sellshow=$sellshow&o=reg" title="按加盟时间排序" class="$jmsj_class">加盟时间</a>
+                </li>
+                <li class="type">
+				    <a href="sort.php?shop_name=$shop_name&o=$o&province_s=$province_s&city_s=$city_s&county_s=$county_s" rel="sellshow" title="全部">全部</a>  
+                    <a href="sort.php?shop_name=$shop_name&o=$o&province_s=$province_s&city_s=$city_s&county_s=$county_s&sellshow=1" rel="sellshow" title="销售型商铺">销售型</a>  
+					<a href="sort.php?shop_name=$shop_name&o=$o&province_s=$province_s&city_s=$city_s&county_s=$county_s&sellshow=2" rel="sellshow" title="展示型商铺">展示型</a>     
+                </li>
+                <li>
+                <form action="sort.php?shop_cat=$shop_cat" method="post">
+                    <span class="span_left">搜商铺：</span><input type="text" class="text" name="shop_name" size="20" value="$shop_name" />
+                    <script language="javascript" src="include/javascript/jquery.city.js"></script>
+                    <select id="province_s" name="province_s"></select>
+                    <select id="city_s" name="city_s"></select>
+                    <select id="county_s" name="county_s"></select>
+                    <script type="text/javascript">
+                    $(function(){
+                        $.init_area(new Array("province_s","city_s","county_s"),new Array("$province_s","$city_s","$county_s"));
+                    });
+                    </script>
+                    <input type="submit" class="sea_button" value="确定" />
+                </form>
+                </li>
+            </ul></td>
+        </tr>
+    </table>
+	<div class="clear"></div>
+<!--
+EOT;
+$rank=0;
+foreach ($shop_list as $val){
+$rank++;
+$c=$val[sellshow]==2?'shop_shows':'shop_sales';
+print <<<EOT
+--> <div class="border shopnew2 h_oflow">	
+		<dl>
+			<dt class="fct"><a href="$val[shop_url]" title="$val[shop_name]" target="_blank"><img src="images/noimages/loading.gif" rel="lazy" path="$val[up_logo]" height="60" /><span class="$c"></span></a></dt>
+			<dd class="name"><a href="$val[shop_url]" title="$val[shop_name]" target="_blank">$val[shop_name]</a><!--
+EOT;
+if($val[certified_type] & 1){
+print <<<EOT
+-->				<a href="$mm_url[certification]" target="_blank" class="tipsy_s cert0" title="已实名认证"></a>
+<!--
+EOT;
+} print <<<EOT
+--><!--
+EOT;
+if($val[certified_type] & 2){
+print <<<EOT
+-->				<a href="$mm_url[certification]" target="_blank" class="tipsy_s cert1" title="已实体认证"></a>
+<!--
+EOT;
+} print <<<EOT
+--><!--
+EOT;
+if($val[certified_type] & 4){
+print <<<EOT
+-->				<span class="tipsy_s xb" title="消保商铺 消保是指商铺缴纳一定数额的消费者保障金，用于交易纠纷时先行赔付给买家"></span>
+<!--
+EOT;
+} print <<<EOT
+--></dd>
+			<dd>商品数：<span class="orange">$val[goods_cnt]</span></dd>
+			<dd>主营：$val[run_product]</dd>
+			<dd>地址：$val[province]$val[city]$val[county]$val[shop_address]</dd>
+			<dd class="nms">描述：$val[shop_intro] <a href="$val[promote_url]" class="gray" target="_blank">详情&gt;&gt;</a></dd>
+			<dd>
+			    联系：<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=$val[shop_qq1]&site=qq&menu=yes"><img src="http://wpa.qq.com/pa?p=2:$val[shop_qq1]:45" width="18" height="18" align="absmiddle" /></a>&nbsp;&nbsp;
+				{$val[shop_ww]}&nbsp;&nbsp;
+				<a href="$val[sms_url]" title="发送站内信" target="_blank"><img src="images/default/message.jpg" align="absmiddle" /></a>
+			</dd>
+			<dd class="fct"><a href="$val[shop_url]" title="马上去逛逛" class="goto_shop1" target="_blank"></a><a href="#" rel="fav" t="0" uid="$val[m_uid]" module="" gt="" title="收藏该商铺" class="goto_promote1" target="_blank"></a></dd>
+		</dl>
+		<ul>
+<!--
+EOT;
+foreach ($val[goods] as $g){
+print <<<EOT
+-->
+			<li>
+				<p><a href="$g[url]" target="_blank" title=""><img src="images/noimages/loading.gif" rel="lazy" path="$g[goods_file1]" width="160" height="160" class="border_img" /></a></p>
+				<p class="name"><a href="$g[url]" target="_blank" title="$g[goods_name]">$g[goods_name]</a></p>
+				<p class="orange fd">$g[goods_sale_price]</p>
+			</li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>
+		<a href="$val[shop_url]" target="_blank" class="shopmore blue">查看更多商品&gt;</a>
+	</div>
+	<div class="clear"></div>
+<!--
+EOT;
+} print <<<EOT
+--> <div class="clear0"></div>
+	<div class="page">$page_list</div>
+<!--
+EOT;
+?>-->

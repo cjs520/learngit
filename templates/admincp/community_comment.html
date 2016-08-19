@@ -1,0 +1,91 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定评论？")) return;
+		
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);
+	});//end click
+	
+	$("a[@rel=tab]:eq($t)").addClass("curtab");
+});
+</script>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">生活圈评论管理</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+	
+	<div class="mt6">
+        <a href="admincp.php?module=$module&action=$action&t=0" class="but1" rel="tab">已审核</a>
+        <a href="admincp.php?module=$module&action=$action&t=1" class="but1" rel="tab">未审核</a>
+		<a href="admincp.php?module=$module&action=$action&t=2" class="but1" rel="tab">已驳回</a>
+	</div>
+	
+	<table cellpadding="0" cellspacing="1" class="mt6 list">
+		<tr>
+			<th width="20%">标题</th>
+			<th width="25%">内容</th>
+			<th width="20%">话题</th>
+			<th>会员ID</th>
+			<th>发布时间</th>
+<!--
+EOT;
+if($t==2){
+print <<<EOT
+-->
+			<th width="20%">拒绝原因</th>
+<!--
+EOT;
+} print <<<EOT
+-->
+			<th>操作</th>
+		</tr>
+<!--
+EOT;
+foreach ($arr_comment as $val){
+print <<<EOT
+-->		
+		<tr uid="$val[uid]">
+			<td class="td1">$val[title]</td>
+			<td class="td1">$val[content]</td>
+			<td><a href="$val[topic_url]" target="_blank">$val[t_name]</a></td>
+			<td>$val[member_id]</td>
+			<td>$val[register_date]</td>
+<!--
+EOT;
+if($t==2){
+print <<<EOT
+-->
+			<td>$val[back_reason]</td>
+<!--
+EOT;
+} print <<<EOT
+-->	
+			<td>
+			    <a href="#" uid="$val[uid]" rel="del" class="tipsy_s delete" title="删除"></a>
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->	
+	</table>
+	<div id="page"><span>$page_list</span></div>
+</div>
+<!--
+EOT;
+?>-->

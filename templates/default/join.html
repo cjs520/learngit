@@ -1,0 +1,330 @@
+<!--<?php print<<<EOT
+--><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta name="Copyright" content="www.verymall.cn" />
+<meta name="keywords" content="$mm_keywords">
+<meta name="description" content="$mm_description">
+<title>招商加盟,$mm_mall_name-$mm_seotitle</title>
+<script language="javascript" src="include/javascript/jquery.js"></script>
+<style type="text/css"> 
+<!--
+body,h1,h2,h3,h4,p,ul,ol,li,dl,dt,dd { margin:0; padding:0; }   
+body { background:#a81d13; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#444; }
+img { border:0; }
+a { color:#666; text-decoration:none; }
+a:hover { color:#c00; }
+li { list-style:none; }
+.wrap { clear:both; width:980px; margin:0 auto; background:#fff7eb; line-height:1.8em; text-align:justify; text-justify:inter-ideograph; }
+.red { color:#c00; }
+.orange { color:#f60; }
+.fd { font-weight:bold; }
+.f14 { font-size:14px; }
+.f20 { font-size:20px; }
+.f_right { float:right; }
+.f_left { float:left; }
+.h_oflow { height:100%; overflow:hidden; }
+.mb8 { margin-bottom:8px; }
+.bgs { background:#fef1dd; }
+.bgq { background:#fff7eb; }
+.plt { padding:15px 25px; }
+.fct { text-align:center; }
+.top_nav { background:url(images/default/join/top_nav.png) repeat-x 0 -50px; height:47px; overflow:hidden; }
+.top_nav li { float:left; width:140px; text-align:center; list-style:none; line-height:47px; background:url(images/default/join/top_nav.png) no-repeat right -100px; color:#fff; font-weight:bold; cursor:pointer; } 
+.top_nav li.hover { background:url(images/default/join/top_nav.png) repeat-x 0 0; }
+.top_nav a { color:#fff; }
+.join_zs { padding:30px 50px; }
+.join_down { float:right; width:135px; overflow:hidden; text-align:center; }
+.join_down h3 { background:url(images/default/join/join_icon.gif) no-repeat; padding-left:30px; line-height:28px; text-align:left; }
+.join_down a { text-decoration:underline; }
+.zs p { padding-left:10px; text-indent:2em; }
+.join_ys .f_left,.join_yq .f_left { width:380px; padding-left:38px;  }
+.join_ys .f_right,.join_yq .f_right { width:480px; }
+.join_yq .f_right { padding-top:10px; }
+.join_yq .f_right li { padding-right:40px; }
+.join_ys dt { font-family:"黑体"; }
+.join_ys dd,.join_yq dd,.join_xm li { background:url(images/default/join/dot_icon.gif) no-repeat 2px 8px; padding-left:15px; }
+.join_yq dd { margin-left:20px; }
+.join_xm ul { margin:0 38px; }
+.join_fw dl { float:left; width:250px; padding-left:38px; margin-top:8px; }
+.join_fw dt { font-weight:bold; color:#c00; }
+.table { width:80%; margin:10px auto; text-align:center; border:solid 1px #aaa; border-collapse:collapse; }
+.table td,.table th { border:solid 1px #ddd; } 
+.join_lx { position:relative; }
+.top { position:absolute; right:0; top:80px; }
+.join_xx { padding:20px 53px; }
+.join_xx p { float:right; font-size:12px; line-height:18px; width:550px; padding-right:20px; }
+.join_dw { padding:50px 30px; } 
+.join_dw p { padding:15px 38px 0 38px; text-indent:2em; }
+.join_dw p.fd { font-size:16px; }
+.join_qj1 { padding:0px 53px 50px 53px; }
+.join_qj2 { padding:10px 38px; }
+.join_qj1 li,.join_qj2 li { background:url(images/default/join/join_icon2.gif) no-repeat 2px 5px; padding-left:22px; text-align:left; }
+.footer { clear:both; text-align:center; color:#fff; line-height:20px; font-size:12px; padding:15px 0; }
+.footer a { color:#fff; }
+-->
+</style> 
+<script type="text/javascript">
+$(function(){
+	$("[@rel=showjoin]").click(function(e){
+		$("#con_join_1").show();
+		$("#join1").addClass("hover");
+		$("#join2").removeClass("hover");
+		$("#join3").removeClass("hover");
+		$("#con_join_2").css("display","none");
+		$("#con_join_3").css("display","none");
+	});
+});
+</script>
+</head> 
+<body> 
+<div class="wrap h_oflow"><a name="top"></a>
+	<h1><img src="images/default/join/logo.jpg" /><img src="images/default/join/top_1.jpg" /></h1>
+	<p><img src="images/default/join/top_2.jpg" /><img src="images/default/join/top_3.jpg" /><img src="images/default/join/top_4.jpg" /></p>
+	<p><img src="images/default/join/top_5.jpg" /></p>
+	<ul class="top_nav">
+		<li class="hover" id="join1" onclick="setTab('join',1,3);">首页</li>
+		<li id="join2" onclick="setTab('join',2,3);">市场前景</li>
+		<li id="join3" onclick="setTab('join',3,3);">商城定位</li>
+		<li><a href="#item" rel="showjoin">项目介绍</a></li>
+		<li><a href="#scope" rel="showjoin">招商范围</a></li>
+		<li><a href="#need" rel="showjoin">招商要求</a></li>
+		<li><a href="#contact" rel="showjoin">联系我们</a></li>
+	</ul>	
+	<div id="con_join_1">
+		<div class="join_zs">
+			<div class="f_right" style="padding-left:50px;">
+				<embed src="http://player.youku.com/player.php/sid/XMjYwNjU3MzUy/v.swf" quality="high" width="350" height="250" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>
+			</div>
+			<div class="zs">
+				<h3 class="mb8"><img src="images/default/join/join.gif" alt="招商啦" /></h3>
+				<p>商城即将推出，作为电子商务专业服务商，专注于为品牌厂商提供网络零售新渠道，扩大品牌在网络消费者中的影响力，促进品牌厂商的资金周转，降低生产者和消费者的交易成本。加入商城，迎合日渐升温的网络购物潮流，打开网络消费市场！</p>
+				<p>化流量为销量，商城，每天为您带来的访问量，最大化商品的曝光率。当网络购物成为新的生活方式，当网络消费市场无限扩展，怎可能错失商机？现在加入商城，开拓网络零售新渠道，利用低廉推广成本，展示品牌形象，降低交易成本，品牌推广、招商分销产品全完成。</p>
+			</div>
+		</div>
+		<div class="join_ys bgs plt h_oflow">
+			<h3 class="mb8"><img src="images/default/join/join_ys.gif" alt="我们的优势" /></h3>
+			<dl class="f_left">
+				<dt class="red f20">帮供应商赚钱，帮消费者省钱。</dt>
+				<dd>技术力量雄厚的便捷交易平台，每天带来超值访问量；</dd>
+				<dd>专业的网络营销队伍定向推广，开拓广阔的销售空间；</dd>
+				<dd>订单实时结算无帐期，资金周转更快速，库存管理更及时；</dd>
+				<dd>销售同一品牌的商家禁止恶性竞争，保持市场良性循环；</dd>
+				<dd>协助您签定物流配送快递公司，送货服务后顾无忧。</dd>
+			</dl>
+			<dl class="f_right">
+				<dt class="red f20">为供应商服务<span class="orange f14">专业团队，统一管理，均衡并保障供应商利益。</span></dt>
+				<dd>商铺托管，实时服务，把消费者购买商品的指引交给供应商；</dd>
+				<dd>提供流量极大的电子商务平台——商城及相应的技术支持；</dd>
+				<dd>提供网上商铺系统，来充分展示商品，促进销售；</dd>
+				<dd>对顾客提出的商品信息咨询快速回复；</dd>
+				<dd>协助签定物流配送快递公司，帮助供应商将售出商品送至顾客手中。</dd> 
+			</dl>
+		</div> 
+		<a name="need"></a><div class="join_yq plt h_oflow" style="position:relative;">
+			<div class="join_down" style="position:absolute; right:50px; top:20px;">
+				<h3 class="red">招商手册</h3>
+				<p><a href="http://mvmmall.cn/download/mvmmall-join.rar" target="_blank"><img src="images/default/join/sc.gif" /></a></p>
+				<p><a href="http://mvmmall.cn/download/mvmmall-join.rar" target="_blank">下载</a></p>
+			</div>
+			<h3><img src="images/default/join/join_yq.gif" alt="招商要求" /></h3>
+			<div class="f_left join_l">
+				<p class="orange fd">每天极大的访问量，怎可能错失商机？</p>
+				<p class="fd red">您属于</p>
+				<dl>
+					<dt class="fd">A、平台合作类</dt>
+					<dd>现有的网上S2C商城</dd>
+					<dt class="fd">B、独立招商类</dt>
+					<dd>生产型厂商，拥有自己注册商标；</dd>
+					<dd>授权代理商，获得国内或国际知名品牌厂商的授权；</dd>
+					<dd>经销商，专业品类专卖店；</dd>
+					<dd>具有民事行为能力的个人，获得授权代理书。</dd>
+				</dl>
+				<p class="fd red">您拥有</p>
+				<ol>
+					<li>1、拥有企业营业执照，个人代理需提供个人身份证件。</li>
+					<li>2、拥有注册商标或品牌，或者拥有正规的品牌授权书。</li>
+					<li>3、署入驻商城服务合约。</li>
+				</ol>
+			</div>
+			<div class="f_right join_r">
+				<p class="fd red">您只需</p>
+				<ol>
+					<li>1、定价公平合理。</li>
+					<li>2、所有商品保障原厂正品。</li>
+					<li>3、七天不影响二次销售换货。</li>
+					<li>4、参加商城积分购物活动。</li>
+					<li>5、保障商品质量，承诺售后服务。</li>
+					<li>6、必要时提供购物发票。</li>
+				</ol>
+				<p class="fd red">您要做</p>
+				<ol>
+					<li>1、提供商品，并上传商品图片与信息，在电脑系统后台中进行日常商品管理；</li>
+					<li>2、自行存储商品，并根据订单发货给顾客，对有需要的顾客开具购物发票；</li>
+					<li>3、优质的服务和可靠的配送服务体系，对售出商品的售后服务负责；</li>
+				</ol>
+			</div>
+		</div>
+		<a name="item"></a><div class="join_xm bgs plt h_oflow">
+			<h3 class="mb8"><img src="images/default/join/join_xm.gif" alt="项目介绍" /></h3>
+			<ul>
+				<li>商城，国内首个提供中高档品牌销售业务的网上购物平台，致力于为企业及商务白领提供综合性一站式的网购服务。安全可靠的交易平台，专业高效的服务团队，以用户体验导向为核心价值观的商务服务理念，助力企业和商务白领，运用电子商务，压缩渠道成本、时间成本，拓展销售市场，强化企业品牌，实现最大化企业的商业目标。</li>
+				<li>漳州市迈维软件有限公司是电子商务专业服务商，是一家拥有核心知识产权的纯互联网企业，运营多个领先的行业网站，拥有每日极大的访问量。公司先后通过通过多年努力，迅速发展壮大，现已成功服务过一万多家企业，提供从电子商务网站建设、推广到在线零售的完整电子商务解决方案，不断为用户创造新的商业价值。</li>
+			</ul>
+		</div>
+		<a name="scope"></a><div class="join_fw plt h_oflow">
+			<h3><img src="images/default/join/join_fw.gif" alt="招商范围" /></h3>
+			<dl><dt>化妆品</dt><dd>个人护理、彩妆</dd></dl>
+			<dl><dt>钟表配饰</dt><dd>钟表、皮具、男士用品</dd></dl> 
+			<dl><dt>家居家纺</dt><dd>家纺、收纳系列、时尚家居百货</dd></dl> 	
+			<dl><dt>女装内衣</dt><dd>女装、内衣</dd></dl> 	
+			<dl><dt>孕童装</dt><dd>孕妇装、童装</dd></dl> 	
+			<dl><dt>孕童用品</dt><dd>孕童食品、玩具、童车、纸尿裤</dd></dl> 	
+			<dl><dt>男装</dt><dd>正装、商务休闲装、时尚男装</dd></dl> 	
+			<dl><dt>运动装</dt><dd>运动服饰、运动装备</dd></dl> 	
+			<dl><dt>休闲装</dt><dd>男女牛仔装、男女休闲装</dd></dl> 	
+			<dl><dt>鞋类箱包</dt><dd>男女鞋、箱包</dd></dl> 	
+			<dl><dt>手机通讯</dt><dd>手机、手机配件、通讯产品</dd></dl> 	
+			<dl><dt>数码产品</dt><dd>数码产品、电子产品</dd></dl> 	
+			<dl><dt>电脑软件</dt><dd>电脑、电脑配件、软件</dd></dl> 
+			<dl><dt>小家电</dt><dd>厨用、家用等</dd></dl> 
+			<dl><dt>办公用品</dt><dd>办公设备、办公用品</dd></dl> 	
+		</div>
+		<div class="join_lc bgs plt h_oflow">
+			<h3 class="mb8"><img src="images/default/join/join_lc.gif" alt="入驻流程" /></h3>
+			<p class="fct"><img src="images/default/join/lc.png" /></p>
+		</div>
+		<div class="join_zc plt h_oflow">
+			<h3 class="mb8"><img src="images/default/join/join_zc.gif" alt="强大的技术支持" /></h3>
+			<p>完善的培训体系，强大的客户支持，快速的响应机制，都验证了专业团队对供应商后顾无忧的服务理念。</p>
+		</div>
+		<a name="contact"></a><div class="join_lx bgs plt h_oflow"><a href="#top"><img src="images/default/join/top.gif" class="top" /></a>
+			<h3><img src="images/default/join/join_lx.gif" alt="联络我们" /></h3>
+			<table class="table">
+				<tr> 
+					<th width="27%">类 目</th> 
+					<th width="10%">联系人</th> 
+					<th width="19%">E-mail地址</th> 
+					<th width="14%">手 机</th> 
+					<th width="15%">电话</th>
+					<th width="15%">QQ</th>
+				</tr> 
+				<tr class="bgq"> 
+					<td>平台合作</td> 
+					<td>蔡先生</td> 
+					<td>95218@qq.com</td> 
+					<td>13015661029</td> 
+					<td>0596-2921706</td>
+					<td>95218</td>
+				</tr> 
+				<tr> 
+					<td>开店咨询</td> 
+					<td>石小姐</td> 
+					<td>shimei@verymall.cn</td> 
+					<td>13559667617</td> 
+					<td>0596-2921706</td>
+					<td>80391506</td>
+				</tr> 	
+				<tr class="bgq">
+					<td>运动、休闲、鞋类、箱包、<br />珠宝配饰、化妆品、男装、女装</td>  
+					<td>林小姐</td> 
+					<td>linsx@verymall.cn</td> 
+					<td>13960165285</td> 
+					<td>0596-2968057</td>
+					<td>82162890</td>
+				</tr> 
+				<tr> 
+					<td>孕童、食品特产、家居家纺、<br />大小家电、手机、数码、电脑</td>
+					<td>卞小姐</td> 
+					<td>xiaoyan@verymall.cn</td> 
+					<td>13607577904</td> 
+					<td>0596-2968077</td>
+					<td>86267192</td>
+				</tr>
+			</table>
+		</div>
+		<div class="join_xx plt h_oflow">
+			<a href="http://mvmmall.cn/download/djb.rar" target="_blank"><img src="images/default/join/join_down.gif" alt="下载信息登记表" class="f_left" /></a>
+			<p><strong>备注：</strong>填写完毕后请传真至福建省漳州市迈维软件有限公司，传真号码：0596-2921706，或者以电子邮件的形式发送给我们，电子邮箱地址：service@verymall.cn 。<br />我们收到您提交的信息后，将安排负责您所经营商品品类的招商人员与您联系。<br />感谢您对商城的支持，我们期待您的到来！</p>
+		</div>
+	</div>
+	
+	<div id="con_join_2" style="display:none;">
+		<h3 class="plt"><img src="images/default/join/join_qj.gif" title="市场前景" /></h3>
+		<p class="plt" style="padding-top:0;"><img src="images/default/join/join_btc.gif" /></p>
+		<ul class="join_qj1">
+			<li>B（Business 商家或企业）2（To）C （Customer 消费者) 电子商务是以Internet 为主要手段,由商家或企业通过网站向消费者提供商品和服务的一种商务模式；</li>
+			<li>我们概念中的网络购物一般定义为类似淘宝的个人商铺即C （Customer 消费者）2（To） C （Customer 消费者)，事实上2007年中国网络购物销售的561亿中有433亿来自淘宝的个人商铺销售；</li>
+			<li>C2C存在的问题：①存在支付风险和商品真伪难辨；②售后服务难以保障；③产品参差不齐，良莠难分；④品牌无法突出，新进入者被无数商铺淹没。</li>
+		</ul>
+		<div class="bgs fct plt h_oflow">
+			<p class="f20">2007—2011年中国B2C网络市场调查</p>
+			<p><img src="images/default/join/gird.jpg" /></p>
+			<p>本资料摘自艾瑞咨询集团及中国互联网络信息中心</p>
+		</div>
+		<div class="plt h_oflow">
+			<h3 class="plt"><img src="images/default/join/join_sq.gif" title="市场前景" /></h3>
+			<ul class="join_qj2">
+				<li>2007年网购10大品类，按销售排名：服装、手机、化妆品、居家日用品、家用电器、充值卡、相机摄像机、PC及配件、笔记本电脑、食品保健；其中服装销售达到 57.8亿元。</li>
+				<li>某些细分专业市场领域线上B2C厂商每年销售近亿元，一些服装、 母婴用品等生活中主要的产品在线销售开始获得B2C线上用户的认可。</li>
+				<li>一家小小的品牌折扣服装B2C网站年销售上千万。</li>
+				<li>网上没有致力于为企业及商务白领提供网购服务的综合性一站式B2C平台。</li>
+			</ul>
+		</div>
+		<div class="bgs plt h_oflow">
+			<p class="fct f20">传统商业和网上商城的对比</p>
+			<table class="table">
+				<tr><th>传统商业</th><th>网上商城</th></tr>
+				<tr>
+					<td><ul class="join_qj2">
+						<li>费用高昂</li>
+						<li>商圈局限</li> 
+						<li>空间限制，陈列受限</li>
+						<li>物业难寻，布点受限</li>
+						<li>竞争激烈</li>
+					</ul></td>
+					<td><ul class="join_qj2">
+						<li>进入成本较低</li>
+						<li>经营成本低</li>
+						<li>受众广泛</li>
+						<li>空间相对无限</li>
+						<li>前景无限</li>
+					</ul></td>  
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+	<div class="join_dw h_oflow" id="con_join_3" style="display:none;">
+		<h3><img src="images/default/join/join_dw.gif" title="商城定位" /></h3>
+		<p class="fd red">Mvmmall商城，国内首个提供中高档品牌销售业务的网上购物平台，致力于为企业及商务白领提供综合性一站式的网购服务。安全可靠的交易平台，专业高效的服务团队，以用户体验导向为核心价值观的商务服务理念，助力企业和商务白领，运用电子商务，压缩渠道成本、时间成本，拓展销售市场，强化企业品牌，实现最大化企业的商业目标。</p>
+		<p>Mvmmall商城：立足华东，面向全国、品类齐全、国内领先的品牌购物商城，服务于商务白领，提供正规发票，正规销售渠道支持。</p>
+		<p>Mvmmall商城：定位为中高收入阶层，以商务白领为主要消费群，辐射企业主、时尚人士等高价值消费群的B2C专业平台。我们将利用固有的千余家企业商务资源及企业的几十万商务白领资源，为Mvmmall商城提供客流的保证；每天千万的流量，化流量为销量，您准备好了吗？</p>
+		<p>Mvmmall商城：单品牌唯一供应商，提供高品质的产品。我们每个品牌的供应商都将是唯一的，为您的利益做最大保障。</p>
+		<p>Mvmmall商城：畅通的客服热线，优质的平台供应商，为商家、消费者提供全方位的服务。我们将设置专门的客服热线接听人员，为消费者解答，为商家赚钱。</p>
+	</div>
+</div>	
+<div class="footer">
+	<p class="site"><a href="#" title="不良信息举报中心" class="report border"></a><a href="#" class="network110 border" title="网络110报警服务"></a><a href="#" class="business border" title="经营性网站备案信息"></a><a href="#" class="security border" title="网上交易保障中心"></a></p>
+	<p class="copy3">Copyright &copy; 2014 <a href="$mm_mall_url" title="$mm_mall_address" target="_blank">$mm_mall_address</a> All Rights Reserved &nbsp; ICP证:$mm_company_num</p>
+	<p>软件著作权登记号：2011SR020550  $lang_powered_mvmmall</p> 
+	<p>程序开发商：迈维软件有限公司</p>  
+</div>
+<script type="text/javascript">
+<!--//选项卡特效
+function setTab(name,cursel,n){
+ for(i=1;i<=n;i++){
+  var menu=document.getElementById(name+i);
+  var con=document.getElementById("con_"+name+"_"+i);
+  menu.className=i==cursel?"hover":"";
+  con.style.display=i==cursel?"":"none";
+ }
+}//-->
+</script>
+</body>
+</html>
+<!--
+EOT;
+?>-->	

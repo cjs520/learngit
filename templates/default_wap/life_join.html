@@ -1,0 +1,107 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">生活圈</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+    var join_lock=false;
+    $("input[@rel=join_submit]").click(function(){
+	    if(join_lock) return;
+	    var jq_form=$(this).parents("form:first");
+		var msg="";
+		if(!jq_form.find("input[@name=agree]").attr("checked")) msg+="请认真阅读并同意《圈子指导原则》\\n";
+		if(msg!="")
+		{
+		    alert(msg);
+			return;
+		}
+		
+		join_lock=true;
+		$.ajax({
+		    url:"ajax.php?action=join_community&uid=$comm[uid]",
+			type:"POST",
+			dataType:"json",
+			data:jq_form.serialize(),
+			cache:false,
+			success:function(json){
+			    $("img[@rel=code]").trigger("click");
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				alert(json.info);
+				jq_form.find("input[@type=text],textarea").val("");
+				window.location="life_detail.php?action=$comm[uid]";
+			},
+			complete:function(){
+			    join_lock=false;
+			}
+		});
+	});//end click
+});
+</script>
+	<div class="h_oflow border lifexx">
+        <div class="quan_zhu">
+            <dl class="h_oflow">
+                <dt class="fl"><img src="$man_image" /></dt>
+                <dd class="fl">
+                    <p>圈主：<span class="fd blue">$comm[m_id]</span></p>
+                    <p>好友($man_friend_num)&nbsp;&nbsp;圈子($man_community_num)&nbsp;&nbsp;评论($man_comment_num)</p>
+                    <p><a href="life_list.php?m_uid=$comm[m_uid]" class="blue">话题($man_topic_num)</a>&nbsp;&nbsp;
+<!--
+EOT;
+if($man_shop_url){
+print <<<EOT
+-->						<a href="$man_shop_url" target="_blank" class="blue">TA的店铺</a>
+<!--
+EOT;
+} print <<<EOT
+-->                
+                    </p>
+                    <p><a rel="friend" m_uid="$comm[m_uid]" href="#" class="pink_but">加为好友</a></p>
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="clear"></div>  
+	<form name="join_form">
+    <table cellspacing="0" class="table_list">
+        <tr>
+            <th class="fcl red" colspan="2"><span class="fd">申请加入 <span class="f14 blue">$comm[c_name]</span> 圈子</span> <span class="nowrap gray">（填写越完整越容易通过圈主审核哦！）</span></th>
+        </tr>
+        <tr>
+            <td width="50">加入理由</td>
+            <td><textarea name="join_reason" cols="" rows="5" class="textarea"></textarea></td>
+        </tr>
+<!--
+EOT;
+if($mm_code_use==1){
+print <<<EOT
+-->   
+					<tr>
+					    <td>验证码</td>
+						<td>
+						    <input name="code" type="text" class="text_yzm" size="20" maxlength="8" /> 
+							<img align="absmiddle" src="ajax.php?action=code&rnd=$m_now_time" rel="code" onClick="this.src='ajax.php?action=code&rnd='+Math.random();" style="cursor:pointer; height:32px; margin-left:5px;" alt="验证码" />
+						</td>
+					</tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+        <tr>
+            <td colspan="2">
+                <input name="agree" type="checkbox" value="1" class="vmid" /> 我已认真阅读并同意<a href="page.php?action=quanzi" target="_blank" class="blue">《圈子指导原则》</a>
+            </td>
+        </tr>
+         <tr>
+            <td></td>
+            <td><input class="orange_but" type="button" rel="join_submit" value="提交"></td>
+        </tr>
+    </table>
+	</form>
+<!--
+EOT;
+?>-->	

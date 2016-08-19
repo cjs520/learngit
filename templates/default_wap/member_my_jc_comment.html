@@ -1,0 +1,66 @@
+<!--<?php
+require_once template('header'); 
+require_once template('social_left');
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=tab]:eq($t)").addClass("hover");
+	
+	$("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除指定评论？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "member.php?action=$action&step=1&uid="+uid+"&rnd="+Math.random(),
+			function(){
+			    $("tr[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+    <div class="mem_right"><!-- 会员中心首页 开始 -->
+		<div class="member_title fd red">生活圈评论管理</div>
+        <div class="title_rate_list">
+        	<a href="member.php?action=$action&t=0" rel="tab"><span>已审核</span></a>
+            <a href="member.php?action=$action&t=1" rel="tab"><span>未审核</span></a>
+			<a href="member.php?action=$action&t=2" rel="tab"><span>已拒绝</span></a>
+        </div>
+
+		<table cellspacing="0" class="table_list fct" rel="table">
+			<tr>
+				<th>我的发表评论</th>
+			</tr>
+<!--
+EOT;
+foreach($arr_member as $val){
+print <<<EOT
+-->			<tr uid="$val[uid]">
+                <td class="fcl">
+                	标题：$val[title]<br />
+                    内容：<span class="gray">$val[content]</span><br />
+                    话题：<a href="$val[topic_url]" target="_blank">$val[t_name]</a><br />
+                    发布时间：$val[register_date]<br />   
+<!--
+EOT;
+if($t==2){
+print <<<EOT
+-->					拒绝原因：$val[back_reason]<br />
+<!--
+EOT;
+} print <<<EOT
+-->
+				    操作：<a href="#" rel="del" uid="$val[uid]" class="tipsy_s delete blue" title="删除">删除</a>
+				</td>
+            </tr>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</table>
+		<div class="page">$page_list</div>
+	</div><!-- 会员中心首页 结束 -->
+<!--
+EOT;
+?>-->

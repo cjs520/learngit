@@ -1,0 +1,114 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+--> <div class="h_oflow shopshow_r">
+        <h3 class="title_line"><span>商铺二维码</span></h3>	
+		<div class="erweima"><img src="$qrcode_img" width="210" height="210"></div>
+		<div class="clear0"></div>
+		<h3 class="title_line"><span>类似商铺</span></h3>	
+        <ul class="h_oflow near_shop">   	 
+<!--
+EOT;
+foreach($similar_shop as $val){
+print <<<EOT
+-->			<li><a href="$val[url]" target="_blank"><img src="$val[up_logo]" class="border"></a><a href="$val[url]" target="_blank" class="fct">$val[shop_name]</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->		</ul>
+    </div>
+	<div class="shopshow_l">
+        <div class="border h_oflow">          
+            <div class="shop_video" rel="video">$shop[video_code]</div><!-- 商家视频 -->
+            <script type="text/javascript">
+            $("div[@rel=video]").children().css({
+                "width":"570px",
+                "height":"390px",
+                "position":"absolute",
+                "z-index":"1"
+            }).attr("wmode","transparent");
+            </script>
+            <div class="shop_info">
+                <h4><a href="$shop_url" target="_blank" class="fl f14">$shop[shop_name]</a><span class="fr fn f12">商铺类别：$shop_cat_name</span></h4>
+                <ul>
+                    <li>联 系 人：$shop[member_name]</li>
+                    <li>地 　 址：$shop[province]$shop[city]$shop[county]$shop[shop_address]</li>
+                    <li>联系电话：$shop[ceo_phone]</li>
+					<li>主营项目：$shop[run_product]</li>
+                    <li><span class="span_left">在线客服：</span> $shop_qq1 $shop_qq2 $shop_ww</li>
+                    <li class="li1"><span class="span_left">商铺认证：</span>
+<!--
+EOT;
+if($shop[certified_type] & 1){
+print <<<EOT
+--><a href="$certified_url" class="tipsy_s cert0" title="已实名认证"></a>&nbsp;<!--
+EOT;
+}else{ print <<<EOT
+--><a href="$certified_url" class="tipsy_s uncert0" title="未实名认证"></a>&nbsp;<!--
+EOT;
+} print <<<EOT
+--><!--
+EOT;
+if($shop[certified_type] & 2){
+print <<<EOT
+--><a href="$certified_url" target="_blank" class="tipsy_s cert1" title="已实体认证"></a><!--
+EOT;
+}else{ print <<<EOT
+--><a href="$certified_url" target="_blank" class="tipsy_s uncert1" title="未实体认证"></a><!--
+EOT;
+} print <<<EOT
+-->
+<!--
+EOT;
+if($shop[certified_type] & 4){
+print <<<EOT
+--><span class="tipsy_s xb" title="消保商铺 消保是指商铺缴纳一定数额的消费者保障金，用于交易纠纷时先行赔付给买家"></span>&nbsp;<!--
+EOT;
+}else{ print <<<EOT
+--><span class="tipsy_s unxb" title="未消保认证"></span>
+<!--
+EOT;
+} print <<<EOT
+-->					</li>
+                    <li>黄页公告：<span class="huang">$shop[supplier_notice]</span></li>
+                    <li class="li2"><span class="fl">商铺网址：</span><a href="$shop_url" target="_blank" class="fl">$shop_url</a></li>                	
+                </ul>
+                <div class="clear"></div>
+                <p class="add_com" style="display:none;"><a href="#comment" title="我要点评" class="add_com_a">我要点评</a> 已有<span class="red">{$comment_count}</span>人发表评论</p>
+            </div>
+        </div>
+		<h3 class="shop_title f14 mt10">商家地图</h3><!-- 商家地图 -->
+		<div id="my_map"></div>
+		<script language="javascript" src="include/javascript/jquery.map_baidu.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			if(typeof(LTMaps)!="function")
+			{
+				$("#my_map").html("地图接口加载失败");
+	 			return false;
+			}
+			var lng="$shop[lng]",lat="$shop[lat]";
+			var map_title="$shop[map_title]",map_tip="$shop[map_tip]";
+		
+			$("#my_map").Map(new LTPoint(lng,lat),2,map_title,map_tip,null,true);
+		});
+		</script>
+        <h3 class="shop_title f14 mt10">企业证书</h3>
+        <ul class="h_oflow border shop_cert">
+<!--
+EOT;
+foreach($arr_certi as $val){
+print <<<EOT
+-->
+        	<li><a href="$val[b_img]" target="_blank"><img src="$val[s_img]" alt=""></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul><!-- 企业证书 -->
+        <h3 class="shop_title f14 mt10"><a href="$detail_url" class="fr fn f12 white" target="_blank">详细介绍&gt;</a>商家简介</h3>
+        <div class="border h_oflow shop_content align"><img src="$shop[promote_pic]" class="fr" />$detail</div>
+    </div>
+<!--
+EOT;
+?>-->

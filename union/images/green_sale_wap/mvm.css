@@ -1,0 +1,29 @@
+body { background:#cdeca6; }
+.top1 { background:#00b000; }
+.footer2 { background:#e6f6d2; }
+/*-- 底部悬浮 --*/
+.footer1 { z-index:999; position:fixed; bottom:0; left:0; width:100%; height:62px; overflow:visible; background:url(bg.jpg) repeat-x 0 14px; }
+.footer1 li { width:18%; margin-top:16px; text-align:center; }
+.footer1 li.li3 { width:28%; margin:0; }
+.footer1 li a { color:#fff; }
+.home,.new,.tel,.my_acc { display:block; width:25px; height:23px; margin:0 auto; background:url(../default_wap/icon.png) 0 -30px; }
+.new { background-position:0 -60px; }
+.tel { background-position:0 -90px; }
+.my_acc { background-position:0 -120px; }
+.cart { display:block; width:64px; height:62px; margin:0 auto; background:url(../default_wap/gouwuc.png) -210px -80px; text-indent:-1000em; }
+/*---------------------- 首页 ----------------------*/
+/*-- 手机推荐广告 --*/
+.recom_ad { clear:both; }
+.recom_ad p img { display:block; width:10rem; }
+.recom_ad li { margin-bottom:0.2rem; }
+.recom_ad li img { display:block; width:4.9rem; }
+.recom_ad2 li img { display:block; width:3.33rem; }
+/*-- 分类商品 --*/
+.title2 { height:25px; margin:0 10px; padding:5px 0; overflow:hidden; line-height:25px; font-weight:normal; font-size:14px; }
+.title2 span { display:block; float:left; width:3px; height:13px; margin:6px 6px 0 0; background:#e10000; }
+.title2 a { color:#7a7a7a; }
+.pro_list1 li { width:4.5rem; padding:0.24rem 0.24rem 0.333rem; border-bottom:1px solid #dbdbdb; }
+.pro_list1 li.span_left { border-right:1px solid #dbdbdb; }
+.pro_list1 li.span_right { float:left; }
+.pro_list1 .name { height:36px; margin:0.1rem 0; }
+.pro_list1 .goods_img img { display:inline; width:4.5rem; height:4.5rem; padding:0; border:0; }

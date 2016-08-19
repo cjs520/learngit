@@ -1,0 +1,77 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=del]").click(function(e){
+	    e.preventDefault();
+		if(!confirm("确认删除？")) return;
+		var uid=$(this).attr("uid");
+		$.get(
+		    "admincp.php?module=$module&action=del&uid="+uid+"&rnd="+Math.random(),
+			function(msg){
+			    $("div[@uid="+uid+"]").remove();
+			}
+		);//end get
+	});//end click
+});
+</script>
+<div id="right">
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list1">
+	 	<tr><th colspan="4">Flash 编辑</th></tr>
+		<tr><td colspan="4">
+<!--
+EOT;
+foreach ($photo as $val){
+print <<<EOT
+-->
+			<div uid="$val[uid]" class="promotion">
+				<p><a href="#" rel="del" uid="$val[uid]">[删除]</a>&nbsp;&nbsp;<a href="#" rel="apply_page" apply_url="admincp.php?module=$module&action=edit&uid=$val[uid]">[修改]</a></p>
+				<p><a href="$val[img]" target="_blank"><img src="$val[img]" width="125" height="46" /></a></p>
+				<p>标题：<input type="text" value="$val[title]" size="16" class="text" /></p>
+				<p>链接：<input type="text" value="$val[link]" size="16" class="text" /></p>
+			    <p>排序：<input type="text" value="$val[cat_tag]" size="16" class="text" /></p>
+				<p style="display:none;">资讯：<input type="text" value="$val[art_id]" size="16" class="text" /></p>
+			</div>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</td></tr>
+	</table>
+	
+	<form action="admincp.php?module=$module&action=add" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="step" value="1" />
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr><th colspan="4">上传轮转广告</th></tr>
+		<tr>
+			<td colspan="4">
+				标题 <input type="text" name="title" size="20" class="text"> 
+				链接 <input type="text" name="link" size="20" class="text"> 
+				排序 <input type="text" name="cat_tag" size="20" class="text">  
+				大图 <input type="file" name="gallery" size="20" class="text">
+				资讯ID <input type="text" name="art_id" size="20" class="text">
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot">
+		<input type="submit" name="Submit" value=" 提 交 " class="button" onclick="" />
+		<input type="reset" name="reset" value=" 重 置 " class="button" />
+	</div>
+    </form>
+
+</div>
+<!--
+EOT;
+?>-->

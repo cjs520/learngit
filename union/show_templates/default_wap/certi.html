@@ -1,0 +1,22 @@
+<!--<?php
+require_once template('header');
+print <<<EOT
+-->
+	<div class="location"><p><span class="loca_icon"></span>资质证书</p></div>	
+	<ul class="h_oflow bg_white cert_pic">
+<!--
+EOT;
+$k=0;
+foreach ($certi as $val){
+$class=$k++%2==0?'span_left':'span_right';
+print <<<EOT
+-->		<li class="$class"><a href="$val[b_img]" target="_blank"><img src="$val[s_img]" /></a></li>
+<!--
+EOT;
+} print <<<EOT
+-->			
+	</ul>
+	<div class="page">$page_list</div>
+<!--
+EOT;
+?>-->

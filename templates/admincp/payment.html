@@ -1,0 +1,82 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+<div class="newopen" style="display:none;" p_url="$prev_url"><a class="close" href="#" rel="close_apply"></a><div rel="content"></div></div>
+<div id="right">
+	<table class="clst" align="center" cellpadding="0" cellspacing="1">
+		<tr>
+			<td class="tleft">$lang[payment_management]</td>
+			<td class="tright"></td>
+		</tr>
+	</table>
+<!--
+EOT;
+if($page_error){
+print <<<EOT
+-->	<p rel="page_error_tip" class="page_error_tip"><span class="icon_error"></span>$page_error<a href="#" rel="close_page_error_tip">关闭</a></p>
+<!--
+EOT;
+} print <<<EOT
+-->
+	<table cellpadding="0" cellspacing="1" class="list">
+		<tr>
+			<th>$lang[name]</th>
+			<th>$lang[description]</th>
+			<th>$lang[operation]</th>
+		</tr>
+<!--
+EOT;
+foreach ($payment as $key=>$val){
+print <<<EOT
+-->		
+		<tr>
+			<td class="td1">$val[name]</td>
+			<td class="td1">$val[desc]</td>
+			<td>
+<!--
+EOT;
+if ($val['install']==1) {
+print <<<EOT
+-->				
+           <a href="#" rel="apply_page" apply_url="$val[edit]" class="tipsy_s modify" title="修改"></a>
+		   <a href="$val[del]" onclick="return uninstall()" class="tipsy_s nxz" title="卸载"></a> 
+<!--
+EOT;
+}else{  print <<<EOT
+-->
+			<a href="#" rel="apply_page" apply_url="$val[insert]" class="tipsy_s add" title="安装"></a>
+<!--
+EOT;
+if ($val['payname']=='alipay') {
+print <<<EOT
+-->	
+			<span class="tdnew" onmouseover="this.className='tdnew_on'" onmouseout="this.className='tdnew'"><span class="wait"></span><span class="qianyue"><strong>签约</strong><br /><a target="_blank" href="https://b.alipay.com/order/productDetail.htm?productId=2011060800327556">担保交易</a><br />
+			<a target="_blank" href="https://b.alipay.com/order/productDetail.htm?productId=2012051600355662">即时到帐</a><br />
+			<a target="_blank" href="https://b.alipay.com/order/productDetail.htm?productId=2011060800327553">双功能</a></span></span>
+<!--
+EOT;
+}else{  print <<<EOT
+-->
+           <a href="$val[reg]" target="_blank" class="tipsy_s nsq" title="申请"></a>
+<!--
+EOT;
+} print <<<EOT
+-->			
+<!--
+EOT;
+} print <<<EOT
+-->			
+			</td>
+		</tr>
+<!--
+EOT;
+} print <<<EOT
+-->			
+	</table>
+	<br />
+	<b>注意：PHP 5.3以上版本才能使用京东支付接口</b>
+</div>
+<!--
+EOT;
+?>-->

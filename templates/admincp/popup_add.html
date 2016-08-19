@@ -1,0 +1,60 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+<!--右边开始-->
+
+<script charset="utf-8" type="text/javascript" src="include/kindediter/kindeditor-min.js"></script>
+<div id="right">
+	<form name="popup_form" action="admincp.php?module=$module&action=add" method="post">
+    <input type="hidden" name="action" id="action" value="$action"/>
+	<input type="hidden" name="setp" id="setp" value="1"/>
+	<input type="hidden" name="uid" id="uid"value="$uid"/>
+	<table cellpadding="0" cellspacing="1" class="list1">
+		<tr>
+			<th width="20%">添加或修改弹窗</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+		    <td>清除弹窗内容</td>
+			<td><a href="admincp.php?module=$module&action=del" onClick="return confirm('确认清除？');">点击清除弹窗内容</a></td>
+		</tr>
+		<tr>
+			<td>弹窗标题</td>
+			<td><input type="text" name="subject" value="$popup[subject]" class="text text_1" /></td>
+		</tr>
+		<tr>
+			<td>弹窗位置</td>
+			<td>
+			左侧 <input type="text" name="left" value="$popup[left]" size="7" class="text text_2"/> px　　
+            顶部 <input type="text" name="top" value="$popup[top]" size="7" class="text text_2"/> px</td>
+		</tr>
+		<tr>
+			<td>弹窗大小</td>
+			<td>
+			宽度 <input type="text" name="width" value="$popup[width]" class="text text_2"/> px　　
+           	高度 <input type="text" name="height" value="$popup[height]" class="text text_2"/> px
+			</td>
+		</tr>
+		<tr>
+			<td>内容</td>
+			<td>
+			    <script type="text/javascript">
+	            KindEditor.ready(function(K) {
+		            var editor1 = K.create('textarea[name="body"]', {
+			            uploadJson : 'admincp.php?module=editor&action=upload',
+			            fileManagerJson : 'admincp.php?module=editor&action=list_files',
+			            allowFileManager : true,
+			            items:kindecitor_items
+		            });
+	            });
+	            </script>
+			    <textarea name="body" style="width:100%;height:400px;visibility:hidden;">$popup[body]</textarea>
+			</td>
+		</tr>
+	</table>
+	<div id="tfoot"><input type="submit" name="Submit" value="确定" class="button" onclick="" /> <input type="reset" name="reset" value="重置" class="button" /></div>
+	</form>
+</div>
+<!--
+EOT;
+?>-->

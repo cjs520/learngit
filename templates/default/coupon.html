@@ -1,0 +1,177 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->
+<script type="text/javascript">
+$(function(){
+    $("a[@direction=prev]").click(function(e){
+	    e.preventDefault();
+		var rel=$(this).attr("rel");
+		var jq_ul=$("ul[@rel="+rel+"]");
+		var page=jq_ul.attr("page");
+		var loading=jq_ul.attr("loading");
+		if(loading=="1")
+		{
+		    alert("数据加载中，请稍等");
+			return;
+		}
+		if(page<=1)
+		{
+		    alert("当前已是第一页");
+			return;
+		}
+		jq_ul.attr("loading","1");
+		page=page-1;
+		if(page<=1) page=1;
+		$.ajax({
+		    url:"ajax.php?action=coupon&rel="+rel+"&page="+page,
+			type:"GET",
+			cache:true,
+			dataType:"json",
+			success:function(json){
+			    jq_ul.attr("page",json["page"]);
+				html="";
+				for(var i in json["coupon"])
+				{
+				    html+='<li class="border">';
+                    html+='<a href="'+json["coupon"][i]["url"]+'" target="_new"><img class="disb" src="'+json["coupon"][i]["coupon_img"]+'" width="213" height="140"/></a>';
+				    html+='<p><a href="'+json["coupon"][i]["url"]+'" class="fl" target="_new">'+json["coupon"][i]["shop_name"]+'</a><span class="fr gray">满'+json["coupon"][i]["price_lbound"]+'元可使用</span></p>';
+                    html+='<p><span class="fl">有效期至'+json["coupon"][i]["end_date"]+'</span><span class="fr red fd f14">'+json["coupon"][i]["discount"]+'元券</span></p>';
+				    if(json["coupon"][i]["handout_type"]=="0") html+='<p><a href="'+json["coupon"][i]["url"]+'" class="fr free" target="_new">免费领取</a></p>';
+					else if(json["coupon"][i]["handout_type"]=="1") html+='<p><a href="'+json["coupon"][i]["url"]+'" class="fr exchange" target="_new">'+json["coupon"][i]["sale_price"]+'积分兑换</a></p>';
+				}
+				jq_ul.html(html);
+			},
+			complete:function(){
+			    jq_ul.attr("loading","0");
+			}
+		});//end ajax
+	});//end click
+	
+	$("a[@direction=next]").click(function(e){
+	    e.preventDefault();
+		var rel=$(this).attr("rel");
+		var jq_ul=$("ul[@rel="+rel+"]");
+		var page=jq_ul.attr("page");
+		var loading=jq_ul.attr("loading");
+		if(loading=="1")
+		{
+		    alert("数据加载中，请稍等");
+			return;
+		}
+		
+		jq_ul.attr("loading","1");
+		page=parseInt(page)+1;
+		if(page<=1) page=1;
+		$.ajax({
+		    url:"ajax.php?action=coupon&rel="+rel+"&page="+page,
+			type:"GET",
+			cache:true,
+			dataType:"json",
+			success:function(json){
+			    jq_ul.attr("page",json["page"]);
+				html="";
+				for(var i in json["coupon"])
+				{
+				    html+='<li class="border">';
+                    html+='<a href="'+json["coupon"][i]["url"]+'" target="_new"><img class="disb" src="'+json["coupon"][i]["coupon_img"]+'" width="213" height="140"/></a>';
+				    html+='<p><a href="'+json["coupon"][i]["url"]+'" class="fl" target="_new">'+json["coupon"][i]["shop_name"]+'</a><span class="fr gray">满'+json["coupon"][i]["price_lbound"]+'元可使用</span></p>';
+                    html+='<p><span class="fl">有效期至'+json["coupon"][i]["end_date"]+'</span><span class="fr red fd f14">'+json["coupon"][i]["discount"]+'元券</span></p>';
+				    if(json["coupon"][i]["handout_type"]=="0") html+='<p><a href="'+json["coupon"][i]["url"]+'" class="fr free" target="_new">免费领取</a></p>';
+					else if(json["coupon"][i]["handout_type"]=="1") html+='<p><a href="'+json["coupon"][i]["url"]+'" class="fr exchange" target="_new">'+json["coupon"][i]["sale_price"]+'积分兑换</a></p>';
+				    else if(json["coupon"][i]["handout_type"]=="2") html+='<p><a href="'+json["coupon"][i]["url"]+'" class="fr giving" target="_new">购物满'+json["coupon"][i]["sale_price"]+'元赠送</a></p>';
+				}
+				jq_ul.html(html);
+			},
+			complete:function(){
+			    jq_ul.attr("loading","0");
+			}
+		});//end ajax
+	});//end click
+});
+</script>
+<!--
+EOT;
+foreach($AD->GetAd('banner',2) as $val){
+print <<<EOT
+-->	<div class="mb10" style="position:relative;">
+<!--
+EOT;
+if($mvm_member[isSupplier]>1){
+print <<<EOT
+-->		<a href="#" rel="ad_apply" m="coupon" p="banner" op="" t="2" class="pu" style="display:none;"></a>
+<!--
+EOT;
+} print <<<EOT
+-->		<a href="$val[url]" target="_blank" rel="banner"><img src="$val[pic]" alt="$val[title]"/></a>
+	</div>
+<!--
+EOT;
+} print <<<EOT
+--><!--banner-->
+	<h3 class="titleb free_title"><span>免费领取</span><p class="fr coupon_page"><a href="#" class="up" rel="free_coupon" direction="next"></a><a href="#" class="next" rel="free_coupon" direction="prev"></a></p></h3>
+	<div class="box_out border coupon_list"><!-- 免费领取开始 -->
+        <ul rel="free_coupon" page="1">    
+<!--
+EOT;
+foreach($arr_free_coupon as $val){
+print <<<EOT
+--> 
+			<li class="border">
+                <a href="$val[url]"><img class="disb" src="images/noimages/loading.gif" rel="lazy" path="$val[coupon_img]" width="213" height="140"/></a>
+				<p><a href="$val[url]" class="fl" target="_new">$val[shop_name]</a><span class="fr gray">满{$val[price_lbound]}元可使用</span></p>
+                <p><span class="fl">有效期至$val[end_date]</span><span class="fr red fd f14">$val[discount]元券</span></p>
+				<p><a href="$val[url]" class="fr free" target="_new">免费领取</a></p>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>
+    </div><!-- 免费领取结束 -->
+    <div class="clear"></div> 
+    <h3 class="titleb ex_title"><span>积分兑换</span><p class="fr coupon_page"><a href="#" class="up" rel="exchange_coupon" direction="next"></a><a href="#" class="next" rel="exchange_coupon" direction="prev"></a></p></h3>
+	<div class="box_out border coupon_list"><!-- 积分兑换开始 -->
+        <ul rel="exchange_coupon" page="1">      
+<!--
+EOT;
+foreach($arr_exchange_coupon as $val){
+print <<<EOT
+-->
+			<li class="border">
+                <a href="$val[url]" target="_new"><img class="disb" src="images/noimages/loading.gif" rel="lazy" path="$val[coupon_img]" width="213" height="140"/></a>
+				<p><a href="$val[url]" class="fl" target="_new">$val[shop_name]</a><span class="fr gray">满{$val[price_lbound]}元可使用</span></p>
+                <p><span class="fl">有效期至$val[end_date]</span><span class="fr red fd f14">$val[discount]元券</span></p>
+				<p><a href="$val[url]" class="fr exchange" target="_new">$val[sale_price]积分兑换</a></p>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>
+    </div><!-- 积分兑换结束 --> 
+    <div class="clear"></div> 
+	<h3 class="titleb giving_title"><span>购物返券</span><p class="fr coupon_page"><a href="#" class="up" rel="order_coupon" direction="next"></a><a href="#" class="next" rel="order_coupon" direction="prev"></a></p></h3>
+	<div class="box_out border coupon_list"><!-- 购物反券开始 -->
+        <ul rel="order_coupon" page="1">    
+<!--
+EOT;
+foreach($arr_order_coupon as $val){
+print <<<EOT
+-->
+			<li class="border">
+                <a href="$val[url]"><img class="disb" src="images/noimages/loading.gif" rel="lazy" path="$val[coupon_img]" width="213" height="140"/></a>
+				<p><a href="$val[url]" class="fl" target="_new">$val[shop_name]</a><span class="fr gray">满{$val[price_lbound]}元可使用</span></p>
+                <p><span class="fl">有效期至$val[end_date]</span><span class="fr red fd f14">$val[discount]元券</span></p>
+				<p><a href="$val[url]" class="fr giving" target="_new">购物满$val[sale_price]元赠送</a></p>
+            </li>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </ul>
+    </div><!-- 购物反券结束 -->
+
+<!--
+EOT;
+?>-->	

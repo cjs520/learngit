@@ -1,0 +1,200 @@
+<!--<?php
+require_once template('header'); 
+print <<<EOT
+-->	<div class="top1">生活圈</div>
+<div class="wrapper">
+<script type="text/javascript">
+$(function(){
+    $("a[@rel=tab]").click(function(e){
+	    e.preventDefault();
+	});//end click
+	
+	var member_load=false;
+	$("a[@rel=tab]").hover(
+	    function(e){
+			$("a[@rel=tab]").removeClass("hover");
+			$(this).addClass("hover");
+			
+			var idx=$("a[@rel=tab]").index(this);
+			$("div[@rel=tab_detail_body]").hide();
+			$("div[@rel=tab_detail_body]").eq(idx).show();
+			if(idx!=1) return;
+			if(member_load) return;
+			
+			member_load=true;
+			$.ajax({
+			    url:"ajax.php?action=life_detail&cmd=all_member&c_uid=$comm[uid]",
+				type:"GET",
+				dataType:"json",
+				cache:true,
+				success:function(json){
+				    var jq_div=$("div[@rel=tab_detail_body]:last");
+				    
+					if(json.all_member.length<=0)
+					{
+					    jq_div.children("div[@rel=loading]").html("还没有会员加入 -_-");
+						return;
+					}
+					jq_div.children("div[@rel=loading]").remove();
+					var html="";
+					$.each(json.all_member,function(i){
+					    html+='<li><a href="#" rel="friend" m_uid="'+this.m_uid+'" title="点击添加为好友"><img src="'+this.member_image+'" /></a><a href="#" rel="friend" m_uid="'+this.m_uid+'" title="点击添加为好友" class="fct">'+this.member_id+'</a></li>';
+					});//end each
+					jq_div.children("ul:first").html(html);
+					
+					$("a[@rel=friend]").unbind();
+					$("a[@rel=friend]").click(function(e){
+	                    e.preventDefault();
+		                var m_uid=$(this).attr("m_uid");
+		                $.get(
+		                    "ajax.php?action=make_friend&cmd=make&m_uid="+m_uid+"&rnd="+Math.random(),
+			                function(msg){
+			                    alert(msg);
+			                }
+		                );//end get
+	                });//end click
+				}
+			});//end ajax
+		},
+		function(e){}
+	);//end hover
+	
+	$("a[@rel=exit_comm]").click(function(e){
+	    e.preventDefault();
+		$.ajax({
+		    url:"ajax.php?action=life_detail&cmd=exit&c_uid=$comm[uid]",
+			type:"GET",
+			dataType:"json",
+			cache:false,
+			success:function(json){
+			    if(json.err!="")
+				{
+				    alert(json.err);
+					return;
+				}
+				alert(json.info);
+				window.location.reload();
+			}
+		});
+	});//end click
+});
+</script>
+
+<div class="left_quan">
+	<div class="h_oflow border lifexx">
+        <img src="$comm[c_logo]" width="100%" />
+        <h4 class="h_oflow">
+            <a class="f14 fl lifexx_title">$comm[c_name]</a>
+<!--
+EOT;
+if(!$is_member){
+print <<<EOT
+-->
+            <a href="$join_url" class="fr pink_but">加入圈子</a>
+<!--
+EOT;
+}else{ print <<<EOT
+-->
+            <a href="$invite_url" class="fr pink_but mr5">邀请好友</a>
+            <a rel="exit_comm" href="#" class="fr gray_but1 mr5">退出圈子</a>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </h4>  
+        <p class="mb6 gray">成员：{$member_num}&nbsp;&nbsp;话题：{$topic_num}&nbsp;&nbsp;评论：{$comment_num}&nbsp;&nbsp;<span class="nowrap">建立日期：$comm[register_date]</span></p>
+        <p class="mb6"><strong>圈子分类：</strong>$comm[c_cat]</p>
+        <p class="mb6"><strong>圈子标签：</strong>$comm[c_tag]</p>
+        <p class="mb6"><strong>共同爱好：</strong>$comm[c_hobby]</p>
+        <p class="mb6"><strong>圈子宣言：</strong>$comm[c_proclaim]</p>
+        <p class="mb6"><strong>圈子简介：</strong>$comm[c_intro]</p>
+        <div class="quan_zhu">
+            <dl class="h_oflow">
+                <dt class="fl"><img src="$man_image" /></dt>
+                <dd class="fl">
+                    <p>圈主：<span class="fd blue">$comm[m_id]</span></p>
+                    <p>好友($man_friend_num)&nbsp;&nbsp;圈子($man_community_num)&nbsp;&nbsp;评论($man_comment_num)</p>
+                    <p><a href="life_list.php?m_uid=$comm[m_uid]" class="blue">话题($man_topic_num)</a>&nbsp;&nbsp;
+<!--
+EOT;
+if($man_shop_url){
+print <<<EOT
+-->						<a href="$man_shop_url" target="_blank" class="blue">TA的店铺</a>
+<!--
+EOT;
+} print <<<EOT
+-->                
+                    </p>
+                    <p><a rel="friend" m_uid="$comm[m_uid]" href="#" class="pink_but">加为好友</a></p>
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <ul class="mb10 life_tab">
+        <li><a rel="tab" href="#" class="hover">话题</a></li>
+        <li><a rel="tab" href="#">全部成员</a></li>
+    </ul>
+    <div rel="tab_detail_body">
+		<ul class="h_oflow sort_bg">
+			<li class="fl sort">
+            	<strong class="pad8">排序：</strong>
+				<a href="life_detail.php?action=$comm[uid]&t=new" $new_topic_class>最新</a>
+				<a href="life_detail.php?action=$comm[uid]&t=hot" $hot_topic_class>热门</a> 
+			</li>
+<!--
+EOT;
+if($is_member){
+print <<<EOT
+-->
+            <li class="fr"><a class="blue_but" href="life_posting.php?action=$comm[uid]">我要发帖</a></li>
+<!--
+EOT;
+} print <<<EOT
+-->
+		</ul>
+        <div class="quan_hot_xx">
+<!--
+EOT;
+foreach($arr_topic as $val){
+print <<<EOT
+-->
+            <div class="h_oflow mt10 bg_gray">
+				<h3>  
+                    <a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加成为好友"><img src="$val[member_image]" class="vmid" width="30" height="30"/></a>
+                    <a href="#" rel="friend" m_uid="$val[m_uid]" title="点击添加成为好友" class="gray">$val[member_id]：</a>
+					<a href="$val[detail_url]" class="fd">$val[t_name]</a>
+                </h3>
+                <h4 class="mt8 mb8 gray"> 
+                	<span class="fr">$val[register_date]</span>
+                    标签：$val[tags]
+                </h4>
+				<div class="content">
+					<p>$val[content] <a href="$val[detail_url]">[全文]</a></p>
+<!--
+EOT;
+if($val[cover]){
+print <<<EOT
+-->					<img rel="delay_load" src="images/noimages/loading.gif" max_width="200" path="$val[cover]" align="absmiddle" />
+<!--
+EOT;
+} print <<<EOT
+-->
+				</div>
+				<p class="gray mt8"><span class="fr">&nbsp;&nbsp;评论：$val[comment_num]</span><a href="$val[detail_url]" target="_blank" class="fr yellow_but">参与评论</a></p>
+            </div>
+<!--
+EOT;
+} print <<<EOT
+-->
+        </div><!-- 话题 -->
+        <div><a href="life_list.php?c_uid=$comm[uid]" class="gray_but" style="margin:60px auto 0">查看更多</a></div>
+    </div>
+    <div rel="tab_detail_body" style="display:none;">
+	    <div rel="loading" style="width:100%; text-align:center;"><img src="images/noimages/star_loading.gif" /> 成员数据加载中...</div>
+        <ul class="quan_act1"></ul><!-- 全部成员 -->
+    </div><!-- 全部成员 -->
+</div>
+<!--
+EOT;
+?>-->	
